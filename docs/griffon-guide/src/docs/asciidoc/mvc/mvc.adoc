@@ -17,7 +17,7 @@ Here's how a typical MVC group configuration looks:
 ----
 mvcGroups {
     // MVC Group for "sample"
-    'sample' {
+    sample {
         model      = 'sample.SampleModel'
         view       = 'sample.SampleView'
         controller = 'sample.SampleController'
@@ -55,14 +55,14 @@ for that group, as it can be seen in the following snippet:
 ----
 mvcGroups {
     // MVC Group for "sample"
-    'sample' {
+    sample {
         model      = 'sample.SampleModel'
         view       = 'sample.SampleView'
         controller = 'sample.SampleController'
     }
 
     // MVC Group for "foo"
-    'foo' {
+    foo {
         model      = 'sample.FooModel'
         view       = 'sample.FooView'
         controller = 'sample.FooController'
@@ -82,7 +82,7 @@ the `FooController` can reach the key defined in the configuration:
 @ArtifactProviderFor(GriffonController)
 class FooController {
     void mvcGroupInit(Map<String, Object> args) {
-        println args.configuration.config.key
+        println mvcGroup.configuration.config.key
     }
 }
 ----
@@ -95,6 +95,7 @@ For that we'll have to discuss the `MVCGroupManager` first.
 :leveloffset: 2
 include::mvc-mvcmanager.adoc[]
 include::mvc-mvcgroups.adoc[]
+include::mvc-typed-mvcgroups.adoc[]
 include::mvc-lifecycle.adoc[]
 include::mvc-mvcaware-transformation.adoc[]
 :leveloffset: 1

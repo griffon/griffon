@@ -1,0 +1,48 @@
+
+[[_mvc_typed_mvcgroups]]
+= Typed MVCGroups
+
+Typed MVCGroups gives you type safe access to each MVC member defined by the group. This feature assumes
+the MVC group has the required `Model`, `View`, and `Controller` members; it won't work for groups that
+define less than these 3 members. You may define additional typed accessors for other members too. For example
+
+[source,java,linenums,options="nowrap"]
+.src/main/java/org/example/FooMVCGroup.java
+----
+package org.example;
+
+import javax.inject.Named;
+import griffon.core.mvc.MVCGroup;
+import org.codehaus.griffon.runtime.core.mvc.AbstractTypedMVCGroup;
+
+@Named("foo")
+public class FooMVCGroup extends AbstractTypedMVCGroup<FooModel, FooView, FooController> {
+    public FooMVCGroup(MVCGroup delegate) {
+        super(delegate);
+    }
+}
+----
+
+Instances of this group can be created as follows
+
+[source,java,linenums,options="nowrap"]
+----
+FooMVCGroup fooGroup1 = createMVCGroup(FooMVCGroup.class);
+FooMVCGroup fooGroup2 = createMVCGroup(FooMVCGroup.class, "foo2");
+----
+
+You may now refer to the exact types of each MVC member, for example
+
+[source,java,linenums,options="nowrap"]
+----
+FooMVCGroup fooGroup = createMVCGroup(FooMVCGroup.class);
+fooGroup.model().setSomeProperty("value"); // returned model type is FooModel
+
+// the following won't even compile
+MVCGroup mvcGroup = createMVCGroup("foo");
+mvcGroup.getModel().setSomeProperty("value"); // returned model type is GriffonModel !!
+----
+
+The name of the group is determined by the value of the `@Named` annotation. If the annotation is not present
+then the simple class name (`FooMVCGroup` in this case) will be used instead.
+

@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
-
+<!--
+  ~ Copyright 2008-2017 the original author or authors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 <!DOCTYPE suppressions PUBLIC
     "-//Puppy Crawl//DTD Suppressions 1.1//EN"
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
@@ -10,12 +24,17 @@
               files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]ast[/\\][^/\\]+"/>
     <suppress checks="MethodNameCheck"
               files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]ast[/\\][^/\\]+"/>
-	<suppress checks="EmptyBlockCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]test[/\\]report[/\\]junit[/\\]PlainFormatter.java"/>
-	<suppress checks="MemberNameCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]runtime[/\\]core[/\\]AbstractGriffonViewScript.java"/>
-    <suppress checks="MemberNameCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]cli[/\\]GriffonScriptRunner.java"/>
-	<suppress checks="EmptyBlockCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]griffon[/\\]util[/\\][^/\\]+"/>
-	<!-- strange error on my mac. unable to remove the tab use error in the following file-->
-	<suppress checks="FileTabCharacter" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]griffon[/\\]core[/\\]GriffonClass.java"/>
-	<suppress checks="EqualsHashCode" files=".*[/\\]src[/\\]test[/\\]groovy[/\\]org[/\\]codehaus[/\\]groovy[/\\]runtime[/\\]DummyBean.java"/>
-	
+    <suppress checks="EmptyBlockCheck"
+              files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]test[/\\]report[/\\]junit[/\\]PlainFormatter.java"/>
+    <suppress checks="MemberNameCheck"
+              files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]runtime[/\\]core[/\\]AbstractGriffonViewScript.java"/>
+    <suppress checks="MemberNameCheck"
+              files=".*[/\\]src[/\\]main[/\\]groovy[/\\]org[/\\]codehaus[/\\]griffon[/\\]cli[/\\]GriffonScriptRunner.java"/>
+    <suppress checks="EmptyBlockCheck" files=".*[/\\]src[/\\]main[/\\]groovy[/\\]griffon[/\\]util[/\\][^/\\]+"/>
+    <!-- strange error on my mac. unable to remove the tab use error in the following file-->
+    <suppress checks="FileTabCharacter"
+              files=".*[/\\]src[/\\]main[/\\]groovy[/\\]griffon[/\\]core[/\\]GriffonClass.java"/>
+    <suppress checks="EqualsHashCode"
+              files=".*[/\\]src[/\\]test[/\\]groovy[/\\]org[/\\]codehaus[/\\]groovy[/\\]runtime[/\\]DummyBean.java"/>
+
 </suppressions>
