@@ -15,12 +15,14 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
+import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.pivot.PivotWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.pivot.controller.PivotActionFactory;
 import org.codehaus.griffon.runtime.pivot.controller.PivotActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -34,32 +36,36 @@ import static griffon.util.AnnotationUtils.named;
  */
 @Named(&quot;pivot&quot;)
 @ServiceProviderFor(Module.class)
-<span class="fc" id="L37">public class PivotModule extends AbstractModule {</span>
+<span class="fc" id="L39">public class PivotModule extends AbstractModule {</span>
     @Override
     protected void doConfigure() {
         // tag::bindings[]
-<span class="fc" id="L41">        bind(PivotWindowDisplayHandler.class)</span>
-<span class="fc" id="L42">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
-<span class="fc" id="L43">            .to(DefaultPivotWindowDisplayHandler.class)</span>
-<span class="fc" id="L44">            .asSingleton();</span>
+<span class="fc" id="L43">        bind(PivotWindowDisplayHandler.class)</span>
+<span class="fc" id="L44">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
+<span class="fc" id="L45">            .to(DefaultPivotWindowDisplayHandler.class)</span>
+<span class="fc" id="L46">            .asSingleton();</span>
 
-<span class="fc" id="L46">        bind(PivotWindowDisplayHandler.class)</span>
-<span class="fc" id="L47">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
-<span class="fc" id="L48">            .to(ConfigurablePivotWindowDisplayHandler.class)</span>
-<span class="fc" id="L49">            .asSingleton();</span>
+<span class="fc" id="L48">        bind(PivotWindowDisplayHandler.class)</span>
+<span class="fc" id="L49">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
+<span class="fc" id="L50">            .to(ConfigurablePivotWindowDisplayHandler.class)</span>
+<span class="fc" id="L51">            .asSingleton();</span>
 
-<span class="fc" id="L51">        bind(WindowManager.class)</span>
-<span class="fc" id="L52">            .to(DefaultPivotWindowManager.class)</span>
-<span class="fc" id="L53">            .asSingleton();</span>
+<span class="fc" id="L53">        bind(WindowManager.class)</span>
+<span class="fc" id="L54">            .to(DefaultPivotWindowManager.class)</span>
+<span class="fc" id="L55">            .asSingleton();</span>
 
-<span class="fc" id="L55">        bind(UIThreadManager.class)</span>
-<span class="fc" id="L56">            .to(PivotUIThreadManager.class)</span>
-<span class="fc" id="L57">            .asSingleton();</span>
+<span class="fc" id="L57">        bind(UIThreadManager.class)</span>
+<span class="fc" id="L58">            .to(PivotUIThreadManager.class)</span>
+<span class="fc" id="L59">            .asSingleton();</span>
 
-<span class="fc" id="L59">        bind(ActionManager.class)</span>
-<span class="fc" id="L60">            .to(PivotActionManager.class)</span>
-<span class="fc" id="L61">            .asSingleton();</span>
+<span class="fc" id="L61">        bind(ActionManager.class)</span>
+<span class="fc" id="L62">            .to(PivotActionManager.class)</span>
+<span class="fc" id="L63">            .asSingleton();</span>
+
+<span class="fc" id="L65">        bind(ActionFactory.class)</span>
+<span class="fc" id="L66">            .to(PivotActionFactory.class)</span>
+<span class="fc" id="L67">            .asSingleton();</span>
         // end::bindings[]
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L69">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

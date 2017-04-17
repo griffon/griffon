@@ -65,15 +65,16 @@ import static org.codehaus.griffon.compile.core.ast.transform.ThreadingAwareASTT
      * Convenience method to see if an annotated node is {@code @Threading}.
      *
      * @param node the node to check
+     *
      * @return true if the node is an event publisher
      */
     public static boolean hasThreadingAnnotation(AnnotatedNode node) {
-<span class="nc bnc" id="L71" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
-<span class="nc bnc" id="L72" title="All 2 branches missed.">            if (THREADING_CNODE.equals(annotation.getClassNode())) {</span>
-<span class="nc" id="L73">                return true;</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        for (AnnotationNode annotation : node.getAnnotations()) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            if (THREADING_CNODE.equals(annotation.getClassNode())) {</span>
+<span class="nc" id="L74">                return true;</span>
             }
-<span class="nc" id="L75">        }</span>
-<span class="nc" id="L76">        return false;</span>
+<span class="nc" id="L76">        }</span>
+<span class="nc" id="L77">        return false;</span>
     }
 
     /**
@@ -83,130 +84,133 @@ import static org.codehaus.griffon.compile.core.ast.transform.ThreadingAwareASTT
      * @param source the source unit for the nodes
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
-<span class="nc" id="L86">        AnnotationNode annotation = (AnnotationNode) nodes[0];</span>
-<span class="nc" id="L87">        AnnotatedNode node = (AnnotatedNode) nodes[1];</span>
+<span class="nc" id="L87">        AnnotationNode annotation = (AnnotationNode) nodes[0];</span>
+<span class="nc" id="L88">        AnnotatedNode node = (AnnotatedNode) nodes[1];</span>
 
-<span class="nc" id="L89">        Threading.Policy threadingPolicy = getThreadingPolicy(annotation);</span>
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (threadingPolicy == Threading.Policy.SKIP) return;</span>
+<span class="nc" id="L90">        Threading.Policy threadingPolicy = getThreadingPolicy(annotation);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (threadingPolicy == Threading.Policy.SKIP) { return; }</span>
 
-<span class="nc" id="L92">        String threadingMethod = resolveThreadingMethod(threadingPolicy);</span>
+<span class="nc" id="L93">        String threadingMethod = resolveThreadingMethod(threadingPolicy);</span>
 
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (node instanceof MethodNode) {</span>
-<span class="nc" id="L95">            ClassNode declaringClass = node.getDeclaringClass();</span>
-<span class="nc bnc" id="L96" title="All 2 branches missed.">            if (declaringClass.implementsInterface(GRIFFON_CONTROLLER_CNODE)) {</span>
-<span class="nc" id="L97">                return;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (node instanceof MethodNode) {</span>
+<span class="nc" id="L96">            ClassNode declaringClass = node.getDeclaringClass();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if (declaringClass.implementsInterface(GRIFFON_CONTROLLER_CNODE)) {</span>
+<span class="nc" id="L98">                return;</span>
             }
 
-<span class="nc" id="L100">            addThreadingHandlerIfNeeded(source, declaringClass);</span>
-<span class="nc" id="L101">            handleMethodForInjection(declaringClass, (MethodNode) node, threadingMethod);</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">        } else if (node instanceof ClassNode) {</span>
-<span class="nc" id="L103">            ClassNode declaringClass = (ClassNode) node;</span>
-<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (declaringClass.implementsInterface(GRIFFON_CONTROLLER_CNODE)) {</span>
-<span class="nc" id="L105">                return;</span>
+<span class="nc" id="L101">            addThreadingHandlerIfNeeded(source, declaringClass);</span>
+<span class="nc" id="L102">            handleMethodForInjection(declaringClass, (MethodNode) node, threadingMethod);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        } else if (node instanceof ClassNode) {</span>
+<span class="nc" id="L104">            ClassNode declaringClass = (ClassNode) node;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (declaringClass.implementsInterface(GRIFFON_CONTROLLER_CNODE)) {</span>
+<span class="nc" id="L106">                return;</span>
             }
 
-<span class="nc" id="L108">            addThreadingHandlerIfNeeded(source, declaringClass);</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">            for (MethodNode methodNode : declaringClass.getAllDeclaredMethods()) {</span>
-<span class="nc" id="L110">                threadingPolicy = getThreadingPolicy(methodNode, threadingPolicy);</span>
-<span class="nc" id="L111">                threadingMethod = resolveThreadingMethod(threadingPolicy);</span>
-<span class="nc" id="L112">                handleMethodForInjection(declaringClass, methodNode, threadingMethod);</span>
-<span class="nc" id="L113">            }</span>
+<span class="nc" id="L109">            addThreadingHandlerIfNeeded(source, declaringClass);</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            for (MethodNode methodNode : declaringClass.getAllDeclaredMethods()) {</span>
+<span class="nc" id="L111">                threadingPolicy = getThreadingPolicy(methodNode, threadingPolicy);</span>
+<span class="nc" id="L112">                threadingMethod = resolveThreadingMethod(threadingPolicy);</span>
+<span class="nc" id="L113">                handleMethodForInjection(declaringClass, methodNode, threadingMethod);</span>
+<span class="nc" id="L114">            }</span>
         }
-<span class="nc" id="L115">    }</span>
+<span class="nc" id="L116">    }</span>
 
     private String resolveThreadingMethod(Threading.Policy threadingPolicy) {
-<span class="nc" id="L118">        String threadingMethod = METHOD_RUN_OUTSIDE_UI;</span>
-<span class="nc bnc" id="L119" title="All 3 branches missed.">        switch (threadingPolicy) {</span>
+<span class="nc" id="L119">        String threadingMethod = METHOD_RUN_OUTSIDE_UI;</span>
+<span class="nc bnc" id="L120" title="All 4 branches missed.">        switch (threadingPolicy) {</span>
             case INSIDE_UITHREAD_SYNC:
-<span class="nc" id="L121">                threadingMethod = METHOD_RUN_INSIDE_UI_SYNC;</span>
-<span class="nc" id="L122">                break;</span>
+<span class="nc" id="L122">                threadingMethod = METHOD_RUN_INSIDE_UI_SYNC;</span>
+<span class="nc" id="L123">                break;</span>
             case INSIDE_UITHREAD_ASYNC:
-<span class="nc" id="L124">                threadingMethod = METHOD_RUN_INSIDE_UI_ASYNC;</span>
-<span class="nc" id="L125">                break;</span>
+<span class="nc" id="L125">                threadingMethod = METHOD_RUN_INSIDE_UI_ASYNC;</span>
+<span class="nc" id="L126">                break;</span>
+            case BACKGROUND_THREAD:
+<span class="nc" id="L128">                threadingMethod = METHOD_RUN_IN_BACKGROUND;</span>
+<span class="nc" id="L129">                break;</span>
             case OUTSIDE_UITHREAD:
             default:
                 break;
         }
-<span class="nc" id="L130">        return threadingMethod;</span>
+<span class="nc" id="L134">        return threadingMethod;</span>
     }
 
     public static Threading.Policy getThreadingPolicy(AnnotationNode annotation) {
-<span class="nc" id="L134">        PropertyExpression value = (PropertyExpression) annotation.getMember(&quot;value&quot;);</span>
-<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (value == null) return Threading.Policy.OUTSIDE_UITHREAD;</span>
-<span class="nc" id="L136">        return Threading.Policy.valueOf(value.getPropertyAsString());</span>
+<span class="nc" id="L138">        PropertyExpression value = (PropertyExpression) annotation.getMember(&quot;value&quot;);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (value == null) { return Threading.Policy.OUTSIDE_UITHREAD; }</span>
+<span class="nc" id="L140">        return Threading.Policy.valueOf(value.getPropertyAsString());</span>
     }
 
     public static Threading.Policy getThreadingPolicy(MethodNode method, Threading.Policy defaultPolicy) {
-<span class="nc" id="L140">        List&lt;AnnotationNode&gt; annotations = method.getAnnotations(THREADING_CNODE);</span>
-<span class="nc bnc" id="L141" title="All 2 branches missed.">        if(annotations.size() &gt; 0) {</span>
-<span class="nc" id="L142">            return getThreadingPolicy(annotations.get(0));</span>
+<span class="nc" id="L144">        List&lt;AnnotationNode&gt; annotations = method.getAnnotations(THREADING_CNODE);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (annotations.size() &gt; 0) {</span>
+<span class="nc" id="L146">            return getThreadingPolicy(annotations.get(0));</span>
         }
-<span class="nc" id="L144">        return defaultPolicy;</span>
+<span class="nc" id="L148">        return defaultPolicy;</span>
     }
 
     public static void handleMethodForInjection(ClassNode classNode, MethodNode method, String threadingMethod) {
-<span class="nc" id="L148">        MethodDescriptor md = methodDescriptorFor(method);</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (GriffonClassUtils.isPlainMethod(md) &amp;&amp;</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">            !GriffonClassUtils.isEventHandler(md) &amp;&amp;</span>
-<span class="nc bnc" id="L151" title="All 2 branches missed.">            hasVoidOrDefAsReturnType(method)) {</span>
-<span class="nc" id="L152">            wrapStatements(classNode, method, threadingMethod);</span>
+<span class="nc" id="L152">        MethodDescriptor md = methodDescriptorFor(method);</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (GriffonClassUtils.isPlainMethod(md) &amp;&amp;</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">            !GriffonClassUtils.isEventHandler(md) &amp;&amp;</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            hasVoidOrDefAsReturnType(method)) {</span>
+<span class="nc" id="L156">            wrapStatements(classNode, method, threadingMethod);</span>
         }
-<span class="nc" id="L154">    }</span>
+<span class="nc" id="L158">    }</span>
 
     private static boolean hasVoidOrDefAsReturnType(MethodNode method) {
-<span class="nc" id="L157">        Class&lt;?&gt; returnType = method.getReturnType().getTypeClass();</span>
-<span class="nc bnc" id="L158" title="All 2 branches missed.">        return returnType.equals(ClassHelper.DYNAMIC_TYPE.getTypeClass()) ||</span>
-<span class="nc bnc" id="L159" title="All 2 branches missed.">            returnType.equals(ClassHelper.VOID_TYPE.getTypeClass());</span>
+<span class="nc" id="L161">        Class&lt;?&gt; returnType = method.getReturnType().getTypeClass();</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        return returnType.equals(ClassHelper.DYNAMIC_TYPE.getTypeClass()) ||</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">            returnType.equals(ClassHelper.VOID_TYPE.getTypeClass());</span>
     }
 
     private static MethodDescriptor methodDescriptorFor(MethodNode method) {
-<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (method == null) return null;</span>
-<span class="nc" id="L164">        Parameter[] types = method.getParameters();</span>
-<span class="nc" id="L165">        String[] parameterTypes = new String[types.length];</span>
-<span class="nc bnc" id="L166" title="All 2 branches missed.">        for (int i = 0; i &lt; types.length; i++) {</span>
-<span class="nc" id="L167">            parameterTypes[i] = newClass(types[i].getType()).getName();</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (method == null) { return null; }</span>
+<span class="nc" id="L168">        Parameter[] types = method.getParameters();</span>
+<span class="nc" id="L169">        String[] parameterTypes = new String[types.length];</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        for (int i = 0; i &lt; types.length; i++) {</span>
+<span class="nc" id="L171">            parameterTypes[i] = newClass(types[i].getType()).getName();</span>
         }
-<span class="nc" id="L169">        return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());</span>
+<span class="nc" id="L173">        return new MethodDescriptor(method.getName(), parameterTypes, method.getModifiers());</span>
     }
 
     private static void wrapStatements(ClassNode declaringClass, MethodNode method, String threadingMethod) {
-<span class="nc" id="L173">        Statement code = method.getCode();</span>
-<span class="nc" id="L174">        Statement wrappedCode = wrapStatements(code, threadingMethod);</span>
-<span class="nc bnc" id="L175" title="All 2 branches missed.">        if (code != wrappedCode) {</span>
-<span class="nc" id="L176">            method.setCode(wrappedCode);</span>
-<span class="nc bnc" id="L177" title="All 2 branches missed.">            for (Parameter param : method.getParameters()) {</span>
-<span class="nc" id="L178">                param.setClosureSharedVariable(true);</span>
+<span class="nc" id="L177">        Statement code = method.getCode();</span>
+<span class="nc" id="L178">        Statement wrappedCode = wrapStatements(code, threadingMethod);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (code != wrappedCode) {</span>
+<span class="nc" id="L180">            method.setCode(wrappedCode);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">            for (Parameter param : method.getParameters()) {</span>
+<span class="nc" id="L182">                param.setClosureSharedVariable(true);</span>
             }
         }
-<span class="nc" id="L181">    }</span>
+<span class="nc" id="L185">    }</span>
 
     private static Statement wrapStatements(Statement code, String threadingMethod) {
         // TODO deal with non-block statements
-<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (!(code instanceof BlockStatement)) return code;</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (!(code instanceof BlockStatement)) { return code; }</span>
 
-<span class="nc" id="L187">        BlockStatement codeBlock = (BlockStatement) code;</span>
-<span class="nc" id="L188">        List&lt;Statement&gt; statements = codeBlock.getStatements();</span>
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (statements.isEmpty()) return code;</span>
+<span class="nc" id="L191">        BlockStatement codeBlock = (BlockStatement) code;</span>
+<span class="nc" id="L192">        List&lt;Statement&gt; statements = codeBlock.getStatements();</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if (statements.isEmpty()) { return code; }</span>
 
-<span class="nc" id="L191">        VariableScope variableScope = codeBlock.getVariableScope();</span>
-<span class="nc" id="L192">        BlockStatement block = new BlockStatement();</span>
-<span class="nc" id="L193">        VariableScope blockScope = variableScope.copy();</span>
-<span class="nc" id="L194">        makeVariablesShared(blockScope);</span>
-<span class="nc" id="L195">        block.setVariableScope(blockScope);</span>
-<span class="nc" id="L196">        ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);</span>
-<span class="nc" id="L197">        VariableScope closureScope = variableScope.copy();</span>
-<span class="nc" id="L198">        makeVariablesShared(closureScope);</span>
-<span class="nc" id="L199">        closure.setVariableScope(closureScope);</span>
-<span class="nc" id="L200">        block.addStatement(stmnt(new MethodCallExpression(THIS, threadingMethod, args(closure))));</span>
+<span class="nc" id="L195">        VariableScope variableScope = codeBlock.getVariableScope();</span>
+<span class="nc" id="L196">        BlockStatement block = new BlockStatement();</span>
+<span class="nc" id="L197">        VariableScope blockScope = variableScope.copy();</span>
+<span class="nc" id="L198">        makeVariablesShared(blockScope);</span>
+<span class="nc" id="L199">        block.setVariableScope(blockScope);</span>
+<span class="nc" id="L200">        ClosureExpression closure = new ClosureExpression(Parameter.EMPTY_ARRAY, code);</span>
+<span class="nc" id="L201">        VariableScope closureScope = variableScope.copy();</span>
+<span class="nc" id="L202">        makeVariablesShared(closureScope);</span>
+<span class="nc" id="L203">        closure.setVariableScope(closureScope);</span>
+<span class="nc" id="L204">        block.addStatement(stmnt(new MethodCallExpression(THIS, threadingMethod, args(closure))));</span>
 
-<span class="nc" id="L202">        return block;</span>
+<span class="nc" id="L206">        return block;</span>
     }
 
     private static void makeVariablesShared(VariableScope scope) {
-<span class="nc bnc" id="L206" title="All 2 branches missed.">        for (Iterator&lt;Variable&gt; vars = scope.getReferencedLocalVariablesIterator(); vars.hasNext(); ) {</span>
-<span class="nc" id="L207">            Variable var = vars.next();</span>
-<span class="nc" id="L208">            var.setClosureSharedVariable(true);</span>
-<span class="nc" id="L209">        }</span>
-<span class="nc" id="L210">    }</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        for (Iterator&lt;Variable&gt; vars = scope.getReferencedLocalVariablesIterator(); vars.hasNext(); ) {</span>
+<span class="nc" id="L211">            Variable var = vars.next();</span>
+<span class="nc" id="L212">            var.setClosureSharedVariable(true);</span>
+<span class="nc" id="L213">        }</span>
+<span class="nc" id="L214">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

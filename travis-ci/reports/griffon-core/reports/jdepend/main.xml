@@ -301,20 +301,23 @@
 
         <Package name="griffon.core.controller">
             <Stats>
-                <TotalClasses>6</TotalClasses>
+                <TotalClasses>11</TotalClasses>
                 <ConcreteClasses>2</ConcreteClasses>
-                <AbstractClasses>4</AbstractClasses>
+                <AbstractClasses>9</AbstractClasses>
                 <Ca>4</Ca>
-                <Ce>4</Ce>
-                <A>0.67</A>
-                <I>0.5</I>
-                <D>0.17</D>
+                <Ce>5</Ce>
+                <A>0.82</A>
+                <I>0.56</I>
+                <D>0.37</D>
                 <V>1</V>
             </Stats>
 
             <AbstractClasses>
                 <Class sourceFile="Action.java">
                     griffon.core.controller.Action
+                </Class>
+                <Class sourceFile="ActionFactory.java">
+                    griffon.core.controller.ActionFactory
                 </Class>
                 <Class sourceFile="ActionHandler.java">
                     griffon.core.controller.ActionHandler
@@ -324,6 +327,18 @@
                 </Class>
                 <Class sourceFile="ActionManager.java">
                     griffon.core.controller.ActionManager
+                </Class>
+                <Class sourceFile="ActionMetadata.java">
+                    griffon.core.controller.ActionMetadata
+                </Class>
+                <Class sourceFile="ActionMetadataFactory.java">
+                    griffon.core.controller.ActionMetadataFactory
+                </Class>
+                <Class sourceFile="ActionParameter.java">
+                    griffon.core.controller.ActionParameter
+                </Class>
+                <Class sourceFile="ControllerAction.java">
+                    griffon.core.controller.ControllerAction
                 </Class>
             </AbstractClasses>
 
@@ -339,6 +354,7 @@
             <DependsUpon>
                 <Package>griffon.core.artifact</Package>
                 <Package>java.lang</Package>
+                <Package>java.lang.annotation</Package>
                 <Package>java.lang.reflect</Package>
                 <Package>java.util</Package>
             </DependsUpon>
@@ -1973,14 +1989,14 @@
 
         <Package name="org.codehaus.griffon.runtime.core.controller">
             <Stats>
-                <TotalClasses>17</TotalClasses>
-                <ConcreteClasses>15</ConcreteClasses>
+                <TotalClasses>19</TotalClasses>
+                <ConcreteClasses>17</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
                 <Ca>1</Ca>
                 <Ce>21</Ce>
-                <A>0.12</A>
+                <A>0.11</A>
                 <I>0.95</I>
-                <D>0.07</D>
+                <D>0.06</D>
                 <V>1</V>
             </Stats>
 
@@ -2009,12 +2025,6 @@
                 <Class sourceFile="AbstractActionManager.java">
                     org.codehaus.griffon.runtime.core.controller.AbstractActionManager$ActionCache
                 </Class>
-                <Class sourceFile="AbstractActionManager.java">
-                    org.codehaus.griffon.runtime.core.controller.AbstractActionManager$ActionWrapper
-                </Class>
-                <Class sourceFile="AbstractActionManager.java">
-                    org.codehaus.griffon.runtime.core.controller.AbstractActionManager$ArgInfo
-                </Class>
                 <Class sourceFile="ActionDecorator.java">
                     org.codehaus.griffon.runtime.core.controller.ActionDecorator
                 </Class>
@@ -2030,8 +2040,20 @@
                 <Class sourceFile="DefaultAction.java">
                     org.codehaus.griffon.runtime.core.controller.DefaultAction$2$1
                 </Class>
+                <Class sourceFile="DefaultActionFactory.java">
+                    org.codehaus.griffon.runtime.core.controller.DefaultActionFactory
+                </Class>
                 <Class sourceFile="DefaultActionManager.java">
                     org.codehaus.griffon.runtime.core.controller.DefaultActionManager
+                </Class>
+                <Class sourceFile="DefaultActionMetadata.java">
+                    org.codehaus.griffon.runtime.core.controller.DefaultActionMetadata
+                </Class>
+                <Class sourceFile="DefaultActionMetadataFactory.java">
+                    org.codehaus.griffon.runtime.core.controller.DefaultActionMetadataFactory
+                </Class>
+                <Class sourceFile="DefaultActionParameter.java">
+                    org.codehaus.griffon.runtime.core.controller.DefaultActionParameter
                 </Class>
                 <Class sourceFile="DefaultToolkitAction.java">
                     org.codehaus.griffon.runtime.core.controller.DefaultToolkitAction
@@ -2547,14 +2569,14 @@
 
         <Package name="org.codehaus.griffon.runtime.core.threading">
             <Stats>
-                <TotalClasses>7</TotalClasses>
-                <ConcreteClasses>5</ConcreteClasses>
+                <TotalClasses>8</TotalClasses>
+                <ConcreteClasses>6</ConcreteClasses>
                 <AbstractClasses>2</AbstractClasses>
                 <Ca>1</Ca>
                 <Ce>8</Ce>
-                <A>0.29</A>
+                <A>0.25</A>
                 <I>0.89</I>
-                <D>0.17</D>
+                <D>0.14</D>
                 <V>1</V>
             </Stats>
 
@@ -2570,6 +2592,9 @@
             <ConcreteClasses>
                 <Class sourceFile="AbstractUIThreadManager.java">
                     org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager$1
+                </Class>
+                <Class sourceFile="AbstractUIThreadManager.java">
+                    org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager$2
                 </Class>
                 <Class sourceFile="DefaultExecutorServiceProvider.java">
                     org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
@@ -2937,10 +2962,11 @@
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.threading">
-            <Package>griffon.exceptions</Package>
-            <Package>griffon.core.artifact</Package>
+            <Package>griffon.core</Package>
+            <Package>griffon.util</Package>
             <Package>griffon.core.mvc</Package>
             <Package>griffon.core.artifact</Package>
+            <Package>griffon.core.mvc</Package>
         </Package>
 
         <Package Name="org.codehaus.griffon.runtime.core.view">

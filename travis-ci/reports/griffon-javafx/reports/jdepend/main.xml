@@ -10,6 +10,10 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="griffon.core.artifact">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="griffon.core.controller">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -626,7 +630,37 @@
         </Package>
 
         <Package name="org.codehaus.griffon.runtime.javafx.controller">
-            <error>No stats available: package referenced, but not analyzed.</error>
+            <Stats>
+                <TotalClasses>1</TotalClasses>
+                <ConcreteClasses>1</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>4</Ce>
+                <A>0</A>
+                <I>0.8</I>
+                <D>0.2</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="JavaFXActionFactory.java">
+                    org.codehaus.griffon.runtime.javafx.controller.JavaFXActionFactory
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>griffon.core.artifact</Package>
+                <Package>griffon.core.controller</Package>
+                <Package>griffon.core.threading</Package>
+                <Package>java.lang</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.codehaus.griffon.runtime.javafx</Package>
+            </UsedBy>
         </Package>
 
         <Package name="org.slf4j">

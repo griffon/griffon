@@ -16,12 +16,14 @@
 package org.codehaus.griffon.runtime.lanterna;
 
 import com.googlecode.lanterna.gui.GUIScreen;
+import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.lanterna.controller.LanternaActionFactory;
 import org.codehaus.griffon.runtime.lanterna.controller.LanternaActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -35,36 +37,40 @@ import static griffon.util.AnnotationUtils.named;
  */
 @Named(&quot;lanterna&quot;)
 @ServiceProviderFor(Module.class)
-<span class="fc" id="L38">public class LanternaModule extends AbstractModule {</span>
+<span class="fc" id="L40">public class LanternaModule extends AbstractModule {</span>
     @Override
     protected void doConfigure() {
         // tag::bindings[]
-<span class="fc" id="L42">        bind(GUIScreen.class)</span>
-<span class="fc" id="L43">            .toProvider(GUIScreenProvider.class)</span>
-<span class="fc" id="L44">            .asSingleton();</span>
+<span class="fc" id="L44">        bind(GUIScreen.class)</span>
+<span class="fc" id="L45">            .toProvider(GUIScreenProvider.class)</span>
+<span class="fc" id="L46">            .asSingleton();</span>
 
-<span class="fc" id="L46">        bind(LanternaWindowDisplayHandler.class)</span>
-<span class="fc" id="L47">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
-<span class="fc" id="L48">            .to(DefaultLanternaWindowDisplayHandler.class)</span>
-<span class="fc" id="L49">            .asSingleton();</span>
+<span class="fc" id="L48">        bind(LanternaWindowDisplayHandler.class)</span>
+<span class="fc" id="L49">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
+<span class="fc" id="L50">            .to(DefaultLanternaWindowDisplayHandler.class)</span>
+<span class="fc" id="L51">            .asSingleton();</span>
 
-<span class="fc" id="L51">        bind(LanternaWindowDisplayHandler.class)</span>
-<span class="fc" id="L52">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
-<span class="fc" id="L53">            .to(ConfigurableLanternaWindowDisplayHandler.class)</span>
-<span class="fc" id="L54">            .asSingleton();</span>
+<span class="fc" id="L53">        bind(LanternaWindowDisplayHandler.class)</span>
+<span class="fc" id="L54">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
+<span class="fc" id="L55">            .to(ConfigurableLanternaWindowDisplayHandler.class)</span>
+<span class="fc" id="L56">            .asSingleton();</span>
 
-<span class="fc" id="L56">        bind(WindowManager.class)</span>
-<span class="fc" id="L57">            .to(DefaultLanternaWindowManager.class)</span>
-<span class="fc" id="L58">            .asSingleton();</span>
+<span class="fc" id="L58">        bind(WindowManager.class)</span>
+<span class="fc" id="L59">            .to(DefaultLanternaWindowManager.class)</span>
+<span class="fc" id="L60">            .asSingleton();</span>
 
-<span class="fc" id="L60">        bind(UIThreadManager.class)</span>
-<span class="fc" id="L61">            .to(LanternaUIThreadManager.class)</span>
-<span class="fc" id="L62">            .asSingleton();</span>
+<span class="fc" id="L62">        bind(UIThreadManager.class)</span>
+<span class="fc" id="L63">            .to(LanternaUIThreadManager.class)</span>
+<span class="fc" id="L64">            .asSingleton();</span>
 
-<span class="fc" id="L64">        bind(ActionManager.class)</span>
-<span class="fc" id="L65">            .to(LanternaActionManager.class)</span>
-<span class="fc" id="L66">            .asSingleton();</span>
+<span class="fc" id="L66">        bind(ActionManager.class)</span>
+<span class="fc" id="L67">            .to(LanternaActionManager.class)</span>
+<span class="fc" id="L68">            .asSingleton();</span>
+
+<span class="fc" id="L70">        bind(ActionFactory.class)</span>
+<span class="fc" id="L71">            .to(LanternaActionFactory.class)</span>
+<span class="fc" id="L72">            .asSingleton();</span>
         // end::bindings[]
-<span class="fc" id="L68">    }</span>
+<span class="fc" id="L74">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.javafx.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import griffon.core.threading.UIThreadManager;
 import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
@@ -61,189 +62,190 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     private String graphicStyleClass;
     private String graphicStyle;
     private boolean selected;
-<span class="fc" id="L64">    private boolean visible = true;</span>
+<span class="fc" id="L65">    private boolean visible = true;</span>
 
-    public JavaFXGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-<span class="fc" id="L67">        super(actionManager, controller, actionName);</span>
-<span class="fc" id="L68">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
+    public JavaFXGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final ActionMetadata actionMetadata) {
+<span class="fc" id="L68">        super(actionManager, controller, actionMetadata);</span>
+<span class="fc" id="L69">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
 
-<span class="fc" id="L70">        toolkitAction = createAction(actionManager, controller, actionName);</span>
-<span class="pc" id="L71">        toolkitAction.setOnAction(actionEvent -&gt; actionManager.invokeAction(controller, actionName, actionEvent));</span>
+<span class="fc" id="L71">        toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());</span>
+<span class="pc" id="L72">        toolkitAction.setOnAction(actionEvent -&gt; actionManager.invokeAction(controller, actionMetadata.getActionName(), actionEvent));</span>
 
-<span class="fc" id="L73">        addPropertyChangeListener(evt -&gt; uiThreadManager.runInsideUIAsync(() -&gt; handlePropertyChange(evt)));</span>
-<span class="fc" id="L74">    }</span>
+<span class="fc" id="L74">        addPropertyChangeListener(evt -&gt; uiThreadManager.runInsideUIAsync(() -&gt; handlePropertyChange(evt)));</span>
+<span class="fc" id="L75">    }</span>
 
     protected JavaFXAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-<span class="fc" id="L77">        return new JavaFXAction();</span>
+<span class="fc" id="L78">        return new JavaFXAction();</span>
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
-<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (KEY_NAME.equals(evt.getPropertyName())) {</span>
-<span class="fc" id="L82">            toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L84">            toolkitAction.setDescription(String.valueOf(evt.getNewValue()));</span>
-<span class="nc bnc" id="L85" title="All 2 branches missed.">        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L86">            toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));</span>
-<span class="nc bnc" id="L87" title="All 2 branches missed.">        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L88">            toolkitAction.setSelected(castToBoolean(evt.getNewValue()));</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">        } else if (KEY_VISIBLE.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L90">            toolkitAction.setVisible(castToBoolean(evt.getNewValue()));</span>
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L92">            String accelerator = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }</span>
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        } else if (KEY_STYLECLASS.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L95">            String styleClass = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L96" title="All 2 branches missed.">            if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }</span>
-<span class="nc bnc" id="L97" title="All 2 branches missed.">        } else if (KEY_STYLE.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L98">            String style = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">            if (!isBlank(style)) { toolkitAction.setStyle(style); }</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">        } else if (KEY_ICON.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L101">            String icon = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L102" title="All 2 branches missed.">            if (!isBlank(icon)) { toolkitAction.setIcon(icon); }</span>
-<span class="nc bnc" id="L103" title="All 2 branches missed.">        } else if (KEY_IMAGE.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L104">            Image image = (Image) evt.getNewValue();</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">            if (null != image) { toolkitAction.setImage(image); }</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">        } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L107">            Node graphic = (Node) evt.getNewValue();</span>
-<span class="nc bnc" id="L108" title="All 2 branches missed.">            if (null != graphic) { toolkitAction.setGraphic(graphic); }</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">        } else if (KEY_GRAPHICSTYLECLASS.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L110">            String graphicStyleClass = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L111" title="All 2 branches missed.">            if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }</span>
-<span class="nc bnc" id="L112" title="All 2 branches missed.">        } else if (KEY_GRAPHICSTYLE.equals(evt.getPropertyName())) {</span>
-<span class="nc" id="L113">            String graphicStyle = (String) evt.getNewValue();</span>
-<span class="nc bnc" id="L114" title="All 2 branches missed.">            if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }</span>
+<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (KEY_NAME.equals(evt.getPropertyName())) {</span>
+<span class="fc" id="L83">            toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L85">            toolkitAction.setDescription(String.valueOf(evt.getNewValue()));</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        } else if (KEY_ENABLED.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L87">            toolkitAction.setEnabled(castToBoolean(evt.getNewValue()));</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        } else if (KEY_SELECTED.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L89">            toolkitAction.setSelected(castToBoolean(evt.getNewValue()));</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        } else if (KEY_VISIBLE.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L91">            toolkitAction.setVisible(castToBoolean(evt.getNewValue()));</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L93">            String accelerator = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        } else if (KEY_STYLECLASS.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L96">            String styleClass = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        } else if (KEY_STYLE.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L99">            String style = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">            if (!isBlank(style)) { toolkitAction.setStyle(style); }</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        } else if (KEY_ICON.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L102">            String icon = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            if (!isBlank(icon)) { toolkitAction.setIcon(icon); }</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">        } else if (KEY_IMAGE.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L105">            Image image = (Image) evt.getNewValue();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">            if (null != image) { toolkitAction.setImage(image); }</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        } else if (KEY_GRAPHIC.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L108">            Node graphic = (Node) evt.getNewValue();</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (null != graphic) { toolkitAction.setGraphic(graphic); }</span>
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        } else if (KEY_GRAPHICSTYLECLASS.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L111">            String graphicStyleClass = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        } else if (KEY_GRAPHICSTYLE.equals(evt.getPropertyName())) {</span>
+<span class="nc" id="L114">            String graphicStyle = (String) evt.getNewValue();</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }</span>
         }
-<span class="fc" id="L116">    }</span>
+<span class="fc" id="L117">    }</span>
 
     @Nullable
     public String getStyleClass() {
-<span class="nc" id="L120">        return styleClass;</span>
+<span class="nc" id="L121">        return styleClass;</span>
     }
 
     public void setStyleClass(@Nullable String styleClass) {
-<span class="nc" id="L124">        firePropertyChange(KEY_STYLECLASS, this.styleClass, this.styleClass = styleClass);</span>
-<span class="nc" id="L125">    }</span>
+<span class="nc" id="L125">        firePropertyChange(KEY_STYLECLASS, this.styleClass, this.styleClass = styleClass);</span>
+<span class="nc" id="L126">    }</span>
 
     @Nullable
     public String getStyle() {
-<span class="nc" id="L129">        return style;</span>
+<span class="nc" id="L130">        return style;</span>
     }
 
     public void setStyle(@Nullable String style) {
-<span class="nc" id="L133">        firePropertyChange(KEY_STYLE, this.style, this.style = style);</span>
-<span class="nc" id="L134">    }</span>
+<span class="nc" id="L134">        firePropertyChange(KEY_STYLE, this.style, this.style = style);</span>
+<span class="nc" id="L135">    }</span>
 
     @Nullable
     public String getGraphicStyleClass() {
-<span class="nc" id="L138">        return graphicStyleClass;</span>
+<span class="nc" id="L139">        return graphicStyleClass;</span>
     }
 
     public void setGraphicStyleClass(@Nullable String graphicStyleClass) {
-<span class="nc" id="L142">        firePropertyChange(KEY_GRAPHICSTYLECLASS, this.graphicStyleClass, this.graphicStyleClass = graphicStyleClass);</span>
-<span class="nc" id="L143">    }</span>
+<span class="nc" id="L143">        firePropertyChange(KEY_GRAPHICSTYLECLASS, this.graphicStyleClass, this.graphicStyleClass = graphicStyleClass);</span>
+<span class="nc" id="L144">    }</span>
 
     @Nullable
     public String getGraphicStyle() {
-<span class="nc" id="L147">        return graphicStyle;</span>
+<span class="nc" id="L148">        return graphicStyle;</span>
     }
 
     public void setGraphicStyle(@Nullable String graphicStyle) {
-<span class="nc" id="L151">        firePropertyChange(KEY_GRAPHICSTYLE, this.graphicStyle, this.graphicStyle = graphicStyle);</span>
-<span class="nc" id="L152">    }</span>
+<span class="nc" id="L152">        firePropertyChange(KEY_GRAPHICSTYLE, this.graphicStyle, this.graphicStyle = graphicStyle);</span>
+<span class="nc" id="L153">    }</span>
 
     @Nullable
     public String getAccelerator() {
-<span class="fc" id="L156">        return accelerator;</span>
+<span class="fc" id="L157">        return accelerator;</span>
     }
 
     public void setAccelerator(@Nullable String accelerator) {
-<span class="nc" id="L160">        firePropertyChange(KEY_ACCELERATOR, this.accelerator, this.accelerator = accelerator);</span>
-<span class="nc" id="L161">    }</span>
+<span class="nc" id="L161">        firePropertyChange(KEY_ACCELERATOR, this.accelerator, this.accelerator = accelerator);</span>
+<span class="nc" id="L162">    }</span>
 
     public boolean isSelected() {
-<span class="fc" id="L164">        return selected;</span>
+<span class="fc" id="L165">        return selected;</span>
     }
 
     public void setSelected(boolean selected) {
-<span class="fc" id="L168">        firePropertyChange(KEY_SELECTED, this.selected, this.selected = selected);</span>
-<span class="fc" id="L169">    }</span>
+<span class="fc" id="L169">        firePropertyChange(KEY_SELECTED, this.selected, this.selected = selected);</span>
+<span class="fc" id="L170">    }</span>
 
     public boolean isVisible() {
-<span class="fc" id="L172">        return visible;</span>
+<span class="fc" id="L173">        return visible;</span>
     }
 
     public void setVisible(boolean visible) {
-<span class="fc" id="L176">        firePropertyChange(KEY_SELECTED, this.visible, this.visible = visible);</span>
-<span class="fc" id="L177">    }</span>
+<span class="fc" id="L177">        firePropertyChange(KEY_SELECTED, this.visible, this.visible = visible);</span>
+<span class="fc" id="L178">    }</span>
 
     @Nullable
     public String getDescription() {
-<span class="fc" id="L181">        return description;</span>
+<span class="fc" id="L182">        return description;</span>
     }
 
     public void setDescription(@Nullable String description) {
-<span class="nc" id="L185">        firePropertyChange(KEY_DESCRIPTION, this.description, this.description = description);</span>
-<span class="nc" id="L186">    }</span>
+<span class="nc" id="L186">        firePropertyChange(KEY_DESCRIPTION, this.description, this.description = description);</span>
+<span class="nc" id="L187">    }</span>
 
     @Nullable
     public String getIcon() {
-<span class="fc" id="L190">        return icon;</span>
+<span class="fc" id="L191">        return icon;</span>
     }
 
     public void setIcon(@Nullable String icon) {
-<span class="nc" id="L194">        firePropertyChange(KEY_ICON, this.icon, this.icon = icon);</span>
-<span class="nc" id="L195">    }</span>
+<span class="nc" id="L195">        firePropertyChange(KEY_ICON, this.icon, this.icon = icon);</span>
+<span class="nc" id="L196">    }</span>
 
     @Nullable
     public Image getImage() {
-<span class="fc" id="L199">        PropertyEditor editor = findEditor(Image.class);</span>
-<span class="fc" id="L200">        editor.setValue(image);</span>
-<span class="fc" id="L201">        return (Image) editor.getValue();</span>
+<span class="fc" id="L200">        PropertyEditor editor = findEditor(Image.class);</span>
+<span class="fc" id="L201">        editor.setValue(image);</span>
+<span class="fc" id="L202">        return (Image) editor.getValue();</span>
     }
 
     public void setImage(@Nullable String image) {
-<span class="nc" id="L205">        firePropertyChange(KEY_IMAGE, this.image, this.image = image);</span>
-<span class="nc" id="L206">    }</span>
+<span class="nc" id="L206">        firePropertyChange(KEY_IMAGE, this.image, this.image = image);</span>
+<span class="nc" id="L207">    }</span>
 
     @Nullable
     public Node getGraphic() {
-<span class="fc" id="L210">        return graphic;</span>
+<span class="fc" id="L211">        return graphic;</span>
     }
 
     public void setGraphic(@Nullable Node graphic) {
-<span class="nc" id="L214">        firePropertyChange(KEY_ICON, this.graphic, this.graphic = graphic);</span>
-<span class="nc" id="L215">    }</span>
+<span class="nc" id="L215">        firePropertyChange(KEY_ICON, this.graphic, this.graphic = graphic);</span>
+<span class="nc" id="L216">    }</span>
 
     @Nonnull
     public Object getToolkitAction() {
-<span class="nc" id="L219">        return toolkitAction;</span>
+<span class="nc" id="L220">        return toolkitAction;</span>
     }
 
+    @Override
     protected void doExecute(Object... args) {
-<span class="nc" id="L223">        ActionEvent event = null;</span>
-<span class="nc bnc" id="L224" title="All 6 branches missed.">        if (args != null &amp;&amp; args.length == 1 &amp;&amp; args[0] instanceof ActionEvent) {</span>
-<span class="nc" id="L225">            event = (ActionEvent) args[0];</span>
+<span class="nc" id="L225">        ActionEvent event = null;</span>
+<span class="nc bnc" id="L226" title="All 6 branches missed.">        if (args != null &amp;&amp; args.length == 1 &amp;&amp; args[0] instanceof ActionEvent) {</span>
+<span class="nc" id="L227">            event = (ActionEvent) args[0];</span>
         }
-<span class="nc" id="L227">        toolkitAction.onActionProperty().get().handle(event);</span>
-<span class="nc" id="L228">    }</span>
+<span class="nc" id="L229">        toolkitAction.onActionProperty().get().handle(event);</span>
+<span class="nc" id="L230">    }</span>
 
     @Override
     protected void doInitialize() {
-<span class="fc" id="L232">        toolkitAction.setName(getName());</span>
-<span class="fc" id="L233">        toolkitAction.setDescription(getDescription());</span>
-<span class="fc" id="L234">        toolkitAction.setEnabled(isEnabled());</span>
-<span class="fc" id="L235">        toolkitAction.setSelected(isSelected());</span>
-<span class="fc" id="L236">        toolkitAction.setVisible(isVisible());</span>
-<span class="fc" id="L237">        String accelerator = getAccelerator();</span>
-<span class="pc bpc" id="L238" title="1 of 2 branches missed.">        if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }</span>
-<span class="pc bpc" id="L239" title="1 of 2 branches missed.">        if (!isBlank(style)) { toolkitAction.setStyle(style); }</span>
-<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }</span>
-<span class="fc" id="L241">        String icon = getIcon();</span>
-<span class="pc bpc" id="L242" title="1 of 2 branches missed.">        if (!isBlank(icon)) { toolkitAction.setIcon(icon); }</span>
-<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (null != getImage()) { toolkitAction.setImage(getImage()); }</span>
-<span class="pc bpc" id="L244" title="1 of 2 branches missed.">        if (null != getGraphic()) { toolkitAction.setGraphic(getGraphic()); }</span>
-<span class="pc bpc" id="L245" title="1 of 2 branches missed.">        if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }</span>
-<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }</span>
-<span class="fc" id="L247">    }</span>
+<span class="fc" id="L234">        toolkitAction.setName(getName());</span>
+<span class="fc" id="L235">        toolkitAction.setDescription(getDescription());</span>
+<span class="fc" id="L236">        toolkitAction.setEnabled(isEnabled());</span>
+<span class="fc" id="L237">        toolkitAction.setSelected(isSelected());</span>
+<span class="fc" id="L238">        toolkitAction.setVisible(isVisible());</span>
+<span class="fc" id="L239">        String accelerator = getAccelerator();</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }</span>
+<span class="pc bpc" id="L241" title="1 of 2 branches missed.">        if (!isBlank(style)) { toolkitAction.setStyle(style); }</span>
+<span class="pc bpc" id="L242" title="1 of 2 branches missed.">        if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }</span>
+<span class="fc" id="L243">        String icon = getIcon();</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">        if (!isBlank(icon)) { toolkitAction.setIcon(icon); }</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">        if (null != getImage()) { toolkitAction.setImage(getImage()); }</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">        if (null != getGraphic()) { toolkitAction.setGraphic(getGraphic()); }</span>
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }</span>
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">        if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }</span>
+<span class="fc" id="L249">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

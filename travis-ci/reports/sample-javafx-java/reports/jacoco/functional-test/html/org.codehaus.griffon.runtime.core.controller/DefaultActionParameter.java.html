@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultActionParameter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.controller</a> &gt; <span class="el_source">DefaultActionParameter.java</span></div><h1>DefaultActionParameter.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.controller;
+
+import griffon.core.controller.ActionMetadata;
+import griffon.core.controller.ActionParameter;
+import griffon.inject.Contextual;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Named;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+
+import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.GriffonNameUtils.isBlank;
+import static java.lang.System.arraycopy;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class DefaultActionParameter implements ActionParameter {
+<span class="nc" id="L37">    private static final Annotation[] EMPTY_ARRAY = new Annotation[0];</span>
+
+    private final int index;
+    private final Class&lt;?&gt; type;
+    private final String name;
+    private final Annotation[] annotations;
+    private final boolean contextual;
+    private final boolean nullable;
+
+<span class="nc" id="L46">    public DefaultActionParameter(@Nonnull ActionMetadata actionMetadata, int index, @Nonnull Class&lt;?&gt; type, @Nullable Annotation[] annotations) {</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        requireState(index &gt;= 0, &quot;Parameter index must be equal or greater than 0 [&quot; + index + &quot;]&quot;);</span>
+<span class="nc" id="L48">        this.index = index;</span>
+<span class="nc" id="L49">        this.type = type;</span>
+
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (annotations != null) {</span>
+<span class="nc" id="L52">            this.annotations = new Annotation[annotations.length];</span>
+<span class="nc" id="L53">            arraycopy(annotations, 0, this.annotations, 0, annotations.length);</span>
+
+<span class="nc" id="L55">            boolean c = false;</span>
+<span class="nc" id="L56">            boolean u = false;</span>
+<span class="nc" id="L57">            String n = null;</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            for (Annotation annotation : this.annotations) {</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                if (Contextual.class.isAssignableFrom(annotation.annotationType())) {</span>
+<span class="nc" id="L60">                    c = true;</span>
+                }
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                if (Nonnull.class.isAssignableFrom(annotation.annotationType())) {</span>
+<span class="nc" id="L63">                    u = true;</span>
+                }
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                if (Named.class.isAssignableFrom(annotation.annotationType())) {</span>
+<span class="nc" id="L66">                    n = ((Named) annotation).value();</span>
+                }
+            }
+<span class="nc" id="L69">            this.contextual = c;</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            this.nullable = !u;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            this.name = !isBlank(n) ? n : resolveParameterName(actionMetadata, index);</span>
+<span class="nc" id="L72">        } else {</span>
+<span class="nc" id="L73">            this.annotations = EMPTY_ARRAY;</span>
+<span class="nc" id="L74">            this.contextual = false;</span>
+<span class="nc" id="L75">            this.nullable = false;</span>
+<span class="nc" id="L76">            this.name = resolveParameterName(actionMetadata, index);</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    @Nonnull
+    protected String resolveParameterName(@Nonnull ActionMetadata actionMetadata, int index) {
+<span class="nc" id="L82">        return actionMetadata.getFullyQualifiedName() + &quot;.arg&quot; + index;</span>
+    }
+
+    @Override
+    public int getIndex() {
+<span class="nc" id="L87">        return index;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Annotation[] getAnnotations() {
+<span class="nc" id="L93">        return annotations;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Class&lt;?&gt; getType() {
+<span class="nc" id="L99">        return type;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getName() {
+<span class="nc" id="L105">        return name;</span>
+    }
+
+    @Override
+    public boolean isContextual() {
+<span class="nc" id="L110">        return contextual;</span>
+    }
+
+    @Override
+    public boolean isNullable() {
+<span class="nc" id="L115">        return nullable;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L120">        final StringBuilder sb = new StringBuilder(&quot;DefaultActionParameter{&quot;);</span>
+<span class="nc" id="L121">        sb.append(&quot;index=&quot;).append(index);</span>
+<span class="nc" id="L122">        sb.append(&quot;, type=&quot;).append(type);</span>
+<span class="nc" id="L123">        sb.append(&quot;, name=&quot;).append(name);</span>
+<span class="nc" id="L124">        sb.append(&quot;, annotations=&quot;).append(Arrays.toString(annotations));</span>
+<span class="nc" id="L125">        sb.append(&quot;, contextual=&quot;).append(contextual);</span>
+<span class="nc" id="L126">        sb.append(&quot;, nullable=&quot;).append(nullable);</span>
+<span class="nc" id="L127">        sb.append('}');</span>
+<span class="nc" id="L128">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

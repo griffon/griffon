@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultActionMetadata.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-pivot-java</a> &gt; <a href="index.source.html" class="el_package">org.codehaus.griffon.runtime.core.controller</a> &gt; <span class="el_source">DefaultActionMetadata.java</span></div><h1>DefaultActionMetadata.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.codehaus.griffon.runtime.core.controller;
+
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ActionMetadata;
+import griffon.core.controller.ActionParameter;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.lang.System.arraycopy;
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class DefaultActionMetadata implements ActionMetadata {
+    private final String actionName;
+    private final String fullyQualifiedName;
+    private final Class&lt;?&gt; returnType;
+    private final Annotation[] annotations;
+    private final ActionParameter[] parameters;
+    private final boolean contextual;
+
+<span class="fc" id="L44">    public DefaultActionMetadata(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Method method) {</span>
+<span class="fc" id="L45">        this.actionName = requireNonBlank(actionName, &quot;Argument 'actionName' must not be blank&quot;);</span>
+<span class="fc" id="L46">        requireNonNull(controller, &quot;Argument 'controller' must not be null&quot;);</span>
+<span class="fc" id="L47">        requireNonNull(method, &quot;Argument 'method' must not be null&quot;);</span>
+<span class="fc" id="L48">        this.fullyQualifiedName = controller.getTypeClass().getName() + &quot;.&quot; + actionName;</span>
+<span class="fc" id="L49">        this.returnType = method.getReturnType();</span>
+
+<span class="fc" id="L51">        Annotation[] declaredAnnotations = method.getDeclaredAnnotations();</span>
+<span class="fc" id="L52">        annotations = new Annotation[declaredAnnotations.length];</span>
+<span class="fc" id="L53">        arraycopy(declaredAnnotations, 0, annotations, 0, annotations.length);</span>
+
+<span class="fc" id="L55">        this.parameters = new ActionParameter[method.getParameterCount()];</span>
+<span class="fc" id="L56">        Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();</span>
+<span class="fc" id="L57">        Annotation[][] parameterAnnotations = method.getParameterAnnotations();</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (this.parameters.length &gt; 0) {</span>
+<span class="nc" id="L59">            boolean c = false;</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">            for (int index = 0; index &lt; this.parameters.length; index++) {</span>
+<span class="nc" id="L61">                this.parameters[index] = createActionParameter(index, parameterTypes[index], parameterAnnotations[index]);</span>
+<span class="nc" id="L62">                c |= this.parameters[index].isContextual();</span>
+            }
+<span class="nc" id="L64">            this.contextual = c;</span>
+<span class="nc" id="L65">        } else {</span>
+<span class="fc" id="L66">            this.contextual = false;</span>
+        }
+<span class="fc" id="L68">    }</span>
+
+    @Nonnull
+    protected ActionParameter createActionParameter(int index, @Nonnull Class&lt;?&gt; type, @Nullable Annotation[] annotations) {
+<span class="nc" id="L72">        return new DefaultActionParameter(this, index, type, annotations);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Annotation[] getAnnotations() {
+<span class="nc" id="L78">        return annotations;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Class&lt;?&gt; getReturnType() {
+<span class="nc" id="L84">        return returnType;</span>
+    }
+
+    @Nonnull
+    @Override
+    public ActionParameter[] getParameters() {
+<span class="nc" id="L90">        return parameters;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getActionName() {
+<span class="fc" id="L96">        return actionName;</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getFullyQualifiedName() {
+<span class="fc" id="L102">        return fullyQualifiedName;</span>
+    }
+
+    @Override
+    public boolean hasContextualArgs() {
+<span class="nc" id="L107">        return contextual;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L112">        final StringBuilder sb = new StringBuilder(&quot;DefaultActionMetadata{&quot;);</span>
+<span class="nc" id="L113">        sb.append(&quot;actionName='&quot;).append(actionName).append('\'');</span>
+<span class="nc" id="L114">        sb.append(&quot;, fullyQualifiedName='&quot;).append(fullyQualifiedName).append('\'');</span>
+<span class="nc" id="L115">        sb.append(&quot;, returnType=&quot;).append(returnType);</span>
+<span class="nc" id="L116">        sb.append(&quot;, annotations=&quot;).append(Arrays.toString(annotations));</span>
+<span class="nc" id="L117">        sb.append(&quot;, parameters=&quot;).append(Arrays.toString(parameters));</span>
+<span class="nc" id="L118">        sb.append('}');</span>
+<span class="nc" id="L119">        return sb.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

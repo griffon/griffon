@@ -62,12 +62,14 @@ import static java.util.Objects.requireNonNull;
      * Executes a code block as a Future on an ExecutorService.
      *
      * @param callable a code block to be executed
+     *
      * @return a Future that contains the result of the execution
      */
     @Nonnull
+    @Override
     public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L69">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
-<span class="nc" id="L70">        return runFuture(executorService, callable);</span>
+<span class="nc" id="L71">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L72">        return runFuture(executorService, callable);</span>
     }
 
     /**
@@ -75,42 +77,60 @@ import static java.util.Objects.requireNonNull;
      *
      * @param executorService the ExecutorService to use. Will use the default ExecutorService if null.
      * @param callable        a code block to be executed
+     *
      * @return a Future that contains the result of the execution
      */
     @Nonnull
+    @Override
     public &lt;R&gt; Future&lt;R&gt; runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L82">        requireNonNull(executorService, &quot;Argument 'executorService' must not be null&quot;);</span>
-<span class="nc" id="L83">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
-<span class="nc" id="L84">        return executorService.submit(callable);</span>
+<span class="nc" id="L86">        requireNonNull(executorService, &quot;Argument 'executorService' must not be null&quot;);</span>
+<span class="nc" id="L87">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L88">        return executorService.submit(callable);</span>
     }
 
+    @Override
     public void runOutsideUI(@Nonnull final Runnable runnable) {
-<span class="fc" id="L88">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
-<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        if (!isUIThread()) {</span>
-<span class="fc" id="L90">            runnable.run();</span>
+<span class="fc" id="L93">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if (!isUIThread()) {</span>
+<span class="fc" id="L95">            runnable.run();</span>
         } else {
-<span class="nc" id="L92">            executorService.submit(new Runnable() {</span>
+<span class="nc" id="L97">            executorService.submit(new Runnable() {</span>
                 public void run() {
                     try {
-<span class="nc" id="L95">                        runnable.run();</span>
-<span class="nc" id="L96">                    } catch (Throwable throwable) {</span>
-<span class="nc" id="L97">                        exceptionHandler.uncaughtException(Thread.currentThread(), throwable);</span>
-<span class="nc" id="L98">                    }</span>
-<span class="nc" id="L99">                }</span>
+<span class="nc" id="L100">                        runnable.run();</span>
+<span class="nc" id="L101">                    } catch (Throwable throwable) {</span>
+<span class="nc" id="L102">                        exceptionHandler.uncaughtException(Thread.currentThread(), throwable);</span>
+<span class="nc" id="L103">                    }</span>
+<span class="nc" id="L104">                }</span>
             });
         }
-<span class="fc" id="L102">    }</span>
+<span class="fc" id="L107">    }</span>
+
+    @Override
+    public void runInBackground(@Nonnull final Runnable runnable) {
+<span class="nc" id="L111">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
+
+<span class="nc" id="L113">        executorService.submit(new Runnable() {</span>
+            public void run() {
+                try {
+<span class="nc" id="L116">                    runnable.run();</span>
+<span class="nc" id="L117">                } catch (Throwable throwable) {</span>
+<span class="nc" id="L118">                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);</span>
+<span class="nc" id="L119">                }</span>
+<span class="nc" id="L120">            }</span>
+        });
+<span class="nc" id="L122">    }</span>
 
     @Nullable
     @Override
     public &lt;R&gt; R runInsideUISync(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L107">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
-<span class="nc" id="L108">        FutureTask&lt;R&gt; ft = new FutureTask&lt;&gt;(callable);</span>
-<span class="nc" id="L109">        runInsideUISync(ft);</span>
+<span class="nc" id="L127">        requireNonNull(callable, ERROR_CALLABLE_NULL);</span>
+<span class="nc" id="L128">        FutureTask&lt;R&gt; ft = new FutureTask&lt;&gt;(callable);</span>
+<span class="nc" id="L129">        runInsideUISync(ft);</span>
         try {
-<span class="nc" id="L111">            return ft.get();</span>
-<span class="nc" id="L112">        } catch (InterruptedException | ExecutionException e) {</span>
-<span class="nc" id="L113">            throw new GriffonException(&quot;An error occurred while executing a task inside the UI thread&quot;, e);</span>
+<span class="nc" id="L131">            return ft.get();</span>
+<span class="nc" id="L132">        } catch (InterruptedException | ExecutionException e) {</span>
+<span class="nc" id="L133">            throw new GriffonException(&quot;An error occurred while executing a task inside the UI thread&quot;, e);</span>
         }
     }
 }

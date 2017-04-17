@@ -18,6 +18,8 @@ package org.codehaus.griffon.runtime.pivot.controller;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
+import griffon.core.controller.ActionFactory;
+import griffon.core.controller.ActionMetadataFactory;
 import griffon.exceptions.InstanceMethodInvocationException;
 import org.apache.pivot.wtk.Component;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionManager;
@@ -25,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -40,7 +43,7 @@ import static griffon.util.TypeUtils.castToBoolean;
  * @since 2.0.0
  */
 public class PivotActionManager extends AbstractActionManager {
-<span class="fc" id="L43">    private static final Logger LOG = LoggerFactory.getLogger(PivotActionManager.class);</span>
+<span class="fc" id="L46">    private static final Logger LOG = LoggerFactory.getLogger(PivotActionManager.class);</span>
 
     private static final String EMPTY_STRING = &quot;&quot;;
     private static final String DOT = &quot;.&quot;;
@@ -50,80 +53,75 @@ public class PivotActionManager extends AbstractActionManager {
     private static final String KEY_ENABLED = &quot;enabled&quot;;
 
     @Inject
-    public PivotActionManager(@Nonnull GriffonApplication application) {
-<span class="fc" id="L54">        super(application);</span>
-<span class="fc" id="L55">    }</span>
-
-    @Nonnull
-    @Override
-    protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
-<span class="fc" id="L60">        return new PivotGriffonControllerAction(getUiThreadManager(), this, controller, actionName);</span>
-    }
+    public PivotActionManager(@Nonnull GriffonApplication application, @Nonnull ActionFactory actionFactory, @Nonnull ActionMetadataFactory actionMetadataFactory) {
+<span class="fc" id="L57">        super(application, actionFactory, actionMetadataFactory);</span>
+<span class="fc" id="L58">    }</span>
 
     @Override
     protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
-<span class="fc" id="L65">        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {</span>
+<span class="fc" id="L62">        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {</span>
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-<span class="nc" id="L68">                configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);</span>
-<span class="nc" id="L69">            }</span>
+<span class="nc" id="L65">                configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);</span>
+<span class="nc" id="L66">            }</span>
         });
-<span class="fc" id="L71">        configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L68">        configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L69">    }</span>
 
     protected void configureAction(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-<span class="fc" id="L75">        resolveName(action, controller, normalizeNamed, keyPrefix);</span>
-<span class="fc" id="L76">        resolveDescription(action, controller, normalizeNamed, keyPrefix);</span>
-<span class="fc" id="L77">        resolveEnabled(action, controller, normalizeNamed, keyPrefix);</span>
-<span class="fc" id="L78">    }</span>
+<span class="fc" id="L72">        resolveName(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L73">        resolveDescription(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L74">        resolveEnabled(action, controller, normalizeNamed, keyPrefix);</span>
+<span class="fc" id="L75">    }</span>
 
     protected void resolveName(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-<span class="fc" id="L81">        String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));</span>
-<span class="pc bpc" id="L82" title="1 of 2 branches missed.">        if (!isBlank(rsActionName)) {</span>
-<span class="fc" id="L83">            trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);</span>
-<span class="fc" id="L84">            action.setName(rsActionName);</span>
+<span class="fc" id="L78">        String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">        if (!isBlank(rsActionName)) {</span>
+<span class="fc" id="L80">            trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);</span>
+<span class="fc" id="L81">            action.setName(rsActionName);</span>
         }
-<span class="fc" id="L86">    }</span>
+<span class="fc" id="L83">    }</span>
 
     protected void resolveDescription(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-<span class="fc" id="L89">        String rsDescription = msg(keyPrefix, normalizeNamed, KEY_DESCRIPTION, EMPTY_STRING);</span>
-<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (!isBlank(rsDescription)) {</span>
-<span class="nc" id="L91">            trace(keyPrefix + normalizeNamed, KEY_DESCRIPTION, rsDescription);</span>
-<span class="nc" id="L92">            action.setDescription(rsDescription);</span>
+<span class="fc" id="L86">        String rsDescription = msg(keyPrefix, normalizeNamed, KEY_DESCRIPTION, EMPTY_STRING);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">        if (!isBlank(rsDescription)) {</span>
+<span class="nc" id="L88">            trace(keyPrefix + normalizeNamed, KEY_DESCRIPTION, rsDescription);</span>
+<span class="nc" id="L89">            action.setDescription(rsDescription);</span>
         }
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L91">    }</span>
 
     protected void resolveEnabled(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
-<span class="fc" id="L97">        String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, &quot;true&quot;);</span>
-<span class="pc bpc" id="L98" title="1 of 2 branches missed.">        if (!isBlank(rsEnabled)) {</span>
-<span class="fc" id="L99">            trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);</span>
-<span class="fc" id="L100">            action.setEnabled(castToBoolean(rsEnabled));</span>
+<span class="fc" id="L94">        String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, &quot;true&quot;);</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">        if (!isBlank(rsEnabled)) {</span>
+<span class="fc" id="L96">            trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);</span>
+<span class="fc" id="L97">            action.setEnabled(castToBoolean(rsEnabled));</span>
         }
-<span class="fc" id="L102">    }</span>
+<span class="fc" id="L99">    }</span>
 
+    @Nullable
     @Override
-    protected void doInvokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] updatedArgs) {
+    protected Object doInvokeAction(@Nonnull GriffonController controller, @Nonnull String actionName, @Nonnull Object[] updatedArgs) {
         try {
-<span class="nc" id="L107">            invokeExactInstanceMethod(controller, actionName, updatedArgs);</span>
-<span class="fc" id="L108">        } catch (InstanceMethodInvocationException imie) {</span>
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">            if (imie.getCause() instanceof NoSuchMethodException) {</span>
+<span class="nc" id="L105">            return invokeExactInstanceMethod(controller, actionName, updatedArgs);</span>
+<span class="fc" id="L106">        } catch (InstanceMethodInvocationException imie) {</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">            if (imie.getCause() instanceof NoSuchMethodException) {</span>
                 // try again but this time remove the 1st arg if it's
                 // descendant of org.apache.pivot.wtk.Component
-<span class="pc bpc" id="L112" title="3 of 6 branches missed.">                if (updatedArgs.length == 1 &amp;&amp; updatedArgs[0] != null &amp;&amp; Component.class.isAssignableFrom(updatedArgs[0].getClass())) {</span>
-<span class="fc" id="L113">                    invokeExactInstanceMethod(controller, actionName, EMPTY_ARGS);</span>
+<span class="pc bpc" id="L110" title="3 of 6 branches missed.">                if (updatedArgs.length == 1 &amp;&amp; updatedArgs[0] != null &amp;&amp; Component.class.isAssignableFrom(updatedArgs[0].getClass())) {</span>
+<span class="fc" id="L111">                    return invokeExactInstanceMethod(controller, actionName, EMPTY_ARGS);</span>
                 } else {
-<span class="nc" id="L115">                    throw imie;</span>
+<span class="nc" id="L113">                    throw imie;</span>
                 }
             } else {
-<span class="nc" id="L118">                throw imie;</span>
+<span class="nc" id="L116">                throw imie;</span>
             }
-<span class="nc" id="L120">        }</span>
-<span class="fc" id="L121">    }</span>
+        }
+    }
 
     protected void trace(@Nonnull String actionKey, @Nonnull String key, @Nonnull String value) {
-<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        if (LOG.isTraceEnabled()) {</span>
-<span class="fc" id="L125">            LOG.trace(actionKey + DOT + key + EQUALS + value);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (LOG.isTraceEnabled()) {</span>
+<span class="fc" id="L123">            LOG.trace(actionKey + DOT + key + EQUALS + value);</span>
         }
-<span class="fc" id="L127">    }</span>
+<span class="fc" id="L125">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

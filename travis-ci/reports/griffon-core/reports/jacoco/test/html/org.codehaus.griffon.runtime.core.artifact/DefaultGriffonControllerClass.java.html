@@ -17,44 +17,51 @@ package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonControllerClass;
-import griffon.util.GriffonClassUtils;
+import griffon.core.controller.ControllerAction;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static griffon.util.AnnotationUtils.isAnnotatedWith;
+import static griffon.util.GriffonClassUtils.isEventHandler;
+import static griffon.util.GriffonClassUtils.isPlainMethod;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
 public class DefaultGriffonControllerClass extends DefaultGriffonClass implements GriffonControllerClass {
-<span class="fc" id="L32">    protected final Set&lt;String&gt; actionsCache = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L36">    protected final Set&lt;String&gt; actionsCache = new TreeSet&lt;&gt;();</span>
 
     public DefaultGriffonControllerClass(@Nonnull GriffonApplication application, @Nonnull Class&lt;?&gt; clazz) {
-<span class="fc" id="L35">        super(application, clazz, TYPE, TRAILING);</span>
-<span class="fc" id="L36">    }</span>
+<span class="fc" id="L39">        super(application, clazz, TYPE, TRAILING);</span>
+<span class="fc" id="L40">    }</span>
 
     public void resetCaches() {
-<span class="fc" id="L39">        super.resetCaches();</span>
-<span class="fc" id="L40">        actionsCache.clear();</span>
-<span class="fc" id="L41">    }</span>
+<span class="fc" id="L43">        super.resetCaches();</span>
+<span class="fc" id="L44">        actionsCache.clear();</span>
+<span class="fc" id="L45">    }</span>
 
     @Nonnull
     public String[] getActionNames() {
-<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (actionsCache.isEmpty()) {</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">            for (Method method : getClazz().getMethods()) {</span>
-<span class="fc" id="L47">                String methodName = method.getName();</span>
-<span class="pc bpc" id="L48" title="1 of 2 branches missed.">                if (!actionsCache.contains(methodName) &amp;&amp;</span>
-<span class="fc bfc" id="L49" title="All 2 branches covered.">                    GriffonClassUtils.isPlainMethod(method) &amp;&amp;</span>
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">                    !GriffonClassUtils.isEventHandler(methodName) &amp;&amp;</span>
-<span class="pc bpc" id="L51" title="1 of 2 branches missed.">                    method.getReturnType() == Void.TYPE) {</span>
-<span class="fc" id="L52">                    actionsCache.add(methodName);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (actionsCache.isEmpty()) {</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">            for (Method method : getClazz().getMethods()) {</span>
+<span class="fc" id="L51">                String methodName = method.getName();</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">                if (actionsCache.contains(methodName)) {</span>
+<span class="nc" id="L53">                    continue;</span>
+                }
+
+<span class="fc bfc" id="L56" title="All 2 branches covered.">                if (isPlainMethod(method) &amp;&amp;</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">                    !isEventHandler(methodName) &amp;&amp;</span>
+<span class="pc bpc" id="L58" title="2 of 4 branches missed.">                    (isAnnotatedWith(method, ControllerAction.class, true) || method.getReturnType() == Void.TYPE)) {</span>
+<span class="fc" id="L59">                    actionsCache.add(methodName);</span>
                 }
             }
         }
 
-<span class="fc" id="L57">        return actionsCache.toArray(new String[actionsCache.size()]);</span>
+<span class="fc" id="L64">        return actionsCache.toArray(new String[actionsCache.size()]);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

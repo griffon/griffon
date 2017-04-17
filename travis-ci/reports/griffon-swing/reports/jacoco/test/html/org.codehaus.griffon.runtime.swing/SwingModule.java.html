@@ -16,12 +16,14 @@
 package org.codehaus.griffon.runtime.swing;
 
 import griffon.core.addon.GriffonAddon;
+import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.swing.controller.SwingActionFactory;
 import org.codehaus.griffon.runtime.swing.controller.SwingActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -35,36 +37,40 @@ import static griffon.util.AnnotationUtils.named;
  */
 @Named(&quot;swing&quot;)
 @ServiceProviderFor(Module.class)
-<span class="nc" id="L38">public class SwingModule extends AbstractModule {</span>
+<span class="nc" id="L40">public class SwingModule extends AbstractModule {</span>
     @Override
     protected void doConfigure() {
         // tag::bindings[]
-<span class="nc" id="L42">        bind(SwingWindowDisplayHandler.class)</span>
-<span class="nc" id="L43">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
-<span class="nc" id="L44">            .to(DefaultSwingWindowDisplayHandler.class)</span>
-<span class="nc" id="L45">            .asSingleton();</span>
+<span class="nc" id="L44">        bind(SwingWindowDisplayHandler.class)</span>
+<span class="nc" id="L45">            .withClassifier(named(&quot;defaultWindowDisplayHandler&quot;))</span>
+<span class="nc" id="L46">            .to(DefaultSwingWindowDisplayHandler.class)</span>
+<span class="nc" id="L47">            .asSingleton();</span>
 
-<span class="nc" id="L47">        bind(SwingWindowDisplayHandler.class)</span>
-<span class="nc" id="L48">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
-<span class="nc" id="L49">            .to(ConfigurableSwingWindowDisplayHandler.class)</span>
-<span class="nc" id="L50">            .asSingleton();</span>
+<span class="nc" id="L49">        bind(SwingWindowDisplayHandler.class)</span>
+<span class="nc" id="L50">            .withClassifier(named(&quot;windowDisplayHandler&quot;))</span>
+<span class="nc" id="L51">            .to(ConfigurableSwingWindowDisplayHandler.class)</span>
+<span class="nc" id="L52">            .asSingleton();</span>
 
-<span class="nc" id="L52">        bind(WindowManager.class)</span>
-<span class="nc" id="L53">            .to(DefaultSwingWindowManager.class)</span>
-<span class="nc" id="L54">            .asSingleton();</span>
+<span class="nc" id="L54">        bind(WindowManager.class)</span>
+<span class="nc" id="L55">            .to(DefaultSwingWindowManager.class)</span>
+<span class="nc" id="L56">            .asSingleton();</span>
 
-<span class="nc" id="L56">        bind(UIThreadManager.class)</span>
-<span class="nc" id="L57">            .to(SwingUIThreadManager.class)</span>
-<span class="nc" id="L58">            .asSingleton();</span>
+<span class="nc" id="L58">        bind(UIThreadManager.class)</span>
+<span class="nc" id="L59">            .to(SwingUIThreadManager.class)</span>
+<span class="nc" id="L60">            .asSingleton();</span>
 
-<span class="nc" id="L60">        bind(ActionManager.class)</span>
-<span class="nc" id="L61">            .to(SwingActionManager.class)</span>
-<span class="nc" id="L62">            .asSingleton();</span>
+<span class="nc" id="L62">        bind(ActionManager.class)</span>
+<span class="nc" id="L63">            .to(SwingActionManager.class)</span>
+<span class="nc" id="L64">            .asSingleton();</span>
 
-<span class="nc" id="L64">        bind(GriffonAddon.class)</span>
-<span class="nc" id="L65">            .to(SwingAddon.class)</span>
-<span class="nc" id="L66">            .asSingleton();</span>
+<span class="nc" id="L66">        bind(ActionFactory.class)</span>
+<span class="nc" id="L67">            .to(SwingActionFactory.class)</span>
+<span class="nc" id="L68">            .asSingleton();</span>
+
+<span class="nc" id="L70">        bind(GriffonAddon.class)</span>
+<span class="nc" id="L71">            .to(SwingAddon.class)</span>
+<span class="nc" id="L72">            .asSingleton();</span>
         // end::bindings[]
-<span class="nc" id="L68">    }</span>
+<span class="nc" id="L74">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

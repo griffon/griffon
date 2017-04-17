@@ -18,12 +18,12 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import org.codehaus.griffon.runtime.core.AbstractObservable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,73 +35,79 @@ public abstract class AbstractAction extends AbstractObservable implements Actio
 <span class="fc" id="L35">    private boolean enabled = true;</span>
     private final ActionManager actionManager;
     private final GriffonController controller;
-    private final String actionName;
+    private final ActionMetadata actionMetadata;
     private boolean initialized;
 <span class="fc" id="L40">    private final Object lock = new Object[0];</span>
 
-<span class="fc" id="L42">    public AbstractAction(@Nonnull ActionManager actionManager, @Nonnull GriffonController controller, @Nonnull String actionName) {</span>
+<span class="fc" id="L42">    public AbstractAction(@Nonnull ActionManager actionManager, @Nonnull GriffonController controller, @Nonnull ActionMetadata actionMetadata) {</span>
 <span class="fc" id="L43">        this.actionManager = requireNonNull(actionManager, &quot;Argument 'actionManager' must not be null&quot;);</span>
 <span class="fc" id="L44">        this.controller = requireNonNull(controller, &quot;Argument 'controller' must not be null&quot;);</span>
-<span class="fc" id="L45">        this.actionName = requireNonBlank(actionName, &quot;Argument 'actionName' must not be blank&quot;);</span>
+<span class="fc" id="L45">        this.actionMetadata = requireNonNull(actionMetadata, &quot;Argument 'actionMetadata' must not be blank&quot;);</span>
 <span class="fc" id="L46">    }</span>
 
     @Nonnull
+    @Override
+    public ActionMetadata getActionMetadata() {
+<span class="nc" id="L51">        return actionMetadata;</span>
+    }
+
+    @Nonnull
     public ActionManager getActionManager() {
-<span class="nc" id="L50">        return actionManager;</span>
+<span class="nc" id="L56">        return actionManager;</span>
     }
 
     @Nonnull
     public GriffonController getController() {
-<span class="fc" id="L55">        return controller;</span>
+<span class="fc" id="L61">        return controller;</span>
     }
 
     @Nonnull
     public String getActionName() {
-<span class="fc" id="L60">        return actionName;</span>
+<span class="fc" id="L66">        return actionMetadata.getActionName();</span>
     }
 
     @Nonnull
     @Override
     public String getFullyQualifiedName() {
-<span class="fc" id="L66">        return getController().getClass().getName() + &quot;.&quot; + getActionName();</span>
+<span class="fc" id="L72">        return actionMetadata.getFullyQualifiedName();</span>
     }
 
     @Override
     public boolean isEnabled() {
-<span class="fc" id="L71">        return enabled;</span>
+<span class="fc" id="L77">        return enabled;</span>
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-<span class="fc" id="L76">        firePropertyChange(KEY_ENABLED, this.enabled, this.enabled = enabled);</span>
-<span class="fc" id="L77">    }</span>
+<span class="fc" id="L82">        firePropertyChange(KEY_ENABLED, this.enabled, this.enabled = enabled);</span>
+<span class="fc" id="L83">    }</span>
 
     @Nullable
     public String getName() {
-<span class="fc" id="L81">        return name;</span>
+<span class="fc" id="L87">        return name;</span>
     }
 
     @Override
     public void setName(@Nullable String name) {
-<span class="fc" id="L86">        firePropertyChange(KEY_NAME, this.name, this.name = name);</span>
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L92">        firePropertyChange(KEY_NAME, this.name, this.name = name);</span>
+<span class="fc" id="L93">    }</span>
 
     @Override
     public final void execute(Object... args) {
-<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (isEnabled()) {</span>
-<span class="nc" id="L92">            doExecute(args);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (isEnabled()) {</span>
+<span class="nc" id="L98">            doExecute(args);</span>
         }
-<span class="nc" id="L94">    }</span>
+<span class="nc" id="L100">    }</span>
 
     protected abstract void doExecute(Object... args);
 
     public final void initialize() {
-<span class="fc" id="L99">        synchronized (lock) {</span>
-<span class="pc bpc" id="L100" title="1 of 2 branches missed.">            if (initialized) { return; }</span>
-<span class="fc" id="L101">            doInitialize();</span>
-<span class="fc" id="L102">            initialized = true;</span>
-<span class="pc" id="L103">        }</span>
-<span class="fc" id="L104">    }</span>
+<span class="fc" id="L105">        synchronized (lock) {</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">            if (initialized) { return; }</span>
+<span class="fc" id="L107">            doInitialize();</span>
+<span class="fc" id="L108">            initialized = true;</span>
+<span class="pc" id="L109">        }</span>
+<span class="fc" id="L110">    }</span>
 
     protected abstract void doInitialize();
 }

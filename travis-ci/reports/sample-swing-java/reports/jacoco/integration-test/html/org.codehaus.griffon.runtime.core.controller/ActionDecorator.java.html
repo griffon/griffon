@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,69 +32,75 @@ import static java.util.Objects.requireNonNull;
 public class ActionDecorator implements Action {
     private final Action delegate;
 
-<span class="fc" id="L34">    public ActionDecorator(@Nonnull Action delegate) {</span>
-<span class="fc" id="L35">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
-<span class="fc" id="L36">    }</span>
+<span class="nc" id="L35">    public ActionDecorator(@Nonnull Action delegate) {</span>
+<span class="nc" id="L36">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L37">    }</span>
+
+    @Nonnull
+    @Override
+    public ActionMetadata getActionMetadata() {
+<span class="nc" id="L42">        return delegate.getActionMetadata();</span>
+    }
 
     @Nonnull
     @Override
     public String getActionName() {
-<span class="fc" id="L41">        return delegate.getActionName();</span>
+<span class="nc" id="L48">        return delegate.getActionName();</span>
     }
 
     @Nonnull
     @Override
     public String getFullyQualifiedName() {
-<span class="fc" id="L47">        return delegate.getFullyQualifiedName();</span>
+<span class="nc" id="L54">        return delegate.getFullyQualifiedName();</span>
     }
 
     @Nullable
     @Override
     public String getName() {
-<span class="nc" id="L53">        return delegate.getName();</span>
+<span class="nc" id="L60">        return delegate.getName();</span>
     }
 
     @Override
     public void setName(@Nullable String name) {
-<span class="nc" id="L58">        delegate.setName(name);</span>
-<span class="nc" id="L59">    }</span>
+<span class="nc" id="L65">        delegate.setName(name);</span>
+<span class="nc" id="L66">    }</span>
 
     @Override
     public boolean isEnabled() {
-<span class="nc" id="L63">        return delegate.isEnabled();</span>
+<span class="nc" id="L70">        return delegate.isEnabled();</span>
     }
 
     @Override
     public void setEnabled(boolean enabled) {
-<span class="nc" id="L68">        delegate.setEnabled(enabled);</span>
-<span class="nc" id="L69">    }</span>
+<span class="nc" id="L75">        delegate.setEnabled(enabled);</span>
+<span class="nc" id="L76">    }</span>
 
     @Nonnull
     @Override
     public ActionManager getActionManager() {
-<span class="nc" id="L74">        return delegate.getActionManager();</span>
+<span class="nc" id="L81">        return delegate.getActionManager();</span>
     }
 
     @Nonnull
     @Override
     public GriffonController getController() {
-<span class="fc" id="L80">        return delegate.getController();</span>
+<span class="nc" id="L87">        return delegate.getController();</span>
     }
 
     @Nonnull
     @Override
     public Object getToolkitAction() {
-<span class="fc" id="L86">        return delegate.getToolkitAction();</span>
+<span class="nc" id="L93">        return delegate.getToolkitAction();</span>
     }
 
     @Override
     public void execute(Object... args) {
-<span class="nc" id="L91">        delegate.execute(args);</span>
-<span class="nc" id="L92">    }</span>
+<span class="nc" id="L98">        delegate.execute(args);</span>
+<span class="nc" id="L99">    }</span>
 
     @Override
     public void initialize() {
-<span class="nc" id="L96">        delegate.initialize();</span>
-<span class="nc" id="L97">    }</span>
+<span class="nc" id="L103">        delegate.initialize();</span>
+<span class="nc" id="L104">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.lanterna.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import griffon.core.threading.UIThreadManager;
 import griffon.lanterna.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
@@ -33,48 +34,49 @@ import static java.util.Objects.requireNonNull;
 public class LanternaGriffonControllerAction extends AbstractAction {
     private final LanternaAction toolkitAction;
 
-    public LanternaGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-<span class="fc" id="L37">        super(actionManager, controller, actionName);</span>
-<span class="fc" id="L38">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
+    public LanternaGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final ActionMetadata actionMetadata) {
+<span class="fc" id="L38">        super(actionManager, controller, actionMetadata);</span>
+<span class="fc" id="L39">        requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
 
-<span class="fc" id="L40">        toolkitAction = createAction(actionManager, controller, actionName);</span>
-<span class="fc" id="L41">        addPropertyChangeListener(new PropertyChangeListener() {</span>
+<span class="fc" id="L41">        toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());</span>
+<span class="fc" id="L42">        addPropertyChangeListener(new PropertyChangeListener() {</span>
             public void propertyChange(final PropertyChangeEvent evt) {
-<span class="fc" id="L43">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
+<span class="fc" id="L44">                uiThreadManager.runInsideUIAsync(new Runnable() {</span>
                     public void run() {
-<span class="fc" id="L45">                        handlePropertyChange(evt);</span>
-<span class="fc" id="L46">                    }</span>
+<span class="fc" id="L46">                        handlePropertyChange(evt);</span>
+<span class="fc" id="L47">                    }</span>
                 });
-<span class="fc" id="L48">            }</span>
+<span class="fc" id="L49">            }</span>
         });
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L51">    }</span>
 
     @Nonnull
     protected LanternaAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-<span class="fc" id="L54">        return new LanternaAction(new Runnable() {</span>
+<span class="fc" id="L55">        return new LanternaAction(new Runnable() {</span>
             @Override
             public void run() {
-<span class="nc" id="L57">                actionManager.invokeAction(controller, actionName);</span>
-<span class="nc" id="L58">            }</span>
+<span class="nc" id="L58">                actionManager.invokeAction(controller, actionName);</span>
+<span class="nc" id="L59">            }</span>
         });
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
-<span class="fc" id="L63">        toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
-<span class="fc" id="L64">    }</span>
+<span class="fc" id="L64">        toolkitAction.setName(String.valueOf(evt.getNewValue()));</span>
+<span class="fc" id="L65">    }</span>
 
     @Nonnull
     public Object getToolkitAction() {
-<span class="nc" id="L68">        return toolkitAction;</span>
+<span class="nc" id="L69">        return toolkitAction;</span>
     }
 
+    @Override
     protected void doExecute(Object... args) {
-<span class="nc" id="L72">        toolkitAction.doAction();</span>
-<span class="nc" id="L73">    }</span>
+<span class="nc" id="L74">        toolkitAction.doAction();</span>
+<span class="nc" id="L75">    }</span>
 
     @Override
     protected void doInitialize() {
-<span class="fc" id="L77">        toolkitAction.setName(getName());</span>
-<span class="fc" id="L78">    }</span>
+<span class="fc" id="L79">        toolkitAction.setName(getName());</span>
+<span class="fc" id="L80">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

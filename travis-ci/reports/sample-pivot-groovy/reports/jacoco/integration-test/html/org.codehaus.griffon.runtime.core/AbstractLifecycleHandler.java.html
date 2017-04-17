@@ -78,10 +78,15 @@ public abstract class AbstractLifecycleHandler implements LifecycleHandler {
 <span class="nc" id="L78">        application.getUIThreadManager().runOutsideUI(runnable);</span>
 <span class="nc" id="L79">    }</span>
 
+    @Override
+    public void runInBackground(@Nonnull Runnable runnable) {
+<span class="nc" id="L83">        application.getUIThreadManager().runInBackground(runnable);</span>
+<span class="nc" id="L84">    }</span>
+
     @Nullable
     @Override
     public &lt;R&gt; R runInsideUISync(@Nonnull Callable&lt;R&gt; callable) {
-<span class="nc" id="L84">        return application.getUIThreadManager().runInsideUISync(callable);</span>
+<span class="nc" id="L89">        return application.getUIThreadManager().runInsideUISync(callable);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
