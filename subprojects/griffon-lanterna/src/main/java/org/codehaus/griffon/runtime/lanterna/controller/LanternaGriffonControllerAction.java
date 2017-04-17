@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.lanterna.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import griffon.core.threading.UIThreadManager;
 import griffon.lanterna.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
@@ -33,11 +34,11 @@ import static java.util.Objects.requireNonNull;
 public class LanternaGriffonControllerAction extends AbstractAction {
     private final LanternaAction toolkitAction;
 
-    public LanternaGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        super(actionManager, controller, actionName);
+    public LanternaGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final ActionMetadata actionMetadata) {
+        super(actionManager, controller, actionMetadata);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = createAction(actionManager, controller, actionName);
+        toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
         addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent evt) {
                 uiThreadManager.runInsideUIAsync(new Runnable() {
@@ -68,6 +69,7 @@ public class LanternaGriffonControllerAction extends AbstractAction {
         return toolkitAction;
     }
 
+    @Override
     protected void doExecute(Object... args) {
         toolkitAction.doAction();
     }

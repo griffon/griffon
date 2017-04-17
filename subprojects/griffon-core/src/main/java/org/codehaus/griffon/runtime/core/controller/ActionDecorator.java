@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,6 +34,12 @@ public class ActionDecorator implements Action {
 
     public ActionDecorator(@Nonnull Action delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
+    }
+
+    @Nonnull
+    @Override
+    public ActionMetadata getActionMetadata() {
+        return delegate.getActionMetadata();
     }
 
     @Nonnull

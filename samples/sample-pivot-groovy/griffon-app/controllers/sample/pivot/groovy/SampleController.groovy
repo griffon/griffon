@@ -16,6 +16,7 @@
 package sample.pivot.groovy
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
@@ -30,6 +31,7 @@ class SampleController {
     @Inject
     private SampleService sampleService                                    //<2>
 
+    @ControllerAction
     void sayHello() {                                                      //<3>
         String result = sampleService.sayHello(builder.input.text)
         runInsideUIAsync {                                                 //<4>

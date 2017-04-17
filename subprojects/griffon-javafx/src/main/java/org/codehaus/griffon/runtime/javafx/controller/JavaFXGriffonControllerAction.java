@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.javafx.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import griffon.core.threading.UIThreadManager;
 import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
@@ -63,12 +64,12 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
     private boolean selected;
     private boolean visible = true;
 
-    public JavaFXGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        super(actionManager, controller, actionName);
+    public JavaFXGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final ActionMetadata actionMetadata) {
+        super(actionManager, controller, actionMetadata);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = createAction(actionManager, controller, actionName);
-        toolkitAction.setOnAction(actionEvent -> actionManager.invokeAction(controller, actionName, actionEvent));
+        toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
+        toolkitAction.setOnAction(actionEvent -> actionManager.invokeAction(controller, actionMetadata.getActionName(), actionEvent));
 
         addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
     }
@@ -219,6 +220,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         return toolkitAction;
     }
 
+    @Override
     protected void doExecute(Object... args) {
         ActionEvent event = null;
         if (args != null && args.length == 1 && args[0] instanceof ActionEvent) {

@@ -17,12 +17,16 @@ package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonControllerClass;
-import griffon.util.GriffonClassUtils;
+import griffon.core.controller.ControllerAction;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static griffon.util.AnnotationUtils.isAnnotatedWith;
+import static griffon.util.GriffonClassUtils.isEventHandler;
+import static griffon.util.GriffonClassUtils.isPlainMethod;
 
 /**
  * @author Andres Almiray
@@ -45,10 +49,13 @@ public class DefaultGriffonControllerClass extends DefaultGriffonClass implement
         if (actionsCache.isEmpty()) {
             for (Method method : getClazz().getMethods()) {
                 String methodName = method.getName();
-                if (!actionsCache.contains(methodName) &&
-                    GriffonClassUtils.isPlainMethod(method) &&
-                    !GriffonClassUtils.isEventHandler(methodName) &&
-                    method.getReturnType() == Void.TYPE) {
+                if (actionsCache.contains(methodName)) {
+                    continue;
+                }
+
+                if (isPlainMethod(method) &&
+                    !isEventHandler(methodName) &&
+                    (isAnnotatedWith(method, ControllerAction.class, true) || method.getReturnType() == Void.TYPE)) {
                     actionsCache.add(methodName);
                 }
             }

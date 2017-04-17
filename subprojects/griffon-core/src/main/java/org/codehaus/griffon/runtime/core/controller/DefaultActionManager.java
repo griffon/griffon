@@ -18,6 +18,8 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
+import griffon.core.controller.ActionFactory;
+import griffon.core.controller.ActionMetadataFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -28,18 +30,12 @@ import javax.inject.Inject;
  */
 public class DefaultActionManager extends AbstractActionManager {
     @Inject
-    public DefaultActionManager(@Nonnull GriffonApplication application) {
-        super(application);
+    public DefaultActionManager(@Nonnull GriffonApplication application, @Nonnull ActionFactory actionFactory, @Nonnull ActionMetadataFactory actionMetadataFactory) {
+        super(application, actionFactory, actionMetadataFactory);
     }
 
     @Override
     protected void doConfigureAction(@Nonnull Action action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
 
-    }
-
-    @Nonnull
-    @Override
-    protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
-        return new DefaultAction(getUiThreadManager(), this, controller, actionName);
     }
 }

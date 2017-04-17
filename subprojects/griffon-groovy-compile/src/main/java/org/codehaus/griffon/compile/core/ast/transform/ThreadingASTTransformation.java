@@ -65,6 +65,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
      * Convenience method to see if an annotated node is {@code @Threading}.
      *
      * @param node the node to check
+     *
      * @return true if the node is an event publisher
      */
     public static boolean hasThreadingAnnotation(AnnotatedNode node) {
@@ -87,7 +88,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
         AnnotatedNode node = (AnnotatedNode) nodes[1];
 
         Threading.Policy threadingPolicy = getThreadingPolicy(annotation);
-        if (threadingPolicy == Threading.Policy.SKIP) return;
+        if (threadingPolicy == Threading.Policy.SKIP) { return; }
 
         String threadingMethod = resolveThreadingMethod(threadingPolicy);
 
@@ -123,6 +124,9 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
             case INSIDE_UITHREAD_ASYNC:
                 threadingMethod = METHOD_RUN_INSIDE_UI_ASYNC;
                 break;
+            case BACKGROUND_THREAD:
+                threadingMethod = METHOD_RUN_IN_BACKGROUND;
+                break;
             case OUTSIDE_UITHREAD:
             default:
                 break;
@@ -132,13 +136,13 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
 
     public static Threading.Policy getThreadingPolicy(AnnotationNode annotation) {
         PropertyExpression value = (PropertyExpression) annotation.getMember("value");
-        if (value == null) return Threading.Policy.OUTSIDE_UITHREAD;
+        if (value == null) { return Threading.Policy.OUTSIDE_UITHREAD; }
         return Threading.Policy.valueOf(value.getPropertyAsString());
     }
 
     public static Threading.Policy getThreadingPolicy(MethodNode method, Threading.Policy defaultPolicy) {
         List<AnnotationNode> annotations = method.getAnnotations(THREADING_CNODE);
-        if(annotations.size() > 0) {
+        if (annotations.size() > 0) {
             return getThreadingPolicy(annotations.get(0));
         }
         return defaultPolicy;
@@ -160,7 +164,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
     }
 
     private static MethodDescriptor methodDescriptorFor(MethodNode method) {
-        if (method == null) return null;
+        if (method == null) { return null; }
         Parameter[] types = method.getParameters();
         String[] parameterTypes = new String[types.length];
         for (int i = 0; i < types.length; i++) {
@@ -182,11 +186,11 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
 
     private static Statement wrapStatements(Statement code, String threadingMethod) {
         // TODO deal with non-block statements
-        if (!(code instanceof BlockStatement)) return code;
+        if (!(code instanceof BlockStatement)) { return code; }
 
         BlockStatement codeBlock = (BlockStatement) code;
         List<Statement> statements = codeBlock.getStatements();
-        if (statements.isEmpty()) return code;
+        if (statements.isEmpty()) { return code; }
 
         VariableScope variableScope = codeBlock.getVariableScope();
         BlockStatement block = new BlockStatement();

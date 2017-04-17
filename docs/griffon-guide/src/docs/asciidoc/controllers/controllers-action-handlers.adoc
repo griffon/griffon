@@ -95,9 +95,10 @@ class TracerActionHandler extends AbstractActionHandler {
         return super.before(controller, actionName, args)
     }
 
-    void after(ActionExecutionStatus status, Action action, Object[] args) {
+    Object after(ActionExecutionStatus status, Action action, Object[] args, Object result) {
         long time = System.currentTimeMillis() - TIMES[action.fullyQuallifiedName]
         println("Action ${action.fullyQuallifiedName} took ${time} ms [${status}]")
+        result
     }
 }
 ----
@@ -122,7 +123,7 @@ method is invoked only when an exception occurred during the action's execution.
 Implementors must return `true` if the exception was handled successfully. The exception will
 be rethrown by the `ActionManager` if no handler handled the exception. This happens as the
 last step of the action interception procedure.
-void after(ActionExecutionStatus status, Action axtion, Object[] args):: The `after()` method
+Object after(ActionExecutionStatus status, Action axtion, Object[] args, Object result):: The `after()` method
 is called after an action has been executed. Any exceptions occurred during the action's
 execution should have been handled by `exception()`. The `status` argument specifies if
 the action was successfully executed (`OK`), if it was aborted by an handler (`ABORTERD`)

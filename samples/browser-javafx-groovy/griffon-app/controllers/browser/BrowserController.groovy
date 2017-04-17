@@ -16,6 +16,7 @@
 package browser
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Threading
@@ -30,6 +31,7 @@ class BrowserController {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder
 
+    @ControllerAction
     void back(evt) {
         if (builder.browser.engine.history.entries.size() > 0) {
             builder.browser.engine.history.go(-1)
@@ -37,6 +39,7 @@ class BrowserController {
         }
     }
 
+    @ControllerAction
     void forward(evt) {
         if (builder.browser.engine.history.entries.size() > 0) {
             builder.browser.engine.history.go(1)
@@ -44,10 +47,12 @@ class BrowserController {
         }
     }
 
+    @ControllerAction
     void reload(evt) {
         builder.browser.engine.reload()
     }
 
+    @ControllerAction
     void openUrl(evt) {
         String url = model.url
         if (url.indexOf('://') < 0) url = 'http://' + url

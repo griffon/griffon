@@ -16,6 +16,7 @@
 package sample.javafx.kotlin
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
@@ -30,6 +31,7 @@ class SampleController : AbstractGriffonController() {
     @Inject
     lateinit var sampleService: SampleService
 
+    @ControllerAction
     fun sayHello() {
         val result = sampleService.sayHello(model.input)
         runInsideUIAsync { model.output = result }

@@ -28,7 +28,9 @@ import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.configuration.ConfigurationManager;
+import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadataFactory;
 import griffon.core.env.Environment;
 import griffon.core.env.Lifecycle;
 import griffon.core.env.Metadata;
@@ -59,7 +61,9 @@ import org.codehaus.griffon.runtime.core.configuration.ConfigurationDecoratorFac
 import org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationDecoratorFactory;
 import org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationManager;
 import org.codehaus.griffon.runtime.core.configuration.ResourceBundleConfigurationProvider;
+import org.codehaus.griffon.runtime.core.controller.DefaultActionFactory;
 import org.codehaus.griffon.runtime.core.controller.DefaultActionManager;
+import org.codehaus.griffon.runtime.core.controller.DefaultActionMetadataFactory;
 import org.codehaus.griffon.runtime.core.env.EnvironmentProvider;
 import org.codehaus.griffon.runtime.core.env.MetadataProvider;
 import org.codehaus.griffon.runtime.core.env.RunModeProvider;
@@ -246,6 +250,14 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(ActionManager.class)
             .to(DefaultActionManager.class)
+            .asSingleton();
+
+        bind(ActionFactory.class)
+            .to(DefaultActionFactory.class)
+            .asSingleton();
+
+        bind(ActionMetadataFactory.class)
+            .to(DefaultActionMetadataFactory.class)
             .asSingleton();
 
         bind(ArtifactManager.class)

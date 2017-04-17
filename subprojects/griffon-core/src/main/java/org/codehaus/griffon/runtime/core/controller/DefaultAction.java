@@ -17,6 +17,7 @@ package org.codehaus.griffon.runtime.core.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
@@ -32,14 +33,14 @@ import static java.util.Objects.requireNonNull;
 public class DefaultAction extends AbstractAction {
     private final DefaultToolkitAction toolkitAction;
 
-    public DefaultAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        super(actionManager, controller, actionName);
+    public DefaultAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final ActionMetadata actionMetadata) {
+        super(actionManager, controller, actionMetadata);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
         toolkitAction = new DefaultToolkitAction(new Runnable() {
             @Override
             public void run() {
-                actionManager.invokeAction(controller, actionName);
+                actionManager.invokeAction(controller, actionMetadata.getActionName());
             }
         });
         addPropertyChangeListener(new PropertyChangeListener() {
@@ -54,10 +55,12 @@ public class DefaultAction extends AbstractAction {
     }
 
     @Nonnull
+    @Override
     public Object getToolkitAction() {
         return toolkitAction;
     }
 
+    @Override
     protected void doExecute(Object... args) {
         toolkitAction.execute();
     }

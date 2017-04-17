@@ -16,6 +16,7 @@
 package griffon.core.controller;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
 /**
@@ -56,7 +57,9 @@ public interface ActionHandler {
      *
      * @param action the action to execute
      * @param args   the action's arguments
+     *
      * @return arguments to be sent to the action
+     *
      * @throws griffon.core.controller.AbortActionExecution if action execution should be aborted.
      */
     @Nonnull
@@ -70,8 +73,10 @@ public interface ActionHandler {
      * @param status a flag that indicates the execution status of the action
      * @param action the action to execute
      * @param args   the arguments sent to the action
+     * @param result the result of executing the action
      */
-    void after(@Nonnull ActionExecutionStatus status, @Nonnull Action action, @Nonnull Object[] args);
+    @Nullable
+    Object after(@Nonnull ActionExecutionStatus status, @Nonnull Action action, @Nonnull Object[] args, @Nullable Object result);
 
     /**
      * Called after the action has been executed when an exception occurred
@@ -83,6 +88,7 @@ public interface ActionHandler {
      * @param exception the exception thrown during the action's execution
      * @param action    the action to execute
      * @param args      the arguments sent to the action during execution
+     *
      * @return <code>true</code> if the exception was handled successfully,
      * <code>false</code> otherwise.
      */

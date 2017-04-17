@@ -78,6 +78,11 @@ public abstract class AbstractLifecycleHandler implements LifecycleHandler {
         application.getUIThreadManager().runOutsideUI(runnable);
     }
 
+    @Override
+    public void runInBackground(@Nonnull Runnable runnable) {
+        application.getUIThreadManager().runInBackground(runnable);
+    }
+
     @Nullable
     @Override
     public <R> R runInsideUISync(@Nonnull Callable<R> callable) {

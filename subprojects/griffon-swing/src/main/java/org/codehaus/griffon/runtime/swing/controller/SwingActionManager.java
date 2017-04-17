@@ -18,6 +18,8 @@ package org.codehaus.griffon.runtime.swing.controller;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
+import griffon.core.controller.ActionFactory;
+import griffon.core.controller.ActionMetadataFactory;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,14 +57,8 @@ public class SwingActionManager extends AbstractActionManager {
     private static final String EQUALS = " = ";
 
     @Inject
-    public SwingActionManager(@Nonnull GriffonApplication application) {
-        super(application);
-    }
-
-    @Nonnull
-    @Override
-    protected Action createControllerAction(@Nonnull GriffonController controller, @Nonnull String actionName) {
-        return new SwingGriffonControllerAction(getUiThreadManager(), this, controller, actionName);
+    public SwingActionManager(@Nonnull GriffonApplication application, @Nonnull ActionFactory actionFactory, @Nonnull ActionMetadataFactory actionMetadataFactory) {
+        super(application, actionFactory, actionMetadataFactory);
     }
 
     @Override

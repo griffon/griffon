@@ -1,0 +1,36 @@
+
+[[_threadingbackground]]
+= Background Calls
+
+Making sure a block of code is executed on a background thread is accomplished by invoking
+the `runInBackground` method. This method always runs the code on a bakcground thread regardless
+of the caller / invoking thread. This is usually performed by a helper `java.util.concurrent.ExecutorService`.
+
+[source,groovy,linenums,options="nowrap"]
+----
+package sample
+
+import java.awt.event.ActionEvent
+import griffon.core.artifact.GriffonController
+import griffon.inject.MVCMember
+import javax.annotation.Nonnull
+
+@griffon.metadata.ArtifactProviderFor(GriffonController)
+class SampleController {
+    @MVCMember @Nonnull SampleModel model
+
+    void work(evt = null) {
+        // will be invoked outside of the UI thread by default
+        def value = model.value
+        // do some calculations
+        runInsideUIAsync {
+            // back inside the UI thread
+            model.result = ...
+            runInBackground {
+                // do more calculations
+            }
+        }
+    }
+}
+----
+

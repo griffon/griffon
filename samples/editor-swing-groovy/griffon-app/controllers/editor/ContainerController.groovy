@@ -16,6 +16,7 @@
 package editor
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
@@ -29,6 +30,7 @@ class ContainerController {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder
 
+    @ControllerAction
     void open() {
         def window = application.windowManager.startingWindow
         def openResult = builder.fileChooserWindow.showOpenDialog(window)
@@ -43,14 +45,17 @@ class ContainerController {
         }
     }
 
+    @ControllerAction
     void save() {
         resolveEditorController().saveFile()
     }
 
+    @ControllerAction
     void close() {
         resolveEditorController()?.closeFile()
     }
 
+    @ControllerAction
     void quit() {
         application.shutdown()
     }

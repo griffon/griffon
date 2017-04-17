@@ -16,6 +16,7 @@
 package editor;
 
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.transform.Threading;
@@ -35,6 +36,7 @@ public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull
     private ContainerView view;
 
+    @ControllerAction
     @Threading(Threading.Policy.SKIP)
     public void open() {
         File file = view.selectFile();
@@ -46,6 +48,7 @@ public class ContainerController extends AbstractGriffonController {
         }
     }
 
+    @ControllerAction
     public void save() {
         EditorController controller = resolveEditorController();
         if (controller != null) {
@@ -53,6 +56,7 @@ public class ContainerController extends AbstractGriffonController {
         }
     }
 
+    @ControllerAction
     public void close() {
         EditorController controller = resolveEditorController();
         if (controller != null) {
@@ -60,6 +64,7 @@ public class ContainerController extends AbstractGriffonController {
         }
     }
 
+    @ControllerAction
     public void quit() {
         getApplication().shutdown();
     }

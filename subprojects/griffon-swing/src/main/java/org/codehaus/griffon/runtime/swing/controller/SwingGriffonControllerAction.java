@@ -18,6 +18,7 @@ package org.codehaus.griffon.runtime.swing.controller;
 import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
@@ -59,11 +60,11 @@ public class SwingGriffonControllerAction extends AbstractAction {
     private String command;
     private boolean selected;
 
-    public SwingGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        super(actionManager, controller, actionName);
+    public SwingGriffonControllerAction(@Nonnull final UIThreadManager uiThreadManager, @Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final ActionMetadata actionMetadata) {
+        super(actionManager, controller, actionMetadata);
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
-        toolkitAction = createAction(actionManager, controller, actionName);
+        toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
 
         addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(final PropertyChangeEvent evt) {
@@ -218,6 +219,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
         return toolkitAction;
     }
 
+    @Override
     protected void doExecute(Object... args) {
         ActionEvent event = null;
         if (args != null && args.length == 1 && args[0] instanceof ActionEvent) {

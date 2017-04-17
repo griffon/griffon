@@ -16,12 +16,14 @@
 package org.codehaus.griffon.runtime.lanterna;
 
 import com.googlecode.lanterna.gui.GUIScreen;
+import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.lanterna.controller.LanternaActionFactory;
 import org.codehaus.griffon.runtime.lanterna.controller.LanternaActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -63,6 +65,10 @@ public class LanternaModule extends AbstractModule {
 
         bind(ActionManager.class)
             .to(LanternaActionManager.class)
+            .asSingleton();
+
+        bind(ActionFactory.class)
+            .to(LanternaActionFactory.class)
             .asSingleton();
         // end::bindings[]
     }

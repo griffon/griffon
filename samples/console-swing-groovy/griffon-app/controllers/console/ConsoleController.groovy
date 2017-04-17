@@ -16,6 +16,7 @@
 package console
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
@@ -30,6 +31,7 @@ class ConsoleController {
     @Inject
     Evaluator evaluator                                      //<2>
 
+    @ControllerAction
     void executeScript() {                                   //<3>
         model.enabled = false
         def result

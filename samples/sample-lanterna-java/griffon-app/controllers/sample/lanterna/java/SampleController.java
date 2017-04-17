@@ -16,6 +16,7 @@
 package sample.lanterna.java;
 
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
@@ -35,6 +36,7 @@ public class SampleController extends AbstractGriffonController {
         this.model = model;
     }
 
+    @ControllerAction
     public void sayHello() {                                            //<3>
         final String result = sampleService.sayHello(model.getInput());
         runInsideUIAsync(new Runnable() {                               //<4>

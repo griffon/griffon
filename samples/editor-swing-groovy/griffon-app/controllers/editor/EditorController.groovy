@@ -16,6 +16,7 @@
 package editor
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
@@ -38,6 +39,7 @@ class EditorController {
         }
     }
 
+    @ControllerAction
     void saveFile() {
         // write text to file, outside the EDT
         model.document.file.text = builder.editor.text
@@ -45,6 +47,7 @@ class EditorController {
         runInsideUIAsync { model.document.contents = builder.editor.text }
     }
 
+    @ControllerAction
     void closeFile() {
         // remove tab
         builder.tabGroup.remove builder.tab

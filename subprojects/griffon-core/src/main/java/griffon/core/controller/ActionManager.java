@@ -50,6 +50,7 @@ public interface ActionManager {
      * Updates all actions belonging to the supplied controller.
      *
      * @param controller the controller that owns the actions to be updated.
+     *
      * @since 2.1.0
      */
     void updateActions(@Nonnull GriffonController controller);
@@ -58,6 +59,7 @@ public interface ActionManager {
      * Update the action's properties using registered {@code ActionHandler}s.
      *
      * @param action the action to be updated
+     *
      * @since 2.1.0
      */
     void updateAction(@Nonnull Action action);
@@ -67,6 +69,7 @@ public interface ActionManager {
      *
      * @param controller the controller that owns the action
      * @param actionName the action's name
+     *
      * @since 2.1.0
      */
     void updateAction(@Nonnull GriffonController controller, @Nonnull String actionName);
@@ -85,6 +88,7 @@ public interface ActionManager {
      *
      * @param action the action to be invoked
      * @param args   additional arguments to be sent to the action
+     *
      * @since 2.1.0
      */
     void invokeAction(@Nonnull Action action, @Nonnull Object... args);
@@ -93,6 +97,7 @@ public interface ActionManager {
      * Register an {@code ActionHandler} with this instance.
      *
      * @param actionHandler the handler to be added to this ActionManager
+     *
      * @since 2.1.0
      */
     void addActionHandler(@Nonnull ActionHandler actionHandler);
@@ -101,6 +106,7 @@ public interface ActionManager {
      * Register an {@code ActionInterceptor} with this instance.
      *
      * @param actionInterceptor the interceptor to be added to this ActionManager
+     *
      * @deprecated use {@code addActionHandler} instead.
      */
     @Deprecated

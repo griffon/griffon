@@ -57,6 +57,10 @@ public abstract class AbstractThreadingHandler implements ThreadingHandler {
         uiThreadManager.runOutsideUI(runnable);
     }
 
+    public void runInBackground(@Nonnull Runnable runnable) {
+        uiThreadManager.runInBackground(runnable);
+    }
+
     @Nonnull
     public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
         return uiThreadManager.runFuture(executorService, callable);

@@ -18,12 +18,12 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
+import griffon.core.controller.ActionMetadata;
 import org.codehaus.griffon.runtime.core.AbstractObservable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,14 +35,20 @@ public abstract class AbstractAction extends AbstractObservable implements Actio
     private boolean enabled = true;
     private final ActionManager actionManager;
     private final GriffonController controller;
-    private final String actionName;
+    private final ActionMetadata actionMetadata;
     private boolean initialized;
     private final Object lock = new Object[0];
 
-    public AbstractAction(@Nonnull ActionManager actionManager, @Nonnull GriffonController controller, @Nonnull String actionName) {
+    public AbstractAction(@Nonnull ActionManager actionManager, @Nonnull GriffonController controller, @Nonnull ActionMetadata actionMetadata) {
         this.actionManager = requireNonNull(actionManager, "Argument 'actionManager' must not be null");
         this.controller = requireNonNull(controller, "Argument 'controller' must not be null");
-        this.actionName = requireNonBlank(actionName, "Argument 'actionName' must not be blank");
+        this.actionMetadata = requireNonNull(actionMetadata, "Argument 'actionMetadata' must not be blank");
+    }
+
+    @Nonnull
+    @Override
+    public ActionMetadata getActionMetadata() {
+        return actionMetadata;
     }
 
     @Nonnull
@@ -57,13 +63,13 @@ public abstract class AbstractAction extends AbstractObservable implements Actio
 
     @Nonnull
     public String getActionName() {
-        return actionName;
+        return actionMetadata.getActionName();
     }
 
     @Nonnull
     @Override
     public String getFullyQualifiedName() {
-        return getController().getClass().getName() + "." + getActionName();
+        return actionMetadata.getFullyQualifiedName();
     }
 
     @Override

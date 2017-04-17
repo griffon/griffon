@@ -58,9 +58,9 @@ Actions must follow these rules in order to be considered as such:
  - must have public visibility modifier.
  - name does not match an event handler, i.e, it does not begin with `on`.
  - must pass `{link_is_plain_method}`.
- - must have `void` as return type.
+ - must be annotated with `{link_controller_action}` or have `void` as return type.
 
-The application's `{link_action_manager}` will automatically configure an `{link_controller_action}`
+The application's `{link_action_manager}` will automatically configure an `{link_action}`
 instance for each matching controller action. These `Action` instances can be later used
 within Views to link them to UI components. The following example shows a Swing View
 making use of the configured `clickAction` from `SampleController`:

@@ -16,6 +16,7 @@
 package editor;
 
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
@@ -47,6 +48,7 @@ public class EditorController extends AbstractGriffonController {
         });
     }
 
+    @ControllerAction
     public void saveFile() {
         try {
             writeStringToFile(model.getDocument().getFile(), view.getEditor().getText());
@@ -56,6 +58,7 @@ public class EditorController extends AbstractGriffonController {
         }
     }
 
+    @ControllerAction
     public void closeFile() {
         destroyMVCGroup(getMvcGroup().getMvcId());
     }

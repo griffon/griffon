@@ -50,6 +50,11 @@ public interface ThreadingHandler {
     void runOutsideUI(@Nonnull Runnable runnable);
 
     /**
+     * Executes tje code block on a background thread, always.
+     */
+    void runInBackground(@Nonnull Runnable runnable);
+
+    /**
      * Executes a code block as a Future on an ExecutorService.
      */
     @Nonnull

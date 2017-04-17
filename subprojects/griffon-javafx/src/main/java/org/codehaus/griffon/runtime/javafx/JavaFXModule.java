@@ -15,6 +15,7 @@
  */
 package org.codehaus.griffon.runtime.javafx;
 
+import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
@@ -22,6 +23,7 @@ import griffon.core.view.WindowManager;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import griffon.javafx.support.ActionMatcher;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.javafx.controller.JavaFXActionFactory;
 import org.codehaus.griffon.runtime.javafx.controller.JavaFXActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -59,6 +61,10 @@ public class JavaFXModule extends AbstractModule {
 
         bind(ActionManager.class)
             .to(JavaFXActionManager.class)
+            .asSingleton();
+
+        bind(ActionFactory.class)
+            .to(JavaFXActionFactory.class)
             .asSingleton();
 
         bind(ActionMatcher.class)

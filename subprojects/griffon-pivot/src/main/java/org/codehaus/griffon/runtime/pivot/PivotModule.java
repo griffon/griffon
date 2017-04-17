@@ -15,12 +15,14 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
+import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import griffon.pivot.PivotWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.codehaus.griffon.runtime.pivot.controller.PivotActionFactory;
 import org.codehaus.griffon.runtime.pivot.controller.PivotActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -58,6 +60,10 @@ public class PivotModule extends AbstractModule {
 
         bind(ActionManager.class)
             .to(PivotActionManager.class)
+            .asSingleton();
+
+        bind(ActionFactory.class)
+            .to(PivotActionFactory.class)
             .asSingleton();
         // end::bindings[]
     }

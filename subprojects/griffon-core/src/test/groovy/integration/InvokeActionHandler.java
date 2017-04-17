@@ -20,6 +20,7 @@ import griffon.core.controller.ActionExecutionStatus;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
 public class InvokeActionHandler extends AbstractActionHandler {
@@ -78,10 +79,11 @@ public class InvokeActionHandler extends AbstractActionHandler {
         return super.before(action, args);
     }
 
+    @Nullable
     @Override
-    public void after(@Nonnull ActionExecutionStatus status, @Nonnull Action action, @Nonnull Object[] args) {
+    public Object after(@Nonnull ActionExecutionStatus status, @Nonnull Action action, @Nonnull Object[] args, @Nullable Object result) {
         after = true;
-        super.after(status, action, args);
+        return super.after(status, action, args, result);
     }
 
     @Override
