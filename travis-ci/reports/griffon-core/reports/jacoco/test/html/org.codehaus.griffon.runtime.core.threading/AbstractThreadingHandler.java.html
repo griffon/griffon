@@ -57,8 +57,8 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L57">        uiThreadManager.runOutsideUI(runnable);</span>
 <span class="fc" id="L58">    }</span>
 
-    public void runInBackground(@Nonnull Runnable runnable) {
-<span class="nc" id="L61">        uiThreadManager.runInBackground(runnable);</span>
+    public void runOutsideUIAsync(@Nonnull Runnable runnable) {
+<span class="nc" id="L61">        uiThreadManager.runOutsideUIAsync(runnable);</span>
 <span class="nc" id="L62">    }</span>
 
     @Nonnull

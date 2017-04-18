@@ -107,7 +107,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L107">    }</span>
 
     @Override
-    public void runInBackground(@Nonnull final Runnable runnable) {
+    public void runOutsideUIAsync(@Nonnull final Runnable runnable) {
 <span class="nc" id="L111">        requireNonNull(runnable, ERROR_RUNNABLE_NULL);</span>
 
 <span class="nc" id="L113">        executorService.submit(new Runnable() {</span>

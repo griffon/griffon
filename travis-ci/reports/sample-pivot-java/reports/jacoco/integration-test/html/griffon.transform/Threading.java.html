@@ -82,7 +82,7 @@ public @interface Threading {
      * &lt;ul&gt;
      * &lt;li&gt;{@code SKIP} - no threading management will be performed.&lt;/li&gt;
      * &lt;li&gt;{@code OUTSIDE_UITHREAD} - code should be invoked outside of the UI thread.&lt;/li&gt;
-     * &lt;li&gt;{@code BACKGROUND_THREAD} - code should be invoked on a background thread, always.&lt;/li&gt;
+     * &lt;li&gt;{@code OUTSIDE_UITHREAD_ASYNC} - code should be invoked on a background thread, always.&lt;/li&gt;
      * &lt;li&gt;{@code INSIDE_UITHREAD_SYNC} - code should be invoked inside the UI thread using a synchronous call.&lt;/li&gt;
      * &lt;li&gt;{@code INSIDE_UITHREAD_ASYNC} - code should be invoked inside the UI thread using an asynchronous call.&lt;/li&gt;
      * &lt;/ul&gt;
@@ -101,9 +101,9 @@ public @interface Threading {
          */
 <span class="fc" id="L102">        OUTSIDE_UITHREAD,</span>
         /**
-         * Inject runInBackground wrapper
+         * Inject runOutsideUIAsync wrapper
          */
-<span class="fc" id="L106">        BACKGROUND_THREAD,</span>
+<span class="fc" id="L106">        OUTSIDE_UITHREAD_ASYNC,</span>
         /**
          * Inject runInsideUISync wrapper
          */

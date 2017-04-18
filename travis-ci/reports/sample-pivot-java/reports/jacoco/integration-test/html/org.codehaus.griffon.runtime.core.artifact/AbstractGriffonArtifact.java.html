@@ -135,8 +135,8 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 <span class="nc" id="L135">    }</span>
 
     @Override
-    public void runInBackground(@Nonnull Runnable runnable) {
-<span class="nc" id="L139">        application.getUIThreadManager().runInBackground(runnable);</span>
+    public void runOutsideUIAsync(@Nonnull Runnable runnable) {
+<span class="nc" id="L139">        application.getUIThreadManager().runOutsideUIAsync(runnable);</span>
 <span class="nc" id="L140">    }</span>
 
     @Override

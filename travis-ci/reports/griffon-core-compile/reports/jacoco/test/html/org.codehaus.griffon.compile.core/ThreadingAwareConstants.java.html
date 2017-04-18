@@ -34,7 +34,7 @@ public interface ThreadingAwareConstants extends BaseConstants {
     String METHOD_RUN_INSIDE_UI_ASYNC = &quot;runInsideUIAsync&quot;;
     String METHOD_RUN_INSIDE_UI_SYNC = &quot;runInsideUISync&quot;;
     String METHOD_RUN_OUTSIDE_UI = &quot;runOutsideUI&quot;;
-    String METHOD_RUN_IN_BACKGROUND = &quot;runInBackground&quot;;
+    String METHOD_RUN_OUTSIDE_UI_ASYNC = &quot;runOutsideUIAsync&quot;;
     String METHOD_RUN_FUTURE = &quot;runFuture&quot;;
 
     String JAVA_UTIL_CONCURRENT_FUTURE = &quot;java.util.concurrent.Future&quot;;
@@ -63,7 +63,7 @@ public interface ThreadingAwareConstants extends BaseConstants {
         ),
 <span class="fc" id="L64">        method(</span>
 <span class="fc" id="L65">            type(VOID),</span>
-            METHOD_RUN_IN_BACKGROUND,
+            METHOD_RUN_OUTSIDE_UI_ASYNC,
 <span class="fc" id="L67">            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))</span>
         ),
 <span class="fc" id="L69">        annotatedMethod(</span>
