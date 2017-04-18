@@ -135,8 +135,8 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     }
 
     @Override
-    public void runInBackground(@Nonnull Runnable runnable) {
-        application.getUIThreadManager().runInBackground(runnable);
+    public void runOutsideUIAsync(@Nonnull Runnable runnable) {
+        application.getUIThreadManager().runOutsideUIAsync(runnable);
     }
 
     @Override

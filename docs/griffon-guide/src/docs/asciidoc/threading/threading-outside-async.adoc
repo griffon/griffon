@@ -1,9 +1,9 @@
 
-[[_threadingbackground]]
+[[_threading_outside_async]]
 = Background Calls
 
 Making sure a block of code is executed on a background thread is accomplished by invoking
-the `runInBackground` method. This method always runs the code on a bakcground thread regardless
+the `runOutsideUIAsync` method. This method always runs the code on a bakcground thread regardless
 of the caller / invoking thread. This is usually performed by a helper `java.util.concurrent.ExecutorService`.
 
 [source,groovy,linenums,options="nowrap"]
@@ -26,7 +26,7 @@ class SampleController {
         runInsideUIAsync {
             // back inside the UI thread
             model.result = ...
-            runInBackground {
+            runOutsideUIAsync {
                 // do more calculations
             }
         }

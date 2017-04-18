@@ -361,8 +361,8 @@ public abstract class AbstractActionManager implements ActionManager {
             case OUTSIDE_UITHREAD:
                 getUiThreadManager().runOutsideUI(runnable);
                 break;
-            case BACKGROUND_THREAD:
-                getUiThreadManager().runInBackground(runnable);
+            case OUTSIDE_UITHREAD_ASYNC:
+                getUiThreadManager().runOutsideUIAsync(runnable);
                 break;
             case INSIDE_UITHREAD_SYNC:
                 getUiThreadManager().runInsideUISync(runnable);
@@ -421,9 +421,10 @@ public abstract class AbstractActionManager implements ActionManager {
             case "outside_uithread":
                 return Threading.Policy.OUTSIDE_UITHREAD;
             case "background":
-            case "background thread":
-            case "background_thread":
-                return Threading.Policy.BACKGROUND_THREAD;
+            case "outside async":
+            case "outside uithread async":
+            case "outside_uithread_async":
+                return Threading.Policy.OUTSIDE_UITHREAD_ASYNC;
             case "skip":
                 return Threading.Policy.SKIP;
             default:

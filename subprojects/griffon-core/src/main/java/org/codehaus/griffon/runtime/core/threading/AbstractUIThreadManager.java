@@ -107,7 +107,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
     }
 
     @Override
-    public void runInBackground(@Nonnull final Runnable runnable) {
+    public void runOutsideUIAsync(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
 
         executorService.submit(new Runnable() {

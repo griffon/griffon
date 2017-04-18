@@ -57,8 +57,8 @@ public abstract class AbstractThreadingHandler implements ThreadingHandler {
         uiThreadManager.runOutsideUI(runnable);
     }
 
-    public void runInBackground(@Nonnull Runnable runnable) {
-        uiThreadManager.runInBackground(runnable);
+    public void runOutsideUIAsync(@Nonnull Runnable runnable) {
+        uiThreadManager.runOutsideUIAsync(runnable);
     }
 
     @Nonnull

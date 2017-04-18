@@ -52,7 +52,7 @@ public interface ThreadingHandler {
     /**
      * Executes tje code block on a background thread, always.
      */
-    void runInBackground(@Nonnull Runnable runnable);
+    void runOutsideUIAsync(@Nonnull Runnable runnable);
 
     /**
      * Executes a code block as a Future on an ExecutorService.

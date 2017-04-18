@@ -124,8 +124,8 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
             case INSIDE_UITHREAD_ASYNC:
                 threadingMethod = METHOD_RUN_INSIDE_UI_ASYNC;
                 break;
-            case BACKGROUND_THREAD:
-                threadingMethod = METHOD_RUN_IN_BACKGROUND;
+            case OUTSIDE_UITHREAD_ASYNC:
+                threadingMethod = METHOD_RUN_OUTSIDE_UI_ASYNC;
                 break;
             case OUTSIDE_UITHREAD:
             default:
