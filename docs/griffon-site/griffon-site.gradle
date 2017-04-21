@@ -20,18 +20,18 @@ import groovy.json.JsonParserType
 buildscript {
     repositories {
         jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
     }
 
     dependencies {
-        classpath 'me.champeau.gradle:jbake-gradle-plugin:0.2'
-        classpath 'org.jbake:jbake-core:2.4.0'
-        classpath 'org.asciidoctor:asciidoctorj:1.5.2'
+        classpath 'org.jbake:jbake-gradle-plugin:1.0.0'
+
     }
 }
 
 apply plugin: 'base'
 apply plugin: 'jetty'
-apply plugin: 'me.champeau.jbake'
+apply plugin: 'org.jbake.site'
 
 configurations {
     docs
@@ -95,9 +95,9 @@ task(copyGuide, type: Copy) {
     }
 }
 
-task(site, type: Copy, dependsOn: [jbake, copyGuide]) {
+task(site, type: Copy, dependsOn: [bake, copyGuide]) {
     destinationDir = file("$buildDir/site")
-    from jbake.output
+    from file(bake.output)
     from(copyGuide.destinationDir) {
         into 'guide'
     }
