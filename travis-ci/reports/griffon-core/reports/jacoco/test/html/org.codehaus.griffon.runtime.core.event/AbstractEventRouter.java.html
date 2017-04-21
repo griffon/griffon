@@ -546,10 +546,10 @@ public abstract class AbstractEventRouter implements EventRouter {
 <span class="fc" id="L546">            List&lt;MethodInfo&gt; descriptors = methodMetadata.get(target.getName());</span>
 <span class="pc bpc" id="L547" title="1 of 2 branches missed.">            if (descriptors != null) {</span>
 <span class="pc bpc" id="L548" title="1 of 2 branches missed.">                for (MethodInfo info : descriptors) {</span>
-<span class="fc bfc" id="L549" title="All 2 branches covered.">                    if (info.descriptor.matches(target)) {</span>
+<span class="pc bpc" id="L549" title="1 of 2 branches missed.">                    if (info.descriptor.matches(target)) {</span>
 <span class="fc" id="L550">                        return info.method;</span>
                     }
-<span class="fc" id="L552">                }</span>
+<span class="nc" id="L552">                }</span>
             }
 
 <span class="nc" id="L555">            return null;</span>
@@ -613,4 +613,4 @@ public abstract class AbstractEventRouter implements EventRouter {
         }
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
