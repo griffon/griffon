@@ -143,18 +143,18 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
     }
 
     private void add(ListChangeListener.Change<? extends S> c) {
-        int from = c.getFrom();
-        int to = c.getTo();
+        int from = 0;
+        int to = c.getAddedSize();
         int offset = elements.length;
-        T[] tmp = Arrays.copyOf(elements, offset + (to - from));
+        T[] tmp = Arrays.copyOf(elements, offset + to);
         Function<S, T> function = resolveMapper();
 
-        for (int i = from; i < to; ++i) {
-            tmp[offset + i] = (T) function.apply(c.getList().get(i));
+        for (int i = 0; i < to; ++i) {
+            tmp[offset + i] = (T) function.apply(c.getAddedSubList().get(i));
         }
 
         elements = tmp;
-        nextAdd(from, to);
+        nextAdd(offset + from, offset + to);
     }
 
     private void remove(ListChangeListener.Change<? extends S> c) {
