@@ -143,18 +143,18 @@ public class MappingObservableList&lt;T, S&gt; extends TransformationList&lt;T, 
 <span class="nc" id="L143">    }</span>
 
     private void add(ListChangeListener.Change&lt;? extends S&gt; c) {
-<span class="fc" id="L146">        int from = c.getFrom();</span>
-<span class="fc" id="L147">        int to = c.getTo();</span>
+<span class="fc" id="L146">        int from = 0;</span>
+<span class="fc" id="L147">        int to = c.getAddedSize();</span>
 <span class="fc" id="L148">        int offset = elements.length;</span>
-<span class="fc" id="L149">        T[] tmp = Arrays.copyOf(elements, offset + (to - from));</span>
+<span class="fc" id="L149">        T[] tmp = Arrays.copyOf(elements, offset + to);</span>
 <span class="fc" id="L150">        Function&lt;S, T&gt; function = resolveMapper();</span>
 
-<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (int i = from; i &lt; to; ++i) {</span>
-<span class="fc" id="L153">            tmp[offset + i] = (T) function.apply(c.getList().get(i));</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (int i = 0; i &lt; to; ++i) {</span>
+<span class="fc" id="L153">            tmp[offset + i] = (T) function.apply(c.getAddedSubList().get(i));</span>
         }
 
 <span class="fc" id="L156">        elements = tmp;</span>
-<span class="fc" id="L157">        nextAdd(from, to);</span>
+<span class="fc" id="L157">        nextAdd(offset + from, offset + to);</span>
 <span class="fc" id="L158">    }</span>
 
     private void remove(ListChangeListener.Change&lt;? extends S&gt; c) {

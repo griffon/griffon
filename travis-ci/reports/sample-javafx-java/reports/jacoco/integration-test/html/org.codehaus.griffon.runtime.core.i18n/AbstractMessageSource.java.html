@@ -46,7 +46,7 @@ import static java.util.Objects.requireNonNull;
     @Nonnull
     @Override
     public String getMessage(@Nonnull String key) throws NoSuchMessageException {
-<span class="nc" id="L49">        return getMessage(key, EMPTY_OBJECT_ARGS, Locale.getDefault());</span>
+<span class="fc" id="L49">        return getMessage(key, EMPTY_OBJECT_ARGS, Locale.getDefault());</span>
     }
 
     @Nonnull
@@ -192,7 +192,7 @@ import static java.util.Objects.requireNonNull;
     public String formatMessage(@Nonnull String message, @Nonnull Object[] args) {
 <span class="fc" id="L193">        requireNonNull(message, ERROR_MESSAGE_NULL);</span>
 <span class="fc" id="L194">        requireNonNull(args, ERROR_ARGS_NULL);</span>
-<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (args.length == 0) return message;</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">        if (args.length == 0) return message;</span>
 <span class="fc" id="L196">        return MessageFormat.format(message, args);</span>
     }
 
