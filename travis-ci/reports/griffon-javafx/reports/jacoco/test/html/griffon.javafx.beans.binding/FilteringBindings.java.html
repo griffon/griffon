@@ -60,7 +60,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -76,7 +76,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -93,7 +93,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -113,7 +113,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -134,7 +134,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -150,7 +150,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -167,7 +167,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -187,7 +187,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -208,7 +208,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -224,7 +224,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -241,7 +241,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -261,7 +261,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -282,7 +282,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -298,7 +298,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -315,7 +315,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -335,7 +335,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -356,7 +356,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -372,7 +372,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -389,7 +389,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -409,7 +409,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -430,7 +430,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -446,7 +446,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -463,7 +463,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -483,7 +483,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -504,7 +504,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -520,7 +520,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -537,7 +537,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -557,7 +557,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -578,7 +578,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -594,7 +594,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -611,7 +611,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -631,7 +631,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an object binding
      */
@@ -652,7 +652,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -668,7 +668,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -685,7 +685,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -705,7 +705,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a boolean binding
      */
@@ -726,7 +726,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -742,7 +742,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -759,7 +759,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -779,7 +779,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return an integer binding
      */
@@ -800,7 +800,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -816,7 +816,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -833,7 +833,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -853,7 +853,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a long binding
      */
@@ -874,7 +874,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -890,7 +890,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -907,7 +907,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -927,7 +927,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a float binding
      */
@@ -948,7 +948,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -964,7 +964,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -981,7 +981,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -1001,7 +1001,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a double binding
      */
@@ -1022,7 +1022,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -1038,7 +1038,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -1055,7 +1055,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element
+     * @param filter       a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -1075,7 +1075,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element
+     * @param filter   a non-interfering, stateless predicate to apply to the each element.
      *
      * @return a string binding
      */
@@ -1615,7 +1615,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -1633,7 +1633,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -1652,7 +1652,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -1676,7 +1676,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -1701,7 +1701,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -1719,7 +1719,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -1738,7 +1738,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -1762,7 +1762,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -1787,7 +1787,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -1805,7 +1805,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -1824,7 +1824,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -1848,7 +1848,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -1873,7 +1873,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -1891,7 +1891,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -1910,7 +1910,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -1934,7 +1934,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -1959,7 +1959,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -1977,7 +1977,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -1996,7 +1996,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -2020,7 +2020,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -2045,7 +2045,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2063,7 +2063,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2082,7 +2082,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2106,7 +2106,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2131,7 +2131,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -2149,7 +2149,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -2168,7 +2168,7 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -2192,7 +2192,7 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -2217,7 +2217,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -2235,7 +2235,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -2254,7 +2254,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -2278,7 +2278,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an object binding
      */
@@ -2303,7 +2303,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -2321,7 +2321,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -2340,7 +2340,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -2364,7 +2364,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a boolean binding
      */
@@ -2389,7 +2389,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -2407,7 +2407,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -2426,7 +2426,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -2450,7 +2450,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return an integer binding
      */
@@ -2475,7 +2475,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -2493,7 +2493,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -2512,7 +2512,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -2536,7 +2536,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a long binding
      */
@@ -2561,7 +2561,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -2579,7 +2579,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -2598,7 +2598,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -2622,7 +2622,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a float binding
      */
@@ -2647,7 +2647,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2665,7 +2665,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2684,7 +2684,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2708,7 +2708,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a double binding
      */
@@ -2733,7 +2733,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -2751,7 +2751,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -2770,7 +2770,7 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -2794,7 +2794,7 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element after mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
      *
      * @return a string binding
      */
@@ -3420,7 +3420,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -3438,7 +3438,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -3457,7 +3457,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -3481,7 +3481,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -3506,7 +3506,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -3524,7 +3524,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -3543,7 +3543,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -3567,7 +3567,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -3592,7 +3592,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -3610,7 +3610,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -3629,7 +3629,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -3653,7 +3653,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -3678,7 +3678,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -3696,7 +3696,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -3715,7 +3715,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -3739,7 +3739,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -3764,7 +3764,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -3782,7 +3782,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -3801,7 +3801,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -3825,7 +3825,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -3850,7 +3850,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -3868,7 +3868,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -3887,7 +3887,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -3911,7 +3911,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -3936,7 +3936,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding
@@ -3954,7 +3954,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding
@@ -3973,7 +3973,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding
@@ -3997,7 +3997,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding
@@ -4022,7 +4022,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -4040,7 +4040,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -4059,7 +4059,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -4083,7 +4083,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an object binding
@@ -4108,7 +4108,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -4126,7 +4126,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -4145,7 +4145,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -4169,7 +4169,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a boolean binding
@@ -4194,7 +4194,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -4212,7 +4212,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -4231,7 +4231,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -4255,7 +4255,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return an integer binding
@@ -4280,7 +4280,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -4298,7 +4298,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -4317,7 +4317,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -4341,7 +4341,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a long binding
@@ -4366,7 +4366,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -4384,7 +4384,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -4403,7 +4403,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -4427,7 +4427,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a float binding
@@ -4452,7 +4452,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -4470,7 +4470,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -4489,7 +4489,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -4513,7 +4513,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a double binding
@@ -4538,7 +4538,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding
@@ -4556,7 +4556,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding
@@ -4575,7 +4575,7 @@ public final class FilteringBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     * @param filter       a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding
@@ -4599,7 +4599,7 @@ public final class FilteringBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     * @param filter   a non-interfering, stateless predicate to apply to the each element before mapping.
+     * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
      *
      * @return a string binding

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BooleanPropertyDecorator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">BooleanPropertyDecorator.java</span></div><h1>BooleanPropertyDecorator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
+
+import javax.annotation.Nonnull;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class BooleanPropertyDecorator extends BooleanProperty {
+    private final BooleanProperty delegate;
+
+<span class="nc" id="L39">    public BooleanPropertyDecorator(@Nonnull BooleanProperty delegate) {</span>
+<span class="nc" id="L40">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L41">    }</span>
+
+    @Nonnull
+    protected final BooleanProperty getDelegate() {
+<span class="nc" id="L45">        return delegate;</span>
+    }
+
+    @Override
+    public void setValue(Boolean v) {
+<span class="nc" id="L50">        delegate.setValue(v);</span>
+<span class="nc" id="L51">    }</span>
+
+    @Override
+    public void bindBidirectional(Property&lt;Boolean&gt; other) {
+<span class="nc" id="L55">        delegate.bindBidirectional(other);</span>
+<span class="nc" id="L56">    }</span>
+
+    @Override
+    public void unbindBidirectional(Property&lt;Boolean&gt; other) {
+<span class="nc" id="L60">        delegate.unbindBidirectional(other);</span>
+<span class="nc" id="L61">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L65" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L70">        return delegate.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L75">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
+    }
+
+    @Override
+    public ObjectProperty&lt;Boolean&gt; asObject() {
+<span class="nc" id="L80">        return delegate.asObject();</span>
+    }
+
+    @Override
+    public Boolean getValue() {
+<span class="nc" id="L85">        return delegate.getValue();</span>
+    }
+
+    @Override
+    public BooleanBinding and(ObservableBooleanValue other) {
+<span class="nc" id="L90">        return delegate.and(other);</span>
+    }
+
+    @Override
+    public BooleanBinding or(ObservableBooleanValue other) {
+<span class="nc" id="L95">        return delegate.or(other);</span>
+    }
+
+    @Override
+    public BooleanBinding not() {
+<span class="nc" id="L100">        return delegate.not();</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(ObservableBooleanValue other) {
+<span class="nc" id="L105">        return delegate.isEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(ObservableBooleanValue other) {
+<span class="nc" id="L110">        return delegate.isNotEqualTo(other);</span>
+    }
+
+    @Override
+    public StringBinding asString() {
+<span class="nc" id="L115">        return delegate.asString();</span>
+    }
+
+    @Override
+    public boolean get() {
+<span class="nc" id="L120">        return delegate.get();</span>
+    }
+
+    @Override
+    public void addListener(ChangeListener&lt;? super Boolean&gt; listener) {
+<span class="nc" id="L125">        delegate.addListener(listener);</span>
+<span class="nc" id="L126">    }</span>
+
+    @Override
+    public void removeListener(ChangeListener&lt;? super Boolean&gt; listener) {
+<span class="nc" id="L130">        delegate.removeListener(listener);</span>
+<span class="nc" id="L131">    }</span>
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+<span class="nc" id="L135">        delegate.addListener(listener);</span>
+<span class="nc" id="L136">    }</span>
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+<span class="nc" id="L140">        delegate.removeListener(listener);</span>
+<span class="nc" id="L141">    }</span>
+
+    @Override
+    public Object getBean() {
+<span class="nc" id="L145">        return delegate.getBean();</span>
+    }
+
+    @Override
+    public String getName() {
+<span class="nc" id="L150">        return delegate.getName();</span>
+    }
+
+    @Override
+    public void bind(ObservableValue&lt;? extends Boolean&gt; observable) {
+<span class="nc" id="L155">        delegate.bind(observable);</span>
+<span class="nc" id="L156">    }</span>
+
+    @Override
+    public void unbind() {
+<span class="nc" id="L160">        delegate.unbind();</span>
+<span class="nc" id="L161">    }</span>
+
+    @Override
+    public boolean isBound() {
+<span class="nc" id="L165">        return delegate.isBound();</span>
+    }
+
+    @Override
+    public void set(boolean value) {
+<span class="nc" id="L170">        delegate.set(value);</span>
+<span class="nc" id="L171">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

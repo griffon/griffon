@@ -378,7 +378,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L382">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L383">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L384">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -395,7 +395,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L399">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L400">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L401">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -412,7 +412,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L416">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L417">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L418">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -429,7 +429,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L433">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L434">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L435">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -446,7 +446,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L450">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L451">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L452">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -463,7 +463,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L467">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L468">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L469">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -479,7 +479,7 @@ public final class CollectionBindings {
      * @return a number binding.
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding sumOfList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding sumOfList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L483">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L484">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
 <span class="nc" id="L485">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).sum(), items);</span>
@@ -495,7 +495,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L499">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L500">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L501">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -516,7 +516,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L520">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L521">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L522">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -537,7 +537,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L541">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L542">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L543">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -558,7 +558,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L562">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L563">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L564">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -579,7 +579,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L583">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L584">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L585">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -600,7 +600,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L604">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L605">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L606">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -620,7 +620,7 @@ public final class CollectionBindings {
      * @return a number binding.
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding sumOfList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding sumOfList(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L624">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L625">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
 <span class="nc" id="L626">        return createDoubleBinding(() -&gt; {</span>
@@ -743,7 +743,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L747">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L748">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L749">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -760,7 +760,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L764">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L765">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L766">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -777,7 +777,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L781">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L782">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L783">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -794,7 +794,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L798">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L799">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L800">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -811,7 +811,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L815">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L816">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L817">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -828,7 +828,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L832">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L833">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L834">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -844,7 +844,7 @@ public final class CollectionBindings {
      * @return a number binding.
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding sumOfSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
+    public static &lt;T&gt; NumberBinding sumOfSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ToDoubleFunction&lt;? super T&gt; mapper) {
 <span class="nc" id="L848">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L849">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
 <span class="nc" id="L850">        return createDoubleBinding(() -&gt; items.stream().mapToDouble(mapper).sum(), items);</span>
@@ -860,7 +860,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L864">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L865">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L866">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -881,7 +881,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding minInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L885">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L886">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L887">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -902,7 +902,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L906">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L907">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L908">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -923,7 +923,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding maxInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L927">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L928">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L929">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -944,7 +944,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L948">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L949">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L950">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -965,7 +965,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding averageInSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L969">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L970">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L971">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -985,7 +985,7 @@ public final class CollectionBindings {
      * @return a number binding.
      */
     @Nonnull
-    public &lt;T&gt; NumberBinding sumOfSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
+    public static &lt;T&gt; NumberBinding sumOfSet(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super T&gt;&gt; mapper) {
 <span class="nc" id="L989">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L990">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
 <span class="nc" id="L991">        return createDoubleBinding(() -&gt; {</span>
@@ -1108,7 +1108,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
 <span class="nc" id="L1112">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1113">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L1114">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1125,7 +1125,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
 <span class="nc" id="L1129">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1130">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L1131">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1142,7 +1142,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
 <span class="nc" id="L1146">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1147">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L1148">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1159,7 +1159,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
 <span class="nc" id="L1163">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1164">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L1165">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1176,7 +1176,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
 <span class="nc" id="L1180">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1181">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L1182">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1193,7 +1193,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
 <span class="nc" id="L1197">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1198">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L1199">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1209,7 +1209,7 @@ public final class CollectionBindings {
      * @return a number binding.
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding sumOfMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding sumOfMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ToDoubleFunction&lt;? super V&gt; mapper) {
 <span class="nc" id="L1213">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1214">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
 <span class="nc" id="L1215">        return createDoubleBinding(() -&gt; items.values().stream().mapToDouble(mapper).sum(), items);</span>
@@ -1225,7 +1225,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
 <span class="nc" id="L1229">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1230">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L1231">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1246,7 +1246,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding minInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
 <span class="nc" id="L1250">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1251">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L1252">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1267,7 +1267,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
 <span class="nc" id="L1271">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1272">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L1273">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1288,7 +1288,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding maxInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
 <span class="nc" id="L1292">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1293">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L1294">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1309,7 +1309,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
 <span class="nc" id="L1313">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1314">        requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);</span>
 <span class="nc" id="L1315">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1330,7 +1330,7 @@ public final class CollectionBindings {
      * @return a number binding
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding averageInMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Supplier&lt;? extends Number&gt; supplier, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
 <span class="nc" id="L1334">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1335">        requireNonNull(supplier, ERROR_SUPPLIER_NULL);</span>
 <span class="nc" id="L1336">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
@@ -1350,7 +1350,7 @@ public final class CollectionBindings {
      * @return a number binding.
      */
     @Nonnull
-    public &lt;K, V&gt; NumberBinding sumOfMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
+    public static &lt;K, V&gt; NumberBinding sumOfMap(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;ToDoubleFunction&lt;? super V&gt;&gt; mapper) {
 <span class="nc" id="L1354">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
 <span class="nc" id="L1355">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
 <span class="nc" id="L1356">        return createDoubleBinding(() -&gt; {</span>

@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MatchingBindings.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">MatchingBindings.java</span></div><h1>MatchingBindings.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+
+import javax.annotation.Nonnull;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import static java.util.Objects.requireNonNull;
+import static javafx.beans.binding.Bindings.createBooleanBinding;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class MatchingBindings {
+    private static final String ERROR_ITEMS_NULL = &quot;Argument 'items' must not be null&quot;;
+    private static final String ERROR_PREDICATE_NULL = &quot;Argument 'predicate' must not be null&quot;;
+    private static final String ERROR_MAPPER_NULL = &quot;Argument 'mapper' must not be null&quot;;
+
+<span class="nc" id="L40">    private MatchingBindings() {</span>
+        // prevent instantiation
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding anyMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Predicate&lt;? super T&gt; predicate) {
+<span class="nc" id="L54">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L55">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L56">        return createBooleanBinding(() -&gt; items.stream().anyMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding anyMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Function&lt;? super T, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L70">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L71">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L72">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L73">        return createBooleanBinding(() -&gt; items.stream().map(mapper).anyMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding anyMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super T&gt;&gt; predicate) {
+<span class="nc" id="L86">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L87">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L88">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L89">            Predicate&lt;? super T&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L90">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L91">            return items.stream().anyMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding anyMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super T, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L106">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L107">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L108">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L109">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L110">            Function&lt;? super T, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L111">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L112">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L113">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L114">            return items.stream().map(mapperValue).anyMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding noneMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Predicate&lt;? super T&gt; predicate) {
+<span class="nc" id="L128">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L129">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L130">        return createBooleanBinding(() -&gt; items.stream().noneMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding noneMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Function&lt;? super T, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L144">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L145">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L146">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L147">        return createBooleanBinding(() -&gt; items.stream().map(mapper).noneMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding noneMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super T&gt;&gt; predicate) {
+<span class="nc" id="L160">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L161">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L162">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L163">            Predicate&lt;? super T&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L164">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L165">            return items.stream().noneMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding noneMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super T, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L180">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L181">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L182">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L183">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L184">            Function&lt;? super T, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L185">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L186">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L187">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L188">            return items.stream().map(mapperValue).noneMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding allMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Predicate&lt;? super T&gt; predicate) {
+<span class="nc" id="L202">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L203">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L204">        return createBooleanBinding(() -&gt; items.stream().allMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding allMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final Function&lt;? super T, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L218">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L219">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L220">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L221">        return createBooleanBinding(() -&gt; items.stream().map(mapper).allMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding allMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super T&gt;&gt; predicate) {
+<span class="nc" id="L234">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L235">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L236">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L237">            Predicate&lt;? super T&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L238">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L239">            return items.stream().allMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable list of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding allMatch(@Nonnull final ObservableList&lt;T&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super T, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L254">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L255">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L256">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L257">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L258">            Function&lt;? super T, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L259">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L260">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L261">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L262">            return items.stream().map(mapperValue).allMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding anyMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Predicate&lt;? super T&gt; predicate) {
+<span class="nc" id="L276">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L277">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L278">        return createBooleanBinding(() -&gt; items.stream().anyMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding anyMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Function&lt;? super T, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L292">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L293">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L294">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L295">        return createBooleanBinding(() -&gt; items.stream().map(mapper).anyMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding anyMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super T&gt;&gt; predicate) {
+<span class="nc" id="L308">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L309">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L310">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L311">            Predicate&lt;? super T&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L312">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L313">            return items.stream().anyMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding anyMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super T, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L328">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L329">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L330">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L331">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L332">            Function&lt;? super T, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L333">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L334">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L335">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L336">            return items.stream().map(mapperValue).anyMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding noneMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Predicate&lt;? super T&gt; predicate) {
+<span class="nc" id="L350">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L351">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L352">        return createBooleanBinding(() -&gt; items.stream().noneMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding noneMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Function&lt;? super T, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L366">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L367">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L368">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L369">        return createBooleanBinding(() -&gt; items.stream().map(mapper).noneMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding noneMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super T&gt;&gt; predicate) {
+<span class="nc" id="L382">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L383">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L384">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L385">            Predicate&lt;? super T&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L386">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L387">            return items.stream().noneMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding noneMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super T, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L402">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L403">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L404">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L405">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L406">            Function&lt;? super T, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L407">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L408">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L409">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L410">            return items.stream().map(mapperValue).noneMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding allMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Predicate&lt;? super T&gt; predicate) {
+<span class="nc" id="L424">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L425">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L426">        return createBooleanBinding(() -&gt; items.stream().allMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding allMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final Function&lt;? super T, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L440">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L441">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L442">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L443">        return createBooleanBinding(() -&gt; items.stream().map(mapper).allMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T&gt; BooleanBinding allMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super T&gt;&gt; predicate) {
+<span class="nc" id="L456">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L457">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L458">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L459">            Predicate&lt;? super T&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L460">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L461">            return items.stream().allMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable set of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;T, R&gt; BooleanBinding allMatch(@Nonnull final ObservableSet&lt;T&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super T, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L476">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L477">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L478">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L479">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L480">            Function&lt;? super T, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L481">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L482">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L483">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L484">            return items.stream().map(mapperValue).allMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V&gt; BooleanBinding anyMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Predicate&lt;? super V&gt; predicate) {
+<span class="nc" id="L498">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L499">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L500">        return createBooleanBinding(() -&gt; items.values().stream().anyMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V, R&gt; BooleanBinding anyMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Function&lt;? super V, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L514">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L515">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L516">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L517">        return createBooleanBinding(() -&gt; items.values().stream().map(mapper).anyMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V&gt; BooleanBinding anyMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super V&gt;&gt; predicate) {
+<span class="nc" id="L530">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L531">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L532">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L533">            Predicate&lt;? super V&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L534">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L535">            return items.values().stream().anyMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;anyMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V, R&gt; BooleanBinding anyMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super V, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L550">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L551">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L552">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L553">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L554">            Function&lt;? super V, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L555">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L556">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L557">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L558">            return items.values().stream().map(mapperValue).anyMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V&gt; BooleanBinding noneMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Predicate&lt;? super V&gt; predicate) {
+<span class="nc" id="L572">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L573">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L574">        return createBooleanBinding(() -&gt; items.values().stream().noneMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V, R&gt; BooleanBinding noneMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Function&lt;? super V, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L588">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L589">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L590">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L591">        return createBooleanBinding(() -&gt; items.values().stream().map(mapper).noneMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V&gt; BooleanBinding noneMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super V&gt;&gt; predicate) {
+<span class="nc" id="L604">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L605">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L606">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L607">            Predicate&lt;? super V&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L608">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L609">            return items.values().stream().noneMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;noneMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V, R&gt; BooleanBinding noneMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super V, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L624">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L625">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L626">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L627">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L628">            Function&lt;? super V, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L629">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L630">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L631">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L632">            return items.values().stream().map(mapperValue).noneMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V&gt; BooleanBinding allMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Predicate&lt;? super V&gt; predicate) {
+<span class="nc" id="L646">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L647">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L648">        return createBooleanBinding(() -&gt; items.values().stream().allMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V, R&gt; BooleanBinding allMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final Function&lt;? super V, R&gt; mapper, @Nonnull final Predicate&lt;? super R&gt; predicate) {
+<span class="nc" id="L662">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L663">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L664">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L665">        return createBooleanBinding(() -&gt; items.values().stream().map(mapper).allMatch(predicate), items);</span>
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V&gt; BooleanBinding allMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;Predicate&lt;? super V&gt;&gt; predicate) {
+<span class="nc" id="L678">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L679">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L680">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L681">            Predicate&lt;? super V&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L682">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L683">            return items.values().stream().allMatch(predicateValue);</span>
+        }, items, predicate);
+    }
+
+    /**
+     * Creates a boolean binding based on a &lt;tt&gt;allMatch&lt;/tt&gt; predicate applied to the items.
+     *
+     * @param items     the observable map of items.
+     * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
+     * @param predicate a non-interfering, stateless predicate to apply to the each element.
+     *
+     * @return a boolean binding
+     */
+    @Nonnull
+    public static &lt;K, V, R&gt; BooleanBinding allMatch(@Nonnull final ObservableMap&lt;K, V&gt; items, @Nonnull final ObservableValue&lt;Function&lt;? super V, R&gt;&gt; mapper, @Nonnull final ObservableValue&lt;Predicate&lt;? super R&gt;&gt; predicate) {
+<span class="nc" id="L698">        requireNonNull(items, ERROR_ITEMS_NULL);</span>
+<span class="nc" id="L699">        requireNonNull(mapper, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L700">        requireNonNull(predicate, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L701">        return createBooleanBinding(() -&gt; {</span>
+<span class="nc" id="L702">            Function&lt;? super V, R&gt; mapperValue = mapper.getValue();</span>
+<span class="nc" id="L703">            requireNonNull(mapperValue, ERROR_MAPPER_NULL);</span>
+<span class="nc" id="L704">            Predicate&lt;? super R&gt; predicateValue = predicate.getValue();</span>
+<span class="nc" id="L705">            requireNonNull(predicateValue, ERROR_PREDICATE_NULL);</span>
+<span class="nc" id="L706">            return items.values().stream().map(mapperValue).allMatch(predicateValue);</span>
+        }, items, predicate, mapper);
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

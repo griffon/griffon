@@ -95,18 +95,21 @@
 
         <Package name="griffon.javafx.beans.binding">
             <Stats>
-                <TotalClasses>10</TotalClasses>
-                <ConcreteClasses>8</ConcreteClasses>
-                <AbstractClasses>2</AbstractClasses>
+                <TotalClasses>28</TotalClasses>
+                <ConcreteClasses>25</ConcreteClasses>
+                <AbstractClasses>3</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>5</Ce>
-                <A>0.2</A>
-                <I>0.83</I>
-                <D>0.03</D>
+                <Ce>9</Ce>
+                <A>0.11</A>
+                <I>0.9</I>
+                <D>0.01</D>
                 <V>1</V>
             </Stats>
 
             <AbstractClasses>
+                <Class sourceFile="AbstractUIThreadAwareObservableNumberValue.java">
+                    griffon.javafx.beans.binding.AbstractUIThreadAwareObservableNumberValue
+                </Class>
                 <Class sourceFile="AbstractUIThreadAwareProperty.java">
                     griffon.javafx.beans.binding.AbstractUIThreadAwareProperty
                 </Class>
@@ -116,8 +119,59 @@
             </AbstractClasses>
 
             <ConcreteClasses>
-                <Class sourceFile="AbstractUIThreadAwareObservableNumberValue.java">
-                    griffon.javafx.beans.binding.AbstractUIThreadAwareObservableNumberValue
+                <Class sourceFile="BooleanPropertyDecorator.java">
+                    griffon.javafx.beans.binding.BooleanPropertyDecorator
+                </Class>
+                <Class sourceFile="ChangeListenerDecorator.java">
+                    griffon.javafx.beans.binding.ChangeListenerDecorator
+                </Class>
+                <Class sourceFile="DoublePropertyDecorator.java">
+                    griffon.javafx.beans.binding.DoublePropertyDecorator
+                </Class>
+                <Class sourceFile="FloatPropertyDecorator.java">
+                    griffon.javafx.beans.binding.FloatPropertyDecorator
+                </Class>
+                <Class sourceFile="IntegerPropertyDecorator.java">
+                    griffon.javafx.beans.binding.IntegerPropertyDecorator
+                </Class>
+                <Class sourceFile="InvalidationListenerDecorator.java">
+                    griffon.javafx.beans.binding.InvalidationListenerDecorator
+                </Class>
+                <Class sourceFile="ListChangeListenerDecorator.java">
+                    griffon.javafx.beans.binding.ListChangeListenerDecorator
+                </Class>
+                <Class sourceFile="ListPropertyDecorator.java">
+                    griffon.javafx.beans.binding.ListPropertyDecorator
+                </Class>
+                <Class sourceFile="LongPropertyDecorator.java">
+                    griffon.javafx.beans.binding.LongPropertyDecorator
+                </Class>
+                <Class sourceFile="MapChangeListenerDecorator.java">
+                    griffon.javafx.beans.binding.MapChangeListenerDecorator
+                </Class>
+                <Class sourceFile="MapPropertyDecorator.java">
+                    griffon.javafx.beans.binding.MapPropertyDecorator
+                </Class>
+                <Class sourceFile="ObjectPropertyDecorator.java">
+                    griffon.javafx.beans.binding.ObjectPropertyDecorator
+                </Class>
+                <Class sourceFile="ObservableNumberValueDecorator.java">
+                    griffon.javafx.beans.binding.ObservableNumberValueDecorator
+                </Class>
+                <Class sourceFile="ObservableValueDecorator.java">
+                    griffon.javafx.beans.binding.ObservableValueDecorator
+                </Class>
+                <Class sourceFile="PropertyDecorator.java">
+                    griffon.javafx.beans.binding.PropertyDecorator
+                </Class>
+                <Class sourceFile="SetChangeListenerDecorator.java">
+                    griffon.javafx.beans.binding.SetChangeListenerDecorator
+                </Class>
+                <Class sourceFile="SetPropertyDecorator.java">
+                    griffon.javafx.beans.binding.SetPropertyDecorator
+                </Class>
+                <Class sourceFile="StringPropertyDecorator.java">
+                    griffon.javafx.beans.binding.StringPropertyDecorator
                 </Class>
                 <Class sourceFile="UIThreadAwareObservableBooleanValue.java">
                     griffon.javafx.beans.binding.UIThreadAwareObservableBooleanValue
@@ -144,10 +198,14 @@
 
             <DependsUpon>
                 <Package>java.lang</Package>
+                <Package>java.text</Package>
                 <Package>java.util</Package>
                 <Package>javafx.beans</Package>
+                <Package>javafx.beans.binding</Package>
                 <Package>javafx.beans.property</Package>
                 <Package>javafx.beans.value</Package>
+                <Package>javafx.collections</Package>
+                <Package>javafx.util</Package>
             </DependsUpon>
 
             <UsedBy>
@@ -210,14 +268,14 @@
 
         <Package name="griffon.javafx.collections">
             <Stats>
-                <TotalClasses>6</TotalClasses>
-                <ConcreteClasses>2</ConcreteClasses>
-                <AbstractClasses>4</AbstractClasses>
+                <TotalClasses>8</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
+                <AbstractClasses>5</AbstractClasses>
                 <Ca>1</Ca>
-                <Ce>7</Ce>
-                <A>0.67</A>
-                <I>0.88</I>
-                <D>0.54</D>
+                <Ce>9</Ce>
+                <A>0.62</A>
+                <I>0.9</I>
+                <D>0.52</D>
                 <V>1</V>
             </Stats>
 
@@ -227,6 +285,9 @@
                 </Class>
                 <Class sourceFile="ElementObservableList.java">
                     griffon.javafx.collections.ElementObservableList$PropertyContainer
+                </Class>
+                <Class sourceFile="ElementObservableList.java">
+                    griffon.javafx.collections.ElementObservableList$PropertyExtractor
                 </Class>
                 <Class sourceFile="ObservableMapBase.java">
                     griffon.javafx.collections.ObservableMapBase
@@ -240,6 +301,9 @@
                 <Class sourceFile="ElementObservableList.java">
                     griffon.javafx.collections.ElementObservableList$1
                 </Class>
+                <Class sourceFile="ElementObservableList.java">
+                    griffon.javafx.collections.ElementObservableList$DefaultPropertyExtractor
+                </Class>
                 <Class sourceFile="GriffonFXCollections.java">
                     griffon.javafx.collections.GriffonFXCollections
                 </Class>
@@ -249,10 +313,12 @@
                 <Package>com.sun.javafx.collections</Package>
                 <Package>griffon.javafx.beans.binding</Package>
                 <Package>java.lang</Package>
+                <Package>java.lang.reflect</Package>
                 <Package>java.util</Package>
                 <Package>javafx.beans</Package>
                 <Package>javafx.beans.property</Package>
                 <Package>javafx.collections</Package>
+                <Package>org.slf4j</Package>
             </DependsUpon>
 
             <UsedBy>
@@ -472,6 +538,10 @@
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 
+        <Package name="java.text">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
         <Package name="java.util">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
@@ -533,6 +603,10 @@
         </Package>
 
         <Package name="javafx.stage">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="javafx.util">
             <error>No stats available: package referenced, but not analyzed.</error>
         </Package>
 

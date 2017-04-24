@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StringPropertyDecorator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-java</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">StringPropertyDecorator.java</span></div><h1>StringPropertyDecorator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.Property;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
+import javafx.util.StringConverter;
+
+import javax.annotation.Nonnull;
+import java.text.Format;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class StringPropertyDecorator extends StringProperty {
+    private final StringProperty delegate;
+
+<span class="nc" id="L41">    public StringPropertyDecorator(@Nonnull StringProperty delegate) {</span>
+<span class="nc" id="L42">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L43">    }</span>
+
+    @Nonnull
+    protected final StringProperty getDelegate() {
+<span class="nc" id="L47">        return delegate;</span>
+    }
+
+    @Override
+    public void setValue(String v) {
+<span class="nc" id="L52">        delegate.setValue(v);</span>
+<span class="nc" id="L53">    }</span>
+
+    @Override
+    public void bindBidirectional(Property&lt;String&gt; other) {
+<span class="nc" id="L57">        delegate.bindBidirectional(other);</span>
+<span class="nc" id="L58">    }</span>
+
+    @Override
+    public void bindBidirectional(Property&lt;?&gt; other, Format format) {
+<span class="nc" id="L62">        delegate.bindBidirectional(other, format);</span>
+<span class="nc" id="L63">    }</span>
+
+    @Override
+    public &lt;T&gt; void bindBidirectional(Property&lt;T&gt; other, StringConverter&lt;T&gt; converter) {
+<span class="nc" id="L67">        delegate.bindBidirectional(other, converter);</span>
+<span class="nc" id="L68">    }</span>
+
+    @Override
+    public void unbindBidirectional(Property&lt;String&gt; other) {
+<span class="nc" id="L72">        delegate.unbindBidirectional(other);</span>
+<span class="nc" id="L73">    }</span>
+
+    @Override
+    public void unbindBidirectional(Object other) {
+<span class="nc" id="L77">        delegate.unbindBidirectional(other);</span>
+<span class="nc" id="L78">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L82" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L87">        return delegate.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L92">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
+    }
+
+    @Override
+    public String getValue() {
+<span class="nc" id="L97">        return delegate.getValue();</span>
+    }
+
+    @Override
+    public StringExpression concat(Object other) {
+<span class="nc" id="L102">        return delegate.concat(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(ObservableStringValue other) {
+<span class="nc" id="L107">        return delegate.isEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(String other) {
+<span class="nc" id="L112">        return delegate.isEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(ObservableStringValue other) {
+<span class="nc" id="L117">        return delegate.isNotEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(String other) {
+<span class="nc" id="L122">        return delegate.isNotEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualToIgnoreCase(ObservableStringValue other) {
+<span class="nc" id="L127">        return delegate.isEqualToIgnoreCase(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualToIgnoreCase(String other) {
+<span class="nc" id="L132">        return delegate.isEqualToIgnoreCase(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualToIgnoreCase(ObservableStringValue other) {
+<span class="nc" id="L137">        return delegate.isNotEqualToIgnoreCase(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualToIgnoreCase(String other) {
+<span class="nc" id="L142">        return delegate.isNotEqualToIgnoreCase(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThan(ObservableStringValue other) {
+<span class="nc" id="L147">        return delegate.greaterThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThan(String other) {
+<span class="nc" id="L152">        return delegate.greaterThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThan(ObservableStringValue other) {
+<span class="nc" id="L157">        return delegate.lessThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThan(String other) {
+<span class="nc" id="L162">        return delegate.lessThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThanOrEqualTo(ObservableStringValue other) {
+<span class="nc" id="L167">        return delegate.greaterThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThanOrEqualTo(String other) {
+<span class="nc" id="L172">        return delegate.greaterThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThanOrEqualTo(ObservableStringValue other) {
+<span class="nc" id="L177">        return delegate.lessThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThanOrEqualTo(String other) {
+<span class="nc" id="L182">        return delegate.lessThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNull() {
+<span class="nc" id="L187">        return delegate.isNull();</span>
+    }
+
+    @Override
+    public BooleanBinding isNotNull() {
+<span class="nc" id="L192">        return delegate.isNotNull();</span>
+    }
+
+    @Override
+    public IntegerBinding length() {
+<span class="nc" id="L197">        return delegate.length();</span>
+    }
+
+    @Override
+    public BooleanBinding isEmpty() {
+<span class="nc" id="L202">        return delegate.isEmpty();</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEmpty() {
+<span class="nc" id="L207">        return delegate.isNotEmpty();</span>
+    }
+
+    @Override
+    public String get() {
+<span class="nc" id="L212">        return delegate.get();</span>
+    }
+
+    @Override
+    public void addListener(ChangeListener&lt;? super String&gt; listener) {
+<span class="nc" id="L217">        delegate.addListener(listener);</span>
+<span class="nc" id="L218">    }</span>
+
+    @Override
+    public void removeListener(ChangeListener&lt;? super String&gt; listener) {
+<span class="nc" id="L222">        delegate.removeListener(listener);</span>
+<span class="nc" id="L223">    }</span>
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+<span class="nc" id="L227">        delegate.addListener(listener);</span>
+<span class="nc" id="L228">    }</span>
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+<span class="nc" id="L232">        delegate.removeListener(listener);</span>
+<span class="nc" id="L233">    }</span>
+
+    @Override
+    public Object getBean() {
+<span class="nc" id="L237">        return delegate.getBean();</span>
+    }
+
+    @Override
+    public String getName() {
+<span class="nc" id="L242">        return delegate.getName();</span>
+    }
+
+    @Override
+    public void bind(ObservableValue&lt;? extends String&gt; observable) {
+<span class="nc" id="L247">        delegate.bind(observable);</span>
+<span class="nc" id="L248">    }</span>
+
+    @Override
+    public void unbind() {
+<span class="nc" id="L252">        delegate.unbind();</span>
+<span class="nc" id="L253">    }</span>
+
+    @Override
+    public boolean isBound() {
+<span class="nc" id="L257">        return delegate.isBound();</span>
+    }
+
+    @Override
+    public void set(String value) {
+<span class="nc" id="L262">        delegate.set(value);</span>
+<span class="nc" id="L263">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

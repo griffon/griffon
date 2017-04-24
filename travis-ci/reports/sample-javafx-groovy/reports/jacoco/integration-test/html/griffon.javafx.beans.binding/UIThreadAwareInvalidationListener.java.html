@@ -20,7 +20,6 @@ import javafx.beans.Observable;
 
 import javax.annotation.Nonnull;
 
-import static java.util.Objects.requireNonNull;
 import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.application.Platform.runLater;
 
@@ -28,35 +27,18 @@ import static javafx.application.Platform.runLater;
  * @author Andres Almiray
  * @since 2.9.0
  */
-class UIThreadAwareInvalidationListener implements InvalidationListener, UIThreadAware {
-    private final InvalidationListener delegate;
-
-<span class="nc" id="L34">    UIThreadAwareInvalidationListener(@Nonnull InvalidationListener delegate) {</span>
-<span class="nc" id="L35">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
-<span class="nc" id="L36">    }</span>
+class UIThreadAwareInvalidationListener extends InvalidationListenerDecorator implements UIThreadAware {
+    UIThreadAwareInvalidationListener(@Nonnull InvalidationListener delegate) {
+<span class="nc" id="L32">        super(delegate);</span>
+<span class="nc" id="L33">    }</span>
 
     @Override
     public void invalidated(final Observable observable) {
-<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (isFxApplicationThread()) {</span>
-<span class="nc" id="L41">            delegate.invalidated(observable);</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (isFxApplicationThread()) {</span>
+<span class="nc" id="L38">            getDelegate().invalidated(observable);</span>
         } else {
-<span class="nc" id="L43">            runLater(() -&gt; invalidated(observable));</span>
+<span class="nc" id="L40">            runLater(() -&gt; getDelegate().invalidated(observable));</span>
         }
-<span class="nc" id="L45">    }</span>
-
-    @Override
-    public boolean equals(Object o) {
-<span class="nc bnc" id="L49" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
-    }
-
-    @Override
-    public int hashCode() {
-<span class="nc" id="L54">        return delegate.hashCode();</span>
-    }
-
-    @Override
-    public String toString() {
-<span class="nc" id="L59">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
-    }
+<span class="nc" id="L42">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

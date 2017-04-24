@@ -105,7 +105,7 @@ public abstract class AbstractActionManager implements ActionManager {
     @Nullable
     private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
 <span class="pc bpc" id="L107" title="1 of 2 branches missed.">        for (Method method : controller.getTypeClass().getMethods()) {</span>
-<span class="fc bfc" id="L108" title="All 2 branches covered.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">            if (actionName.equals(method.getName()) &amp;&amp;</span>
 <span class="pc bpc" id="L109" title="1 of 2 branches missed.">                isPublic(method.getModifiers()) &amp;&amp;</span>
 <span class="pc bpc" id="L110" title="1 of 2 branches missed.">                !isStatic(method.getModifiers()) &amp;&amp;</span>
 <span class="pc bpc" id="L111" title="3 of 4 branches missed.">                (isAnnotatedWith(method, ControllerAction.class, true) || method.getReturnType() == Void.TYPE)) {</span>

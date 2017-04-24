@@ -21,78 +21,49 @@ import javafx.beans.value.ObservableValue;
 
 import javax.annotation.Nonnull;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Andres Almiray
  * @since 2.9.0
  */
-class UIThreadAwareObservableValue&lt;T&gt; implements ObservableValue&lt;T&gt;, UIThreadAware {
-    private final ObservableValue&lt;T&gt; delegate;
-
-<span class="nc" id="L33">    UIThreadAwareObservableValue(@Nonnull ObservableValue&lt;T&gt; delegate) {</span>
-<span class="nc" id="L34">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
-<span class="nc" id="L35">    }</span>
-
-    @Nonnull
-    protected ObservableValue&lt;T&gt; getDelegate() {
-<span class="nc" id="L39">        return delegate;</span>
-    }
-
-    @Override
-    public T getValue() {
-<span class="nc" id="L44">        return delegate.getValue();</span>
-    }
+class UIThreadAwareObservableValue&lt;T&gt; extends ObservableValueDecorator&lt;T&gt; implements UIThreadAware {
+    UIThreadAwareObservableValue(@Nonnull ObservableValue&lt;T&gt; delegate) {
+<span class="nc" id="L30">        super(delegate);</span>
+<span class="nc" id="L31">    }</span>
 
     @Override
     public void addListener(ChangeListener&lt;? super T&gt; listener) {
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
-<span class="nc" id="L50">            delegate.addListener(listener);</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L36">            getDelegate().addListener(listener);</span>
         } else {
-<span class="nc" id="L52">            delegate.addListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
+<span class="nc" id="L38">            getDelegate().addListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
         }
-<span class="nc" id="L54">    }</span>
+<span class="nc" id="L40">    }</span>
 
     @Override
     public void removeListener(ChangeListener&lt;? super T&gt; listener) {
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
-<span class="nc" id="L59">            delegate.removeListener(listener);</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L45">            getDelegate().removeListener(listener);</span>
         } else {
-<span class="nc" id="L61">            delegate.removeListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
+<span class="nc" id="L47">            getDelegate().removeListener(new UIThreadAwareChangeListener&lt;&gt;(listener));</span>
         }
-<span class="nc" id="L63">    }</span>
+<span class="nc" id="L49">    }</span>
 
     @Override
     public void addListener(InvalidationListener listener) {
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
-<span class="nc" id="L68">            delegate.addListener(listener);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L54">            getDelegate().addListener(listener);</span>
         } else {
-<span class="nc" id="L70">            delegate.addListener(new UIThreadAwareInvalidationListener(listener));</span>
+<span class="nc" id="L56">            getDelegate().addListener(new UIThreadAwareInvalidationListener(listener));</span>
         }
-<span class="nc" id="L72">    }</span>
+<span class="nc" id="L58">    }</span>
 
     @Override
     public void removeListener(InvalidationListener listener) {
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
-<span class="nc" id="L77">            delegate.removeListener(listener);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (listener instanceof UIThreadAware) {</span>
+<span class="nc" id="L63">            getDelegate().removeListener(listener);</span>
         } else {
-<span class="nc" id="L79">            delegate.removeListener(new UIThreadAwareInvalidationListener(listener));</span>
+<span class="nc" id="L65">            getDelegate().removeListener(new UIThreadAwareInvalidationListener(listener));</span>
         }
-<span class="nc" id="L81">    }</span>
-
-    @Override
-    public boolean equals(Object o) {
-<span class="nc bnc" id="L85" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
-    }
-
-    @Override
-    public int hashCode() {
-<span class="nc" id="L90">        return delegate.hashCode();</span>
-    }
-
-    @Override
-    public String toString() {
-<span class="nc" id="L95">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
-    }
+<span class="nc" id="L67">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

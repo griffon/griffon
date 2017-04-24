@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FloatPropertyDecorator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">sample-javafx-groovy</a> &gt; <a href="index.source.html" class="el_package">griffon.javafx.beans.binding</a> &gt; <span class="el_source">FloatPropertyDecorator.java</span></div><h1>FloatPropertyDecorator.java</h1><pre class="source lang-java linenums">/*
+ * Copyright 2008-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package griffon.javafx.beans.binding;
+
+import javafx.beans.InvalidationListener;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.FloatBinding;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.FloatProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableNumberValue;
+import javafx.beans.value.ObservableValue;
+
+import javax.annotation.Nonnull;
+import java.util.Locale;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * @author Andres Almiray
+ * @since 2.11.0
+ */
+public class FloatPropertyDecorator extends FloatProperty {
+    private final FloatProperty delegate;
+
+<span class="nc" id="L43">    public FloatPropertyDecorator(@Nonnull FloatProperty delegate) {</span>
+<span class="nc" id="L44">        this.delegate = requireNonNull(delegate, &quot;Argument 'delegate' must not be null&quot;);</span>
+<span class="nc" id="L45">    }</span>
+
+    @Nonnull
+    protected final FloatProperty getDelegate() {
+<span class="nc" id="L49">        return delegate;</span>
+    }
+
+    @Override
+    public void setValue(Number v) {
+<span class="nc" id="L54">        delegate.setValue(v);</span>
+<span class="nc" id="L55">    }</span>
+
+    @Override
+    public void bindBidirectional(Property&lt;Number&gt; other) {
+<span class="nc" id="L59">        delegate.bindBidirectional(other);</span>
+<span class="nc" id="L60">    }</span>
+
+    @Override
+    public void unbindBidirectional(Property&lt;Number&gt; other) {
+<span class="nc" id="L64">        delegate.unbindBidirectional(other);</span>
+<span class="nc" id="L65">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L69" title="All 4 branches missed.">        return this == o || delegate.equals(o);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L74">        return delegate.hashCode();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L79">        return getClass().getName() + &quot;:&quot; + delegate.toString();</span>
+    }
+
+    @Override
+    public ObjectProperty&lt;Float&gt; asObject() {
+<span class="nc" id="L84">        return delegate.asObject();</span>
+    }
+
+    @Override
+    public int intValue() {
+<span class="nc" id="L89">        return delegate.intValue();</span>
+    }
+
+    @Override
+    public long longValue() {
+<span class="nc" id="L94">        return delegate.longValue();</span>
+    }
+
+    @Override
+    public float floatValue() {
+<span class="nc" id="L99">        return delegate.floatValue();</span>
+    }
+
+    @Override
+    public double doubleValue() {
+<span class="nc" id="L104">        return delegate.doubleValue();</span>
+    }
+
+    @Override
+    public Float getValue() {
+<span class="nc" id="L109">        return delegate.getValue();</span>
+    }
+
+    @Override
+    public FloatBinding negate() {
+<span class="nc" id="L114">        return delegate.negate();</span>
+    }
+
+    @Override
+    public DoubleBinding add(double other) {
+<span class="nc" id="L119">        return delegate.add(other);</span>
+    }
+
+    @Override
+    public FloatBinding add(float other) {
+<span class="nc" id="L124">        return delegate.add(other);</span>
+    }
+
+    @Override
+    public FloatBinding add(long other) {
+<span class="nc" id="L129">        return delegate.add(other);</span>
+    }
+
+    @Override
+    public FloatBinding add(int other) {
+<span class="nc" id="L134">        return delegate.add(other);</span>
+    }
+
+    @Override
+    public DoubleBinding subtract(double other) {
+<span class="nc" id="L139">        return delegate.subtract(other);</span>
+    }
+
+    @Override
+    public FloatBinding subtract(float other) {
+<span class="nc" id="L144">        return delegate.subtract(other);</span>
+    }
+
+    @Override
+    public FloatBinding subtract(long other) {
+<span class="nc" id="L149">        return delegate.subtract(other);</span>
+    }
+
+    @Override
+    public FloatBinding subtract(int other) {
+<span class="nc" id="L154">        return delegate.subtract(other);</span>
+    }
+
+    @Override
+    public DoubleBinding multiply(double other) {
+<span class="nc" id="L159">        return delegate.multiply(other);</span>
+    }
+
+    @Override
+    public FloatBinding multiply(float other) {
+<span class="nc" id="L164">        return delegate.multiply(other);</span>
+    }
+
+    @Override
+    public FloatBinding multiply(long other) {
+<span class="nc" id="L169">        return delegate.multiply(other);</span>
+    }
+
+    @Override
+    public FloatBinding multiply(int other) {
+<span class="nc" id="L174">        return delegate.multiply(other);</span>
+    }
+
+    @Override
+    public DoubleBinding divide(double other) {
+<span class="nc" id="L179">        return delegate.divide(other);</span>
+    }
+
+    @Override
+    public FloatBinding divide(float other) {
+<span class="nc" id="L184">        return delegate.divide(other);</span>
+    }
+
+    @Override
+    public FloatBinding divide(long other) {
+<span class="nc" id="L189">        return delegate.divide(other);</span>
+    }
+
+    @Override
+    public FloatBinding divide(int other) {
+<span class="nc" id="L194">        return delegate.divide(other);</span>
+    }
+
+    @Override
+    public NumberBinding add(ObservableNumberValue other) {
+<span class="nc" id="L199">        return delegate.add(other);</span>
+    }
+
+    @Override
+    public NumberBinding subtract(ObservableNumberValue other) {
+<span class="nc" id="L204">        return delegate.subtract(other);</span>
+    }
+
+    @Override
+    public NumberBinding multiply(ObservableNumberValue other) {
+<span class="nc" id="L209">        return delegate.multiply(other);</span>
+    }
+
+    @Override
+    public NumberBinding divide(ObservableNumberValue other) {
+<span class="nc" id="L214">        return delegate.divide(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(ObservableNumberValue other) {
+<span class="nc" id="L219">        return delegate.isEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(ObservableNumberValue other, double epsilon) {
+<span class="nc" id="L224">        return delegate.isEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(double other, double epsilon) {
+<span class="nc" id="L229">        return delegate.isEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(float other, double epsilon) {
+<span class="nc" id="L234">        return delegate.isEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(long other) {
+<span class="nc" id="L239">        return delegate.isEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(long other, double epsilon) {
+<span class="nc" id="L244">        return delegate.isEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(int other) {
+<span class="nc" id="L249">        return delegate.isEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isEqualTo(int other, double epsilon) {
+<span class="nc" id="L254">        return delegate.isEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(ObservableNumberValue other) {
+<span class="nc" id="L259">        return delegate.isNotEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(ObservableNumberValue other, double epsilon) {
+<span class="nc" id="L264">        return delegate.isNotEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(double other, double epsilon) {
+<span class="nc" id="L269">        return delegate.isNotEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(float other, double epsilon) {
+<span class="nc" id="L274">        return delegate.isNotEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(long other) {
+<span class="nc" id="L279">        return delegate.isNotEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(long other, double epsilon) {
+<span class="nc" id="L284">        return delegate.isNotEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(int other) {
+<span class="nc" id="L289">        return delegate.isNotEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding isNotEqualTo(int other, double epsilon) {
+<span class="nc" id="L294">        return delegate.isNotEqualTo(other, epsilon);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThan(ObservableNumberValue other) {
+<span class="nc" id="L299">        return delegate.greaterThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThan(double other) {
+<span class="nc" id="L304">        return delegate.greaterThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThan(float other) {
+<span class="nc" id="L309">        return delegate.greaterThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThan(long other) {
+<span class="nc" id="L314">        return delegate.greaterThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThan(int other) {
+<span class="nc" id="L319">        return delegate.greaterThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThan(ObservableNumberValue other) {
+<span class="nc" id="L324">        return delegate.lessThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThan(double other) {
+<span class="nc" id="L329">        return delegate.lessThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThan(float other) {
+<span class="nc" id="L334">        return delegate.lessThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThan(long other) {
+<span class="nc" id="L339">        return delegate.lessThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThan(int other) {
+<span class="nc" id="L344">        return delegate.lessThan(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThanOrEqualTo(ObservableNumberValue other) {
+<span class="nc" id="L349">        return delegate.greaterThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThanOrEqualTo(double other) {
+<span class="nc" id="L354">        return delegate.greaterThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThanOrEqualTo(float other) {
+<span class="nc" id="L359">        return delegate.greaterThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThanOrEqualTo(long other) {
+<span class="nc" id="L364">        return delegate.greaterThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding greaterThanOrEqualTo(int other) {
+<span class="nc" id="L369">        return delegate.greaterThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThanOrEqualTo(ObservableNumberValue other) {
+<span class="nc" id="L374">        return delegate.lessThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThanOrEqualTo(double other) {
+<span class="nc" id="L379">        return delegate.lessThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThanOrEqualTo(float other) {
+<span class="nc" id="L384">        return delegate.lessThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThanOrEqualTo(long other) {
+<span class="nc" id="L389">        return delegate.lessThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public BooleanBinding lessThanOrEqualTo(int other) {
+<span class="nc" id="L394">        return delegate.lessThanOrEqualTo(other);</span>
+    }
+
+    @Override
+    public StringBinding asString() {
+<span class="nc" id="L399">        return delegate.asString();</span>
+    }
+
+    @Override
+    public StringBinding asString(String format) {
+<span class="nc" id="L404">        return delegate.asString(format);</span>
+    }
+
+    @Override
+    public StringBinding asString(Locale locale, String format) {
+<span class="nc" id="L409">        return delegate.asString(locale, format);</span>
+    }
+
+    @Override
+    public void addListener(ChangeListener&lt;? super Number&gt; listener) {
+<span class="nc" id="L414">        delegate.addListener(listener);</span>
+<span class="nc" id="L415">    }</span>
+
+    @Override
+    public void removeListener(ChangeListener&lt;? super Number&gt; listener) {
+<span class="nc" id="L419">        delegate.removeListener(listener);</span>
+<span class="nc" id="L420">    }</span>
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+<span class="nc" id="L424">        delegate.addListener(listener);</span>
+<span class="nc" id="L425">    }</span>
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+<span class="nc" id="L429">        delegate.removeListener(listener);</span>
+<span class="nc" id="L430">    }</span>
+
+    @Override
+    public float get() {
+<span class="nc" id="L434">        return delegate.get();</span>
+    }
+
+    @Override
+    public Object getBean() {
+<span class="nc" id="L439">        return delegate.getBean();</span>
+    }
+
+    @Override
+    public String getName() {
+<span class="nc" id="L444">        return delegate.getName();</span>
+    }
+
+    @Override
+    public void bind(ObservableValue&lt;? extends Number&gt; observable) {
+<span class="nc" id="L449">        delegate.bind(observable);</span>
+<span class="nc" id="L450">    }</span>
+
+    @Override
+    public void unbind() {
+<span class="nc" id="L454">        delegate.unbind();</span>
+<span class="nc" id="L455">    }</span>
+
+    @Override
+    public boolean isBound() {
+<span class="nc" id="L459">        return delegate.isBound();</span>
+    }
+
+    @Override
+    public void set(float value) {
+<span class="nc" id="L464">        delegate.set(value);</span>
+<span class="nc" id="L465">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
