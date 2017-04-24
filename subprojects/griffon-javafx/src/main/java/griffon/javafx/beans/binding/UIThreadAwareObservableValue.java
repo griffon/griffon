@@ -21,77 +21,48 @@ import javafx.beans.value.ObservableValue;
 
 import javax.annotation.Nonnull;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Andres Almiray
  * @since 2.9.0
  */
-class UIThreadAwareObservableValue<T> implements ObservableValue<T>, UIThreadAware {
-    private final ObservableValue<T> delegate;
-
-    UIThreadAwareObservableValue(@Nonnull ObservableValue<T> delegate) {
-        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
-    }
-
-    @Nonnull
-    protected ObservableValue<T> getDelegate() {
-        return delegate;
-    }
-
-    @Override
-    public T getValue() {
-        return delegate.getValue();
+abstract class AbstractUIThreadAwareObservableValue<T> extends ObservableValueDecorator<T> implements UIThreadAware {
+    AbstractUIThreadAwareObservableValue(@Nonnull ObservableValue<T> delegate) {
+        super(delegate);
     }
 
     @Override
     public void addListener(ChangeListener<? super T> listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.addListener(listener);
+            getDelegate().addListener(listener);
         } else {
-            delegate.addListener(new UIThreadAwareChangeListener<>(listener));
+            getDelegate().addListener(new UIThreadAwareChangeListener<>(listener));
         }
     }
 
     @Override
     public void removeListener(ChangeListener<? super T> listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.removeListener(listener);
+            getDelegate().removeListener(listener);
         } else {
-            delegate.removeListener(new UIThreadAwareChangeListener<>(listener));
+            getDelegate().removeListener(new UIThreadAwareChangeListener<>(listener));
         }
     }
 
     @Override
     public void addListener(InvalidationListener listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.addListener(listener);
+            getDelegate().addListener(listener);
         } else {
-            delegate.addListener(new UIThreadAwareInvalidationListener(listener));
+            getDelegate().addListener(new UIThreadAwareInvalidationListener(listener));
         }
     }
 
     @Override
     public void removeListener(InvalidationListener listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.removeListener(listener);
+            getDelegate().removeListener(listener);
         } else {
-            delegate.removeListener(new UIThreadAwareInvalidationListener(listener));
+            getDelegate().removeListener(new UIThreadAwareInvalidationListener(listener));
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return this == o || delegate.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return delegate.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getName() + ":" + delegate.toString();
     }
 }
