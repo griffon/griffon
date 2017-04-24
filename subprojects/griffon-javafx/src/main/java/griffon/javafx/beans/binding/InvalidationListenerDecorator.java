@@ -20,24 +20,41 @@ import javafx.beans.Observable;
 
 import javax.annotation.Nonnull;
 
-import static javafx.application.Platform.isFxApplicationThread;
-import static javafx.application.Platform.runLater;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.9.0
+ * @since 2.11.0
  */
-class UIThreadAwareInvalidationListener extends InvalidationListenerDecorator implements UIThreadAware {
-    UIThreadAwareInvalidationListener(@Nonnull InvalidationListener delegate) {
-        super(delegate);
+public class InvalidationListenerDecorator implements InvalidationListener {
+    private final InvalidationListener delegate;
+
+    public InvalidationListenerDecorator(@Nonnull InvalidationListener delegate) {
+        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
+    }
+
+    @Nonnull
+    protected final InvalidationListener getDelegate() {
+        return delegate;
     }
 
     @Override
     public void invalidated(final Observable observable) {
-        if (isFxApplicationThread()) {
-            getDelegate().invalidated(observable);
-        } else {
-            runLater(() -> getDelegate().invalidated(observable));
-        }
+        delegate.invalidated(observable);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + ":" + delegate.toString();
     }
 }

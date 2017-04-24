@@ -19,24 +19,41 @@ import javafx.collections.MapChangeListener;
 
 import javax.annotation.Nonnull;
 
-import static javafx.application.Platform.isFxApplicationThread;
-import static javafx.application.Platform.runLater;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.9.0
+ * @since 2.11.0
  */
-class UIThreadAwareMapChangeListener<K, V> extends MapChangeListenerDecorator<K, V> implements UIThreadAware {
-    UIThreadAwareMapChangeListener(@Nonnull MapChangeListener<K, V> delegate) {
-        super(delegate);
+public class MapChangeListenerDecorator<K, V> implements MapChangeListener<K, V> {
+    private final MapChangeListener<K, V> delegate;
+
+    public MapChangeListenerDecorator(@Nonnull MapChangeListener<K, V> delegate) {
+        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
+    }
+
+    @Nonnull
+    protected final MapChangeListener<K, V> getDelegate() {
+        return delegate;
     }
 
     @Override
     public void onChanged(final Change<? extends K, ? extends V> change) {
-        if (isFxApplicationThread()) {
-            getDelegate().onChanged(change);
-        } else {
-            runLater(() -> getDelegate().onChanged(change));
-        }
+        delegate.onChanged(change);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + ":" + delegate.toString();
     }
 }

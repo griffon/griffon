@@ -18,11 +18,9 @@ package griffon.javafx.beans.binding;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 
 import javax.annotation.Nonnull;
 
-import static java.util.Objects.requireNonNull;
 import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.application.Platform.runLater;
 
@@ -30,100 +28,53 @@ import static javafx.application.Platform.runLater;
  * @author Andres Almiray
  * @since 2.9.0
  */
-class UIThreadAwareObjectProperty<T> extends ObjectProperty<T> implements UIThreadAware {
-    private final ObjectProperty<T> delegate;
-
+class UIThreadAwareObjectProperty<T> extends ObjectPropertyDecorator<T> implements UIThreadAware {
     UIThreadAwareObjectProperty(@Nonnull ObjectProperty<T> delegate) {
-        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
-    }
-
-    @Override
-    public void bind(ObservableValue<? extends T> observable) {
-        delegate.bind(observable);
-    }
-
-    @Override
-    public void unbind() {
-        delegate.unbind();
-    }
-
-    @Override
-    public boolean isBound() {
-        return delegate.isBound();
-    }
-
-    @Override
-    public Object getBean() {
-        return delegate.getBean();
-    }
-
-    @Override
-    public String getName() {
-        return delegate.getName();
-    }
-
-    @Override
-    public T get() {
-        return delegate.get();
+        super(delegate);
     }
 
     @Override
     public void set(final T value) {
         if (isFxApplicationThread()) {
-            delegate.set(value);
+            getDelegate().set(value);
         } else {
-            runLater(() -> delegate.set(value));
+            runLater(() -> getDelegate().set(value));
         }
     }
 
     @Override
     public void addListener(ChangeListener<? super T> listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.addListener(listener);
+            getDelegate().addListener(listener);
         } else {
-            delegate.addListener(new UIThreadAwareChangeListener<>(listener));
+            getDelegate().addListener(new UIThreadAwareChangeListener<>(listener));
         }
     }
 
     @Override
     public void removeListener(ChangeListener<? super T> listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.removeListener(listener);
+            getDelegate().removeListener(listener);
         } else {
-            delegate.removeListener(new UIThreadAwareChangeListener<>(listener));
+            getDelegate().removeListener(new UIThreadAwareChangeListener<>(listener));
         }
     }
 
     @Override
     public void addListener(InvalidationListener listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.addListener(listener);
+            getDelegate().addListener(listener);
         } else {
-            delegate.addListener(new UIThreadAwareInvalidationListener(listener));
+            getDelegate().addListener(new UIThreadAwareInvalidationListener(listener));
         }
     }
 
     @Override
     public void removeListener(InvalidationListener listener) {
         if (listener instanceof UIThreadAware) {
-            delegate.removeListener(listener);
+            getDelegate().removeListener(listener);
         } else {
-            delegate.removeListener(new UIThreadAwareInvalidationListener(listener));
+            getDelegate().removeListener(new UIThreadAwareInvalidationListener(listener));
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return this == o || delegate.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return delegate.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getName() + ":" + delegate.toString();
     }
 }

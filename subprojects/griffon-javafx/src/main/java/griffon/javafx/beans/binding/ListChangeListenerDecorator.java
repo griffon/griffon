@@ -19,24 +19,41 @@ import javafx.collections.ListChangeListener;
 
 import javax.annotation.Nonnull;
 
-import static javafx.application.Platform.isFxApplicationThread;
-import static javafx.application.Platform.runLater;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.9.0
+ * @since 2.11.0
  */
-class UIThreadAwareListChangeListener<E> extends ListChangeListenerDecorator<E> implements UIThreadAware {
-    UIThreadAwareListChangeListener(@Nonnull ListChangeListener<E> delegate) {
-        super(delegate);
+public class ListChangeListenerDecorator<E> implements ListChangeListener<E> {
+    private final ListChangeListener<E> delegate;
+
+    public ListChangeListenerDecorator(@Nonnull ListChangeListener<E> delegate) {
+        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
+    }
+
+    @Nonnull
+    protected final ListChangeListener<E> getDelegate() {
+        return delegate;
     }
 
     @Override
     public void onChanged(final Change<? extends E> change) {
-        if (isFxApplicationThread()) {
-            getDelegate().onChanged(change);
-        } else {
-            runLater(() -> getDelegate().onChanged(change));
-        }
+        delegate.onChanged(change);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + ":" + delegate.toString();
     }
 }

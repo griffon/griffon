@@ -21,7 +21,7 @@ import javafx.beans.value.ObservableFloatValue;
  * @author Andres Almiray
  * @since 2.9.0
  */
-class UIThreadAwareObservableFloatValue extends AbstractUIThreadAwareObservableNumberValue<Float> implements ObservableFloatValue {
+class UIThreadAwareObservableFloatValue extends AbstractUIThreadAwareObservableNumberValue implements ObservableFloatValue {
     UIThreadAwareObservableFloatValue(ObservableFloatValue delegate) {
         super(delegate);
     }

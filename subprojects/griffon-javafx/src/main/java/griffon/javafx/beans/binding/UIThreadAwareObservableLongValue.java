@@ -21,7 +21,7 @@ import javafx.beans.value.ObservableLongValue;
  * @author Andres Almiray
  * @since 2.9.0
  */
-class UIThreadAwareObservableLongValue extends AbstractUIThreadAwareObservableNumberValue<Long> implements ObservableLongValue {
+class UIThreadAwareObservableLongValue extends AbstractUIThreadAwareObservableNumberValue implements ObservableLongValue {
     UIThreadAwareObservableLongValue(ObservableLongValue delegate) {
         super(delegate);
     }

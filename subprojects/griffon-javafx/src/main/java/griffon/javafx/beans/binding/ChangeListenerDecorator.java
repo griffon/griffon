@@ -20,24 +20,41 @@ import javafx.beans.value.ObservableValue;
 
 import javax.annotation.Nonnull;
 
-import static javafx.application.Platform.isFxApplicationThread;
-import static javafx.application.Platform.runLater;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.9.0
+ * @since 2.11.0
  */
-class UIThreadAwareChangeListener<T> extends ChangeListenerDecorator<T> implements UIThreadAware {
-    UIThreadAwareChangeListener(@Nonnull ChangeListener<? super T> delegate) {
-        super(delegate);
+public class ChangeListenerDecorator<T> implements ChangeListener<T> {
+    private final ChangeListener<? super T> delegate;
+
+    public ChangeListenerDecorator(@Nonnull ChangeListener<? super T> delegate) {
+        this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
+    }
+
+    @Nonnull
+    protected final ChangeListener<? super T> getDelegate() {
+        return delegate;
     }
 
     @Override
     public void changed(final ObservableValue<? extends T> observable, final T oldValue, final T newValue) {
-        if (isFxApplicationThread()) {
-            getDelegate().changed(observable, oldValue, newValue);
-        } else {
-            runLater(() -> getDelegate().changed(observable, oldValue, newValue));
-        }
+        delegate.changed(observable, oldValue, newValue);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return this == o || delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + ":" + delegate.toString();
     }
 }
