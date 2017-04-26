@@ -19,8 +19,6 @@ import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,7 +26,6 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  */
 public class DefaultEventRouter extends AbstractEventRouter {
-    private final BlockingQueue<Runnable> deferredEvents = new LinkedBlockingQueue<>();
     private static final String ERROR_PUBLISHER_NULL = "Argument 'publisher' must not be null";
     private UIThreadManager uiThreadManager;
 
