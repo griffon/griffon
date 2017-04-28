@@ -16,10 +16,10 @@
 package griffon.javafx.collections;
 
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.junit.Test;
@@ -34,16 +34,16 @@ import static org.junit.Assert.assertTrue;
 
 public class ElementObservableListTest {
     @Test
-    public void testWithElementAsPropertyContainer() {
+    public void testWithElementAsObservableValueContainer() {
         // given:
-        ObservableList<ObservablePersonAsPropertyContainer> source = observableArrayList();
-        ObservableList<ObservablePersonAsPropertyContainer> target = new ElementObservableList<>(source);
+        ObservableList<ObservablePersonAsObservableValueContainer> source = observableArrayList();
+        ObservableList<ObservablePersonAsObservableValueContainer> target = new ElementObservableList<>(source);
         final AtomicBoolean changed = new AtomicBoolean(false);
-        ListChangeListener<ObservablePersonAsPropertyContainer> listener = c -> changed.set(true);
+        ListChangeListener<ObservablePersonAsObservableValueContainer> listener = c -> changed.set(true);
         target.addListener(listener);
 
         // when:
-        ObservablePersonAsPropertyContainer person = new ObservablePersonAsPropertyContainer(1, "Andres", "Almiray");
+        ObservablePersonAsObservableValueContainer person = new ObservablePersonAsObservableValueContainer(1, "Andres", "Almiray");
         source.add(person);
 
         // then:
@@ -66,7 +66,7 @@ public class ElementObservableListTest {
     }
 
     @Test
-    public void testWithDefaultPropertyExtractor() {
+    public void testWithDefaultObservableValueExtractor() {
         // given:
         ObservableList<ObservablePerson> source = observableArrayList();
         ObservableList<ObservablePerson> target = new ElementObservableList<>(source);
@@ -98,10 +98,10 @@ public class ElementObservableListTest {
     }
 
     @Test
-    public void testWithCustomPropertyExtractor() {
+    public void testWithCustomObservableValueExtractor() {
         // given:
         ObservableList<ObservablePerson> source = observableArrayList();
-        ObservableList<ObservablePerson> target = new ElementObservableList<>(source, new ObservablePerson2PropertyExtractor());
+        ObservableList<ObservablePerson> target = new ElementObservableList<>(source, new ObservablePersonObservableValueExtractor());
         final AtomicBoolean changed = new AtomicBoolean(false);
         ListChangeListener<ObservablePerson> listener = c -> changed.set(true);
         target.addListener(listener);
@@ -177,15 +177,15 @@ public class ElementObservableListTest {
         }
     }
 
-    public static class ObservablePersonAsPropertyContainer extends ObservablePerson implements ElementObservableList.PropertyContainer {
-        public ObservablePersonAsPropertyContainer(int id, String name, String lastname) {
+    public static class ObservablePersonAsObservableValueContainer extends ObservablePerson implements ElementObservableList.ObservableValueContainer {
+        public ObservablePersonAsObservableValueContainer(int id, String name, String lastname) {
             super(id, name, lastname);
         }
 
         @Nonnull
         @Override
-        public Property<?>[] properties() {
-            return new Property<?>[]{
+        public ObservableValue<?>[] observableValues() {
+            return new ObservableValue<?>[]{
                 idProperty(),
                 nameProperty(),
                 lastnameProperty()
@@ -193,11 +193,11 @@ public class ElementObservableListTest {
         }
     }
 
-    public static class ObservablePerson2PropertyExtractor implements ElementObservableList.PropertyExtractor<ObservablePerson> {
+    public static class ObservablePersonObservableValueExtractor implements ElementObservableList.ObservableValueExtractor<ObservablePerson> {
         @Nonnull
         @Override
-        public Property<?>[] properties(@Nullable ObservablePerson instance) {
-            return new Property<?>[]{
+        public ObservableValue<?>[] observableValues(@Nullable ObservablePerson instance) {
+            return new ObservableValue<?>[]{
                 instance.idProperty(),
                 instance.nameProperty(),
                 instance.lastnameProperty()

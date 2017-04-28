@@ -15,13 +15,11 @@
  */
 package griffon.javafx.collections;
 
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,34 +38,34 @@ import static java.util.Objects.requireNonNull;
  * @since 2.10.0
  */
 public class ElementObservableList<E> extends DelegatingObservableList<E> {
-    public interface PropertyContainer {
+    public interface ObservableValueContainer {
         @Nonnull
-        Property<?>[] properties();
+        ObservableValue<?>[] observableValues();
     }
 
-    public interface PropertyExtractor<E> {
+    public interface ObservableValueExtractor<E> {
         @Nonnull
-        Property<?>[] properties(@Nullable E instance);
+        ObservableValue<?>[] observableValues(@Nullable E instance);
     }
 
     private final Map<E, List<ListenerSubscription>> subscriptions = new LinkedHashMap<>();
-    private final PropertyExtractor<E> propertyExtractor;
+    private final ObservableValueExtractor<E> observableValueExtractor;
 
     public ElementObservableList() {
-        this(FXCollections.observableArrayList(), new DefaultPropertyExtractor<>());
+        this(FXCollections.observableArrayList(), new DefaultObservableValueExtractor<>());
     }
 
-    public ElementObservableList(@Nonnull PropertyExtractor<E> propertyExtractor) {
-        this(FXCollections.observableArrayList(), propertyExtractor);
+    public ElementObservableList(@Nonnull ObservableValueExtractor<E> observableValueExtractor) {
+        this(FXCollections.observableArrayList(), observableValueExtractor);
     }
 
     public ElementObservableList(@Nonnull ObservableList<E> delegate) {
-        this(delegate, new DefaultPropertyExtractor<>());
+        this(delegate, new DefaultObservableValueExtractor<>());
     }
 
-    public ElementObservableList(@Nonnull ObservableList<E> delegate, @Nonnull PropertyExtractor<E> propertyExtractor) {
+    public ElementObservableList(@Nonnull ObservableList<E> delegate, @Nonnull ObservableValueExtractor<E> observableValueExtractor) {
         super(delegate);
-        this.propertyExtractor = requireNonNull(propertyExtractor, "Argument 'propertyExtractor' must not be null");
+        this.observableValueExtractor = requireNonNull(observableValueExtractor, "Argument 'observableValueExtractor' must not be null");
     }
 
     @Override
@@ -88,18 +86,18 @@ public class ElementObservableList<E> extends DelegatingObservableList<E> {
         }
 
         List<ListenerSubscription> elementSubscriptions = new ArrayList<>();
-        for (Property<?> property : propertyExtractor.properties(element)) {
-            elementSubscriptions.add(createChangeListener(element, property));
+        for (ObservableValue<?> observable : observableValueExtractor.observableValues(element)) {
+            elementSubscriptions.add(createChangeListener(element, observable));
         }
         subscriptions.put(element, elementSubscriptions);
     }
 
     @Nonnull
     @SuppressWarnings("unchecked")
-    private ListenerSubscription createChangeListener(@Nonnull final E element, @Nonnull final Property<?> property) {
-        final ChangeListener listener = (observable, oldValue, newValue) -> fireChange(changeFor(element));
-        property.addListener(listener);
-        return () -> property.removeListener(listener);
+    private ListenerSubscription createChangeListener(@Nonnull final E element, @Nonnull final ObservableValue<?> observable) {
+        final ChangeListener listener = (value, oldValue, newValue) -> fireChange(changeFor(element));
+        observable.addListener(listener);
+        return () -> observable.removeListener(listener);
     }
 
     @Nonnull
@@ -162,48 +160,40 @@ public class ElementObservableList<E> extends DelegatingObservableList<E> {
         void unsubscribe();
     }
 
-    private static class DefaultPropertyExtractor<T> implements PropertyExtractor<T> {
-        private static final Logger LOG = LoggerFactory.getLogger(DefaultPropertyExtractor.class);
-
-        private final Map<Class<?>, List<Method>> propertyMetadata = new LinkedHashMap<>();
+    private static class DefaultObservableValueExtractor<T> implements ObservableValueExtractor<T> {
+        private final Map<Class<?>, List<Method>> observableValueMetadata = new LinkedHashMap<>();
 
         @Nonnull
         @Override
-        public Property<?>[] properties(@Nullable T instance) {
+        public ObservableValue<?>[] observableValues(@Nullable T instance) {
             if (instance == null) {
-                return new Property[0];
+                return new ObservableValue[0];
             }
 
-            if (instance instanceof PropertyContainer) {
-                return ((PropertyContainer) instance).properties();
+            if (instance instanceof ElementObservableList.ObservableValueContainer) {
+                return ((ObservableValueContainer) instance).observableValues();
             }
 
-            Class<?> klass = instance.getClass();
-            List<Method> metadata = propertyMetadata.get(klass);
-            if (metadata == null) {
-                metadata = harvestMetadata(klass);
-                propertyMetadata.put(klass, metadata);
-            }
+            List<Method> metadata = observableValueMetadata.computeIfAbsent(instance.getClass(), this::harvestMetadata);
 
-            Property[] properties = new Property[metadata.size()];
-            for (int i = 0; i < properties.length; i++) {
+            ObservableValue[] observableValues = new ObservableValue[metadata.size()];
+            for (int i = 0; i < observableValues.length; i++) {
                 try {
-                    properties[i] = (Property) metadata.get(i).invoke(instance);
+                    observableValues[i] = (ObservableValue) metadata.get(i).invoke(instance);
                 } catch (IllegalAccessException e) {
                     throw new IllegalStateException(e);
                 } catch (InvocationTargetException e) {
                     throw new IllegalStateException(e.getTargetException());
                 }
             }
-            return properties;
+            return observableValues;
         }
 
         private List<Method> harvestMetadata(@Nonnull Class<?> klass) {
             List<Method> metadata = new ArrayList<>();
 
             for (Method method : klass.getMethods()) {
-                if (Property.class.isAssignableFrom(method.getReturnType()) &&
-                    method.getName().endsWith("Property") &&
+                if (ObservableValue.class.isAssignableFrom(method.getReturnType()) &&
                     method.getParameterCount() == 0) {
                     metadata.add(method);
                 }
