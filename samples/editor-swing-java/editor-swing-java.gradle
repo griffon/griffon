@@ -64,8 +64,3 @@ sourceSets {
         }
     }
 }
-
-gradle.taskGraph.whenReady {
-    sourceSets.main.java.srcDirs.each { it.mkdirs() }
-    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
-}

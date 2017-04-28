@@ -98,7 +98,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
                 application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
                 application.getInjector().injectMembers(target);
 
-                await().timeout(timeout).until(() -> startingWindow.isShowing());
+                await().timeout(timeout).until(startingWindow::isShowing);
 
                 before(application, target);
                 try {

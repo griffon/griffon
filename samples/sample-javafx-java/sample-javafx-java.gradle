@@ -76,9 +76,4 @@ javafx {
     mainClass = mainClassName
 }
 
-gradle.taskGraph.whenReady {
-    sourceSets.main.java.srcDirs.each { it.mkdirs() }
-    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
-}
-
 compileGroovy.enabled = false
