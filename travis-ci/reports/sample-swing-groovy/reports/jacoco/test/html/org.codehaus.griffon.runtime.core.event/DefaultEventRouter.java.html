@@ -19,35 +19,32 @@ import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  */
-<span class="fc" id="L30">public class DefaultEventRouter extends AbstractEventRouter {</span>
-<span class="fc" id="L31">    private final BlockingQueue&lt;Runnable&gt; deferredEvents = new LinkedBlockingQueue&lt;&gt;();</span>
+<span class="fc" id="L28">public class DefaultEventRouter extends AbstractEventRouter {</span>
     private static final String ERROR_PUBLISHER_NULL = &quot;Argument 'publisher' must not be null&quot;;
     private UIThreadManager uiThreadManager;
 
     @Inject
     public void setUIThreadManager(@Nonnull UIThreadManager uiThreadManager) {
-<span class="fc" id="L37">        this.uiThreadManager = requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc" id="L34">        this.uiThreadManager = requireNonNull(uiThreadManager, &quot;Argument 'uiThreadManager' must not be null&quot;);</span>
+<span class="fc" id="L35">    }</span>
 
     protected void doPublishOutsideUI(@Nonnull Runnable publisher) {
-<span class="nc" id="L41">        requireNonNull(publisher, ERROR_PUBLISHER_NULL);</span>
-<span class="nc bnc" id="L42" title="All 2 branches missed.">        if (!uiThreadManager.isUIThread()) {</span>
-<span class="nc" id="L43">            publisher.run();</span>
+<span class="nc" id="L38">        requireNonNull(publisher, ERROR_PUBLISHER_NULL);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (!uiThreadManager.isUIThread()) {</span>
+<span class="nc" id="L40">            publisher.run();</span>
         } else {
-<span class="nc" id="L45">            runInsideExecutorService(publisher);</span>
+<span class="nc" id="L42">            runInsideExecutorService(publisher);</span>
         }
-<span class="nc" id="L47">    }</span>
+<span class="nc" id="L44">    }</span>
 
     protected void doPublishAsync(@Nonnull Runnable publisher) {
-<span class="nc" id="L50">        executorService.submit(publisher);</span>
-<span class="nc" id="L51">    }</span>
+<span class="nc" id="L47">        executorService.submit(publisher);</span>
+<span class="nc" id="L48">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

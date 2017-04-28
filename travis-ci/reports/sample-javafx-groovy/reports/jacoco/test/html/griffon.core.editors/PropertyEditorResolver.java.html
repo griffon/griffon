@@ -45,7 +45,7 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L45">    private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);</span>
 <span class="fc" id="L46">    private static final Object LOCK = new Object[0];</span>
     @GuardedBy(&quot;LOCK&quot;)
-<span class="fc" id="L48">    private static final WeakCache&lt;String, Class&lt;? extends PropertyEditor&gt;&gt; propertyEditorRegistry = new WeakCache();</span>
+<span class="fc" id="L48">    private static final WeakCache&lt;String, Class&lt;? extends PropertyEditor&gt;&gt; propertyEditorRegistry = new WeakCache&lt;&gt;();</span>
     @GuardedBy(&quot;LOCK&quot;)
 <span class="fc" id="L50">    private static final Map&lt;String, PropertyEditorChain&gt; propertyEditorChainRegistry = new LinkedHashMap&lt;&gt;();</span>
     private static final String ERROR_TARGET_TYPE_NULL = &quot;Argument 'targetType' must not be null&quot;;
@@ -207,11 +207,11 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L207">        private final Map&lt;K, Reference&lt;V&gt;&gt; map = new WeakHashMap&lt;&gt;();</span>
 
         private V get(K key) {
-<span class="fc" id="L210">            Reference reference = this.map.get(key);</span>
+<span class="fc" id="L210">            Reference&lt;V&gt; reference = this.map.get(key);</span>
 <span class="fc bfc" id="L211" title="All 2 branches covered.">            if (reference == null) {</span>
 <span class="fc" id="L212">                return null;</span>
             } else {
-<span class="fc" id="L214">                V value = (V) reference.get();</span>
+<span class="fc" id="L214">                V value = reference.get();</span>
 <span class="pc bpc" id="L215" title="1 of 2 branches missed.">                if (value == null) {</span>
 <span class="nc" id="L216">                    this.map.remove(key);</span>
                 }
@@ -233,11 +233,11 @@ public final class PropertyEditorResolver {
 <span class="fc" id="L233">        }</span>
 
         private boolean contains(K key) {
-<span class="nc" id="L236">            Reference reference = this.map.get(key);</span>
+<span class="nc" id="L236">            Reference&lt;V&gt; reference = this.map.get(key);</span>
 <span class="nc bnc" id="L237" title="All 2 branches missed.">            if (reference == null) {</span>
 <span class="nc" id="L238">                return false;</span>
             } else {
-<span class="nc" id="L240">                V value = (V) reference.get();</span>
+<span class="nc" id="L240">                V value = reference.get();</span>
 <span class="nc bnc" id="L241" title="All 2 branches missed.">                if (value == null) {</span>
 <span class="nc" id="L242">                    this.map.remove(key);</span>
 <span class="nc" id="L243">                    return false;</span>

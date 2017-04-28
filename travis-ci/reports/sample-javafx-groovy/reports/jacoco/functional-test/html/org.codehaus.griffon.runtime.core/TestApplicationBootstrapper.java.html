@@ -161,258 +161,261 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
 <span class="nc" id="L161">    }</span>
 
     @Nonnull
+    @SuppressWarnings(&quot;unchecked&quot;)
     private List&lt;Module&gt; harvestModulesFromMethod(@Nonnull Class&lt;?&gt; clazz, @Nonnull String methodName, @Nonnull Class&lt;? extends Annotation&gt; annotationClass) {
-<span class="nc" id="L165">        Method annotatedMethod = null;</span>
+<span class="nc" id="L166">        Method annotatedMethod = null;</span>
 
         // check annotation first
-<span class="nc bnc" id="L168" title="All 2 branches missed.">        for (Method m : clazz.getDeclaredMethods()) {</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">            if (m.getAnnotation(annotationClass) != null) {</span>
-<span class="nc" id="L170">                annotatedMethod = m;</span>
-<span class="nc" id="L171">                break;</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        for (Method m : clazz.getDeclaredMethods()) {</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (m.getAnnotation(annotationClass) != null) {</span>
+<span class="nc" id="L171">                annotatedMethod = m;</span>
+<span class="nc" id="L172">                break;</span>
             }
         }
 
         // check using naming convention
-<span class="nc" id="L176">        Method namedMethod = null;</span>
+<span class="nc" id="L177">        Method namedMethod = null;</span>
         try {
-<span class="nc" id="L178">            namedMethod = clazz.getDeclaredMethod(methodName);</span>
-<span class="nc" id="L179">        } catch (NoSuchMethodException e) {</span>
-<span class="nc bnc" id="L180" title="All 2 branches missed.">            if (annotatedMethod == null) {</span>
-<span class="nc" id="L181">                return Collections.emptyList();</span>
+<span class="nc" id="L179">            namedMethod = clazz.getDeclaredMethod(methodName);</span>
+<span class="nc" id="L180">        } catch (NoSuchMethodException e) {</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">            if (annotatedMethod == null) {</span>
+<span class="nc" id="L182">                return Collections.emptyList();</span>
             }
-<span class="nc" id="L183">        }</span>
+<span class="nc" id="L184">        }</span>
 
-<span class="nc bnc" id="L185" title="All 4 branches missed.">        if (namedMethod != null &amp;&amp; annotatedMethod != namedMethod) {</span>
-<span class="nc" id="L186">            System.err.println(&quot;Usage of method named '&quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;()' is discouraged. Rename the method and annotate it with @&quot; + annotationClass.getSimpleName());</span>
+<span class="nc bnc" id="L186" title="All 4 branches missed.">        if (namedMethod != null &amp;&amp; annotatedMethod != namedMethod) {</span>
+<span class="nc" id="L187">            System.err.println(&quot;Usage of method named '&quot; + clazz.getName() + &quot;.&quot; + methodName + &quot;()' is discouraged. Rename the method and annotate it with @&quot; + annotationClass.getSimpleName());</span>
         }
 
-<span class="nc bnc" id="L189" title="All 2 branches missed.">        Method method = annotatedMethod != null ? annotatedMethod : namedMethod;</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        Method method = annotatedMethod != null ? annotatedMethod : namedMethod;</span>
         try {
-<span class="nc" id="L191">            method.setAccessible(true);</span>
-<span class="nc" id="L192">            return (List&lt;Module&gt;) method.invoke(testCase);</span>
-<span class="nc" id="L193">        } catch (Exception e) {</span>
-<span class="nc" id="L194">            throw new IllegalArgumentException(&quot;An error occurred while initializing modules from &quot; + clazz.getName() + &quot;.&quot; + method.getName(), e);</span>
+<span class="nc" id="L192">            method.setAccessible(true);</span>
+<span class="nc" id="L193">            return (List&lt;Module&gt;) method.invoke(testCase);</span>
+<span class="nc" id="L194">        } catch (Exception e) {</span>
+<span class="nc" id="L195">            throw new IllegalArgumentException(&quot;An error occurred while initializing modules from &quot; + clazz.getName() + &quot;.&quot; + method.getName(), e);</span>
         }
     }
 
     private void doCollectModulesFromInnerClasses(@Nonnull final Collection&lt;Module&gt; modules) {
-<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        if (testCase != null) {</span>
-<span class="nc" id="L200">            modules.add(new InnerClassesModule());</span>
-<span class="nc" id="L201">            modules.addAll(harvestInnerModules());</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">        if (testCase != null) {</span>
+<span class="nc" id="L201">            modules.add(new InnerClassesModule());</span>
+<span class="nc" id="L202">            modules.addAll(harvestInnerModules());</span>
         }
-<span class="fc" id="L203">    }</span>
+<span class="fc" id="L204">    }</span>
 
     @Nonnull
     private Collection&lt;? extends Module&gt; harvestInnerModules() {
-<span class="nc" id="L207">        Class&lt;?&gt; clazz = testCase.getClass();</span>
-<span class="nc" id="L208">        List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L209" title="All 2 branches missed.">        while (clazz != null) {</span>
-<span class="nc" id="L210">            classes.add(clazz);</span>
-<span class="nc" id="L211">            clazz = clazz.getSuperclass();</span>
+<span class="nc" id="L208">        Class&lt;?&gt; clazz = testCase.getClass();</span>
+<span class="nc" id="L209">        List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        while (clazz != null) {</span>
+<span class="nc" id="L211">            classes.add(clazz);</span>
+<span class="nc" id="L212">            clazz = clazz.getSuperclass();</span>
         }
 
-<span class="nc" id="L214">        Collections.reverse(classes);</span>
+<span class="nc" id="L215">        Collections.reverse(classes);</span>
 
-<span class="nc" id="L216">        List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L217" title="All 2 branches missed.">        for (Class&lt;?&gt; c : classes) {</span>
-<span class="nc" id="L218">            modules.addAll(doHarvestInnerModules(c));</span>
-<span class="nc" id="L219">        }</span>
+<span class="nc" id="L217">        List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        for (Class&lt;?&gt; c : classes) {</span>
+<span class="nc" id="L219">            modules.addAll(doHarvestInnerModules(c));</span>
+<span class="nc" id="L220">        }</span>
 
-<span class="nc" id="L221">        return modules;</span>
+<span class="nc" id="L222">        return modules;</span>
     }
 
     @Nonnull
     private Collection&lt;? extends Module&gt; doHarvestInnerModules(@Nonnull Class&lt;?&gt; rootClass) {
-<span class="nc" id="L226">        List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L227" title="All 2 branches missed.">        for (Class&lt;?&gt; clazz : rootClass.getDeclaredClasses()) {</span>
-<span class="nc bnc" id="L228" title="All 4 branches missed.">            if (!Module.class.isAssignableFrom(clazz) || !Modifier.isPublic(clazz.getModifiers())) {</span>
-<span class="nc" id="L229">                continue;</span>
+<span class="nc" id="L227">        List&lt;Module&gt; modules = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        for (Class&lt;?&gt; clazz : rootClass.getDeclaredClasses()) {</span>
+<span class="nc bnc" id="L229" title="All 4 branches missed.">            if (!Module.class.isAssignableFrom(clazz) || !Modifier.isPublic(clazz.getModifiers())) {</span>
+<span class="nc" id="L230">                continue;</span>
             }
 
             try {
-<span class="nc" id="L233">                modules.add((Module) clazz.newInstance());</span>
-<span class="nc" id="L234">            } catch (InstantiationException | IllegalAccessException e) {</span>
-<span class="nc" id="L235">                LOG.error(&quot;Can't instantiate module &quot; + clazz.getName() + &quot; . Make sure it's marked as public and provides a no-args constructor.&quot;);</span>
-<span class="nc" id="L236">            }</span>
+<span class="nc" id="L234">                modules.add((Module) clazz.newInstance());</span>
+<span class="nc" id="L235">            } catch (InstantiationException | IllegalAccessException e) {</span>
+<span class="nc" id="L236">                LOG.error(&quot;Can't instantiate module &quot; + clazz.getName() + &quot; . Make sure it's marked as public and provides a no-args constructor.&quot;);</span>
+<span class="nc" id="L237">            }</span>
         }
-<span class="nc" id="L238">        return modules;</span>
+<span class="nc" id="L239">        return modules;</span>
     }
 
     private void doCollectModulesFromFields(@Nonnull final Collection&lt;Module&gt; modules) {
-<span class="pc bpc" id="L242" title="1 of 2 branches missed.">        if (testCase != null) {</span>
-<span class="nc" id="L243">            modules.add(new FieldsModule());</span>
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (testCase != null) {</span>
+<span class="nc" id="L244">            modules.add(new FieldsModule());</span>
         }
-<span class="fc" id="L245">    }</span>
+<span class="fc" id="L246">    }</span>
 
     @Nonnull
     protected List&lt;Annotation&gt; harvestQualifiers(@Nonnull Class&lt;?&gt; clazz) {
-<span class="nc" id="L249">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L250">        Annotation[] annotations = clazz.getAnnotations();</span>
-<span class="nc bnc" id="L251" title="All 2 branches missed.">        for (Annotation annotation : annotations) {</span>
-<span class="nc bnc" id="L252" title="All 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
-<span class="nc bnc" id="L253" title="All 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
-<span class="nc" id="L254">                    continue;</span>
+<span class="nc" id="L250">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L251">        Annotation[] annotations = clazz.getAnnotations();</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        for (Annotation annotation : annotations) {</span>
+<span class="nc bnc" id="L253" title="All 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
+<span class="nc" id="L255">                    continue;</span>
                 }
 
                 // special case for @Named
-<span class="nc bnc" id="L258" title="All 2 branches missed.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
-<span class="nc" id="L259">                    Named named = (Named) annotation;</span>
-<span class="nc bnc" id="L260" title="All 2 branches missed.">                    if (isBlank(named.value())) {</span>
-<span class="nc" id="L261">                        list.add(named(getPropertyName(clazz)));</span>
-<span class="nc" id="L262">                        continue;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
+<span class="nc" id="L260">                    Named named = (Named) annotation;</span>
+<span class="nc bnc" id="L261" title="All 2 branches missed.">                    if (isBlank(named.value())) {</span>
+<span class="nc" id="L262">                        list.add(named(getPropertyName(clazz)));</span>
+<span class="nc" id="L263">                        continue;</span>
                     }
                 }
-<span class="nc" id="L265">                list.add(annotation);</span>
+<span class="nc" id="L266">                list.add(annotation);</span>
             }
         }
-<span class="nc" id="L268">        return list;</span>
+<span class="nc" id="L269">        return list;</span>
     }
 
     @Nonnull
     protected List&lt;Annotation&gt; harvestQualifiers(@Nonnull Field field) {
-<span class="nc" id="L273">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L274">        Annotation[] annotations = field.getAnnotations();</span>
-<span class="nc bnc" id="L275" title="All 2 branches missed.">        for (Annotation annotation : annotations) {</span>
-<span class="nc bnc" id="L276" title="All 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
-<span class="nc bnc" id="L277" title="All 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
-<span class="nc" id="L278">                    continue;</span>
+<span class="nc" id="L274">        List&lt;Annotation&gt; list = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L275">        Annotation[] annotations = field.getAnnotations();</span>
+<span class="nc bnc" id="L276" title="All 2 branches missed.">        for (Annotation annotation : annotations) {</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">            if (AnnotationUtils.isAnnotatedWith(annotation, Qualifier.class)) {</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                if (BindTo.class.isAssignableFrom(annotation.getClass())) {</span>
+<span class="nc" id="L279">                    continue;</span>
                 }
 
                 // special case for @Named
-<span class="nc bnc" id="L282" title="All 2 branches missed.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
-<span class="nc" id="L283">                    Named named = (Named) annotation;</span>
-<span class="nc bnc" id="L284" title="All 2 branches missed.">                    if (isBlank(named.value())) {</span>
-<span class="nc" id="L285">                        list.add(named(getPropertyName(field.getName())));</span>
-<span class="nc" id="L286">                        continue;</span>
+<span class="nc bnc" id="L283" title="All 2 branches missed.">                if (Named.class.isAssignableFrom(annotation.getClass())) {</span>
+<span class="nc" id="L284">                    Named named = (Named) annotation;</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">                    if (isBlank(named.value())) {</span>
+<span class="nc" id="L286">                        list.add(named(getPropertyName(field.getName())));</span>
+<span class="nc" id="L287">                        continue;</span>
                     }
                 }
-<span class="nc" id="L289">                list.add(annotation);</span>
+<span class="nc" id="L290">                list.add(annotation);</span>
             }
         }
-<span class="nc" id="L292">        return list;</span>
+<span class="nc" id="L293">        return list;</span>
     }
 
-<span class="nc" id="L295">    private class InnerClassesModule extends AbstractTestingModule {</span>
+<span class="nc" id="L296">    private class InnerClassesModule extends AbstractTestingModule {</span>
         @Override
         @SuppressWarnings(&quot;unchecked&quot;)
         protected void doConfigure() {
-<span class="nc" id="L299">            Class&lt;?&gt; clazz = testCase.getClass();</span>
-<span class="nc" id="L300">            List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L301" title="All 2 branches missed.">            while (clazz != null) {</span>
-<span class="nc" id="L302">                classes.add(clazz);</span>
-<span class="nc" id="L303">                clazz = clazz.getSuperclass();</span>
+<span class="nc" id="L300">            Class&lt;?&gt; clazz = testCase.getClass();</span>
+<span class="nc" id="L301">            List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">            while (clazz != null) {</span>
+<span class="nc" id="L303">                classes.add(clazz);</span>
+<span class="nc" id="L304">                clazz = clazz.getSuperclass();</span>
             }
 
-<span class="nc" id="L306">            Collections.reverse(classes);</span>
-<span class="nc bnc" id="L307" title="All 2 branches missed.">            for (Class&lt;?&gt; c : classes) {</span>
-<span class="nc" id="L308">                harvestBindings(c);</span>
-<span class="nc" id="L309">            }</span>
-<span class="nc" id="L310">        }</span>
+<span class="nc" id="L307">            Collections.reverse(classes);</span>
+<span class="nc bnc" id="L308" title="All 2 branches missed.">            for (Class&lt;?&gt; c : classes) {</span>
+<span class="nc" id="L309">                harvestBindings(c);</span>
+<span class="nc" id="L310">            }</span>
+<span class="nc" id="L311">        }</span>
 
+        @SuppressWarnings(&quot;unchecked&quot;)
         protected void harvestBindings(@Nonnull Class&lt;?&gt; rootClass) {
-<span class="nc bnc" id="L313" title="All 2 branches missed.">            for (Class&lt;?&gt; clazz : rootClass.getDeclaredClasses()) {</span>
-<span class="nc" id="L314">                BindTo bindTo = clazz.getAnnotation(BindTo.class);</span>
-<span class="nc bnc" id="L315" title="All 2 branches missed.">                if (bindTo == null) { continue; }</span>
-<span class="nc" id="L316">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(clazz);</span>
-<span class="nc bnc" id="L317" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
-<span class="nc bnc" id="L318" title="All 2 branches missed.">                boolean isSingleton = clazz.getAnnotation(Singleton.class) != null;</span>
+<span class="nc bnc" id="L315" title="All 2 branches missed.">            for (Class&lt;?&gt; clazz : rootClass.getDeclaredClasses()) {</span>
+<span class="nc" id="L316">                BindTo bindTo = clazz.getAnnotation(BindTo.class);</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">                if (bindTo == null) { continue; }</span>
+<span class="nc" id="L318">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(clazz);</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
+<span class="nc bnc" id="L320" title="All 2 branches missed.">                boolean isSingleton = clazz.getAnnotation(Singleton.class) != null;</span>
 
-<span class="nc" id="L320">                AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
-<span class="nc bnc" id="L321" title="All 2 branches missed.">                if (classifier != null) {</span>
-<span class="nc" id="L322">                    LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
-<span class="nc bnc" id="L323" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
-<span class="nc" id="L324">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) clazz);</span>
-<span class="nc bnc" id="L325" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
-<span class="nc" id="L326">                    } else {</span>
-<span class="nc" id="L327">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) clazz);</span>
-<span class="nc bnc" id="L328" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L322">                AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">                if (classifier != null) {</span>
+<span class="nc" id="L324">                    LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
+<span class="nc bnc" id="L325" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
+<span class="nc" id="L326">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) clazz);</span>
+<span class="nc bnc" id="L327" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L328">                    } else {</span>
+<span class="nc" id="L329">                        SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) clazz);</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
                     }
-<span class="nc" id="L330">                } else {</span>
-<span class="nc bnc" id="L331" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
-<span class="nc" id="L332">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) clazz);</span>
-<span class="nc bnc" id="L333" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
-<span class="nc" id="L334">                    } else {</span>
-<span class="nc" id="L335">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) clazz);</span>
-<span class="nc bnc" id="L336" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L332">                } else {</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">                    if (Provider.class.isAssignableFrom(clazz)) {</span>
+<span class="nc" id="L334">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) clazz);</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L336">                    } else {</span>
+<span class="nc" id="L337">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) clazz);</span>
+<span class="nc bnc" id="L338" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
                     }
                 }
             }
-<span class="nc" id="L340">        }</span>
+<span class="nc" id="L342">        }</span>
     }
 
-<span class="nc" id="L343">    private class FieldsModule extends AbstractTestingModule {</span>
+<span class="nc" id="L345">    private class FieldsModule extends AbstractTestingModule {</span>
         @Override
         @SuppressWarnings(&quot;unchecked&quot;)
         protected void doConfigure() {
-<span class="nc" id="L347">            Class&lt;?&gt; clazz = testCase.getClass();</span>
-<span class="nc" id="L348">            List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L349" title="All 2 branches missed.">            while (clazz != null) {</span>
-<span class="nc" id="L350">                classes.add(clazz);</span>
-<span class="nc" id="L351">                clazz = clazz.getSuperclass();</span>
+<span class="nc" id="L349">            Class&lt;?&gt; clazz = testCase.getClass();</span>
+<span class="nc" id="L350">            List&lt;Class&lt;?&gt;&gt; classes = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L351" title="All 2 branches missed.">            while (clazz != null) {</span>
+<span class="nc" id="L352">                classes.add(clazz);</span>
+<span class="nc" id="L353">                clazz = clazz.getSuperclass();</span>
             }
 
-<span class="nc" id="L354">            Collections.reverse(classes);</span>
-<span class="nc bnc" id="L355" title="All 2 branches missed.">            for (Class&lt;?&gt; c : classes) {</span>
-<span class="nc" id="L356">                harvestBindings(c);</span>
-<span class="nc" id="L357">            }</span>
-<span class="nc" id="L358">        }</span>
+<span class="nc" id="L356">            Collections.reverse(classes);</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">            for (Class&lt;?&gt; c : classes) {</span>
+<span class="nc" id="L358">                harvestBindings(c);</span>
+<span class="nc" id="L359">            }</span>
+<span class="nc" id="L360">        }</span>
 
+        @SuppressWarnings(&quot;unchecked&quot;)
         protected void harvestBindings(@Nonnull Class&lt;?&gt; rootClass) {
-<span class="nc bnc" id="L361" title="All 2 branches missed.">            for (Field field : rootClass.getDeclaredFields()) {</span>
-<span class="nc" id="L362">                BindTo bindTo = field.getAnnotation(BindTo.class);</span>
-<span class="nc bnc" id="L363" title="All 2 branches missed.">                if (bindTo == null) { continue; }</span>
-<span class="nc" id="L364">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(field);</span>
-<span class="nc bnc" id="L365" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
-<span class="nc bnc" id="L366" title="All 2 branches missed.">                boolean isSingleton = field.getAnnotation(Singleton.class) != null;</span>
+<span class="nc bnc" id="L364" title="All 2 branches missed.">            for (Field field : rootClass.getDeclaredFields()) {</span>
+<span class="nc" id="L365">                BindTo bindTo = field.getAnnotation(BindTo.class);</span>
+<span class="nc bnc" id="L366" title="All 2 branches missed.">                if (bindTo == null) { continue; }</span>
+<span class="nc" id="L367">                List&lt;Annotation&gt; qualifiers = harvestQualifiers(field);</span>
+<span class="nc bnc" id="L368" title="All 2 branches missed.">                Annotation classifier = qualifiers.isEmpty() ? null : qualifiers.get(0);</span>
+<span class="nc bnc" id="L369" title="All 2 branches missed.">                boolean isSingleton = field.getAnnotation(Singleton.class) != null;</span>
 
-<span class="nc" id="L368">                field.setAccessible(true);</span>
-<span class="nc" id="L369">                Object instance = null;</span>
+<span class="nc" id="L371">                field.setAccessible(true);</span>
+<span class="nc" id="L372">                Object instance = null;</span>
                 try {
-<span class="nc" id="L371">                    instance = field.get(testCase);</span>
-<span class="nc" id="L372">                } catch (IllegalAccessException e) {</span>
-<span class="nc" id="L373">                    throw new IllegalArgumentException(e);</span>
-<span class="nc" id="L374">                }</span>
+<span class="nc" id="L374">                    instance = field.get(testCase);</span>
+<span class="nc" id="L375">                } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L376">                    throw new IllegalArgumentException(e);</span>
+<span class="nc" id="L377">                }</span>
 
-<span class="nc bnc" id="L376" title="All 2 branches missed.">                if (instance != null) {</span>
-<span class="nc" id="L377">                    AnnotatedBindingBuilder&lt;Object&gt; abuilder = (AnnotatedBindingBuilder&lt;Object&gt;) bind(bindTo.value());</span>
-<span class="nc bnc" id="L378" title="All 2 branches missed.">                    if (classifier != null) {</span>
-<span class="nc bnc" id="L379" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
-<span class="nc" id="L380">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder</span>
-<span class="nc" id="L381">                                .withClassifier(classifier)</span>
-<span class="nc" id="L382">                                .toProvider((Provider&lt;Object&gt;) instance);</span>
-<span class="nc bnc" id="L383" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
-<span class="nc" id="L384">                        } else {</span>
-<span class="nc" id="L385">                            abuilder.withClassifier(classifier).toInstance(instance);</span>
+<span class="nc bnc" id="L379" title="All 2 branches missed.">                if (instance != null) {</span>
+<span class="nc" id="L380">                    AnnotatedBindingBuilder&lt;Object&gt; abuilder = (AnnotatedBindingBuilder&lt;Object&gt;) bind(bindTo.value());</span>
+<span class="nc bnc" id="L381" title="All 2 branches missed.">                    if (classifier != null) {</span>
+<span class="nc bnc" id="L382" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
+<span class="nc" id="L383">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder</span>
+<span class="nc" id="L384">                                .withClassifier(classifier)</span>
+<span class="nc" id="L385">                                .toProvider((Provider&lt;Object&gt;) instance);</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L387">                        } else {</span>
+<span class="nc" id="L388">                            abuilder.withClassifier(classifier).toInstance(instance);</span>
                         }
-<span class="nc bnc" id="L387" title="All 2 branches missed.">                    } else if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
-<span class="nc" id="L388">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Provider&lt;Object&gt;) instance);</span>
-<span class="nc bnc" id="L389" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
-<span class="nc" id="L390">                    } else {</span>
-<span class="nc" id="L391">                        abuilder.toInstance(instance);</span>
+<span class="nc bnc" id="L390" title="All 2 branches missed.">                    } else if (Provider.class.isAssignableFrom(instance.getClass())) {</span>
+<span class="nc" id="L391">                        SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Provider&lt;Object&gt;) instance);</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">                        if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L393">                    } else {</span>
+<span class="nc" id="L394">                        abuilder.toInstance(instance);</span>
                     }
-<span class="nc" id="L393">                } else {</span>
-<span class="nc" id="L394">                    AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
-<span class="nc bnc" id="L395" title="All 2 branches missed.">                    if (classifier != null) {</span>
-<span class="nc" id="L396">                        LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
-<span class="nc bnc" id="L397" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
-<span class="nc" id="L398">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) field.getType());</span>
-<span class="nc bnc" id="L399" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
-<span class="nc" id="L400">                        } else {</span>
-<span class="nc" id="L401">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) field.getType());</span>
+<span class="nc" id="L396">                } else {</span>
+<span class="nc" id="L397">                    AnnotatedBindingBuilder&lt;?&gt; abuilder = bind(bindTo.value());</span>
+<span class="nc bnc" id="L398" title="All 2 branches missed.">                    if (classifier != null) {</span>
+<span class="nc" id="L399">                        LinkedBindingBuilder&lt;?&gt; lbuilder = abuilder.withClassifier(classifier);</span>
+<span class="nc bnc" id="L400" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
+<span class="nc" id="L401">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.toProvider((Class) field.getType());</span>
 <span class="nc bnc" id="L402" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L403">                        } else {</span>
+<span class="nc" id="L404">                            SingletonBindingBuilder&lt;?&gt; sbuilder = lbuilder.to((Class) field.getType());</span>
+<span class="nc bnc" id="L405" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
                         }
-<span class="nc" id="L404">                    } else {</span>
-<span class="nc bnc" id="L405" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
-<span class="nc" id="L406">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) field.getType());</span>
-<span class="nc bnc" id="L407" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
-<span class="nc" id="L408">                        } else {</span>
-<span class="nc" id="L409">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) field.getType());</span>
+<span class="nc" id="L407">                    } else {</span>
+<span class="nc bnc" id="L408" title="All 2 branches missed.">                        if (Provider.class.isAssignableFrom(field.getType())) {</span>
+<span class="nc" id="L409">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.toProvider((Class) field.getType());</span>
 <span class="nc bnc" id="L410" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
+<span class="nc" id="L411">                        } else {</span>
+<span class="nc" id="L412">                            SingletonBindingBuilder&lt;?&gt; sbuilder = abuilder.to((Class) field.getType());</span>
+<span class="nc bnc" id="L413" title="All 2 branches missed.">                            if (isSingleton) { sbuilder.asSingleton(); }</span>
                         }
                     }
                 }
             }
-<span class="nc" id="L415">        }</span>
+<span class="nc" id="L418">        }</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

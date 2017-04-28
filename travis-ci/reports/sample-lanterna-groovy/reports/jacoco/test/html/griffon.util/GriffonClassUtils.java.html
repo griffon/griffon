@@ -141,7 +141,7 @@ import static java.util.Objects.requireNonNull;
         }
 
         try {
-<span class="fc" id="L144">            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass(&quot;groovy.lang.GroovyObject&quot;);</span>
+<span class="fc" id="L144">            Class&lt;?&gt; groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass(&quot;groovy.lang.GroovyObject&quot;);</span>
 <span class="fc bfc" id="L145" title="All 2 branches covered.">            for (Method method : groovyObjectClass.getMethods()) {</span>
 <span class="fc" id="L146">                MethodDescriptor md = MethodDescriptor.forMethod(method, true);</span>
 <span class="pc bpc" id="L147" title="1 of 2 branches missed.">                if (!BASIC_METHODS.contains(md)) {</span>
@@ -153,7 +153,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L153">        }</span>
 
         try {
-<span class="fc" id="L156">            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass(&quot;groovy.lang.GroovyObjectSupport&quot;);</span>
+<span class="fc" id="L156">            Class&lt;?&gt; groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass(&quot;groovy.lang.GroovyObjectSupport&quot;);</span>
 <span class="fc bfc" id="L157" title="All 2 branches covered.">            for (Method method : groovyObjectClass.getMethods()) {</span>
 <span class="fc" id="L158">                MethodDescriptor md = MethodDescriptor.forMethod(method);</span>
 <span class="pc bpc" id="L159" title="1 of 2 branches missed.">                if (!BASIC_METHODS.contains(md)) {</span>
@@ -1999,7 +1999,7 @@ import static java.util.Objects.requireNonNull;
 <span class="nc" id="L1999">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
 
 <span class="nc" id="L2001">        Class&lt;?&gt; clazz = obj.getClass();</span>
-<span class="nc" id="L2002">        Class c = clazz;</span>
+<span class="nc" id="L2002">        Class&lt;?&gt; c = clazz;</span>
 <span class="nc bnc" id="L2003" title="All 4 branches missed.">        while (c != null &amp;&amp; !c.equals(Object.class)) {</span>
 <span class="nc" id="L2004">            Field field = null;</span>
 <span class="nc" id="L2005">            boolean wasAccessible = false;</span>
@@ -2047,7 +2047,7 @@ import static java.util.Objects.requireNonNull;
 <span class="nc" id="L2047">        requireNonNull(clazz, ERROR_CLAZZ_NULL);</span>
 <span class="nc" id="L2048">        requireNonBlank(name, ERROR_NAME_BLANK);</span>
 
-<span class="nc" id="L2050">        Class c = clazz;</span>
+<span class="nc" id="L2050">        Class&lt;?&gt; c = clazz;</span>
 <span class="nc bnc" id="L2051" title="All 4 branches missed.">        while (c != null &amp;&amp; !c.equals(Object.class)) {</span>
 <span class="nc" id="L2052">            Field field = null;</span>
             try {
@@ -2078,7 +2078,7 @@ import static java.util.Objects.requireNonNull;
 
 <span class="nc" id="L2079">        List&lt;Field&gt; fields = new ArrayList&lt;&gt;();</span>
 
-<span class="nc" id="L2081">        Class c = clazz;</span>
+<span class="nc" id="L2081">        Class&lt;?&gt; c = clazz;</span>
 <span class="nc bnc" id="L2082" title="All 4 branches missed.">        while (c != null &amp;&amp; !c.equals(Object.class)) {</span>
 <span class="nc" id="L2083">            Field[] declaredFields = c.getDeclaredFields();</span>
 <span class="nc bnc" id="L2084" title="All 4 branches missed.">            if (declaredFields != null &amp;&amp; declaredFields.length &gt; 0) {</span>

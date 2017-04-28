@@ -75,8 +75,8 @@ public final class UIThreadAwareBindings {
      */
     public static &lt;T&gt; ChangeListener&lt;T&gt; uiThreadAwareBind(@Nonnull final Property&lt;T&gt; property, @Nonnull final ObservableValue&lt;T&gt; observable) {
 <span class="nc" id="L77">        requireNonNull(property, ERROR_PROPERTY_NULL);</span>
-<span class="nc" id="L78">        ChangeListener&lt;T&gt; listener = (v, o, n) -&gt; property.setValue(n);</span>
-<span class="nc" id="L79">        return uiThreadAwareChangeListener(observable, listener);</span>
+<span class="nc" id="L78">        property.setValue(observable.getValue());</span>
+<span class="nc" id="L79">        return uiThreadAwareChangeListener(observable, (v, o, n) -&gt; property.setValue(n));</span>
     }
 
     /**

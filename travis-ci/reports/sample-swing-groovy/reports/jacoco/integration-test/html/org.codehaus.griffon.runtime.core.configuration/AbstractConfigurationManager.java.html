@@ -74,7 +74,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L74">        requireNonNull(instance, ERROR_INSTANCE_NULL);</span>
 
 <span class="fc" id="L76">        Map&lt;String, ConfigurationDescriptor&gt; descriptors = new LinkedHashMap&lt;&gt;();</span>
-<span class="fc" id="L77">        Class klass = instance.getClass();</span>
+<span class="fc" id="L77">        Class&lt;?&gt; klass = instance.getClass();</span>
         do {
 <span class="fc" id="L79">            harvestDescriptors(instance.getClass(), klass, instance, descriptors);</span>
 <span class="fc" id="L80">            klass = klass.getSuperclass();</span>
@@ -83,7 +83,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L83">        doConfigurationInjection(instance, descriptors);</span>
 <span class="fc" id="L84">    }</span>
 
-    protected void harvestDescriptors(@Nonnull Class instanceClass, @Nonnull Class currentClass, @Nonnull Object instance, @Nonnull Map&lt;String, ConfigurationDescriptor&gt; descriptors) {
+    protected void harvestDescriptors(@Nonnull Class&lt;?&gt; instanceClass, @Nonnull Class&lt;?&gt; currentClass, @Nonnull Object instance, @Nonnull Map&lt;String, ConfigurationDescriptor&gt; descriptors) {
 <span class="fc" id="L87">        PropertyDescriptor[] propertyDescriptors = GriffonClassUtils.getPropertyDescriptors(currentClass);</span>
 <span class="fc bfc" id="L88" title="All 2 branches covered.">        for (PropertyDescriptor pd : propertyDescriptors) {</span>
 <span class="fc" id="L89">            Method writeMethod = pd.getWriteMethod();</span>
@@ -120,7 +120,7 @@ import static java.util.Objects.requireNonNull;
 <span class="fc" id="L120">            final Configured annotation = field.getAnnotation(Configured.class);</span>
 <span class="pc bpc" id="L121" title="1 of 2 branches missed.">            if (null == annotation) { continue; }</span>
 
-<span class="nc" id="L123">            Class resolvedClass = field.getDeclaringClass();</span>
+<span class="nc" id="L123">            Class&lt;?&gt; resolvedClass = field.getDeclaringClass();</span>
 <span class="nc" id="L124">            String fqFieldName = resolvedClass.getName().replace('$', '.') + &quot;.&quot; + field.getName();</span>
 <span class="nc" id="L125">            String configuration = annotation.configuration().trim();</span>
 <span class="nc" id="L126">            String key = annotation.value();</span>

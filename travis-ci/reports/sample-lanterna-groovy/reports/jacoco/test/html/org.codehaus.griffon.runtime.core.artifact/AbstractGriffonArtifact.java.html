@@ -63,7 +63,7 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
 
     @Override
     @Nonnull
-    public Class getTypeClass() {
+    public Class&lt;? extends GriffonArtifact&gt; getTypeClass() {
 <span class="fc" id="L67">        return getClass();</span>
     }
 

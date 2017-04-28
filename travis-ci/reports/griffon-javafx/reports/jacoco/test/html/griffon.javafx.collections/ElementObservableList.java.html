@@ -15,13 +15,11 @@
  */
 package griffon.javafx.collections;
 
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,176 +38,168 @@ import static java.util.Objects.requireNonNull;
  * @since 2.10.0
  */
 public class ElementObservableList&lt;E&gt; extends DelegatingObservableList&lt;E&gt; {
-    public interface PropertyContainer {
+    public interface ObservableValueContainer {
         @Nonnull
-        Property&lt;?&gt;[] properties();
+        ObservableValue&lt;?&gt;[] observableValues();
     }
 
-    public interface PropertyExtractor&lt;E&gt; {
+    public interface ObservableValueExtractor&lt;E&gt; {
         @Nonnull
-        Property&lt;?&gt;[] properties(@Nullable E instance);
+        ObservableValue&lt;?&gt;[] observableValues(@Nullable E instance);
     }
 
-<span class="fc" id="L53">    private final Map&lt;E, List&lt;ListenerSubscription&gt;&gt; subscriptions = new LinkedHashMap&lt;&gt;();</span>
-    private final PropertyExtractor&lt;E&gt; propertyExtractor;
+<span class="fc" id="L51">    private final Map&lt;E, List&lt;ListenerSubscription&gt;&gt; subscriptions = new LinkedHashMap&lt;&gt;();</span>
+    private final ObservableValueExtractor&lt;E&gt; observableValueExtractor;
 
     public ElementObservableList() {
-<span class="nc" id="L57">        this(FXCollections.observableArrayList(), new DefaultPropertyExtractor&lt;&gt;());</span>
-<span class="nc" id="L58">    }</span>
+<span class="nc" id="L55">        this(FXCollections.observableArrayList(), new DefaultObservableValueExtractor&lt;&gt;());</span>
+<span class="nc" id="L56">    }</span>
 
-    public ElementObservableList(@Nonnull PropertyExtractor&lt;E&gt; propertyExtractor) {
-<span class="nc" id="L61">        this(FXCollections.observableArrayList(), propertyExtractor);</span>
-<span class="nc" id="L62">    }</span>
+    public ElementObservableList(@Nonnull ObservableValueExtractor&lt;E&gt; observableValueExtractor) {
+<span class="nc" id="L59">        this(FXCollections.observableArrayList(), observableValueExtractor);</span>
+<span class="nc" id="L60">    }</span>
 
     public ElementObservableList(@Nonnull ObservableList&lt;E&gt; delegate) {
-<span class="fc" id="L65">        this(delegate, new DefaultPropertyExtractor&lt;&gt;());</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L63">        this(delegate, new DefaultObservableValueExtractor&lt;&gt;());</span>
+<span class="fc" id="L64">    }</span>
 
-    public ElementObservableList(@Nonnull ObservableList&lt;E&gt; delegate, @Nonnull PropertyExtractor&lt;E&gt; propertyExtractor) {
-<span class="fc" id="L69">        super(delegate);</span>
-<span class="fc" id="L70">        this.propertyExtractor = requireNonNull(propertyExtractor, &quot;Argument 'propertyExtractor' must not be null&quot;);</span>
-<span class="fc" id="L71">    }</span>
+    public ElementObservableList(@Nonnull ObservableList&lt;E&gt; delegate, @Nonnull ObservableValueExtractor&lt;E&gt; observableValueExtractor) {
+<span class="fc" id="L67">        super(delegate);</span>
+<span class="fc" id="L68">        this.observableValueExtractor = requireNonNull(observableValueExtractor, &quot;Argument 'observableValueExtractor' must not be null&quot;);</span>
+<span class="fc" id="L69">    }</span>
 
     @Override
     protected void sourceChanged(@Nonnull ListChangeListener.Change&lt;? extends E&gt; c) {
-<span class="fc bfc" id="L75" title="All 2 branches covered.">        while (c.next()) {</span>
-<span class="fc bfc" id="L76" title="All 2 branches covered.">            if (c.wasAdded()) {</span>
-<span class="fc" id="L77">                c.getAddedSubList().forEach(this::registerListeners);</span>
-<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            } else if (c.wasRemoved()) {</span>
-<span class="fc" id="L79">                c.getRemoved().forEach(this::unregisterListeners);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        while (c.next()) {</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            if (c.wasAdded()) {</span>
+<span class="fc" id="L75">                c.getAddedSubList().forEach(this::registerListeners);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">            } else if (c.wasRemoved()) {</span>
+<span class="fc" id="L77">                c.getRemoved().forEach(this::unregisterListeners);</span>
             }
         }
-<span class="fc" id="L82">        fireChange(c);</span>
-<span class="fc" id="L83">    }</span>
+<span class="fc" id="L80">        fireChange(c);</span>
+<span class="fc" id="L81">    }</span>
 
     private void registerListeners(@Nonnull E element) {
-<span class="pc bpc" id="L86" title="1 of 2 branches missed.">        if (subscriptions.containsKey(element)) {</span>
-<span class="nc" id="L87">            return;</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (subscriptions.containsKey(element)) {</span>
+<span class="nc" id="L85">            return;</span>
         }
 
-<span class="fc" id="L90">        List&lt;ListenerSubscription&gt; elementSubscriptions = new ArrayList&lt;&gt;();</span>
-<span class="fc bfc" id="L91" title="All 2 branches covered.">        for (Property&lt;?&gt; property : propertyExtractor.properties(element)) {</span>
-<span class="fc" id="L92">            elementSubscriptions.add(createChangeListener(element, property));</span>
+<span class="fc" id="L88">        List&lt;ListenerSubscription&gt; elementSubscriptions = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (ObservableValue&lt;?&gt; observable : observableValueExtractor.observableValues(element)) {</span>
+<span class="fc" id="L90">            elementSubscriptions.add(createChangeListener(element, observable));</span>
         }
-<span class="fc" id="L94">        subscriptions.put(element, elementSubscriptions);</span>
-<span class="fc" id="L95">    }</span>
+<span class="fc" id="L92">        subscriptions.put(element, elementSubscriptions);</span>
+<span class="fc" id="L93">    }</span>
 
     @Nonnull
     @SuppressWarnings(&quot;unchecked&quot;)
-    private ListenerSubscription createChangeListener(@Nonnull final E element, @Nonnull final Property&lt;?&gt; property) {
-<span class="fc" id="L100">        final ChangeListener listener = (observable, oldValue, newValue) -&gt; fireChange(changeFor(element));</span>
-<span class="fc" id="L101">        property.addListener(listener);</span>
-<span class="fc" id="L102">        return () -&gt; property.removeListener(listener);</span>
+    private ListenerSubscription createChangeListener(@Nonnull final E element, @Nonnull final ObservableValue&lt;?&gt; observable) {
+<span class="fc" id="L98">        final ChangeListener listener = (value, oldValue, newValue) -&gt; fireChange(changeFor(element));</span>
+<span class="fc" id="L99">        observable.addListener(listener);</span>
+<span class="fc" id="L100">        return () -&gt; observable.removeListener(listener);</span>
     }
 
     @Nonnull
     private ListChangeListener.Change&lt;? extends E&gt; changeFor(@Nonnull final E element) {
-<span class="fc" id="L107">        final int position = indexOf(element);</span>
-<span class="fc" id="L108">        final int[] permutations = new int[0];</span>
+<span class="fc" id="L105">        final int position = indexOf(element);</span>
+<span class="fc" id="L106">        final int[] permutations = new int[0];</span>
 
-<span class="fc" id="L110">        return new ListChangeListener.Change&lt;E&gt;(this) {</span>
-<span class="fc" id="L111">            private boolean invalid = true;</span>
+<span class="fc" id="L108">        return new ListChangeListener.Change&lt;E&gt;(this) {</span>
+<span class="fc" id="L109">            private boolean invalid = true;</span>
 
             @Override
             public boolean next() {
-<span class="nc bnc" id="L115" title="All 2 branches missed.">                if (invalid) {</span>
-<span class="nc" id="L116">                    invalid = false;</span>
-<span class="nc" id="L117">                    return true;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                if (invalid) {</span>
+<span class="nc" id="L114">                    invalid = false;</span>
+<span class="nc" id="L115">                    return true;</span>
                 }
-<span class="nc" id="L119">                return false;</span>
+<span class="nc" id="L117">                return false;</span>
             }
 
             @Override
             public void reset() {
-<span class="fc" id="L124">                invalid = true;</span>
-<span class="fc" id="L125">            }</span>
+<span class="fc" id="L122">                invalid = true;</span>
+<span class="fc" id="L123">            }</span>
 
             @Override
             public int getFrom() {
-<span class="nc" id="L129">                return position;</span>
+<span class="nc" id="L127">                return position;</span>
             }
 
             @Override
             public int getTo() {
-<span class="nc" id="L134">                return position + 1;</span>
+<span class="nc" id="L132">                return position + 1;</span>
             }
 
             @Override
             public List&lt;E&gt; getRemoved() {
-<span class="nc" id="L139">                return Collections.emptyList();</span>
+<span class="nc" id="L137">                return Collections.emptyList();</span>
             }
 
             @Override
             protected int[] getPermutation() {
-<span class="nc" id="L144">                return permutations;</span>
+<span class="nc" id="L142">                return permutations;</span>
             }
 
             @Override
             public boolean wasUpdated() {
-<span class="nc" id="L149">                return true;</span>
+<span class="nc" id="L147">                return true;</span>
             }
         };
     }
 
     private void unregisterListeners(@Nonnull E element) {
-<span class="fc" id="L155">        List&lt;ListenerSubscription&gt; registeredSubscriptions = subscriptions.remove(element);</span>
-<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (registeredSubscriptions != null) {</span>
-<span class="fc" id="L157">            registeredSubscriptions.forEach(ListenerSubscription::unsubscribe);</span>
+<span class="fc" id="L153">        List&lt;ListenerSubscription&gt; registeredSubscriptions = subscriptions.remove(element);</span>
+<span class="pc bpc" id="L154" title="1 of 2 branches missed.">        if (registeredSubscriptions != null) {</span>
+<span class="fc" id="L155">            registeredSubscriptions.forEach(ListenerSubscription::unsubscribe);</span>
         }
-<span class="fc" id="L159">    }</span>
+<span class="fc" id="L157">    }</span>
 
     private interface ListenerSubscription {
         void unsubscribe();
     }
 
-<span class="fc" id="L165">    private static class DefaultPropertyExtractor&lt;T&gt; implements PropertyExtractor&lt;T&gt; {</span>
-<span class="fc" id="L166">        private static final Logger LOG = LoggerFactory.getLogger(DefaultPropertyExtractor.class);</span>
-
-<span class="fc" id="L168">        private final Map&lt;Class&lt;?&gt;, List&lt;Method&gt;&gt; propertyMetadata = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L163">    private static class DefaultObservableValueExtractor&lt;T&gt; implements ObservableValueExtractor&lt;T&gt; {</span>
+<span class="fc" id="L164">        private final Map&lt;Class&lt;?&gt;, List&lt;Method&gt;&gt; observableValueMetadata = new LinkedHashMap&lt;&gt;();</span>
 
         @Nonnull
         @Override
-        public Property&lt;?&gt;[] properties(@Nullable T instance) {
-<span class="pc bpc" id="L173" title="1 of 2 branches missed.">            if (instance == null) {</span>
-<span class="nc" id="L174">                return new Property[0];</span>
+        public ObservableValue&lt;?&gt;[] observableValues(@Nullable T instance) {
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">            if (instance == null) {</span>
+<span class="nc" id="L170">                return new ObservableValue[0];</span>
             }
 
-<span class="fc bfc" id="L177" title="All 2 branches covered.">            if (instance instanceof PropertyContainer) {</span>
-<span class="fc" id="L178">                return ((PropertyContainer) instance).properties();</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">            if (instance instanceof ElementObservableList.ObservableValueContainer) {</span>
+<span class="fc" id="L174">                return ((ObservableValueContainer) instance).observableValues();</span>
             }
 
-<span class="fc" id="L181">            Class&lt;?&gt; klass = instance.getClass();</span>
-<span class="fc" id="L182">            List&lt;Method&gt; metadata = propertyMetadata.get(klass);</span>
-<span class="pc bpc" id="L183" title="1 of 2 branches missed.">            if (metadata == null) {</span>
-<span class="fc" id="L184">                metadata = harvestMetadata(klass);</span>
-<span class="fc" id="L185">                propertyMetadata.put(klass, metadata);</span>
-            }
+<span class="fc" id="L177">            List&lt;Method&gt; metadata = observableValueMetadata.computeIfAbsent(instance.getClass(), this::harvestMetadata);</span>
 
-<span class="fc" id="L188">            Property[] properties = new Property[metadata.size()];</span>
-<span class="fc bfc" id="L189" title="All 2 branches covered.">            for (int i = 0; i &lt; properties.length; i++) {</span>
+<span class="fc" id="L179">            ObservableValue[] observableValues = new ObservableValue[metadata.size()];</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">            for (int i = 0; i &lt; observableValues.length; i++) {</span>
                 try {
-<span class="fc" id="L191">                    properties[i] = (Property) metadata.get(i).invoke(instance);</span>
-<span class="nc" id="L192">                } catch (IllegalAccessException e) {</span>
-<span class="nc" id="L193">                    throw new IllegalStateException(e);</span>
-<span class="nc" id="L194">                } catch (InvocationTargetException e) {</span>
-<span class="nc" id="L195">                    throw new IllegalStateException(e.getTargetException());</span>
-<span class="fc" id="L196">                }</span>
+<span class="fc" id="L182">                    observableValues[i] = (ObservableValue) metadata.get(i).invoke(instance);</span>
+<span class="nc" id="L183">                } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L184">                    throw new IllegalStateException(e);</span>
+<span class="nc" id="L185">                } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L186">                    throw new IllegalStateException(e.getTargetException());</span>
+<span class="fc" id="L187">                }</span>
             }
-<span class="fc" id="L198">            return properties;</span>
+<span class="fc" id="L189">            return observableValues;</span>
         }
 
         private List&lt;Method&gt; harvestMetadata(@Nonnull Class&lt;?&gt; klass) {
-<span class="fc" id="L202">            List&lt;Method&gt; metadata = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L193">            List&lt;Method&gt; metadata = new ArrayList&lt;&gt;();</span>
 
-<span class="fc bfc" id="L204" title="All 2 branches covered.">            for (Method method : klass.getMethods()) {</span>
-<span class="fc bfc" id="L205" title="All 2 branches covered.">                if (Property.class.isAssignableFrom(method.getReturnType()) &amp;&amp;</span>
-<span class="pc bpc" id="L206" title="1 of 2 branches missed.">                    method.getName().endsWith(&quot;Property&quot;) &amp;&amp;</span>
-<span class="pc bpc" id="L207" title="1 of 2 branches missed.">                    method.getParameterCount() == 0) {</span>
-<span class="fc" id="L208">                    metadata.add(method);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">            for (Method method : klass.getMethods()) {</span>
+<span class="fc bfc" id="L196" title="All 2 branches covered.">                if (ObservableValue.class.isAssignableFrom(method.getReturnType()) &amp;&amp;</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">                    method.getParameterCount() == 0) {</span>
+<span class="fc" id="L198">                    metadata.add(method);</span>
                 }
             }
 
-<span class="fc" id="L212">            return metadata;</span>
+<span class="fc" id="L202">            return metadata;</span>
         }
     }
 }
