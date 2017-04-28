@@ -141,7 +141,7 @@ public class GriffonClassUtils {
         }
 
         try {
-            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass("groovy.lang.GroovyObject");
+            Class<?> groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass("groovy.lang.GroovyObject");
             for (Method method : groovyObjectClass.getMethods()) {
                 MethodDescriptor md = MethodDescriptor.forMethod(method, true);
                 if (!BASIC_METHODS.contains(md)) {
@@ -153,7 +153,7 @@ public class GriffonClassUtils {
         }
 
         try {
-            Class groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass("groovy.lang.GroovyObjectSupport");
+            Class<?> groovyObjectClass = GriffonClassUtils.class.getClassLoader().loadClass("groovy.lang.GroovyObjectSupport");
             for (Method method : groovyObjectClass.getMethods()) {
                 MethodDescriptor md = MethodDescriptor.forMethod(method);
                 if (!BASIC_METHODS.contains(md)) {
@@ -1999,7 +1999,7 @@ public class GriffonClassUtils {
         requireNonBlank(name, ERROR_NAME_BLANK);
 
         Class<?> clazz = obj.getClass();
-        Class c = clazz;
+        Class<?> c = clazz;
         while (c != null && !c.equals(Object.class)) {
             Field field = null;
             boolean wasAccessible = false;
@@ -2047,7 +2047,7 @@ public class GriffonClassUtils {
         requireNonNull(clazz, ERROR_CLAZZ_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
 
-        Class c = clazz;
+        Class<?> c = clazz;
         while (c != null && !c.equals(Object.class)) {
             Field field = null;
             try {
@@ -2078,7 +2078,7 @@ public class GriffonClassUtils {
 
         List<Field> fields = new ArrayList<>();
 
-        Class c = clazz;
+        Class<?> c = clazz;
         while (c != null && !c.equals(Object.class)) {
             Field[] declaredFields = c.getDeclaredFields();
             if (declaredFields != null && declaredFields.length > 0) {

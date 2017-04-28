@@ -132,9 +132,9 @@ public abstract class AbstractEventRouter implements EventRouter {
 
     @Override
     public void publishEvent(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEventPublishingEnabled()) return;
+        if (!isEventPublishingEnabled()) { return; }
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        if (params == null) params = EMPTY_LIST;
+        if (params == null) { params = EMPTY_LIST; }
         buildPublisher(eventName, params, "synchronously").run();
     }
 
@@ -145,9 +145,9 @@ public abstract class AbstractEventRouter implements EventRouter {
 
     @Override
     public void publishEventOutsideUI(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEventPublishingEnabled()) return;
+        if (!isEventPublishingEnabled()) { return; }
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        if (params == null) params = EMPTY_LIST;
+        if (params == null) { params = EMPTY_LIST; }
         final Runnable publisher = buildPublisher(eventName, params, "outside UI");
         doPublishOutsideUI(publisher);
     }
@@ -161,9 +161,9 @@ public abstract class AbstractEventRouter implements EventRouter {
 
     @Override
     public void publishEventAsync(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEventPublishingEnabled()) return;
+        if (!isEventPublishingEnabled()) { return; }
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        if (params == null) params = EMPTY_LIST;
+        if (params == null) { params = EMPTY_LIST; }
         final Runnable publisher = buildPublisher(eventName, params, "asynchronously");
         doPublishAsync(publisher);
     }
@@ -367,7 +367,7 @@ public abstract class AbstractEventRouter implements EventRouter {
                 list = new ArrayList<>();
                 functionalListeners.put(capitalize(eventName), list);
             }
-            if (list.contains(listener)) return;
+            if (list.contains(listener)) { return; }
             LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
             list.add(listener);
         }
@@ -383,7 +383,7 @@ public abstract class AbstractEventRouter implements EventRouter {
                 list = new ArrayList<>();
                 functionalListeners.put(capitalize(eventName), list);
             }
-            if (list.contains(listener)) return;
+            if (list.contains(listener)) { return; }
             LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
             list.add(listener);
         }
@@ -442,9 +442,9 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         List<Object> listeners = new ArrayList<>();
         List<Object> instances = instanceListeners.get(eventName);
-        if (instances != null) listeners.addAll(instances);
+        if (instances != null) { listeners.addAll(instances); }
         instances = functionalListeners.get(eventName);
-        if (instances != null) listeners.addAll(instances);
+        if (instances != null) { listeners.addAll(instances); }
         return unmodifiableCollection(listeners);
     }
 
@@ -464,11 +464,9 @@ public abstract class AbstractEventRouter implements EventRouter {
                     listenersCopy.addAll(instances);
                 }
                 synchronized (functionalListeners) {
-                    List list = functionalListeners.get(eventName);
+                    List<?> list = functionalListeners.get(eventName);
                     if (list != null) {
-                        for (Object listener : list) {
-                            listenersCopy.add(listener);
-                        }
+                        listenersCopy.addAll(list);
                     }
                 }
 
@@ -607,8 +605,8 @@ public abstract class AbstractEventRouter implements EventRouter {
 
         public Thread newThread(Runnable r) {
             Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
-            if (t.isDaemon()) t.setDaemon(false);
-            if (t.getPriority() != Thread.NORM_PRIORITY) t.setPriority(Thread.NORM_PRIORITY);
+            if (t.isDaemon()) { t.setDaemon(false); }
+            if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
             return t;
         }
     }

@@ -36,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 
 public class TypeUtilsTest {
     @Test
+    @SuppressWarnings("unchecked")
     public void setEquality() {
         Set<?> s1 = newSet(2, "a");
         Set<?> s2 = newSet("a", 2);
@@ -77,6 +78,7 @@ public class TypeUtilsTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void listEquality() {
         List<?> l1 = newList(2, "a");
         List<?> l2 = newList(2, "a");

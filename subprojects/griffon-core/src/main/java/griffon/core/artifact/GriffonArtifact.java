@@ -58,7 +58,7 @@ public interface GriffonArtifact extends ThreadingHandler, MVCHandler, ResourceH
      * @since 2.10.0
      */
     @Nonnull
-    Class getTypeClass();
+    Class<? extends GriffonArtifact> getTypeClass();
 
     /**
      * Returns a Logger instance suitable for this Artifact.<p>

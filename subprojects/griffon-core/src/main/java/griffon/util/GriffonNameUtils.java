@@ -490,7 +490,7 @@ public class GriffonNameUtils {
      * @return the joined String
      */
     @Nonnull
-    public static String join(@Nonnull Iterable self, @Nullable String separator) {
+    public static String join(@Nonnull Iterable<?> self, @Nullable String separator) {
         StringBuilder buffer = new StringBuilder();
         boolean first = true;
 

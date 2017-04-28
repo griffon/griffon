@@ -161,6 +161,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
     }
 
     @Nonnull
+    @SuppressWarnings("unchecked")
     private List<Module> harvestModulesFromMethod(@Nonnull Class<?> clazz, @Nonnull String methodName, @Nonnull Class<? extends Annotation> annotationClass) {
         Method annotatedMethod = null;
 
@@ -309,6 +310,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
             }
         }
 
+        @SuppressWarnings("unchecked")
         protected void harvestBindings(@Nonnull Class<?> rootClass) {
             for (Class<?> clazz : rootClass.getDeclaredClasses()) {
                 BindTo bindTo = clazz.getAnnotation(BindTo.class);
@@ -357,6 +359,7 @@ public class TestApplicationBootstrapper extends DefaultApplicationBootstrapper 
             }
         }
 
+        @SuppressWarnings("unchecked")
         protected void harvestBindings(@Nonnull Class<?> rootClass) {
             for (Field field : rootClass.getDeclaredFields()) {
                 BindTo bindTo = field.getAnnotation(BindTo.class);

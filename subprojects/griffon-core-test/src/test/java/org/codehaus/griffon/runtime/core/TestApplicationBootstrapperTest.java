@@ -75,10 +75,10 @@ public class TestApplicationBootstrapperTest {
 
         // then:
         assertEquals(1, modules.size());
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -101,10 +101,10 @@ public class TestApplicationBootstrapperTest {
 
         // then:
         assertEquals(1, modules.size());
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -127,10 +127,10 @@ public class TestApplicationBootstrapperTest {
 
         // then:
         assertEquals(1, modules.size());
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -154,10 +154,10 @@ public class TestApplicationBootstrapperTest {
 
         // then:
         assertEquals(1, modules.size());
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -179,10 +179,10 @@ public class TestApplicationBootstrapperTest {
         List<Module> modules = bootstrapper.loadModules();
 
         // then:
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -204,10 +204,10 @@ public class TestApplicationBootstrapperTest {
         List<Module> modules = bootstrapper.loadModules();
 
         // then:
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -229,10 +229,10 @@ public class TestApplicationBootstrapperTest {
         List<Module> modules = bootstrapper.loadModules();
 
         // then:
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -254,10 +254,10 @@ public class TestApplicationBootstrapperTest {
         List<Module> modules = bootstrapper.loadModules();
 
         // then:
-        Map<Key, Binding<?>> bindings = getBindings(modules);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             if (e.getValue() instanceof TargetBinding) {
-                TargetBinding tb = (TargetBinding) e.getValue();
+                TargetBinding<?> tb = (TargetBinding) e.getValue();
                 if (ApplicationClassLoader.class.isAssignableFrom(tb.getSource())) {
                     assertTrue(TestApplicationClassLoader.class.isAssignableFrom(tb.getTarget()));
                     return;
@@ -377,9 +377,9 @@ public class TestApplicationBootstrapperTest {
         List<Module> modules = bootstrapper.loadModules();
 
         // then:
-        Map<Key, Binding<?>> bindings = getBindings(modules);
+        Map<Key<?>, Binding<?>> bindings = getBindings(modules);
         assertTrue(bindings.size() > 1);
-        for (Map.Entry<Key, Binding<?>> e : bindings.entrySet()) {
+        for (Map.Entry<Key<?>, Binding<?>> e : bindings.entrySet()) {
             Binding<?> binding = e.getValue();
             if (Atom.class.isAssignableFrom(binding.getSource())) {
                 if (binding instanceof TargetBinding) {
@@ -406,7 +406,7 @@ public class TestApplicationBootstrapperTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void assertTargetBinding(TargetBinding binding, List<BindingTypes> bindingTypes, boolean singleton) throws Exception {
+    private void assertTargetBinding(TargetBinding<? extends Atom> binding, List<BindingTypes> bindingTypes, boolean singleton) throws Exception {
         if (singleton) {
             assertTrue(binding.isSingleton());
         }
@@ -493,8 +493,8 @@ public class TestApplicationBootstrapperTest {
     }
 
     @Nonnull
-    protected Map<Key, Binding<?>> getBindings(@Nonnull Collection<Module> modules) {
-        Map<Key, Binding<?>> map = new LinkedHashMap<>();
+    protected Map<Key<?>, Binding<?>> getBindings(@Nonnull Collection<Module> modules) {
+        Map<Key<?>, Binding<?>> map = new LinkedHashMap<>();
 
         for (Module module : modules) {
             for (Binding<?> binding : module.getBindings()) {

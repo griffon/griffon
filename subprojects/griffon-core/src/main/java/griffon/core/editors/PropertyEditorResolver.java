@@ -45,7 +45,7 @@ public final class PropertyEditorResolver {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyEditorResolver.class);
     private static final Object LOCK = new Object[0];
     @GuardedBy("LOCK")
-    private static final WeakCache<String, Class<? extends PropertyEditor>> propertyEditorRegistry = new WeakCache();
+    private static final WeakCache<String, Class<? extends PropertyEditor>> propertyEditorRegistry = new WeakCache<>();
     @GuardedBy("LOCK")
     private static final Map<String, PropertyEditorChain> propertyEditorChainRegistry = new LinkedHashMap<>();
     private static final String ERROR_TARGET_TYPE_NULL = "Argument 'targetType' must not be null";
@@ -207,11 +207,11 @@ public final class PropertyEditorResolver {
         private final Map<K, Reference<V>> map = new WeakHashMap<>();
 
         private V get(K key) {
-            Reference reference = this.map.get(key);
+            Reference<V> reference = this.map.get(key);
             if (reference == null) {
                 return null;
             } else {
-                V value = (V) reference.get();
+                V value = reference.get();
                 if (value == null) {
                     this.map.remove(key);
                 }
@@ -233,11 +233,11 @@ public final class PropertyEditorResolver {
         }
 
         private boolean contains(K key) {
-            Reference reference = this.map.get(key);
+            Reference<V> reference = this.map.get(key);
             if (reference == null) {
                 return false;
             } else {
-                V value = (V) reference.get();
+                V value = reference.get();
                 if (value == null) {
                     this.map.remove(key);
                     return false;

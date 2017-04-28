@@ -64,6 +64,272 @@ public final class MappingBindings {
     }
 
     /**
+     * Converts an observable into an object binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return an object binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapAsObject(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, R> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> mapper.apply(observable.getValue()), observable);
+    }
+
+    /**
+     * Converts an observable into an object binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return an object binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapAsObject(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, R>> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createObjectBinding(() -> {
+            Function<? super T, R> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return mapperValue.apply(observable.getValue());
+        }, observable);
+    }
+
+    /**
+     * Converts an observable into a boolean binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a boolean binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBoolean(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Boolean> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> mapper.apply(observable.getValue()), observable);
+    }
+
+    /**
+     * Converts an observable into a boolean binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a boolean binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> BooleanBinding mapAsBoolean(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Boolean>> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createBooleanBinding(() -> {
+            Function<? super T, Boolean> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return mapperValue.apply(observable.getValue());
+        }, observable);
+    }
+
+    /**
+     * Converts an observable into an integer binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return an integer binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsInteger(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Integer> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> mapper.apply(observable.getValue()), observable);
+    }
+
+    /**
+     * Converts an observable into an integer binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return an integer binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> IntegerBinding mapAsInteger(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Integer>> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createIntegerBinding(() -> {
+            Function<? super T, Integer> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return mapperValue.apply(observable.getValue());
+        }, observable);
+    }
+
+    /**
+     * Converts an observable into a long binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a long binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLong(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Long> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> mapper.apply(observable.getValue()), observable);
+    }
+
+    /**
+     * Converts an observable into a long binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a long binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> LongBinding mapAsLong(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Long>> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createLongBinding(() -> {
+            Function<? super T, Long> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return mapperValue.apply(observable.getValue());
+        }, observable);
+    }
+
+    /**
+     * Converts an observable into a float binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a float binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloat(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Float> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> mapper.apply(observable.getValue()), observable);
+    }
+
+    /**
+     * Converts an observable into a float binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a float binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> FloatBinding mapAsFloat(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Float>> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createFloatBinding(() -> {
+            Function<? super T, Float> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return mapperValue.apply(observable.getValue());
+        }, observable);
+    }
+
+    /**
+     * Converts an observable into a double binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a double binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDouble(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Double> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> mapper.apply(observable.getValue()), observable);
+    }
+
+    /**
+     * Converts an observable into a double binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a double binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> DoubleBinding mapAsDouble(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Double>> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createDoubleBinding(() -> {
+            Function<? super T, Double> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return mapperValue.apply(observable.getValue());
+        }, observable);
+    }
+
+    /**
+     * Converts an observable into a string binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a string binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsString(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, String> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> mapper.apply(observable.getValue()), observable);
+    }
+
+    /**
+     * Converts an observable into a string binding.
+     *
+     * @param observable the observable to be converted.
+     * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
+     * @return a string binding.
+     *
+     * @since 2.11.0
+     */
+    @Nonnull
+    public static <T> StringBinding mapAsString(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, String>> mapper) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        requireNonNull(mapper, ERROR_MAPPER_NULL);
+        return createStringBinding(() -> {
+            Function<? super T, String> mapperValue = mapper.getValue();
+            requireNonNull(mapperValue, ERROR_MAPPER_NULL);
+            return mapperValue.apply(observable.getValue());
+        }, observable);
+    }
+
+    /**
      * Converts a string object observable value into an object binding.
      *
      * @param observable the observable to be converted.

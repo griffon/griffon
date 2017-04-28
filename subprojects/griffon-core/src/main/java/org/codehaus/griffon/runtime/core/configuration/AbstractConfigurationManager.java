@@ -74,7 +74,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
         Map<String, ConfigurationDescriptor> descriptors = new LinkedHashMap<>();
-        Class klass = instance.getClass();
+        Class<?> klass = instance.getClass();
         do {
             harvestDescriptors(instance.getClass(), klass, instance, descriptors);
             klass = klass.getSuperclass();
@@ -83,7 +83,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
         doConfigurationInjection(instance, descriptors);
     }
 
-    protected void harvestDescriptors(@Nonnull Class instanceClass, @Nonnull Class currentClass, @Nonnull Object instance, @Nonnull Map<String, ConfigurationDescriptor> descriptors) {
+    protected void harvestDescriptors(@Nonnull Class<?> instanceClass, @Nonnull Class<?> currentClass, @Nonnull Object instance, @Nonnull Map<String, ConfigurationDescriptor> descriptors) {
         PropertyDescriptor[] propertyDescriptors = GriffonClassUtils.getPropertyDescriptors(currentClass);
         for (PropertyDescriptor pd : propertyDescriptors) {
             Method writeMethod = pd.getWriteMethod();
@@ -120,7 +120,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
             final Configured annotation = field.getAnnotation(Configured.class);
             if (null == annotation) { continue; }
 
-            Class resolvedClass = field.getDeclaringClass();
+            Class<?> resolvedClass = field.getDeclaringClass();
             String fqFieldName = resolvedClass.getName().replace('$', '.') + "." + field.getName();
             String configuration = annotation.configuration().trim();
             String key = annotation.value();
