@@ -25,3 +25,12 @@ dependencies {
             "org.apache.pivot:pivot-wtk:$pivotVersion",
             "org.apache.pivot:pivot-wtk-terra:$pivotVersion"
 }
+
+if (javaVersion.updateRevision > 127) {
+    test {
+        exclude 'griffon/pivot/**'
+        exclude 'org/codehaus/griffon/runtime/pivot/**'
+    }
+
+    projectsWithCoverage.remove(project)
+}

@@ -31,7 +31,9 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-apply from: rootProject.file('gradle/coverage-samples.gradle')
+if (javaVersion.updateRevision > 127) {
+    apply from: rootProject.file('gradle/coverage-samples.gradle')
+}
 
 dependencies {
     compileOnly project(':griffon-core-compile')

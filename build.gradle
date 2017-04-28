@@ -15,6 +15,7 @@
  */
 
 import java.text.SimpleDateFormat
+import org.apache.pivot.util.Version
 
 buildscript {
     repositories {
@@ -72,6 +73,7 @@ ext {
     projectsWithClirr = []
     depProjects = []
     fullBuild = !travis && !appveyor
+    javaVersion = Version.decode(System.getProperty('java.version'))
 }
 
 allprojects {
@@ -202,8 +204,6 @@ subprojects { subproj ->
 
                 projectsWithClirr << subproj
             }
-
-            projectsWithCoverage << subproj
 
             test {
                 testLogging {
