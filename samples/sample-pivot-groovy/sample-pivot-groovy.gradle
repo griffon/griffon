@@ -16,7 +16,9 @@
 
 apply plugin: 'groovy'
 apply plugin: 'application'
-apply from: rootProject.file('gradle/integration-test.gradle')
+if (javaVersion.updateRevision < 127) {
+    apply from: rootProject.file('gradle/integration-test.gradle')
+}
 
 mainClassName = 'sample.pivot.groovy.Launcher'
 
@@ -33,7 +35,7 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-if (javaVersion.updateRevision > 127) {
+if (javaVersion.updateRevision < 127) {
     apply from: rootProject.file('gradle/coverage-samples.gradle')
 }
 
@@ -73,7 +75,8 @@ sourceSets {
     }
 }
 
-gradle.taskGraph.whenReady {
-    sourceSets.main.groovy.srcDirs.each { it.mkdirs() }
-    sourceSets.main.resources.srcDirs.each { it.mkdirs() }
+if (javaVersion.updateRevision > 127) {
+    test {
+        exclude 'sample/pivot/**'
+    }
 }
