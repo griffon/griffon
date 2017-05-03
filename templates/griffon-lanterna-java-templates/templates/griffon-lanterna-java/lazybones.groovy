@@ -47,6 +47,10 @@ def renameFile = { File from, String path ->
         FileUtils.moveFile(from, to)
     }
 }
+
+File mvcGroupFile = new File(mainSources, 'MVCGroup.java')
+renameFile(mvcGroupFile, mainSources.absolutePath + '/' + props.project_capitalized_name + mvcGroupFile.name)
+
 mainSources.eachFile { File file ->
     renameFile(file, mainSourcesPath.absolutePath + '/' + file.name)
 }

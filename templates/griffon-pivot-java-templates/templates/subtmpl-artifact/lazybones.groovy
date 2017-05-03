@@ -16,7 +16,6 @@ if (tmplQualifiers) {
         it.endsWith('.java') || it.endsWith('.groovy')
     }.collect { it.toLowerCase() - '.java' - '.groovy' }.sort() - 'lazybones'
     println '\nThe following artifact templates are available\n'
-    templateNames << 'mvcgroup'
     templateNames.each { println "  $it" }
     println ' '
     while (!(artifactBaseName in templateNames)) {
@@ -70,6 +69,7 @@ if (artifactBaseName == 'mvcgroup') {
     processArtifact(className, 'Model', 'model', 'griffon-app/models')
     processArtifact(className, 'View', 'view', 'griffon-app/views')
     processArtifact(className, 'Controller', 'controller', 'griffon-app/controllers')
+    processArtifact(className + 'MVCGroup', 'MVCGroup', 'mvcgroup', 'src/main/java')
     processArtifact(className + 'Controller', 'Test', 'controller', 'src/test/java')
     processArtifact(className, 'IntegrationTest', 'view', 'src/integration-test/java')
     println "Do not forget to add the group '$groupName' to griffon-app/conf/Config.java"
