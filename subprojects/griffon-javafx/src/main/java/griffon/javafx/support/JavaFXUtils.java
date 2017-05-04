@@ -33,6 +33,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.Axis;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonBase;
@@ -50,6 +51,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
@@ -104,6 +107,20 @@ public final class JavaFXUtils {
 
     private JavaFXUtils() {
 
+    }
+
+    /**
+     * Associates an i18n key to a {@code node}. The key is used to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param key  the message key to be registered.
+     *
+     * @since 2.9.0
+     */
+    public static void setI18nKey(@Nonnull Labeled node, @Nonnull String key) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        node.getProperties().put(MessageSource.class.getName() + SUFFIX_KEY, key);
     }
 
     /**
@@ -356,13 +373,191 @@ public final class JavaFXUtils {
         return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE);
     }
 
+    /**
+     * Associates an i18n key to a {@code node}. The key is used to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param key  the message key to be registered.
+     *
+     * @since 2.11.0
+     */
+    public static void setI18nKey(@Nonnull Axis<?> node, @Nonnull String key) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        node.getProperties().put(MessageSource.class.getName() + SUFFIX_KEY, key);
+    }
+
+    /**
+     * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
+     *
+     * @param node the target node on which the key may have been registered.
+     *
+     * @return the key registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.11.0
+     */
+    @Nullable
+    public static String getI18nKey(@Nonnull Axis<?> node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_KEY);
+    }
+
+    /**
+     * Associates an i18n arrays of arguments to a {@code node}.
+     * These arguments will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param args the array of arguments to be registered.
+     *
+     * @since 2.11.0
+     */
+    public static void setI18nArgs(@Nonnull Axis<?> node, @Nullable String args) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(args, ERROR_ARGS_BLANK);
+        node.getProperties().put(MessageSource.class.getName() + SUFFIX_ARGS, args);
+    }
+
+    /**
+     * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
+     *
+     * @param node the target node on which the arguments may have been registered.
+     *
+     * @return the arguments registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.11.0
+     */
+    @Nullable
+    public static String getI18nArgs(@Nonnull Axis<?> node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_ARGS);
+    }
+
+    /**
+     * Associates an default value {@code node}.
+     * The value will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node         the target node on which the key will be registered.
+     * @param defaultValue the value to be registered.
+     *
+     * @since 2.11.0
+     */
+    public static void setI18nDefaultValue(@Nonnull Axis<?> node, @Nullable String defaultValue) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        node.getProperties().put(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE, defaultValue);
+    }
+
+    /**
+     * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
+     *
+     * @param node the target node on which the value may have been registered.
+     *
+     * @return the value registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.11.0
+     */
+    @Nullable
+    public static String getI18nDefaultValue(@Nonnull Axis<?> node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE);
+    }
+
+    /**
+     * Associates an i18n key to a {@code node}. The key is used to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param key  the message key to be registered.
+     *
+     * @since 2.11.0
+     */
+    public static void setI18nKey(@Nonnull TableColumn<?, ?> node, @Nonnull String key) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        node.getProperties().put(MessageSource.class.getName() + SUFFIX_KEY, key);
+    }
+
+    /**
+     * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
+     *
+     * @param node the target node on which the key may have been registered.
+     *
+     * @return the key registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.11.0
+     */
+    @Nullable
+    public static String getI18nKey(@Nonnull TableColumn<?, ?> node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_KEY);
+    }
+
+    /**
+     * Associates an i18n arrays of arguments to a {@code node}.
+     * These arguments will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node the target node on which the key will be registered.
+     * @param args the array of arguments to be registered.
+     *
+     * @since 2.11.0
+     */
+    public static void setI18nArgs(@Nonnull TableColumn<?, ?> node, @Nullable String args) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        requireNonBlank(args, ERROR_ARGS_BLANK);
+        node.getProperties().put(MessageSource.class.getName() + SUFFIX_ARGS, args);
+    }
+
+    /**
+     * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
+     *
+     * @param node the target node on which the arguments may have been registered.
+     *
+     * @return the arguments registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.11.0
+     */
+    @Nullable
+    public static String getI18nArgs(@Nonnull TableColumn<?, ?> node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_ARGS);
+    }
+
+    /**
+     * Associates an default value {@code node}.
+     * The value will be used alongside a key to resolve a message via the application's {@code MessageSource}.
+     *
+     * @param node         the target node on which the key will be registered.
+     * @param defaultValue the value to be registered.
+     *
+     * @since 2.11.0
+     */
+    public static void setI18nDefaultValue(@Nonnull TableColumn<?, ?> node, @Nullable String defaultValue) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        node.getProperties().put(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE, defaultValue);
+    }
+
+    /**
+     * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
+     *
+     * @param node the target node on which the value may have been registered.
+     *
+     * @return the value registered with the target {@code Node} or {@code null} if not found.
+     *
+     * @since 2.11.0
+     */
+    @Nullable
+    public static String getI18nDefaultValue(@Nonnull TableColumn<?, ?> node) {
+        requireNonNull(node, ERROR_NODE_NULL);
+        return (String) node.getProperties().get(MessageSource.class.getName() + SUFFIX_DEFAULT_VALUE);
+    }
+
     public static void connectMessageSource(@Nonnull Object node, @Nonnull GriffonApplication application) {
         requireNonNull(node, ERROR_NODE_NULL);
         requireNonNull(application, ERROR_APPLICATION_NULL);
 
         findElements(node, arg -> (arg instanceof Labeled && !isBlank(getI18nKey((Labeled) arg))) ||
             (arg instanceof Tab && !isBlank(getI18nKey((Tab) arg))) ||
-            (arg instanceof MenuItem && !isBlank(getI18nKey((MenuItem) arg))))
+            (arg instanceof MenuItem && !isBlank(getI18nKey((MenuItem) arg))) ||
+            (arg instanceof TableColumn && !isBlank(getI18nKey((TableColumn<?, ?>) arg))) ||
+            (arg instanceof Axis && !isBlank(getI18nKey((Axis<?>) arg))))
             .forEach(element -> {
                 if (element instanceof Labeled) {
                     doConnectMessageSource((Labeled) element, application);
@@ -370,6 +565,10 @@ public final class JavaFXUtils {
                     doConnectMessageSource((Tab) element, application);
                 } else if (element instanceof MenuItem) {
                     doConnectMessageSource((MenuItem) element, application);
+                } else if (element instanceof TableColumn) {
+                    doConnectMessageSource((TableColumn<?, ?>) element, application);
+                } else if (element instanceof Axis) {
+                    doConnectMessageSource((Axis<?>) element, application);
                 }
             });
     }
@@ -385,6 +584,16 @@ public final class JavaFXUtils {
     }
 
     private static void doConnectMessageSource(@Nonnull final MenuItem node, @Nonnull final GriffonApplication application) {
+        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -> updateLabeled(node, application));
+        updateLabeled(node, application);
+    }
+
+    private static void doConnectMessageSource(@Nonnull final TableColumn<?, ?> node, @Nonnull final GriffonApplication application) {
+        application.addPropertyChangeListener(PROPERTY_LOCALE, evt -> updateLabeled(node, application));
+        updateLabeled(node, application);
+    }
+
+    private static void doConnectMessageSource(@Nonnull final Axis<?> node, @Nonnull final GriffonApplication application) {
         application.addPropertyChangeListener(PROPERTY_LOCALE, evt -> updateLabeled(node, application));
         updateLabeled(node, application);
     }
@@ -433,6 +642,38 @@ public final class JavaFXUtils {
                 node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale()));
             } else {
                 node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));
+            }
+        });
+    }
+
+    private static void updateLabeled(@Nonnull final TableColumn<?, ?> node, @Nonnull final GriffonApplication application) {
+        runInsideUIThread(() -> {
+            String key = getI18nKey(node);
+            String args = getI18nArgs(node);
+            String defaultValue = getI18nDefaultValue(node);
+
+            Object[] argArray = isBlank(args) ? EMPTY_OBJECT_ARRAY : args.split(",");
+
+            if (isBlank(defaultValue)) {
+                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale()));
+            } else {
+                node.setText(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));
+            }
+        });
+    }
+
+    private static void updateLabeled(@Nonnull final Axis<?> node, @Nonnull final GriffonApplication application) {
+        runInsideUIThread(() -> {
+            String key = getI18nKey(node);
+            String args = getI18nArgs(node);
+            String defaultValue = getI18nDefaultValue(node);
+
+            Object[] argArray = isBlank(args) ? EMPTY_OBJECT_ARRAY : args.split(",");
+
+            if (isBlank(defaultValue)) {
+                node.setLabel(application.getMessageSource().getMessage(key, argArray, application.getLocale()));
+            } else {
+                node.setLabel(application.getMessageSource().getMessage(key, argArray, application.getLocale(), defaultValue));
             }
         });
     }
@@ -1026,7 +1267,6 @@ public final class JavaFXUtils {
         requireNonBlank(id, ERROR_ID_BLANK);
 
         if (id.equals(root.getId())) { return root; }
-
 
         if (root instanceof TabPane) {
             TabPane parent = (TabPane) root;
