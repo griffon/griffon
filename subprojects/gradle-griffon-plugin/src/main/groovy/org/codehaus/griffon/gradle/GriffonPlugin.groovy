@@ -194,8 +194,11 @@ class GriffonPlugin implements Plugin<Project> {
                 validateToolkit(project, extension)
                 if (extension.applicationProject) {
                     project.apply(plugin: 'application')
+                } else {
+                    project.mainClassName = '<INVALID>'
                 }
                 project.plugins.withId('application') { plugin ->
+
                     configureApplicationSettings(project, extension)
                 }
 

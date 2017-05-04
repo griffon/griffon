@@ -3,6 +3,7 @@ import java.text.SimpleDateFormat
 buildscript {
     repositories {
         jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
         mavenLocal()
     }
 
@@ -16,6 +17,7 @@ buildscript {
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath 'net.nemerosa:versioning:2.6.0'
+        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.10'
     }
 }
 
@@ -64,6 +66,7 @@ jacoco {
 ext.jacocoProjects = []
 
 subprojects { subproj ->
+    subproj.apply plugin: 'net.ltgt.apt'
     plugins.withType(JavaPlugin) {
         subproj.tasks.withType(JavaCompile) {
             sourceCompatibility = subproj.sourceCompatibility
