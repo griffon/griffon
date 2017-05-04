@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" tests="26" skipped="0" failures="0" errors="0" timestamp="2017-05-04T09:18:41" hostname="testing-docker-90703794-a676-4191-81e0-3d1951fbc1fe" time="0.014">
+<testsuite name="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" tests="26" skipped="0" failures="0" errors="0" timestamp="2017-05-04T14:13:51" hostname="testing-docker-ecc2246c-0b8e-4707-add3-97d74ea6771b" time="0.016">
   <properties/>
   <testcase name="Calling configuration.get(key.string, STRING) gives string as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
   <testcase name="Calling configuration.getAt(key.string, STRING) gives string as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsString(key.string2, null) gives null as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsString(key.string, STRING) gives string as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsBoolean(key.boolean2, null) gives false as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
-  <testcase name="Calling configuration.getAsBoolean(key.boolean.type, false) gives true as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
-  <testcase name="Calling configuration.getAsBoolean(key.boolean.string, false) gives true as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
+  <testcase name="Calling configuration.getAsBoolean(key.boolean.type, false) gives true as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
+  <testcase name="Calling configuration.getAsBoolean(key.boolean.string, false) gives true as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsInt(key.int2, null) gives 0 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsInt(key.int.type, -1) gives 42 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsInt(key.int.string, -1) gives 21 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
@@ -15,18 +15,18 @@
   <testcase name="Calling configuration.getAsLong(key.long.type, -1) gives 64 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsLong(key.long.string, -1) gives 32 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsFloat(key.float2, null) gives 0.0 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
-  <testcase name="Calling configuration.getAsFloat(key.float.type, -1.0) gives 3.1416 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
+  <testcase name="Calling configuration.getAsFloat(key.float.type, -1.0) gives 3.1416 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
   <testcase name="Calling configuration.getAsFloat(key.float.string, -1.0) gives 6.2832 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
-  <testcase name="Calling configuration.getAsDouble(key.double2, null) gives 0.0 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
+  <testcase name="Calling configuration.getAsDouble(key.double2, null) gives 0.0 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
   <testcase name="Calling configuration.getAsDouble(key.double.type, -1.0) gives 3.1416 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsDouble(key.double.string, -1.0) gives 6.2832 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
   <testcase name="Calling configuration.getAsString(key.string.unknown, UNKNOWN) gives UNKNOWN as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsBoolean(key.boolean.unknown, true) gives true as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
-  <testcase name="Calling configuration.getAsInt(key.int.unknown, 2147483647) gives 2147483647 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
+  <testcase name="Calling configuration.getAsInt(key.int.unknown, 2147483647) gives 2147483647 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
   <testcase name="Calling configuration.getAsLong(key.long.unknown, 9223372036854775807) gives 9223372036854775807 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
-  <testcase name="Calling configuration.getAsFloat(key.float.unknown, 3.4028235E38) gives 3.4028235E38 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
-  <testcase name="Calling configuration.getAsDouble(key.double.unknown, 1.7976931348623157E308) gives 1.7976931348623157E308 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.001"/>
-  <testcase name="Can resolve nested keys from sample application configuration" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.004"/>
+  <testcase name="Calling configuration.getAsFloat(key.float.unknown, 3.4028235E38) gives 3.4028235E38 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
+  <testcase name="Calling configuration.getAsDouble(key.double.unknown, 1.7976931348623157E308) gives 1.7976931348623157E308 as result" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.0"/>
+  <testcase name="Can resolve nested keys from sample application configuration" classname="org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationSpec" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
