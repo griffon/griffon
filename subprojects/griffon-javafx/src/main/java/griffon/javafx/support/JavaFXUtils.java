@@ -1312,7 +1312,16 @@ public final class JavaFXUtils {
                 Node found = findNode(child, id);
                 if (found != null) { return found; }
             }
-        } else if (root instanceof Parent) {
+        } else if (root instanceof TableView) {
+            TableView tableView = (TableView) root;
+            Node placeholder = tableView.getPlaceholder();
+            if (placeholder != null) {
+                Node found = findNode(placeholder, id);
+                if (found != null) { return found; }
+            }
+        }
+
+        if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Node found = findNode(child, id);
@@ -1410,7 +1419,20 @@ public final class JavaFXUtils {
                 Object found = findElement(child, id);
                 if (found != null) { return found; }
             }
-        } else if (root instanceof Parent) {
+        } else if (root instanceof TableView) {
+            TableView tableView = (TableView) root;
+            Node placeholder = tableView.getPlaceholder();
+            if (placeholder != null) {
+                Object found = findElement(placeholder, id);
+                if (found != null) { return found; }
+            }
+            for (Object child : tableView.getColumns()) {
+                Object found = findElement(child, id);
+                if (found != null) { return found; }
+            }
+        }
+
+        if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Object found = findElement(child, id);
@@ -1510,7 +1532,20 @@ public final class JavaFXUtils {
                 Object found = findElement(child, predicate);
                 if (found != null) { return found; }
             }
-        } else if (root instanceof Parent) {
+        } else if (root instanceof TableView) {
+            TableView tableView = (TableView) root;
+            Node placeholder = tableView.getPlaceholder();
+            if (placeholder != null) {
+                Object found = findElement(placeholder, predicate);
+                if (found != null) { return found; }
+            }
+            for (Object child : tableView.getColumns()) {
+                Object found = findElement(child, predicate);
+                if (found != null) { return found; }
+            }
+        }
+
+        if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Object found = findElement(child, predicate);
@@ -1603,7 +1638,18 @@ public final class JavaFXUtils {
             for (Node child : toolBar.getItems()) {
                 findElements(child, predicate, accumulator);
             }
-        } else if (root instanceof Parent) {
+        } else if (root instanceof TableView) {
+            TableView tableView = (TableView) root;
+            Node placeholder = tableView.getPlaceholder();
+            if (placeholder != null) {
+                findElements(placeholder, predicate, accumulator);
+            }
+            for (Object child : tableView.getColumns()) {
+                findElements(child, predicate, accumulator);
+            }
+        }
+
+        if (root instanceof Parent) {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 findElements(child, predicate, accumulator);
