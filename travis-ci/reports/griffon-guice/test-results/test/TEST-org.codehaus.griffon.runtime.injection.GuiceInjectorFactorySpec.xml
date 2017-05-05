@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" tests="9" skipped="0" failures="0" errors="0" timestamp="2017-05-04T14:14:33" hostname="testing-docker-ecc2246c-0b8e-4707-add3-97d74ea6771b" time="2.531">
+<testsuite name="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" tests="9" skipped="0" failures="0" errors="0" timestamp="2017-05-05T07:55:55" hostname="testing-docker-de2156a6-c5c8-4a10-9b49-92161b928698" time="1.164">
   <properties/>
-  <testcase name="Verify bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="1.074"/>
-  <testcase name="Invalid bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.081"/>
-  <testcase name="Non existent binding results in exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.034"/>
-  <testcase name="Non existent binding results in exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.02"/>
-  <testcase name="Closed injector throws exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.024"/>
-  <testcase name="Closed injector throws exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.025"/>
-  <testcase name="Closed injector throws exception (3)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.023"/>
-  <testcase name="Closed injector throws exception (4)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.016"/>
-  <testcase name="Closed injector throws exception (5)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="1.231"/>
+  <testcase name="Verify bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.975"/>
+  <testcase name="Invalid bindings" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.061"/>
+  <testcase name="Non existent binding results in exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.02"/>
+  <testcase name="Non existent binding results in exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.016"/>
+  <testcase name="Closed injector throws exception (1)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.023"/>
+  <testcase name="Closed injector throws exception (2)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.02"/>
+  <testcase name="Closed injector throws exception (3)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.017"/>
+  <testcase name="Closed injector throws exception (4)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.014"/>
+  <testcase name="Closed injector throws exception (5)" classname="org.codehaus.griffon.runtime.injection.GuiceInjectorFactorySpec" time="0.017"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[May 04, 2017 2:14:34 PM com.google.inject.internal.MessageProcessor visit
-INFO: An exception was caught and reported. Message: java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@376669b3
-java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@376669b3
+  <system-err><![CDATA[May 05, 2017 7:55:56 AM com.google.inject.internal.MessageProcessor visit
+INFO: An exception was caught and reported. Message: java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@4394c093
+java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffon.runtime.injection.InvalidBinding@4394c093
 	at org.codehaus.griffon.runtime.injection.GuiceInjector$1.configure(GuiceInjector.java:85)
 	at com.google.inject.AbstractModule.configure(AbstractModule.java:62)
 	at com.google.inject.spi.Elements$RecordingBinder.install(Elements.java:340)
@@ -34,28 +34,28 @@ java.lang.IllegalArgumentException: Don't know how to handle org.codehaus.griffo
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:153)
+	at org.spockframework.util.ReflectionUtil.invokeMethod(ReflectionUtil.java:188)
 	at org.spockframework.runtime.model.MethodInfo.invoke(MethodInfo.java:84)
-	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
-	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
-	at org.spockframework.runtime.BaseSpecRunner.runFeatureMethod(BaseSpecRunner.java:405)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:481)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:464)
+	at org.spockframework.runtime.BaseSpecRunner.runFeatureMethod(BaseSpecRunner.java:406)
 	at org.spockframework.runtime.BaseSpecRunner.doRunIteration(BaseSpecRunner.java:324)
 	at org.spockframework.runtime.BaseSpecRunner$6.invoke(BaseSpecRunner.java:309)
-	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
-	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:481)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:464)
 	at org.spockframework.runtime.BaseSpecRunner.runIteration(BaseSpecRunner.java:288)
 	at org.spockframework.runtime.BaseSpecRunner.initializeAndRunIteration(BaseSpecRunner.java:278)
 	at org.spockframework.runtime.BaseSpecRunner.runSimpleFeature(BaseSpecRunner.java:269)
 	at org.spockframework.runtime.BaseSpecRunner.doRunFeature(BaseSpecRunner.java:263)
 	at org.spockframework.runtime.BaseSpecRunner$5.invoke(BaseSpecRunner.java:246)
-	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
-	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:481)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:464)
 	at org.spockframework.runtime.BaseSpecRunner.runFeature(BaseSpecRunner.java:238)
 	at org.spockframework.runtime.BaseSpecRunner.runFeatures(BaseSpecRunner.java:188)
 	at org.spockframework.runtime.BaseSpecRunner.doRunSpec(BaseSpecRunner.java:98)
 	at org.spockframework.runtime.BaseSpecRunner$1.invoke(BaseSpecRunner.java:84)
-	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:480)
-	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:463)
+	at org.spockframework.runtime.BaseSpecRunner.invokeRaw(BaseSpecRunner.java:481)
+	at org.spockframework.runtime.BaseSpecRunner.invoke(BaseSpecRunner.java:464)
 	at org.spockframework.runtime.BaseSpecRunner.runSpec(BaseSpecRunner.java:76)
 	at org.spockframework.runtime.BaseSpecRunner.run(BaseSpecRunner.java:67)
 	at org.spockframework.runtime.Sputnik.run(Sputnik.java:63)
