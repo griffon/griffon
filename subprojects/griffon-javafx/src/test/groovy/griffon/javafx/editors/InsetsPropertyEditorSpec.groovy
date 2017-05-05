@@ -38,10 +38,10 @@ class InsetsPropertyEditorSpec extends Specification {
 
         then:
 
-        insets == editor.value
+        value == editor.value
 
         where:
-        insets                 | format
+        value                  | format
         null                   | null
         null                   | ''
         null                   | ' '
@@ -105,7 +105,6 @@ class InsetsPropertyEditorSpec extends Specification {
 
         then:
 
-        println editor.value
         expected == actual
 
         where:
