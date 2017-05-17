@@ -37,6 +37,7 @@ buildscript {
         classpath 'net.nemerosa:versioning:2.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.gradle.publish:plugin-publish-plugin:0.9.3'
+        classpath "gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.1.1"
     }
 }
 
@@ -80,6 +81,7 @@ allprojects {
     apply plugin: 'base'
     apply plugin: 'idea'
     apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'net.ossindex.audit'
 
     repositories {
         jcenter()
@@ -102,6 +104,10 @@ allprojects {
                 }
             }
         }
+    }
+
+    audit {
+        failOnError = false
     }
 }
 
