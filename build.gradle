@@ -38,6 +38,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.gradle.publish:plugin-publish-plugin:0.9.3'
         classpath "gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.1.1"
+        classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.1.0'
     }
 }
 
@@ -203,6 +204,11 @@ subprojects { subproj ->
         if (subproj.publishJars.toBoolean()) {
             if (subproj.name.startsWith('griffon-')) {
                 subproj.apply plugin: 'org.kordamp.gradle.clirr'
+                subproj.apply plugin: 'org.kordamp.jdeps'
+
+                subproj.jdeps {
+                    failOnError = false
+                }
 
                 subproj.clirr {
                     failOnErrors = false
