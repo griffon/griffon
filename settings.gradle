@@ -30,10 +30,8 @@ if (!appveyor) {
     include 'samples/sample-lanterna-java'
     include 'samples/sample-lanterna-groovy'
     include 'samples/sample-javafx-kotlin'
-    if (!travis) {
-        include 'samples/sample-pivot-java'
-        include 'samples/sample-pivot-groovy'
-    }
+    include 'samples/sample-pivot-java'
+    include 'samples/sample-pivot-groovy'
 }
 if (fullBuild) {
     include 'subprojects/application-master-pom'
