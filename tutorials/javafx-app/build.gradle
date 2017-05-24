@@ -30,17 +30,26 @@ buildscript {
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:1.2.0'
+        classpath 'net.nemerosa:versioning:2.6.0'
+        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.10'
     }
 }
 
 apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
+apply plugin: 'net.nemerosa.versioning'
+apply plugin: 'net.ltgt.apt'
 
 griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = true
     version = '2.11.0-SNAPSHOT'
     toolkit = 'javafx'
+    applicationProperties = [
+        'build.date'    : buildDate,
+        'build.time'    : buildTime,
+        'build.revision': versioning.info.commit
+    ]
 }
 
 ext {
@@ -67,7 +76,7 @@ javafx {
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
     compile 'org.kordamp.ikonli:ikonli-javafx:1.9.0'
-    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.8.0'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.9.0'
 
     runtime 'org.slf4j:slf4j-simple:1.7.25'
 

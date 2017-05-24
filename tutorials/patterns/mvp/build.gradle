@@ -17,6 +17,7 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
         mavenLocal()
     }
 
@@ -25,10 +26,12 @@ buildscript {
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.10'
     }
 }
 
 apply plugin: 'groovy'
+apply plugin: 'net.ltgt.apt'
 apply plugin: 'org.codehaus.griffon.griffon'
 
 griffon {
@@ -61,8 +64,8 @@ dependencies {
     runtime 'org.slf4j:slf4j-simple:1.7.25'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
-    testCompile 'pl.pragmatists:JUnitParams:1.0.6'
-    testCompile 'org.mockito:mockito-core:2.7.13'
+    testCompile 'pl.pragmatists:JUnitParams:1.1.0'
+    testCompile 'org.mockito:mockito-core:2.8.9'
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }

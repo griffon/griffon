@@ -268,7 +268,15 @@ class GriffonPlugin implements Plugin<Project> {
                 String dependencyCoordinates = ['org.codehaus.griffon', 'griffon-' + artifactId, extension.version].join(':')
 
                 if (artifactId.endsWith('-compile')) {
-                    ['compileOnly', 'apt', 'testCompileOnly', 'testApt'].each { conf ->
+                    ['compileOnly', 'testCompileOnly'].each { conf ->
+                        project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, conf)
+                        project.dependencies.add(conf, dependencyCoordinates)
+                    }
+                    ['apt', 'testApt'].each { conf ->
+                        if (!project.configurations.findByName(conf)) {
+                            project.logger.info("Configuration '{}' does not exist. Apply the 'gradle-apt-plugin' and try again", conf)
+                            return
+                        }
                         project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, conf)
                         project.dependencies.add(conf, dependencyCoordinates)
                     }
