@@ -170,6 +170,21 @@ New `MatchingBindings` class provides matching capabilities on `ObservableList`/
 
  * Apply `allMatch`, `anyMatch`, and `noneMatch` predicates.
 
+You can now create `TableColumns` and fill out a `TableView` with the brand new `TableViewFormat` and `TableViewModel`
+classes as shown by:
+
+[source,java,linenums,options="nowrap"]
+----
+TableViewFormat<Measurement> tableFormat = new DefaultTableFormat<>(
+    new DefaultTableFormat.Column("name", 0.2d),
+    new DefaultTableFormat.Column("amount", 0.1d),
+    new DefaultTableFormat.Column("timestamp")
+);
+ObservableList<Measurement> measurements = uiThreadAwareObservableList(model.getMeasurements());
+TableViewModel<Measurement> tableModel = new DefaultTableViewModel<>(measurements, tableFormat);
+tableModel.attachTo(measurementsTableView);
+measurementsTableView.setEditable(false);
+----
 
 === Buildtime
 
