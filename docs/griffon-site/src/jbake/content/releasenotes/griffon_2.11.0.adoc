@@ -15,6 +15,7 @@ The following dependencies have been upgraded
  * com.google.code.findbugs:jsr305:3.0.2
  * org.slf4j:slf4j-simple:1.7.25
  * org.slf4j:slf4j-log4j:1.7.25
+ * com.google.guava:guava:22.0
  * org.awaitility:awaitility:3.0.0
  * org.codehaus.groovy:groovy-all:2.4.11
  * org.jetbrains.kotlin:kotlin-stdlib:1.1.2-4
@@ -192,8 +193,11 @@ measurementsTableView.setEditable(false);
 
 Gradle wrapper version on all Lazybones templates has been bumped to `3.5`.
 
-
 === Compatibility
+
+Implementation classes of `Configuration` were moved to the `org.codehaus.griffon.runtime.core.configuration` package.
+Plugins that rely on reading custom configuration files (such as persistence plugins like `datasource` et al) must be
+updated to their latest versions.
 
 Full binary compatibility report between Griffon 2.11.0 and 2.10.0 can be found
 link:../reports/2.11.0/compatibility-report.html[here].
