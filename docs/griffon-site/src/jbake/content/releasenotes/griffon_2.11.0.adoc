@@ -60,7 +60,7 @@ XML has been added as part of the supported formats. You may write any configura
 Configuration values may be injected into managed beans. Simply annotate a field or a setter with `@Configured`.
 Take for example the following configuration
 
-[source,groovy,linenums,options="nowrap"]
+[source, groovy]
 .griffon-app/conf/sample/swing/groovy/Config.groovy
 ----
 application {
@@ -84,7 +84,7 @@ mvcGroups {
 
 Any of those configuration values may be set on a managed bean, such as the `SampleModel` class
 
-[source,groovy,linenums,options="nowrap"]
+[source, groovy]
 .griffon-app/models/sample/javafx/groovy/SampleModel.groovy
 ----
 package sample.javafx.groovy
@@ -124,7 +124,7 @@ using property editors.
 It's now possible to define typed MVC groups. This feature assumes the MVC group has the required `Model`, `View`, and
 `Controller` members; it won't work for groups that define less than these 3 members. For example
 
-[source,java,linenums,options="nowrap"]
+[source, java]
 .src/main/java/org/example/FooMVCGroup.java
 ----
 package org.example;
@@ -143,7 +143,7 @@ public class FooMVCGroup extends AbstractTypedMVCGroup<FooModel, FooView, FooCon
 
 Instances of this group can be created as follows
 
-[source,java,linenums,options="nowrap"]
+[source, java]
 ----
 FooMVCGroup fooGroup1 = createMVCGroup(FooMVCGroup.class);
 FooMVCGroup fooGroup2 = createMVCGroup(FooMVCGroup.class, "foo2");
@@ -151,7 +151,7 @@ FooMVCGroup fooGroup2 = createMVCGroup(FooMVCGroup.class, "foo2");
 
 You may refer to the exact types of each MVC member using a typed MVC group, for example
 
-[source,java,linenums,options="nowrap"]
+[source, java]
 ----
 FooMVCGroup fooGroup = createMVCGroup(FooMVCGroup.class);
 fooGroup.model().setSomeProperty("value"); // returned model type is FooModel
@@ -174,7 +174,7 @@ New `MatchingBindings` class provides matching capabilities on `ObservableList`/
 You can now create `TableColumns` and fill out a `TableView` with the brand new `TableViewFormat` and `TableViewModel`
 classes as shown by:
 
-[source,java,linenums,options="nowrap"]
+[source, java]
 ----
 TableViewFormat<Measurement> tableFormat = new DefaultTableFormat<>(
     new DefaultTableFormat.Column("name", 0.2d),
