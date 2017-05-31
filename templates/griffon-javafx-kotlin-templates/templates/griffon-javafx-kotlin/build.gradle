@@ -8,7 +8,6 @@ buildscript {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.0'
         classpath 'com.github.cr0:gradle-macappbundle-plugin:3.1.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
@@ -41,7 +40,6 @@ apply from: 'gradle/integration-test.gradle'
 apply from: 'gradle/functional-test.gradle'
 apply from: 'gradle/package.gradle'
 apply from: 'gradle/docs.gradle'
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'org.kordamp.gradle.stats'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'com.github.kt3k.coveralls'
@@ -167,23 +165,7 @@ tasks.withType(GroovyCompile) {
     targetCompatibility = project.targetCompatibility
 }
 
-import com.github.jengelman.gradle.plugins.shadow.transformers.*
 import java.text.SimpleDateFormat
-
-shadowJar {
-    transform(ServiceFileTransformer)
-    transform(ServiceFileTransformer) {
-        path = 'META-INF/griffon'
-    }
-    transform(ServiceFileTransformer) {
-        path = 'META-INF/types'
-    }
-    transform(PropertiesFileTransformer) {
-        paths = [
-            'META-INF/editors/java.beans.PropertyEditor'
-        ]
-    }
-}
 
 startScripts {
     doLast {
