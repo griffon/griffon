@@ -23,6 +23,8 @@ import griffon.core.mvc.TypedMVCGroup;
 
 import javax.annotation.Nonnull;
 
+import static griffon.util.GriffonClassUtils.requireState;
+
 /**
  * @author Andres Almiray
  * @since 2.11.0
@@ -30,6 +32,30 @@ import javax.annotation.Nonnull;
 public abstract class AbstractTypedMVCGroup<M extends GriffonModel, V extends GriffonView, C extends GriffonController> extends DelegatingMVCGroup implements TypedMVCGroup<M, V, C> {
     public AbstractTypedMVCGroup(@Nonnull MVCGroup delegate) {
         super(delegate);
+
+        GriffonModel model = getModel();
+        requireState(model != null, "MVC member 'model' must not be null");
+        try {
+            M m = (M) model;
+        } catch (ClassCastException cce) {
+            throw new IllegalStateException("Expected 'model' is not of the right type for " + getClass().getName());
+        }
+
+        GriffonView view = getView();
+        requireState(view != null, "MVC member 'view' must not be null");
+        try {
+            V v = (V) view;
+        } catch (ClassCastException cce) {
+            throw new IllegalStateException("Expected 'view' is not of the right type for " + getClass().getName());
+        }
+
+        GriffonController controller = getController();
+        requireState(controller != null, "MVC member 'controller' must not be null");
+        try {
+            C c = (C) controller;
+        } catch (ClassCastException cce) {
+            throw new IllegalStateException("Expected 'controller' is not of the right type for " + getClass().getName());
+        }
     }
 
     @Nonnull
