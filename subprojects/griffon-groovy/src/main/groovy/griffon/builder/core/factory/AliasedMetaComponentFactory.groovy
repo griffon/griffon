@@ -38,8 +38,6 @@ class AliasedMetaComponentFactory extends MetaComponentFactory {
 
     @Override
     protected Map resolveAttributes(Map attributes) {
-        println this.attributes
-        println attributes
         Map defaultMvcArgs = this.attributes.mvcArgs ?: [:]
         Map mvcArgs = attributes.mvcArgs ?: [:]
         Map attrs = [:]
