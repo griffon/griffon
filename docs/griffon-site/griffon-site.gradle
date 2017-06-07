@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-import groovy.json.JsonSlurper
 import groovy.json.JsonParserType
+import groovy.json.JsonSlurper
+import org.eclipse.jetty.server.Server
+import org.eclipse.jetty.webapp.WebAppContext
 
 buildscript {
     repositories {
@@ -25,12 +27,12 @@ buildscript {
 
     dependencies {
         classpath 'org.jbake:jbake-gradle-plugin:1.0.0'
-
+        classpath "org.eclipse.jetty:jetty-webapp:$jettyVersion"
+        classpath "org.eclipse.jetty:jetty-annotations:$jettyVersion"
     }
 }
 
 apply plugin: 'base'
-apply plugin: 'jetty'
 apply plugin: 'org.jbake.site'
 
 configurations {
@@ -114,12 +116,21 @@ task(site, type: Copy, dependsOn: [bake, copyGuide]) {
     }
 }
 
-jettyRun {
-    contextPath = ''
-    webAppSourceDirectory = file(site.destinationDir)
+task(siteRun) {
+    dependsOn site
+    doLast {
+        Server server = new Server(8080)
+        String wardir = site.destinationDir.absolutePath
+        WebAppContext context = new WebAppContext()
+        context.setResourceBase(wardir)
+        context.setDescriptor(wardir + 'WEB-INF/web.xml')
+        context.setContextPath('/')
+        context.setParentLoaderPriority(true)
+        server.setHandler(context)
+        server.start()
+        server.join()
+    }
 }
-
-task(siteRun, dependsOn: ['site', 'jettyRun']) { }
 
 task(siteZip, type: Zip, dependsOn: site) {
     baseName = 'griffon-site'
