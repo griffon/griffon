@@ -98,10 +98,14 @@ package sample
 import java.awt.event.ActionEvent
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class SampleController {
+    @ControllerAction
     void close(ActionEvent evt) { ... }
+
+    @ControllerAction
     void newAction(ActionEvent evt) { ... }
 }
 ----

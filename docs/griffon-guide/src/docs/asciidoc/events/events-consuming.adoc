@@ -91,6 +91,7 @@ Print a message every time the event "Foo" is published:
 package com.acme
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
@@ -100,6 +101,7 @@ class MyController {
         ])
     }
 
+    @ControllerAction
     void fooAction() {
         // do something
         application.eventRouter.publishEvent('Foo')
@@ -115,6 +117,7 @@ An alternative to the previous example using a `RunnableWithArgs` event handler:
 package com.acme
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
@@ -124,6 +127,7 @@ class MyController {
         ])
     }
 
+    @ControllerAction
     void fooAction() {
         // do something
         application.eventRouter.publishEvent('Foo')
@@ -139,6 +143,7 @@ An alternative to the previous example using a custom event class:
 package com.acme
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 
 @griffon.metadata.ArtifactProviderFor(GriffonController)
 class MyController {
@@ -146,6 +151,7 @@ class MyController {
         application.eventRouter.addListener(Foo) { e -> assert e instanceof Foo }
     }
 
+    @ControllerAction
     void fooAction() {
         // do something
         application.eventRouter.publishEvent(new MyController.Foo(this))

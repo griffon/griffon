@@ -13,6 +13,7 @@ in Groovy you'd write
 package sample
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import javax.annotation.Nonnull
 
@@ -20,6 +21,7 @@ import javax.annotation.Nonnull
 class SampleController {
     @MVCMember @Nonnull SampleModel model
 
+    @ControllerAction
     void click() {
         model.clickCount++
     }
@@ -33,6 +35,7 @@ The corresponding code for Java 8 would be
 package sample;
 
 import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import javax.annotation.Nonnull;
 
@@ -45,6 +48,7 @@ public class SampleController {
         this.model = model;
     }
 
+    @ControllerAction
     public void click() {
         runInsideUIAsync(() -> {
             model.setClickCount(model.getClickCount() + 1);
