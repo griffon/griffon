@@ -11,17 +11,20 @@ annotations that are handled by an `ActionHandler`, like this:
 [source,groovy,linenums,options="nowrap"]
 ----
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.metadata.ArtifactProviderFor
 import griffon.plugins.shiro.annotation.*
 
 @ArtifactProviderFor(GriffonController)
 @RequiresAuthentication
 class PrinterController {
-   @RequiresPermission('printer:print')
-   void print () { ... }
+    @RequiresPermission('printer:print')
+    @ControllerAction
+    void print () { ... }
 
-   @RequiresRoles('administrator')
-   void configure() { ... }
+    @RequiresRoles('administrator')
+    @ControllerAction
+    void configure() { ... }
 }
 ----
 
@@ -31,6 +34,7 @@ Take the following snippet for example
 [source,groovy,linenums,options="nowrap"]
 ----
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.metadata.ArtifactProviderFor
 import griffon.plugins.shiro.annotation.*
 import org.apache.shiro.authc.UsernamePasswordToken
@@ -45,6 +49,7 @@ class StrutsController {
     private Subject subject
 
     @RequiresGuest
+    @ControllerAction
     void login(LoginCommandObject cmd) {
         try {
             subject.login(new UsernamePasswordToken(cmd.username, cmd.password))
@@ -57,6 +62,7 @@ class StrutsController {
     }
 
     @RequiresAuthentication
+    @ControllerAction
     void logout() {
         subject.logout()
     }

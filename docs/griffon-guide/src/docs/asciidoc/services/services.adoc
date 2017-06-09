@@ -32,6 +32,7 @@ define an injection point and annotate it with `@javax.inject.Inject`:
 package sample
 
 import griffon.core.artifact.GriffonController
+import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import javax.annotation.Nonnull
 
@@ -42,6 +43,7 @@ class SampleController {
     @javax.inject.Inject
     private MathService mathService
 
+    @ControllerAction
     void calculate(evt = null) {
         model.result = mathService.addition model.a, model.b
     }
