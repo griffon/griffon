@@ -27,10 +27,10 @@ jacocoTestReport {
     List cd = []
     Set csd = [] as Set
     project.depProjects.each { String projectName ->
-        cd << project(projectName).sourceSets.main.output.classesDir.path
+        cd.addAll project(projectName).sourceSets.main.output.classesDirs*.path
         csd << project(projectName).sourceSets.main.allSource.srcDirs
     }
-    cd << sourceSets.main.output.classesDir.path
+    cd.addAll sourceSets.main.output.classesDirs*.path
     csd << sourceSets.main.allSource.srcDirs
 
     additionalSourceDirs = project.files(csd)

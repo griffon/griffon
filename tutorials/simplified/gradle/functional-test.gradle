@@ -50,7 +50,7 @@ idea {
 }
 
 task functionalTest(type: Test, dependsOn: jar) {
-    testClassesDir = sourceSets.functionalTest.output.classesDir
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
     reports.html.enabled = false
 }

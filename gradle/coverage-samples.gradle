@@ -33,7 +33,7 @@ jacocoTestReport {
     List _classDirectories = []
     Set _sourceDirectories = [] as Set
     project.depProjects.each { String projectName ->
-        _classDirectories << project(projectName).sourceSets.main.output.classesDir.path
+        _classDirectories.addAll project(projectName).sourceSets.main.output.classesDirs*.path
         _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
     }
 
@@ -69,7 +69,7 @@ if (hasIntegrationTests) {
         List _classDirectories = []
         Set _sourceDirectories = [] as Set
         project.depProjects.each { String projectName ->
-            _classDirectories << project(projectName).sourceSets.main.output.classesDir.path
+            _classDirectories.addAll project(projectName).sourceSets.main.output.classesDirs*.path
             _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
         }
 
@@ -83,8 +83,8 @@ if (hasIntegrationTests) {
             xml.enabled = true
             csv.enabled = false
             html.enabled = true
-            html.destination = "${buildDir}/reports/jacoco/integration-test/html"
-            xml.destination = "${buildDir}/reports/jacoco/integration-test/jacocoTestReport.xml"
+            html.destination = file("${buildDir}/reports/jacoco/integration-test/html")
+            xml.destination = file("${buildDir}/reports/jacoco/integration-test/jacocoTestReport.xml")
         }
 
         afterEvaluate {
@@ -112,7 +112,7 @@ if (hasFunctionalTests) {
         List _classDirectories = []
         Set _sourceDirectories = [] as Set
         project.depProjects.each { String projectName ->
-            _classDirectories << project(projectName).sourceSets.main.output.classesDir.path
+            _classDirectories.addAll project(projectName).sourceSets.main.output.classesDirs*.path
             _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
         }
 
@@ -126,8 +126,8 @@ if (hasFunctionalTests) {
             xml.enabled = true
             csv.enabled = false
             html.enabled = true
-            html.destination = "${buildDir}/reports/jacoco/functional-test/html"
-            xml.destination = "${buildDir}/reports/jacoco/functional-test/jacocoTestReport.xml"
+            html.destination = file("${buildDir}/reports/jacoco/functional-test/html")
+            xml.destination = file("${buildDir}/reports/jacoco/functional-test/jacocoTestReport.xml")
         }
 
         afterEvaluate {
