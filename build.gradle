@@ -322,8 +322,8 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     reports {
         xml.enabled true
         html.enabled true
-        xml.destination "${buildDir}/reports/jacoco/report.xml"
-        html.destination "${buildDir}/reports/jacoco/html"
+        xml.destination = file("${buildDir}/reports/jacoco/report.xml")
+        html.destination = file("${buildDir}/reports/jacoco/html")
     }
 }
 
