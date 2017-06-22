@@ -15,9 +15,6 @@
  */
 package org.codehaus.griffon.gradle
 
-import org.codehaus.griffon.gradle.tasks.AggregateCoberturaExtension
-import org.codehaus.griffon.gradle.tasks.AggregateCoberturaMergeTask
-import org.codehaus.griffon.gradle.tasks.AggregateCoberturaReportTask
 import org.codehaus.griffon.gradle.tasks.GenerateBomTask
 import org.gradle.BuildAdapter
 import org.gradle.api.Plugin
@@ -29,22 +26,6 @@ class GriffonBuildPlugin implements Plugin<Project> {
     void apply(Project project) {
         // enable jcenter by default
         project.repositories.jcenter()
-
-        AggregateCoberturaExtension coberturaExtension = project.extensions.create(AggregateCoberturaExtension.EXTENSION_NAME, AggregateCoberturaExtension, project)
-
-        project.tasks.create(name: AggregateCoberturaMergeTask.TASK_NAME,
-            description: 'Aggregates Cobertura data files',
-            group: 'Reporting',
-            type: AggregateCoberturaMergeTask, {
-            extension = coberturaExtension
-        })
-
-        project.tasks.create(name: AggregateCoberturaReportTask.TASK_NAME,
-            description: 'Aggregates Cobertura report files',
-            group: 'Reporting',
-            type: AggregateCoberturaReportTask, {
-            extension = coberturaExtension
-        })
 
         project.tasks.create(name: GenerateBomTask.TASK_NAME,
             description: 'Generates a BOM file',
