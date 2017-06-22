@@ -5,14 +5,22 @@ apply plugin: 'com.jfrog.bintray'
 
 def pomConfig = {
     name project.name
-    description project.projectDescription
     url project.projectWebsiteUrl
     inceptionYear project.projectInceptionYear
+    scm {
+        url project.projectVcsUrl
+    }
     licenses {
         license([:]) {
             name 'The Apache Software License, Version 2.0'
             url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
             distribution 'repo'
+        }
+    }
+    developers {
+        developer {
+            id buildBy
+            name buildBy
         }
     }
 }
@@ -32,6 +40,7 @@ publishing {
                     }
                 }
                 asNode().children().last() + pomConfig
+                asNode().appendNode('description', project.projectDescription)
             }
         }
     }
