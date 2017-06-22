@@ -42,11 +42,11 @@ buildscript {
         classpath 'com.gradle:build-scan-plugin:1.8'
     }
 }
+apply plugin: 'com.gradle.build-scan'
 apply from: 'gradle/idea.gradle'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.nemerosa.versioning'
-apply plugin: 'com.gradle.build-scan'
 
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
