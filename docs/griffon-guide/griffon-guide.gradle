@@ -219,7 +219,7 @@ asciidoctor {
         'spock-version'         : project.spockVersion,
         'slf4j-version'         : project.slf4jVersion,
         'griffon-group'         : project.group,
-        'griffon-source-url'    : griffonSourceUrl,
+        'griffon-source-url'    : project_vcs_url,
         'rootprojectdir'        : rootProject.projectDir.absolutePath,
         'gradle-griffon-version': loadProperties(project(':gradle-griffon-plugin').file('gradle.properties')).version,
         'application-master-pom': loadProperties(project(':application-master-pom').file('gradle.properties')).version
