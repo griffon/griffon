@@ -46,10 +46,10 @@ public class Tab2View extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Node node = loadFromFXML();
-        uiInput = UIThreadAwareBindings.uiThreadAwareStringProperty(input.textProperty());
-        uiOutput = UIThreadAwareBindings.uiThreadAwareStringProperty(output.textProperty());
-        model.inputProperty().bindBidirectional(uiInput);
-        model.outputProperty().bindBidirectional(uiOutput);
+        uiInput = UIThreadAwareBindings.uiThreadAwareStringProperty(model.inputProperty());
+        uiOutput = UIThreadAwareBindings.uiThreadAwareStringProperty(model.outputProperty());
+        input.textProperty().bindBidirectional(uiInput);
+        output.textProperty().bind(uiOutput);
         connectActions(node, controller);
 
         Tab tab = new Tab("FXML");

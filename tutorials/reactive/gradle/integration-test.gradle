@@ -69,7 +69,7 @@ task jacocoIntegrationTestReport(dependsOn: integrationTest, type: JacocoReport)
         csv.enabled = false
         xml.enabled = true
         html.enabled = true
-        html.destination = "${buildDir}/reports/jacoco/integration-test/html"
-        xml.destination = "${buildDir}/reports/jacoco/integration-test/jacocoIntegrationTestReport.xml"
+        html.destination = file("${buildDir}/reports/jacoco/integration-test/html")
+        xml.destination = file("${buildDir}/reports/jacoco/integration-test/jacocoIntegrationTestReport.xml")
     }
 }

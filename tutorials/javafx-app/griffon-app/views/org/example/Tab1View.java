@@ -62,10 +62,10 @@ public class Tab1View extends AbstractJavaFXGriffonView {
         Label output = new Label();
         label.setPrefWidth(360.0);
 
-        uiInput = UIThreadAwareBindings.uiThreadAwareStringProperty(input.textProperty());
-        uiOutput = UIThreadAwareBindings.uiThreadAwareStringProperty(output.textProperty());
-        model.inputProperty().bindBidirectional(uiInput);
-        model.outputProperty().bindBidirectional(uiOutput);
+        uiInput = UIThreadAwareBindings.uiThreadAwareStringProperty(model.inputProperty());
+        uiOutput = UIThreadAwareBindings.uiThreadAwareStringProperty(model.outputProperty());
+        input.textProperty().bindBidirectional(uiInput);
+        output.textProperty().bind(uiOutput);
 
         anchorPane.getChildren().addAll(label, input, button, output);
 
