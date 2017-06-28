@@ -83,9 +83,9 @@ subprojects { subproj ->
         }
 
         dependencies {
-            testCompile 'junit:junit:4.12'
+            testCompile "junit:junit:\$junitVersion"
             testCompile "org.spockframework:spock-core:\${spockVersion}"
-            testCompile 'org.slf4j:slf4j-simple:1.7.25'
+            testCompile "org.slf4j:slf4j-simple:\$slf4jVersion"
         }
 
         task sourceJar(type: Jar) {
@@ -93,6 +93,13 @@ subprojects { subproj ->
             description 'An archive of the source code'
             classifier 'sources'
             from sourceSets.main.allSource
+        }
+
+        task javadocJar(type: Jar) {
+            group 'Build'
+            description 'An archive of the Javadocs'
+            classifier 'javadoc'
+            from javadoc.destinationDir
         }
 
         tasks.withType(AbstractCompile) {
