@@ -160,21 +160,7 @@ The Griffon Build plugin adds a number of tasks to your project, as shown below.
 [cols="4*", options="header"]
 |===
 | Task name                | Depends on | Type                          | Description
-| aggregateCoberturaMerge  | -          | `AggregateCoberturaMergeTask` | Aggregates all cobertura data files found in the project.
-| aggregateCoberturaReport | -          | `AggregateCoberturaReport`    | Generates a project-wide Cobertura report.
 | GenerateBomTask          | -          | `GenerateBomTask`             | Generates a BOM file that includes all subprojects.
-|===
-
-=== Convention Properties
-
-The Griffon Build plugin adds a number of convention properties to the project, shown below.
-
-.Griffon Build plugin - tasks
-[cols="4*", options="header"]
-|===
-| Property name          | Type | Default value                      | Description
-| coverageOutputDatafile | File | _buildDir_/cobertura/cobertura.ser | Path to the data file to produce during instrumentation.
-| coverageReportDir      | File | _reportsDir_/cobertura             | Path to report directory for coverage report.
 |===
 
 == Dependencies
