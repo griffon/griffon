@@ -56,6 +56,26 @@ class GenerateBomTaskTest {
         Task task = rootProject.tasks.create(name: 'generateBom', type: GenerateBomTask) {
             outputDir = taskOutputDir
             additionalDependencies = ['commons-lang:commons-lang:2.6']
+            pomConfig {
+                description = 'description'
+                url         = 'url'
+                scm {
+                    url = 'scm'
+                }
+                licenses {
+                    license {
+                        name         = 'The Apache Software License, Version 2.0'
+                        url          = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id   = 'aalmiray'
+                        name = 'Andres Almiray'
+                    }
+                }
+            }
         }
 
         // when:
