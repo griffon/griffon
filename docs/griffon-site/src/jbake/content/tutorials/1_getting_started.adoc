@@ -136,19 +136,19 @@ Once installed you can verify that's working by invoking this command
 ----
 $ gradle --version
 ------------------------------------------------------------
-Gradle 3.0
+Gradle 4.0
 ------------------------------------------------------------
 
-Build time:   2016-08-15 13:15:01 UTC
-Revision:     ad76ba00f59ecb287bd3c037bd25fc3df13ca558
+Build time:   2017-06-14 15:11:08 UTC
+Revision:     316546a5fcb4e2dfe1d6aa0b73a4e09e8cecb5a5
 
-Groovy:       2.4.7
+Groovy:       2.4.11
 Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
-JVM:          1.8.0_102 (Oracle Corporation 25.102-b14)
-OS:           Mac OS X 10.10.5 x86_64
+JVM:          1.8.0_131 (Oracle Corporation 25.131-b11)
+OS:           Mac OS X 10.12.5 x86_64
 ----
 
-Gradle 2.13 is the minimum supported version.
+Gradle 4 is the minimum supported version.
 
 .Maven
 
@@ -169,12 +169,12 @@ You can verify this tool by executing this command
 [source]
 ----
 $ mvn -v
-Apache Maven 3.3.1 (cab6659f9874fa96462afef40fcf6bc033d58c1c; 2015-03-13T21:10:27+01:00)
+Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T21:39:06+02:00)
 Maven home: /usr/local/maven
-Java version: 1.8.0_102, vendor: Oracle Corporation
-Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home/jre
+Java version: 1.8.0_131, vendor: Oracle Corporation
+Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre
 Default locale: en_US, platform encoding: UTF-8
-OS name: "mac os x", version: "10.10.5", arch: "x86_64", family: "mac"
+OS name: "mac os x", version: "10.12.5", arch: "x86_64", family: "mac"
 ----
 
 Maven 3 is the minimum supported version.
@@ -304,7 +304,8 @@ up automatically. Open up Preferences and navigate to *Build, Execution Deployme
 .Annotation Processing in IntelliJ
 image::/img/intellij_apt_processor.png[]
 
-Finally, check that all `*-compile` JARs are added in the PROVIDED scope, also `jipsy-0.4.0.jar` and `gipsy-0.4.0.jar`.
+Finally, check that all `*-compile` JARs are added in the PROVIDED scope, also `jipsy-0.4.1.jar` (for Java and Groovy
+projects) and `gipsy-0.4.1.jar` (for Groovy projects).
 
 .NetBeans
 NetBeans can import Maven projects without additional plugins. You must install the Gradle plugin first if you
