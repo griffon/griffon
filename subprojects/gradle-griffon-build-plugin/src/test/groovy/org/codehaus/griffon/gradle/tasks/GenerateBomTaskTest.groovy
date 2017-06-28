@@ -81,7 +81,7 @@ class GenerateBomTaskTest {
         // when:
         task.generate()
 
-        File expectedBom = new File('src/test/resources/expected-bom.xml')
+        File expectedBom = new File('src/test/files/expected-bom.xml')
         File actualBom = new File(taskOutputDir, "${rootProject.name}-${rootProject.version}.pom")
 
         // then:
