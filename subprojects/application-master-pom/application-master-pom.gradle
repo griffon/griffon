@@ -17,8 +17,10 @@ task copyPom(type: Copy) {
     from(file('src/pom')) {
         filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
             'project.version': project.version,
-            'groovy.version': project.groovyVersion,
+            'groovy.version' : project.groovyVersion,
             'griffon.version': rootProject.version,
+            'slf4j.version'  : slf4jVersion,
+            'spock.version'  : spockVersion
         ])
     }
 }

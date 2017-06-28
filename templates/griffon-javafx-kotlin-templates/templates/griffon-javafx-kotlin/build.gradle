@@ -104,49 +104,44 @@ sourceSets {
 }
 
 processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.properties'
-        exclude '**/*.groovy'
-        exclude '**/*.xml'
-    }
-    from(sourceSets.main.resources.srcDirs) {
-        include '**/*.properties'
-        include '**/*.groovy'
-        include '**/*.xml'
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-            'application.name'   : project.name,
-            'application.version': project.version,
-            'griffon.version'    : project.version
-        ])
+    filesMatching('**/*.properties',
+            '**/*.groovy',
+            '**/*.html',
+            '**/*.xml',
+            '**/*.txt'
+        ]) {
+        expand(
+            'application_name'   : project.name,
+            'application_version': project.version,
+            'griffon_version'    : project.version
+        )
     }
 }
 
 processTestResources {
-    from(sourceSets.test.resources.srcDirs) {
-        exclude '**/*.properties'
-        exclude '**/*.groovy'
-        exclude '**/*.xml'
-    }
-    from(sourceSets.test.resources.srcDirs) {
-        include '**/*.properties'
-        include '**/*.groovy'
-        include '**/*.xml'
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-            'application.name'   : project.name,
-            'application.version': project.version,
-            'griffon.version'    : project.version
-        ])
+    filesMatching([
+            '**/*.properties',
+            '**/*.groovy',
+            '**/*.html',
+            '**/*.xml',
+            '**/*.txt'
+        ]) {
+        expand(
+            'application_name'   : project.name,
+            'application_version': project.version,
+            'griffon_version'    : project.version
+        )
     }
 }
 
 stats {
     paths += [
-        model     : [name: 'Models', path: 'griffon-app/models'],
-        view      : [name: 'Views', path: 'griffon-app/views'],
-        controller: [name: 'Controllers', path: 'griffon-app/controllers'],
-        service   : [name: 'Services', path: 'griffon-app/services'],
+        model     : [name: 'Models',        path: 'griffon-app/models'],
+        view      : [name: 'Views',         path: 'griffon-app/views'],
+        controller: [name: 'Controllers',   path: 'griffon-app/controllers'],
+        service   : [name: 'Services',      path: 'griffon-app/services'],
         config    : [name: 'Configuration', path: 'griffon-app/conf'],
-        lifecycle : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
+        lifecycle : [name: 'Lifecycle',     path: 'griffon-app/lifecycle']
     ]
 }
 

@@ -48,20 +48,20 @@ There are also a few helpful methods found in `{link_metadata}`:
 * `getApplicationVersion()` - same result as `meta['application.version']`
 
 The following table shows the default properties and values found in `application.properties`. You may edit this
-file and either set a fixed value fo an existing property or add new key/value pairs
+file and either set a fixed value of an existing property or add new key/value pairs
 
 [options="header"]
 .Metadata properties
 |====
 | Key                 | Value
-| application.name    | @application.name@
-| application.version | @application.version@
-| build.date          | @build.date@
-| build.time          | @build.time@
-| build.revision      | @build.revision@
+| application.name    | ${application_name}
+| application.version | ${application_version}
+| build.date          | ${build_date}
+| build.time          | ${build_time}
+| build.revision      | ${build_revision}
 |====
 
-Values surrounded by `@` are treated as placeholder tokens; their values are determined at build time. Look
+Values surrounded by `${}` are treated as placeholder tokens; their values are determined at build time. Look
 for the `griffon` section in the Gradle build file to change these values, which looks like this by default
 
 .build.gradle
@@ -74,9 +74,9 @@ griffon {
     version = '{griffon-version}'
     toolkit = 'javafx'
     applicationProperties = [                     // <1>
-        'build.date'    : buildDate,
-        'build.time'    : buildTime,
-        'build.revision': versioning.info.commit
+        'build_date'    : buildDate,
+        'build_time'    : buildTime,
+        'build_revision': versioning.info.commit
     ]
 }
 ----

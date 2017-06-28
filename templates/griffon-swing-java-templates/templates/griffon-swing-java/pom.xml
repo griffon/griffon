@@ -16,7 +16,20 @@
     <properties>
         <griffon.version>${griffon_version}</griffon.version>
         <application.main.class>${project_package}.Launcher</application.main.class>
+        <application_name>\${project.name}</application_name>
+        <application_version>\${project.version}</application_version>
+        <build_date>\${git.build.time}</build_date>
+        <build_time>\${git.build.time}</build_time>
+        <build_revision>\${git.commit.id}</build_revision>
     </properties>
+
+    <build>
+        <!-- Uncomment if project is versioned using Git
+        <filters>
+            <filter>\${project.build.outputDirectory}/git.properties</filter>
+        </filters>
+        -->
+    </build>
 
     <dependencies>
         <!-- compile -->
@@ -36,7 +49,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <version>\${slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
         <!-- test -->

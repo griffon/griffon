@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.gradle
 
-import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.BuildAdapter
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
@@ -79,23 +78,18 @@ class GriffonPlugin implements Plugin<Project> {
     }
 
     private void processResources(Project project, SourceSet sourceSet, GriffonExtension extension) {
-        def filePatterns = [
-            '**/*.properties',
-            '**/*.groovy',
-            '**/*.html',
-            '**/*.xml',
-            '**/*.txt'
-        ]
         project.tasks."${sourceSet.processResourcesTaskName}" {
-            from(sourceSet.resources.srcDirs) {
-                exclude filePatterns
-            }
-            from(sourceSet.resources.srcDirs) {
-                include filePatterns
-                filter(ReplaceTokens, tokens: [
-                    'application.name'   : resolveApplicationName(project),
-                    'application.version': project.version,
-                    'griffon.version'    : extension.version
+            filesMatching([
+                '**/*.properties',
+                '**/*.groovy',
+                '**/*.html',
+                '**/*.xml',
+                '**/*.txt'
+            ]) {
+                expand([
+                    'application_name'   : resolveApplicationName(project),
+                    'application_version': project.version,
+                    'griffon_version'    : extension.version
                 ] + extension.applicationProperties)
             }
         }

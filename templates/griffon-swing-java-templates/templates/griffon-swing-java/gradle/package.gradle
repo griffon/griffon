@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 apply plugin: 'izpack'
 if (macosx) apply plugin: 'com.github.cr0.macappbundle'
 
@@ -11,7 +9,6 @@ task prepareIzpack(type: Copy, dependsOn: installDist) {
     destinationDir = file("$buildDir/install/izpack")
     from('src/main/izpack/resources') {
         into 'resources'
-        filter(ReplaceTokens, tokens: ['griffon.version': griffon.version])
     }
     into('binary') {
         from installDist.destinationDir

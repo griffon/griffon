@@ -143,13 +143,13 @@ in Groovy script format:
 dataSource.driverClassName = 'org.h2.Driver'
 environments {
     development {
-        dataSource.url = 'jdbc:h2:mem:@application.name@-dev'
+        dataSource.url = 'jdbc:h2:mem:${application_name}-dev'
     }
     test {
-        dataSource.url = 'jdbc:h2:mem:@application.name@-test'
+        dataSource.url = 'jdbc:h2:mem:${application_name}-test'
     }
     production {
-        dataSource.url = 'jdbc:h2:file:/opt/@application.name@/data/db'
+        dataSource.url = 'jdbc:h2:file:/opt/${application_name}/data/db'
     }
 }
 ----
@@ -160,9 +160,9 @@ The same configuration in properties format:
 .griffon-app/resources/DataSource.properties
 ----
 dataSource.driverClassName = org.h2.Driver
-environments.development.dataSource.url = jdbc:h2:mem:@application.name@-dev
-environments.test.dataSource.url = jdbc:h2:mem:@application.name@-test
-environments.production.dataSource.url = jdbc:h2:file:/opt/@application.name@/data/db
+environments.development.dataSource.url = jdbc:h2:mem:${application_name}-dev
+environments.test.dataSource.url = jdbc:h2:mem:${application_name}-test
+environments.production.dataSource.url = jdbc:h2:file:/opt/${application_name}/data/db
 ----
 
 Or in XML format:
@@ -178,17 +178,17 @@ Or in XML format:
     <environments>
         <development>
             <dataSource>
-                <url>jdbc:h2:mem:@application.name@-dev</url>
+                <url>jdbc:h2:mem:${application_name}-dev</url>
             </dataSource>
         </development>
         <test>
             <dataSource>
-                <url>jdbc:h2:mem:@application.name@-test</url>
+                <url>jdbc:h2:mem:${application_name}-test</url>
             </dataSource>
         </test>
         <production>
             <dataSource>
-                <url>jdbc:h2:mem:@application.name@-prod</url>
+                <url>jdbc:h2:mem:${application_name}-prod</url>
             </dataSource>
         </production>
     </environments>

@@ -49,7 +49,8 @@
     <properties>
         <griffon.version>@griffon.version@</griffon.version>
         <groovy.version>@groovy.version@</groovy.version>
-        <spock.version>1.1-groovy-2.4</spock.version>
+        <slf4j.version>@slf4j.version@</slf4j.version>
+        <spock.version>@spock.version@</spock.version>
         <codenarc.version>0.21</codenarc.version>
         <izpack-standalone.version>4.3.5</izpack-standalone.version>
         <izpack.staging.dir>${project.build.directory}/izpack</izpack.staging.dir>
@@ -69,10 +70,11 @@
         <plugin.dependency.version>2.9</plugin.dependency.version>
         <plugin.exec.version>1.2.1</plugin.exec.version>
         <plugin.findbugs.version>2.5.4</plugin.findbugs.version>
+        <plugin.git.commit.version>2.2.1</plugin.git.commit.version>
         <plugin.gmavenplus.version>1.2</plugin.gmavenplus.version>
         <plugin.javadoc.version>2.9.1</plugin.javadoc.version>
         <plugin.javafx.version>8.7.0</plugin.javafx.version>
-        <plugin.jacoco.version>0.7.7.201606060606</plugin.jacoco.version>
+        <plugin.jacoco.version>0.7.9</plugin.jacoco.version>
         <plugin.jdepend.version>2.0</plugin.jdepend.version>
         <plugin.jxr.version>2.4</plugin.jxr.version>
         <plugin.osxappbundle.version>1.0.1</plugin.osxappbundle.version>
@@ -481,6 +483,7 @@
                     <version>${plugin.antrun.version}</version>
                     <inherited>true</inherited>
                     <executions>
+                        <!--
                         <execution>
                             <id>process-resources</id>
                             <phase>compile</phase>
@@ -493,6 +496,7 @@
                                 </tasks>
                             </configuration>
                         </execution>
+                        -->
                         <execution>
                             <id>post-site</id>
                             <phase>site</phase>
@@ -694,6 +698,27 @@
                         <maxmem>256m</maxmem>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>pl.project13.maven</groupId>
+                    <artifactId>git-commit-id-plugin</artifactId>
+                    <version>${plugin.git.commit.version}</version>
+                    <executions>
+                        <execution>
+                            <id>get-the-git-infos</id>
+                            <goals>
+                                <goal>revision</goal>
+                            </goals>
+                            <phase>validate</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <verbose>false</verbose>
+                        <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                        <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                        <dateFormat>yyyy-MM-dd'@'HH:mm:ss.SSSZ</dateFormat>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -755,8 +780,27 @@
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+            </plugin>
         </plugins>
         <!-- end::plugins[] -->
+
+        <resources>
+            <resource>
+                <directory>griffon-app/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>griffon-app/i18n</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>

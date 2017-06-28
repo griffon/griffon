@@ -73,6 +73,13 @@ ext {
     depProjects = []
     fullBuild = !travis && !appveyor
     javaVersion = Version.decode(System.getProperty('java.version'))
+    resourceFilePatterns = [
+        '**/*.properties',
+        '**/*.groovy',
+        '**/*.html',
+        '**/*.xml',
+        '**/*.txt'
+    ]
 }
 
 allprojects {
@@ -122,7 +129,7 @@ subprojects { subproj ->
         }
 
         dependencies {
-            testCompile 'junit:junit:4.12'
+            testCompile "junit:junit:$junitVersion"
             testCompile 'com.google.guiceberry:guiceberry:3.3.1'
             testCompile("com.google.inject:guice:$guiceVersion") {
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
@@ -138,38 +145,27 @@ subprojects { subproj ->
         }
 
         processResources {
-            from(sourceSets.main.resources.srcDirs) {
-                exclude '**/*.properties'
-                exclude '**/*.groovy'
-                exclude '**/*.xml'
-            }
-            from(sourceSets.main.resources.srcDirs) {
-                include '**/*.properties'
-                include '**/*.groovy'
-                include '**/*.xml'
-                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'application.name'   : project.name,
-                    'application.version': project.version,
-                    'griffon.version'    : project.version
-                ])
+            filesMatching(resourceFilePatterns) {
+                expand(
+                    'application_name'   : project.name,
+                    'application_version': project.version,
+                    'griffon_version'    : project.version,
+                    'built_by'           : buildBy,
+                    'created_by'         : buildCreatedBy,
+                    'build_date'         : buildDate,
+                    'build_time'         : buildTime,
+                    'build_revision'     : versioning.info.commit
+                )
             }
         }
 
         processTestResources {
-            from(sourceSets.test.resources.srcDirs) {
-                exclude '**/*.properties'
-                exclude '**/*.groovy'
-                exclude '**/*.xml'
-            }
-            from(sourceSets.test.resources.srcDirs) {
-                include '**/*.properties'
-                include '**/*.groovy'
-                include '**/*.xml'
-                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'application.name'   : project.name,
-                    'application.version': project.version,
-                    'griffon.version'    : project.version
-                ])
+            filesMatching(resourceFilePatterns) {
+                expand(
+                    'application_name'   : project.name,
+                    'application_version': project.version,
+                    'griffon_version'    : project.version
+                )
             }
         }
 
@@ -269,12 +265,12 @@ subprojects { subproj ->
             def statsTask = subproj.tasks.findByName('stats')
             statsTask.formats = ['txt']
             statsTask.paths += [
-                model     : [name: 'Models', path: 'griffon-app/models'],
-                view      : [name: 'Views', path: 'griffon-app/views'],
-                controller: [name: 'Controllers', path: 'griffon-app/controllers'],
-                service   : [name: 'Services', path: 'griffon-app/services'],
+                model     : [name: 'Models',        path: 'griffon-app/models'],
+                view      : [name: 'Views',         path: 'griffon-app/views'],
+                controller: [name: 'Controllers',   path: 'griffon-app/controllers'],
+                service   : [name: 'Services',      path: 'griffon-app/services'],
                 config    : [name: 'Configuration', path: 'griffon-app/conf'],
-                lifecycle : [name: 'Lifecycle', path: 'griffon-app/lifecycle']
+                lifecycle : [name: 'Lifecycle',     path: 'griffon-app/lifecycle']
             ]
         }
     }
