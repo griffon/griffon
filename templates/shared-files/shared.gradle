@@ -34,6 +34,9 @@ tasks.withType(Zip) { task ->
                 // continue
             } else if (destDir.name == 'griffon-javafx-kotlin') {
                 from(rootProject.file('templates/shared-files/sources')) {
+                    exclude '.mvn'
+                    exclude 'mvnw'
+                    exclude 'mvnw.cmd'
                     exclude 'maven'
                     exclude 'gradle/package.gradle'
                     exclude 'gradle/code-quality.gradle'
@@ -43,6 +46,9 @@ tasks.withType(Zip) { task ->
             } else if (destDir.name == 'griffon-plugin') {
                 from(rootProject.file('templates/shared-files/sources')) {
                     exclude 'src'
+                    exclude '.mvn'
+                    exclude 'mvnw'
+                    exclude 'mvnw.cmd'
                     exclude 'maven'
                     exclude 'settings.gradle'
                     exclude 'gradle/package.gradle'
