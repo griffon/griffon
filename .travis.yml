@@ -19,13 +19,13 @@ before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 before_script:
-  - ./gradlew --version
-script: ./gradlew -S -Dscan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy -x clirr
+  - ./gradlew --no-daemon --version
+script: ./gradlew --no-daemon -S -Dscan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-groovy:jfxDeploy -x :sample-javafx-java:jfxJar -x :sample-javafx-java:jfxDeploy -x clirr
 after_success:
   - ./update-gh-pages.sh
   - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
   - for report in `find ./samples -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
-  - ./gradlew coveralls
+  - ./gradlew --no-daemon coveralls
   - bash <(curl -s https://codecov.io/bash)
 after_failure:
   - ./update-gh-pages.sh
