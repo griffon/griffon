@@ -53,6 +53,15 @@ class AbstractModuleSpec extends Specification {
         bindings[6] instanceof TargetBinding
         bindings[7] instanceof TargetBinding
 
+        bindings[0].toString().contains 'TargetBinding'
+        bindings[1].toString().contains 'TargetBinding'
+        bindings[2].toString().contains 'InstanceBinding'
+        bindings[3].toString().contains 'ProviderBinding'
+        bindings[4].toString().contains 'ProviderTypeBinding'
+        bindings[5].toString().contains 'TargetBinding'
+        bindings[6].toString().contains 'TargetBinding'
+        bindings[7].toString().contains 'TargetBinding'
+
         // singleton
         !bindings[0].singleton
         !bindings[1].singleton

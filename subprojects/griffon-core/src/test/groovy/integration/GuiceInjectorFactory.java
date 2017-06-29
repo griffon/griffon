@@ -20,6 +20,7 @@ import com.google.inject.Guice;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
@@ -32,12 +33,14 @@ import griffon.core.injection.InjectorFactory;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ServiceLoader;
 
 import static com.google.inject.util.Providers.guicify;
+import static griffon.util.GriffonClassUtils.invokeAnnotatedMethod;
 import static integration.GuiceInjector.moduleFromBindings;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
@@ -65,6 +68,13 @@ public class GuiceInjectorFactory implements InjectorFactory {
             }
         };
 
+        final InjectionListener<Object> postConstructorInjectorListener = new InjectionListener<Object>() {
+            @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+            @Override
+            public void afterInjection(Object injectee) {
+                invokeAnnotatedMethod(injectee, PostConstruct.class);
+            }
+        };
 
         Module injectorModule = new AbstractModule() {
             @Override
@@ -88,6 +98,13 @@ public class GuiceInjectorFactory implements InjectorFactory {
                                  }
                              }
                 );
+
+                bindListener(Matchers.any(), new TypeListener() {
+                    @Override
+                    public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter) {
+                        encounter.register(postConstructorInjectorListener);
+                    }
+                });
             }
         };
 

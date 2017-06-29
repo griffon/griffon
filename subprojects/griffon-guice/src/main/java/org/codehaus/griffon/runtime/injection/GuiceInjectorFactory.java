@@ -90,7 +90,6 @@ public class GuiceInjectorFactory implements InjectorFactory {
             }
         };
 
-
         final InstanceTracker instanceTracker = new InstanceTracker();
         Module injectorModule = new AbstractModule() {
             @Override

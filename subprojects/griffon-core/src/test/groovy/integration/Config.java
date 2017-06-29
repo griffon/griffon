@@ -40,6 +40,8 @@ public class Config extends AbstractMapResourceBundle {
                     .e("config", CollectionUtils.map()
                         .e("color", "#0000FF"))
                 )
-            );
+            )
+            .e("keys", CollectionUtils.map()
+                .e("key1", "value1"));
     }
 }

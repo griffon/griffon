@@ -17,11 +17,13 @@ package integration;
 
 import griffon.core.LifecycleHandler;
 import griffon.core.addon.GriffonAddon;
+import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionHandler;
 import griffon.core.env.Lifecycle;
 import griffon.core.i18n.MessageSource;
 import griffon.core.resources.ResourceResolver;
 import org.codehaus.griffon.runtime.core.LifecycleHandlerProvider;
+import org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationManager;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;

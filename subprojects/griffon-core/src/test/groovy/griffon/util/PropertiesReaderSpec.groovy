@@ -46,7 +46,7 @@ class PropertiesReaderSpec extends Specification {
     def 'Load properties with environments = #environment'() {
         given:
         PropertiesReader reader = new PropertiesReader()
-        reader.registerConditionalBlock('environments', environment)
+        reader.environment = environment
 
         when:
         Properties p = reader.load(getClass().getClassLoader().getResource('griffon/util/props.properties'))
@@ -74,6 +74,7 @@ class PropertiesReaderSpec extends Specification {
         then:
         p.size() == size
         p.key2 == value2
+        reader.conditionalBlockValues == ['environments': environment, 'variables': variable]
 
         where:
         environment   | variable | size | value2
