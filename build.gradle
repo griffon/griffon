@@ -276,8 +276,7 @@ subprojects { subproj ->
 
     task allDeps(type: DependencyReportTask) {}
     configurations.all {
-        resolutionStrategy.force "jdepend:jdepend:$jdependVersion",
-            "com.google.guava:guava:$guavaVersion",
+        resolutionStrategy.force  "com.google.guava:guava:$guavaVersion",
             "junit:junit:$junitVersion",
             "cglib:cglib-nodep:$cglibVersion",
             "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",

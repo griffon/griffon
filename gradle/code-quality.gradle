@@ -17,7 +17,6 @@
 apply plugin: 'checkstyle'
 apply plugin: 'codenarc'
 // apply plugin: 'findbugs'
-apply plugin: 'jdepend'
 apply plugin: 'com.github.hierynomus.license'
 
 def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
@@ -49,13 +48,6 @@ findbugs {
     reportLevel = 'high'
 }
 */
-
-jdepend {
-    toolVersion = jdependVersion
-    sourceSets = [sourceSets.main]
-    ignoreFailures = true
-    reportsDir = file("$project.buildDir/reports/jdepend")
-}
 
 license {
     header = rootProject.file('config/HEADER')
