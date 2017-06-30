@@ -26,6 +26,8 @@ Gradle wrapper version on all Lazybones templates has been bumped to `4.0`.
 
 === Compatibility
 
+==== Resources
+
 Resource tokens have been migrated from `@token@` to `${token}`. This affects all resources found in the following directories:
 
  * `src/main/resources`
@@ -44,6 +46,11 @@ created by the Lazybones templates or those that rely on the `gradle-griffon` pl
 | build.time          | build_time
 | build.revision      | build_revision
 |===
+
+==== JavaFX Gradle Plugin
+
+All JavaFX project templates (Lazybones) now rely on link:https://github.com/FibreFoX/javafx-gradle-plugin[FibreFoX/javafx-gradle-plugin]
+as it provides more features and it's updated more constantly than the previous plugin choice.
 
 Full binary compatibility report between Griffon 2.12.0 and 2.11.0 can be found
 link:../reports/2.11.0/compatibility-report.html[here].
