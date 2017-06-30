@@ -29,6 +29,12 @@
             <filter>\${project.build.outputDirectory}/git.properties</filter>
         </filters>
         -->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
@@ -71,6 +77,10 @@
             <artifactId>griffon-core-test</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.griffon</groupId>
+            <artifactId>griffon-pivot-test</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
         </dependency>
@@ -79,10 +89,12 @@
     <repositories>
         <repository>
             <id>jcenter</id>
+            <name>jcenter</name>
             <url>http://jcenter.bintray.com/</url>
         </repository>
         <repository>
             <id>griffon-plugins</id>
+            <name>griffon-plugins</name>
             <url>http://dl.bintray.com/griffon/griffon-plugins</url>
         </repository>
     </repositories>

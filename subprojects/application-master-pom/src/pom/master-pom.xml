@@ -52,39 +52,40 @@
         <slf4j.version>@slf4j.version@</slf4j.version>
         <spock.version>@spock.version@</spock.version>
         <codenarc.version>0.21</codenarc.version>
+        <spotbugs.version>3.1.0-RC3</spotbugs.version>
         <izpack-standalone.version>4.3.5</izpack-standalone.version>
         <izpack.staging.dir>${project.build.directory}/izpack</izpack.staging.dir>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- plugins -->
-        <plugin.antrun.version>1.7</plugin.antrun.version>
-        <plugin.appassembler.version>1.8.1</plugin.appassembler.version>
-        <plugin.assembly.version>2.4</plugin.assembly.version>
-        <plugin.buildhelper.version>1.9</plugin.buildhelper.version>
-        <plugin.changes.version>2.8</plugin.changes.version>
-        <plugin.checkstyle.version>2.12.1</plugin.checkstyle.version>
-        <plugin.compiler.version>3.1</plugin.compiler.version>
-        <plugin.coveralls.version>2.2.0</plugin.coveralls.version>
-        <plugin.dependency.version>2.9</plugin.dependency.version>
-        <plugin.exec.version>1.2.1</plugin.exec.version>
-        <plugin.findbugs.version>2.5.4</plugin.findbugs.version>
-        <plugin.git.commit.version>2.2.1</plugin.git.commit.version>
-        <plugin.gmavenplus.version>1.2</plugin.gmavenplus.version>
-        <plugin.javadoc.version>2.9.1</plugin.javadoc.version>
-        <plugin.javafx.version>8.7.0</plugin.javafx.version>
+        <plugin.antrun.version>1.8</plugin.antrun.version>
+        <plugin.appassembler.version>2.0.0</plugin.appassembler.version>
+        <plugin.assembly.version>3.0.0</plugin.assembly.version>
+        <plugin.buildhelper.version>3.0.0</plugin.buildhelper.version>
+        <plugin.changes.version>2.12.1</plugin.changes.version>
+        <plugin.checkstyle.version>2.17</plugin.checkstyle.version>
+        <plugin.compiler.version>3.6.1</plugin.compiler.version>
+        <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
+        <plugin.dependency.version>3.0.1</plugin.dependency.version>
+        <plugin.exec.version>1.6.0</plugin.exec.version>
+        <plugin.findbugs.version>3.0.4</plugin.findbugs.version>
+        <plugin.git.commit.version>2.2.2</plugin.git.commit.version>
+        <plugin.gmavenplus.version>1.5</plugin.gmavenplus.version>
+        <plugin.javadoc.version>2.10.4</plugin.javadoc.version>
+        <plugin.javafx.version>8.8.3</plugin.javafx.version>
         <plugin.jacoco.version>0.7.9</plugin.jacoco.version>
         <plugin.jdepend.version>2.0</plugin.jdepend.version>
-        <plugin.jxr.version>2.4</plugin.jxr.version>
+        <plugin.jxr.version>2.5</plugin.jxr.version>
         <plugin.osxappbundle.version>1.0.1</plugin.osxappbundle.version>
-        <plugin.processor.version>2.2.4</plugin.processor.version>
-        <plugin.project-info-reports.version>2.7</plugin.project-info-reports.version>
-        <plugin.release.version>2.5</plugin.release.version>
-        <plugin.shade.version>2.3</plugin.shade.version>
-        <plugin.shade_ext_transformers.version>1.0.0</plugin.shade_ext_transformers.version>
-        <plugin.site.version>3.4</plugin.site.version>
-        <plugin.surefire.version>2.17</plugin.surefire.version>
-        <plugin.versions.version>2.1</plugin.versions.version>
+        <plugin.processor.version>3.3.1</plugin.processor.version>
+        <plugin.project-info-reports.version>2.9</plugin.project-info-reports.version>
+        <plugin.release.version>2.5.3</plugin.release.version>
+        <plugin.shade.version>3.0.0</plugin.shade.version>
+        <plugin.shade_ext_transformers.version>1.0.3</plugin.shade_ext_transformers.version>
+        <plugin.site.version>3.6</plugin.site.version>
+        <plugin.surefire.version>2.20</plugin.surefire.version>
+        <plugin.versions.version>2.4</plugin.versions.version>
         <maven-checkstyle-plugin.configLocation>${project.basedir}/config/checkstyle/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <!-- javafx signing -->
         <keystore.alias>example-user</keystore.alias>
@@ -99,7 +100,7 @@
     </properties>
 
     <prerequisites>
-        <maven>3.0.4</maven>
+        <maven>3.5.0</maven>
     </prerequisites>
 
     <!-- tag::dependencyManagement[] -->
@@ -278,7 +279,7 @@
                     <version>${plugin.compiler.version}</version>
                     <inherited>true</inherited>
                     <configuration>
-                        <verbose>true</verbose>
+                        <verbose>false</verbose>
                         <fork>true</fork>
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
@@ -430,6 +431,13 @@
                     <artifactId>findbugs-maven-plugin</artifactId>
                     <version>${plugin.findbugs.version}</version>
                     <inherited>true</inherited>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>${spotbugs.version}</version>
+                        </dependency>
+                    </dependencies>
                     <configuration>
                         <skip>${findbugs.skip}</skip>
                         <maxHeap>512</maxHeap>
@@ -451,7 +459,7 @@
                         <links>
                             <link>http://www.slf4j.org/apidocs/</link>
                             <link>http://junit.org/junit4/javadoc/latest/</link>
-                            <link>http://static.javadoc.io/com.google.code.findbugs/jsr305/3.0.1</link>
+                            <link>http://aalmiray.github.io/jsr-305/apidocs/</link>
                             <link>http://javax-inject.github.io/javax-inject/api/</link>
                             <link>http://docs.oracle.com/javase/8/docs/api/</link>
                             <link>http://griffon-framework.org/guide/latest/api/</link>
@@ -698,7 +706,7 @@
                         <failOnNoGitDirectory>false</failOnNoGitDirectory>
                         <generateGitPropertiesFile>true</generateGitPropertiesFile>
                         <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
-                        <dateFormat>yyyy-MM-dd'@'HH:mm:ss.SSSZ</dateFormat>
+                        <dateFormat>yyyy-MM-dd'T'HH:mm:ss.SSSZ</dateFormat>
                     </configuration>
                 </plugin>
             </plugins>
@@ -713,10 +721,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.bsc.maven</groupId>
@@ -759,10 +763,6 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
             </plugin>
@@ -784,30 +784,6 @@
             </resource>
         </resources>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.spockframework</groupId>
-            <artifactId>spock-core</artifactId>
-        </dependency>
-    </dependencies>
-
-    <!-- tag::repositories[] -->
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <url>http://jcenter.bintray.com/</url>
-        </repository>
-        <repository>
-            <id>griffon-plugins</id>
-            <url>http://dl.bintray.com/griffon/griffon-plugins/</url>
-        </repository>
-    </repositories>
-    <!-- end::repositories[] -->
 
     <profiles>
         <!-- tag::profile_binary[] -->
@@ -868,7 +844,7 @@
                                 <id>make-distribution</id>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>assembly</goal>
+                                    <goal>single</goal>
                                 </goals>
                             </execution>
                         </executions>
