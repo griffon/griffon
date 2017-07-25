@@ -31,12 +31,14 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Dimension.class)
 public class DimensionPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Dimension dimension = (Dimension) getValue();
         return dimension.getWidth() + ", " + dimension.getHeight();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

@@ -25,6 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class BooleanPropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -45,6 +46,7 @@ public class BooleanPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(bool);
     }
 
+    @Override
     protected Formatter<Boolean> resolveFormatter() {
         return isBlank(getFormat()) ? null : BooleanFormatter.getInstance(getFormat());
     }

@@ -48,6 +48,7 @@ public class DoubleFormatter extends AbstractFormatter<Double> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Double number) {
         return number == null ? null : numberFormat.format(number);
     }

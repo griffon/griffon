@@ -52,6 +52,7 @@ public class BigIntegerFormatter extends AbstractFormatter<BigInteger> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable BigInteger number) {
         return number == null ? null : numberFormat.format(number);
     }

@@ -31,12 +31,14 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Point.class)
 public class PointPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Point p = (Point) getValue();
         return p.getX() + ", " + p.getY();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

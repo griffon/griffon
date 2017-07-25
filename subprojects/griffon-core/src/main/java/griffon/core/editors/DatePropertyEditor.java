@@ -30,6 +30,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class DatePropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -66,6 +67,7 @@ public class DatePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @Override
     protected Formatter<Date> resolveFormatter() {
         return isBlank(getFormat()) ? null : new DateFormatter(getFormat());
     }

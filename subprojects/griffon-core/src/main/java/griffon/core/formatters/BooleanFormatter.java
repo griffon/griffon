@@ -104,7 +104,7 @@ public class BooleanFormatter extends AbstractFormatter<Boolean> {
         return isBlank(str) ? null : delegate.parse(str);
     }
 
-    private static interface BooleanFormatterDelegate {
+    private interface BooleanFormatterDelegate {
         @Nonnull
         String getPattern();
 
@@ -125,17 +125,20 @@ public class BooleanFormatter extends AbstractFormatter<Boolean> {
         }
 
         @Nonnull
+        @Override
         public String getPattern() {
             return pattern;
         }
 
         @Nonnull
+        @Override
         public String format(@Nonnull Boolean bool) {
             requireNonNull(bool, "Can't format given Boolean because it's null");
             return bool ? tokens[1] : tokens[0];
         }
 
         @Nonnull
+        @Override
         public Boolean parse(@Nonnull String str) throws ParseException {
             if (tokens[0].equalsIgnoreCase(str)) {
                 return Boolean.FALSE;

@@ -20,6 +20,7 @@ package griffon.core.editors;
  * @since 2.0.0
  */
 public class StringPropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

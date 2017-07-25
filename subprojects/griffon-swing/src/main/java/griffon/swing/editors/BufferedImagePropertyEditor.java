@@ -36,6 +36,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(BufferedImage.class)
 public class BufferedImagePropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

@@ -36,10 +36,12 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
     private String format;
 
     @Nullable
+    @Override
     public String getFormat() {
         return format;
     }
 
+    @Override
     public void setFormat(@Nullable String format) {
         this.format = format;
     }
@@ -83,6 +85,7 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
         return super.getAsText();
     }
 
+    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public String getFormattedValue() {
         Object value = getValueInternal();
@@ -93,6 +96,7 @@ public abstract class AbstractPropertyEditor extends PropertyEditorSupport imple
         return value != null ? value.toString() : null;
     }
 
+    @Override
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public void setFormattedValue(String value) {
         Formatter<?> formatter = resolveFormatter();

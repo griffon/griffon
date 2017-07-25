@@ -40,6 +40,7 @@ public class RadialGradientPropertyEditor extends AbstractPropertyEditor {
         return getValueInternal().toString();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

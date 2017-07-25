@@ -46,6 +46,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
         return isBlank(getFormat()) ? format((Color) getValueInternal()) : getFormattedValue();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

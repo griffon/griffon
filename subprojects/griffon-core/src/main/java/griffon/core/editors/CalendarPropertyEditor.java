@@ -30,6 +30,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class CalendarPropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -73,6 +74,7 @@ public class CalendarPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @Override
     protected Formatter<Calendar> resolveFormatter() {
         return isBlank(getFormat()) ? null : new CalendarFormatter(getFormat());
     }

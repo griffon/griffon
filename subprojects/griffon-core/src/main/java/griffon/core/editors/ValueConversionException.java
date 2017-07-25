@@ -15,6 +15,9 @@
  */
 package griffon.core.editors;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * @author Andres Almiray
  * @since 2.0.0
@@ -22,7 +25,7 @@ package griffon.core.editors;
 public class ValueConversionException extends IllegalArgumentException {
     private static final long serialVersionUID = 6344566641106178891L;
 
-    private Object value;
+    private final Object value;
     private Class<?> type;
 
     public ValueConversionException(Object value) {
@@ -44,10 +47,12 @@ public class ValueConversionException extends IllegalArgumentException {
         this.value = value;
     }
 
+    @Nonnull
     public Object getValue() {
         return value;
     }
 
+    @Nullable
     public Class<?> getType() {
         return type;
     }

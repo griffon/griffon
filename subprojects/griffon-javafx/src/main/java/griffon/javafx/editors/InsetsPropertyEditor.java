@@ -29,12 +29,14 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Insets.class)
 public class InsetsPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Insets i = (Insets) getValue();
         return i.getTop() + ", " + i.getRight() + ", " + i.getBottom() + ", " + i.getLeft();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

@@ -25,6 +25,7 @@ import java.util.Locale;
  * @since 2.0.0
  */
 public class LocalePropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -37,6 +38,7 @@ public class LocalePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @Override
     protected Formatter<Locale> resolveFormatter() {
         return new LocaleFormatter();
     }

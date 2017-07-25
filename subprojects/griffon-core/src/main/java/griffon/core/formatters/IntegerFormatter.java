@@ -49,6 +49,7 @@ public class IntegerFormatter extends AbstractFormatter<Integer> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Integer number) {
         return number == null ? null : numberFormat.format(number);
     }

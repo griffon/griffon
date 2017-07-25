@@ -49,6 +49,7 @@ public class ByteFormatter extends AbstractFormatter<Byte> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Byte number) {
         return number == null ? null : numberFormat.format(number);
     }

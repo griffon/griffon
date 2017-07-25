@@ -37,6 +37,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Image.class)
 public class ImagePropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

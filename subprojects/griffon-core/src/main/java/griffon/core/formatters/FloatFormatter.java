@@ -48,6 +48,7 @@ public class FloatFormatter extends AbstractFormatter<Float> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Float number) {
         return number == null ? null : numberFormat.format(number);
     }

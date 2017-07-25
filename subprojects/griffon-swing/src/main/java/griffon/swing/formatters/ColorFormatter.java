@@ -138,11 +138,13 @@ public class ColorFormatter extends AbstractFormatter<Color> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Color color) {
         return color == null ? null : delegate.format(color);
     }
 
     @Nullable
+    @Override
     public Color parse(@Nullable String str) throws ParseException {
         return isBlank(str) ? null : delegate.parse(str);
     }
@@ -221,6 +223,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public String getPattern() {
             return pattern;
         }
@@ -232,6 +235,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public String format(@Nonnull Color color) {
             requireNonNull(color, "Cannot format given Color because it's null");
 
@@ -243,6 +247,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith("#") || str.length() != 4) {
                 throw parseError(str, Color.class);
@@ -271,6 +276,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public String format(@Nonnull Color color) {
             requireNonNull(color, "Cannot format given Color because it's null");
 
@@ -283,6 +289,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith("#") || str.length() != 5) {
                 throw parseError(str, Color.class);
@@ -315,6 +322,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public String format(@Nonnull Color color) {
             requireNonNull(color, "Cannot format given Color because it's null");
             return new StringBuilder("#")
@@ -325,6 +333,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith("#") || str.length() != 7) {
                 throw parseError(str, Color.class);
@@ -353,6 +362,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public String format(@Nonnull Color color) {
             requireNonNull(color, "Cannot format given Color because it's null");
 
@@ -365,6 +375,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Nonnull
+        @Override
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith("#") || str.length() != 9) {
                 throw parseError(str, Color.class);

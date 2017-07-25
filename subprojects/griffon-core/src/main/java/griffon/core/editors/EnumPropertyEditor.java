@@ -33,6 +33,7 @@ public class EnumPropertyEditor extends AbstractPropertyEditor {
         this.enumType = enumType;
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

@@ -29,6 +29,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Font.class)
 public class FontPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Font font = (Font) getValue();
@@ -46,6 +47,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
         return "PLAIN";
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

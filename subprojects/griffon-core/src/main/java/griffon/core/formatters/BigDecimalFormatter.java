@@ -51,6 +51,7 @@ public class BigDecimalFormatter extends AbstractFormatter<BigDecimal> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable BigDecimal number) {
         return number == null ? null : numberFormat.format(number);
     }

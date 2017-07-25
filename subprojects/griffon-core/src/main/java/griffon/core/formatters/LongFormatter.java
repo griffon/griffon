@@ -49,6 +49,7 @@ public class LongFormatter extends AbstractFormatter<Long> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Long number) {
         return number == null ? null : numberFormat.format(number);
     }

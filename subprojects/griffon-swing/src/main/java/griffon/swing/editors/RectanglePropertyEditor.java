@@ -31,12 +31,14 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Rectangle.class)
 public class RectanglePropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Rectangle r = (Rectangle) getValue();
         return r.getX() + ", " + r.getY() + ", " + r.getWidth() + ", " + r.getHeight();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

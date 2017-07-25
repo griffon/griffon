@@ -25,6 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class FloatPropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -49,6 +50,7 @@ public class FloatPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.floatValue());
     }
 
+    @Override
     protected Formatter<Float> resolveFormatter() {
         return isBlank(getFormat()) ? null : new FloatFormatter(getFormat());
     }

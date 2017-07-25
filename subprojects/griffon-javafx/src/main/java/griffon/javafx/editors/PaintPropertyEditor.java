@@ -34,13 +34,13 @@ import static griffon.core.editors.PropertyEditorResolver.findEditor;
  */
 @PropertyEditorFor(Paint.class)
 public class PaintPropertyEditor extends AbstractPropertyEditor {
-
     @Override
     public String getAsText() {
         if (null == getValue()) return null;
         return getValueInternal().toString();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

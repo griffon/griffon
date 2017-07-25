@@ -28,6 +28,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class BigDecimalPropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -58,6 +59,7 @@ public class BigDecimalPropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @Override
     protected Formatter<BigDecimal> resolveFormatter() {
         return isBlank(getFormat()) ? null : new BigDecimalFormatter(getFormat());
     }

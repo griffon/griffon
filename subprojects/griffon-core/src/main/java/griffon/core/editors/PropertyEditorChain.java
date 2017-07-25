@@ -58,11 +58,13 @@ public class PropertyEditorChain extends PropertyEditorSupport implements Extend
         }
     }
 
+    @Override
     @Nullable
     public String getFormat() {
         return format;
     }
 
+    @Override
     public void setFormat(@Nullable String format) {
         this.format = format;
     }
@@ -127,6 +129,7 @@ public class PropertyEditorChain extends PropertyEditorSupport implements Extend
         }
     }
 
+    @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public String getFormattedValue() {
         initPropertyEditors();
@@ -149,6 +152,7 @@ public class PropertyEditorChain extends PropertyEditorSupport implements Extend
         throw illegalValue(value, targetClass);
     }
 
+    @Override
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
     public void setFormattedValue(String value) {
         initPropertyEditors();

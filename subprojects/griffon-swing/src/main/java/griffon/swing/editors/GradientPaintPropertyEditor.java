@@ -32,6 +32,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(GradientPaint.class)
 public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         GradientPaint p = (GradientPaint) getValue();
@@ -52,6 +53,7 @@ public class GradientPaintPropertyEditor extends AbstractPropertyEditor {
             .toString();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

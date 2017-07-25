@@ -27,6 +27,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 public class LocaleFormatter extends AbstractFormatter<Locale> {
     @Nullable
+    @Override
     public String format(@Nullable Locale locale) {
         if (locale == null) return null;
         StringBuilder b = new StringBuilder();

@@ -47,6 +47,7 @@ public class DateFormatter extends AbstractFormatter<Date> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Date date) {
         return date == null ? null : dateFormat.format(date);
     }

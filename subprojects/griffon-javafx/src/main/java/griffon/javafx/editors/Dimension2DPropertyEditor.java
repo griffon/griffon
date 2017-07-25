@@ -29,6 +29,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Dimension2D.class)
 public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Dimension2D dimension = (Dimension2D) getValue();

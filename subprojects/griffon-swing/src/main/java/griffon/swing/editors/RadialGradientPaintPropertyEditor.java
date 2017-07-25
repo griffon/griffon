@@ -33,6 +33,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(RadialGradientPaint.class)
 public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         RadialGradientPaint p = (RadialGradientPaint) getValue();
@@ -85,6 +86,7 @@ public class RadialGradientPaintPropertyEditor extends AbstractPropertyEditor {
         return b.append("]").toString();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

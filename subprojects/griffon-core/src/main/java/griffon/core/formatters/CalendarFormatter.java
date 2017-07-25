@@ -47,6 +47,7 @@ public class CalendarFormatter extends AbstractFormatter<Calendar> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Calendar date) {
         return date == null ? null : dateFormat.format(date.getTime());
     }

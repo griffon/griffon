@@ -25,6 +25,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @since 2.0.0
  */
 public class ShortPropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -49,6 +50,7 @@ public class ShortPropertyEditor extends AbstractPropertyEditor {
         super.setValueInternal(number.shortValue());
     }
 
+    @Override
     protected Formatter<Short> resolveFormatter() {
         return isBlank(getFormat()) ? null : new ShortFormatter(getFormat());
     }

@@ -49,6 +49,7 @@ public class ShortFormatter extends AbstractFormatter<Short> {
     }
 
     @Nullable
+    @Override
     public String format(@Nullable Short number) {
         return number == null ? null : numberFormat.format(number);
     }

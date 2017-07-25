@@ -29,6 +29,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Polygon.class)
 public class PolygonPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Polygon p = (Polygon) getValue();
@@ -44,6 +45,7 @@ public class PolygonPropertyEditor extends AbstractPropertyEditor {
         return b.toString();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

@@ -30,12 +30,14 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(Bounds.class)
 public class BoundsPropertyEditor extends AbstractPropertyEditor {
+    @Override
     public String getAsText() {
         if (null == getValue()) return null;
         Bounds r = (Bounds) getValue();
         return r.x + ", " + r.y + ", " + r.width + ", " + r.height;
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
