@@ -15,7 +15,6 @@
  */
 
 import java.text.SimpleDateFormat
-import org.apache.pivot.util.Version
 
 buildscript {
     repositories {
@@ -73,7 +72,6 @@ ext {
     projectsWithClirr = []
     depProjects = []
     fullBuild = !travis && !appveyor
-    javaVersion = Version.decode(System.getProperty('java.version'))
     resourceFilePatterns = [
         '**/*.properties',
         '**/*.groovy',

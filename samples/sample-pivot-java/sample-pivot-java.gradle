@@ -16,9 +16,7 @@
 
 apply plugin: 'groovy'
 apply plugin: 'application'
-if (javaVersion.updateRevision < 127) {
-    apply from: rootProject.file('gradle/integration-test.gradle')
-}
+apply from: rootProject.file('gradle/integration-test.gradle')
 
 mainClassName = 'sample.pivot.java.Launcher'
 
@@ -33,9 +31,7 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-if (javaVersion.updateRevision < 127) {
-    apply from: rootProject.file('gradle/coverage-samples.gradle')
-}
+apply from: rootProject.file('gradle/coverage-samples.gradle')
 
 dependencies {
     compileOnly project(':griffon-core-compile')
@@ -69,12 +65,6 @@ sourceSets {
                 'src/main/resources'
             ]
         }
-    }
-}
-
-if (javaVersion.updateRevision > 127) {
-    test {
-        exclude 'sample/pivot/**'
     }
 }
 

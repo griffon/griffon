@@ -25,7 +25,7 @@ import java.beans.PropertyEditor
 @Unroll
 class InsetsPropertyEditorSpec extends Specification {
     @Shared
-    private Insets insets = new Insets(1, 2, 3, 4)
+    private Insets sharedInsets = new Insets(1, 2, 3, 4)
 
     void "Insets format '#format' should be equal to #insets"() {
         setup:
@@ -49,20 +49,20 @@ class InsetsPropertyEditorSpec extends Specification {
         new Insets(1, 0, 0, 0) | '1'
         new Insets(1, 2, 0, 0) | '1,2'
         new Insets(1, 2, 3, 0) | '1,2,3'
-        insets                 | '1,2,3,4'
-        insets                 | '1, 2, 3, 4'
-        insets                 | ' 1, 2, 3, 4'
-        insets                 | ' 1, 2,3 , 4 '
-        insets                 | [1, 2, 3, 4]
-        insets                 | ['1', '2', '3', '4']
+        sharedInsets           | '1,2,3,4'
+        sharedInsets           | '1, 2, 3, 4'
+        sharedInsets           | ' 1, 2, 3, 4'
+        sharedInsets           | ' 1, 2,3 , 4 '
+        sharedInsets           | [1, 2, 3, 4]
+        sharedInsets           | ['1', '2', '3', '4']
         new Insets(1, 1, 1, 1) | 1
         new Insets(1, 0, 0, 0) | [1]
         new Insets(1, 0, 0, 0) | ['1']
-        insets                 | [top: 1, left: 2, right: 3, bottom: 4]
-        insets                 | [top: '1', left: '2', right: '3', bottom: '4']
-        insets                 | [t: 1, l: 2, r: 3, b: 4]
-        insets                 | [t: '1', l: '2', r: '3', b: '4']
-        insets                 | insets
+        sharedInsets           | [top: 1, left: 2, right: 3, bottom: 4]
+        sharedInsets           | [top: '1', left: '2', right: '3', bottom: '4']
+        sharedInsets           | [t: 1, l: 2, r: 3, b: 4]
+        sharedInsets           | [t: '1', l: '2', r: '3', b: '4']
+        sharedInsets           | sharedInsets
         new Insets(0, 0, 0, 0) | [foo: 1, bar: 2]
     }
 
@@ -107,8 +107,8 @@ class InsetsPropertyEditorSpec extends Specification {
         expected == actual
 
         where:
-        value  | expected
-        null   | null
-        insets | '1, 2, 3, 4'
+        value        | expected
+        null         | null
+        sharedInsets | '1, 2, 3, 4'
     }
 }

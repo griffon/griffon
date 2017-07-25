@@ -32,12 +32,3 @@ dependencies {
 
     testRuntime project(':griffon-guice')
 }
-
-if (javaVersion.updateRevision > 127) {
-    test {
-        exclude 'griffon/pivot/**'
-        exclude 'org/codehaus/griffon/runtime/pivot/**'
-    }
-
-    projectsWithCoverage.remove(project)
-}
