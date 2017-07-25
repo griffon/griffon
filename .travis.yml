@@ -1,12 +1,8 @@
 language: java
-# we test at Ubuntu Trusty (Ubuntu 14.04 LTS)
-# see https://docs.travis-ci.com/user/trusty-ci-environment/
 sudo: required
 dist: trusty
 install: true
 jdk: oraclejdk8
-# cache gradle dependencies
-# https://docs.travis-ci.com/user/languages/java#Caching
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
@@ -22,19 +18,19 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
+    organization:
+      - griffon
+  sonar:
+    token:
+      secure: i42zSa0Q9jdtAZY8MyDjTImr4ARoxpuZwm3RSVHgpC6Dg4an/eZ8PcR9/MqWYAAzxuPY/ILqnT9524bU9YoCxzVXz00k9ri41DUVRV+5TwJrQYA24Eil7bxWXWfEWWSV6zrK4jk3unir8RQrPZFIj9hsErGeC2yHI+GlSf8IBWc=
 before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  - sleep 3 # give xvfb some time to start
+  - sleep 3
 before_script:
   - ./gradlew --no-daemon --version
-  # Integration tests often fail with "Process 'Gradle Test Executor 4' finished with non-zero exit value 137"
-  # They should run, but the result is ignored
-  # no need for databases for the integrationTest -> save memory
   - sudo service mysql stop
   - sudo service postgresql stop
-  # following services identified by "sudo service --status-all" do not need to run, too
-  # excluded: rsyslog (feels wrong), udev (feels wrong), friendly-recovery ("Unkonwn instance" error)
   - sudo service acpid stop
   - sudo service atd stop
   - sudo service cron stop
@@ -48,8 +44,8 @@ script: ./gradlew --console=plain --no-daemon -S --scan check test integrationTe
 after_success:
   - ./update-gh-pages.sh
   - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
-  - for report in `find ./samples -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
-  - ./gradlew --no-daemon coveralls
+  - for report in `find ./samples -name "jacocoTestReport.xml" -print`; do rm -f $report; done
+  - ./gradlew --no-daemon coveralls sonarqube
   - bash <(curl -s https://codecov.io/bash)
 after_failure:
   - ./update-gh-pages.sh
@@ -57,6 +53,6 @@ notifications:
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/914e6ffa96dfbf419d60
-    on_success: change 
+    on_success: change
     on_failure: always
     on_start: never

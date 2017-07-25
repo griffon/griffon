@@ -39,6 +39,7 @@ buildscript {
         classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.1.1'
         classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.2.0'
         classpath 'com.gradle:build-scan-plugin:1.8'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5'
     }
 }
 apply plugin: 'com.gradle.build-scan'
@@ -46,6 +47,7 @@ apply from: 'gradle/idea.gradle'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.nemerosa.versioning'
+apply plugin: 'org.sonarqube'
 
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
