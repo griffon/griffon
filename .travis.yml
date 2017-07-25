@@ -45,7 +45,7 @@ after_success:
   - ./update-gh-pages.sh
   - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
   - for report in `find ./samples -name "jacocoTestReport.xml" -print`; do rm -f $report; done
-  - ./gradlew --no-daemon coveralls sonarqube
+  - ./gradlew --no-daemon coveralls
   - bash <(curl -s https://codecov.io/bash)
 after_failure:
   - ./update-gh-pages.sh

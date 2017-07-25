@@ -193,6 +193,10 @@ subprojects { subproj ->
         subproj.apply from: rootProject.file('gradle/publish.gradle')
         subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
+        sonarqube {
+            skipProject = !subproj.publishJars.toBoolean()
+        }
+
         if (subproj.publishJars.toBoolean()) {
             if (subproj.name.startsWith('griffon-')) {
                 subproj.apply plugin: 'org.kordamp.gradle.clirr'
