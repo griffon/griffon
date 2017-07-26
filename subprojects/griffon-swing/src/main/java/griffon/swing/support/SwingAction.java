@@ -39,8 +39,14 @@ public class SwingAction extends AbstractAction {
     private static final long serialVersionUID = 4493562556110760713L;
     private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
     private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
-    private RunnableWithArgs runnable;
+    private transient RunnableWithArgs runnable;
 
+    /**
+     * Creates a new action.
+     *
+     * @param callable
+     * @deprecated use the {@code RunnableWithArgs} constructor instead.
+     */
     @Deprecated
     public SwingAction(@Nonnull final CallableWithArgs<?> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);

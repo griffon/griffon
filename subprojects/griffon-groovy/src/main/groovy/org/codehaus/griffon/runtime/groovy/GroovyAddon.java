@@ -36,6 +36,7 @@ import java.util.Map;
 public class GroovyAddon extends AbstractGriffonAddon {
     private GriffonApplication application;
 
+    @Override
     public void init(@Nonnull GriffonApplication application) {
         this.application = application;
     }

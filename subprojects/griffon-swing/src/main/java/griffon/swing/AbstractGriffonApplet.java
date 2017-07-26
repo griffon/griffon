@@ -69,14 +69,14 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     public static final String[] EMPTY_ARGS = new String[0];
     private static final long serialVersionUID = -3489610863053527695L;
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
-    protected final Object[] lock = new Object[0];
-    private final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
+    protected final transient Object[] lock = new Object[0];
+    private final transient List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
     private final String[] startupArgs;
-    private final Object shutdownLock = new Object();
-    private final Logger log;
-    private Locale locale = Locale.getDefault();
+    private final transient Object shutdownLock = new Object();
+    private final transient Logger log;
+    private Locale appLocale = Locale.getDefault();
     private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
-    private Injector<?> injector;
+    private transient Injector<?> injector;
 
     public AbstractGriffonApplet() {
         this(EMPTY_ARGS);
@@ -90,21 +90,25 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     // ------------------------------------------------------
 
+    @Override
     public void init() {
         initialize();
         startup();
     }
 
+    @Override
     public void start() {
         ready();
     }
 
+    @Override
     public void stop() {
         event(ApplicationEvent.STOP_START, asList(this));
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.STOP);
         event(ApplicationEvent.STOP_END, asList(this));
     }
 
+    @Override
     public void destroy() {
         shutdown();
     }
@@ -112,42 +116,50 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     // ------------------------------------------------------
 
     @Nonnull
+    @Override
     public Locale getLocale() {
-        return locale;
+        return appLocale;
     }
 
+    @Override
     public void setLocale(@Nonnull Locale locale) {
-        Locale oldValue = this.locale;
-        this.locale = locale;
+        Locale oldValue = this.appLocale;
+        this.appLocale = locale;
         Locale.setDefault(locale);
         firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
     @Nonnull
+    @Override
     public String[] getStartupArgs() {
         return startupArgs;
     }
 
     @Nonnull
+    @Override
     public Logger getLog() {
         return log;
     }
 
+    @Override
     public void setLocaleAsString(@Nullable String locale) {
         setLocale(parseLocale(locale));
     }
 
+    @Override
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
         requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);
         if (!shutdownHandlers.contains(handler)) shutdownHandlers.add(handler);
     }
 
+    @Override
     public void removeShutdownHandler(@Nonnull ShutdownHandler handler) {
         requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);
         shutdownHandlers.remove(handler);
     }
 
     @Nonnull
+    @Override
     public ApplicationPhase getPhase() {
         synchronized (lock) {
             return this.phase;
@@ -269,12 +281,14 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         return injector.getInstance(ApplicationConfigurer.class);
     }
 
+    @Override
     public void initialize() {
         if (getPhase() == ApplicationPhase.INITIALIZE) {
             getApplicationConfigurer().init();
         }
     }
 
+    @Override
     public void ready() {
         if (getPhase() != ApplicationPhase.STARTUP) return;
 
@@ -295,6 +309,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         }
     }
 
+    @Override
     public boolean canShutdown() {
         event(ApplicationEvent.SHUTDOWN_REQUESTED, asList(this));
         synchronized (shutdownLock) {
@@ -315,6 +330,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         return true;
     }
 
+    @Override
     public boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
@@ -374,6 +390,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public void startup() {
         if (getPhase() != ApplicationPhase.INITIALIZE) return;
 

@@ -15,7 +15,7 @@
  */
 package griffon.core.mvc;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * An specialized function for working with MVC groups.
@@ -29,5 +29,5 @@ public interface MVCGroupFunction {
      *
      * @param group the MVC group
      */
-    void apply(@Nullable MVCGroup group);
+    void apply(@Nonnull MVCGroup group);
 }

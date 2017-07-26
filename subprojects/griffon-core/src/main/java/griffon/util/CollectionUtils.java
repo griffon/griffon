@@ -63,6 +63,10 @@ import static java.util.Objects.requireNonNull;
 public final class CollectionUtils {
     private static final String ERROR_MAP_NULL = "Argument 'map' must not be null";
 
+    private CollectionUtils() {
+        // prevent instantiation
+    }
+
     public static <T> List<T> reverse(List<T> input) {
         List<T> output = new ArrayList<>(input);
         Collections.reverse(output);
@@ -461,7 +465,7 @@ public final class CollectionUtils {
     }
 
     private static class MapToPropertiesAdapter extends Properties {
-        private final Map<String, Object> map;
+        private final transient Map<String, Object> map;
 
         private MapToPropertiesAdapter(@Nonnull Map<String, Object> map) {
             this.map = map;

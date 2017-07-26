@@ -526,7 +526,7 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
         }
 
         @Override
-        public void apply(@Nullable MVCGroup group) {
+        public void apply(@Nonnull MVCGroup group) {
             children.put(group.getMvcId(), group);
             delegate.apply(group);
             children.remove(group.getMvcId());
@@ -541,7 +541,7 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
         }
 
         @Override
-        public void apply(@Nullable MVC group) {
+        public void apply(@Nonnull MVC group) {
             children.put(group.getMvcId(), group);
             delegate.apply(group);
             children.remove(group.getMvcId());

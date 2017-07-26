@@ -33,7 +33,11 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class BindUtils {
+public final class BindUtils {
+    private BindUtils() {
+        // prevent instantiation
+    }
+
     /**
      * Create a new Binding using a builder.
      */
@@ -137,7 +141,6 @@ public class BindUtils {
                 @Override
                 public Object call(Object args) {
                     return callback.call(args);
-                    // return callback.call(arguments != null && arguments.getClass().isArray() ? (Object[]) arguments : new Object[]{arguments});
                 }
             };
         }

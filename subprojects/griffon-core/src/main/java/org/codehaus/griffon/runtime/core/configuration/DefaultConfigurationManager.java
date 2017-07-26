@@ -16,26 +16,16 @@
 package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.core.Configuration;
-import griffon.core.GriffonApplication;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 import static griffon.util.AnnotationUtils.named;
-import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
  * @since 2.11.0
  */
 public class DefaultConfigurationManager extends AbstractConfigurationManager {
-    private final GriffonApplication application;
-
-    @Inject
-    public DefaultConfigurationManager(@Nonnull GriffonApplication application) {
-        this.application = requireNonNull(application, "Argument 'application' must not be null");
-    }
-
     @Nonnull
     @Override
     public Configuration getConfiguration() {

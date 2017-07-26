@@ -50,7 +50,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractApplicationBootstrapper implements ApplicationBootstrapper {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultApplicationBootstrapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractApplicationBootstrapper.class);
     private static final String INJECTOR = "injector";
     private static final String GRIFFON_PATH = "META-INF/griffon";
     private static final String PROPERTIES = ".properties";

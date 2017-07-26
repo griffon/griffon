@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 public class ValueConversionException extends IllegalArgumentException {
     private static final long serialVersionUID = 6344566641106178891L;
 
-    private final Object value;
+    private final transient Object value;
     private Class<?> type;
 
     public ValueConversionException(Object value) {

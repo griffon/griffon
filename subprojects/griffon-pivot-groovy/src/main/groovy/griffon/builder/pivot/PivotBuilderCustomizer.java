@@ -165,8 +165,6 @@ public class PivotBuilderCustomizer extends AbstractBuilderCustomizer {
 
     @SuppressWarnings("unchecked")
     public PivotBuilderCustomizer() {
-        // PivotUtils.enhanceClasses();
-
         // -- griffon
         registerFactory("application", new ApplicationFactory());
 

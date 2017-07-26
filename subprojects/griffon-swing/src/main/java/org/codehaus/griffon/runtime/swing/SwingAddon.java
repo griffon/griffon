@@ -50,6 +50,7 @@ public class
                 CheckThreadViolationRepaintManager.class.getPackage().getName()
         ).split("(\\s|,)+");
 
+    @Override
     public void init(@Nonnull GriffonApplication application) {
         String value = System.getProperty(SWING_EDT_VIOLATIONS_KEY);
         if (value != null && Boolean.parseBoolean(value)) {
