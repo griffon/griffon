@@ -42,7 +42,7 @@ public final class MVCGroupExceptionHandler implements RunnableWithArgs {
     }
 
     public void run(@Nullable Object... args) {
-        if (args.length > 0) {
+        if (args != null && args.length > 0) {
             Exception exception = (Exception) args[0];
             application.getLog().error("Unrecoverable error", exception);
             // exception.printStackTrace();

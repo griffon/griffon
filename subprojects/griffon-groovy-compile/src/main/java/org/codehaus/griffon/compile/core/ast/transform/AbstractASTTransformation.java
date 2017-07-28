@@ -129,7 +129,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
             ));
         }
         method = classNode.getMethod(METHOD_GET_APPLICATION, NO_PARAMS);
-        if (method == null && !isPrivate(method.getModifiers())) {
+        if (method == null) {
             injectMethod(classNode, new MethodNode(
                 METHOD_GET_APPLICATION,
                 PUBLIC,
