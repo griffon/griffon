@@ -1779,7 +1779,7 @@ public class GriffonClassUtils {
 
         try {
             PropertyDescriptor pd = getPropertyDescriptor(clazz, propertyName);
-            if (pd.getPropertyType().equals(propertyType)) {
+            if (pd != null && pd.getPropertyType().equals(propertyType)) {
                 return pd;
             } else {
                 return null;

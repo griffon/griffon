@@ -84,6 +84,7 @@ public class GriffonNameUtils {
      * Finds out if the given String is a Java/Groovy keyword.
      *
      * @param str The String to test
+     *
      * @return <tt>true</tt> if the given String is a keyword, false otherwise
      */
     public static boolean isKeyword(String str) {
@@ -95,11 +96,12 @@ public class GriffonNameUtils {
      * of blank strings and single character strings.
      *
      * @param str The String to be capitalized
+     *
      * @return Capitalized version of the target string if it is not blank
      */
     public static String capitalize(String str) {
-        if (isBlank(str)) return str;
-        if (str.length() == 1) return str.toUpperCase();
+        if (isBlank(str)) { return str; }
+        if (str.length() == 1) { return str.toUpperCase(); }
         return str.substring(0, 1).toUpperCase(Locale.ENGLISH) + str.substring(1);
     }
 
@@ -108,12 +110,12 @@ public class GriffonNameUtils {
      * of blank strings and single character strings.
      *
      * @param str The String to be uncapitalized
+     *
      * @return Uncapitalized version of the target string if it is not blank
      */
     public static String uncapitalize(String str) {
-        if (isBlank(str)) return str;
-        if (str.length() == 1)
-            return String.valueOf(Character.toLowerCase(str.charAt(0)));
+        if (isBlank(str)) { return str; }
+        if (str.length() == 1) { return String.valueOf(Character.toLowerCase(str.charAt(0))); }
         return Character.toLowerCase(str.charAt(0)) + str.substring(1);
     }
 
@@ -121,6 +123,7 @@ public class GriffonNameUtils {
      * Retrieves the name of a setter for the specified property name
      *
      * @param propertyName The property name
+     *
      * @return The setter equivalent
      */
     public static String getSetterName(String propertyName) {
@@ -131,6 +134,7 @@ public class GriffonNameUtils {
      * Calculate the name for a getter method to retrieve the specified property
      *
      * @param propertyName The property name
+     *
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
     public static String getGetterName(String propertyName) {
@@ -142,6 +146,7 @@ public class GriffonNameUtils {
      *
      * @param logicalName  The logical name
      * @param trailingName The trailing name
+     *
      * @return The class name
      */
     public static String getClassName(String logicalName, String trailingName) {
@@ -160,6 +165,7 @@ public class GriffonNameUtils {
      * Returns the class name representation of the given name
      *
      * @param name The name to convert
+     *
      * @return The property name representation
      */
     public static String getClassNameRepresentation(String name) {
@@ -180,17 +186,18 @@ public class GriffonNameUtils {
      * as-is.
      *
      * @param name The lower case hyphen separated name
+     *
      * @return The class name equivalent.
      */
     public static String getClassNameForLowerCaseHyphenSeparatedName(String name) {
         // Handle null and empty strings.
-        if (isBlank(name)) return name;
+        if (isBlank(name)) { return name; }
 
         if (name.indexOf('-') > -1) {
             StringBuilder buf = new StringBuilder();
             String[] tokens = name.split("-");
             for (String token : tokens) {
-                if (token == null || token.length() == 0) continue;
+                if (token == null || token.length() == 0) { continue; }
                 buf.append(capitalize(token));
             }
             return buf.toString();
@@ -205,6 +212,7 @@ public class GriffonNameUtils {
      *
      * @param clazz        The class
      * @param trailingName The trailing name such as "Controller" or "TagLib"
+     *
      * @return The logical class name
      */
     public static String getLogicalName(Class<?> clazz, String trailingName) {
@@ -216,10 +224,11 @@ public class GriffonNameUtils {
      *
      * @param name         The name of the class
      * @param trailingName The trailing name
+     *
      * @return The logical name
      */
     public static String getLogicalName(String name, String trailingName) {
-        if (!isBlank(trailingName)) {
+        if (!isBlank(name) && !isBlank(trailingName)) {
             String shortName = getShortName(name);
             if (shortName.endsWith(trailingName)) {
                 return shortName.substring(0, shortName.length() - trailingName.length());
@@ -241,6 +250,7 @@ public class GriffonNameUtils {
      * Shorter version of getPropertyNameRepresentation
      *
      * @param name The name to convert
+     *
      * @return The property name version
      */
     public static String getPropertyName(String name) {
@@ -251,6 +261,7 @@ public class GriffonNameUtils {
      * Shorter version of getPropertyNameRepresentation
      *
      * @param clazz The clazz to convert
+     *
      * @return The property name version
      */
     public static String getPropertyName(Class<?> clazz) {
@@ -261,6 +272,7 @@ public class GriffonNameUtils {
      * Returns the property name equivalent for the specified class
      *
      * @param targetClass The class to get the property name for
+     *
      * @return A property name representation of the class name (eg. MyClass becomes myClass)
      */
     public static String getPropertyNameRepresentation(Class<?> targetClass) {
@@ -272,10 +284,11 @@ public class GriffonNameUtils {
      * Returns the property name representation of the given name
      *
      * @param name The name to convert
+     *
      * @return The property name representation
      */
     public static String getPropertyNameRepresentation(String name) {
-        if (isBlank(name)) return name;
+        if (isBlank(name)) { return name; }
         // Strip any package from the name.
         int pos = name.lastIndexOf('.');
         if (pos != -1) {
@@ -298,6 +311,7 @@ public class GriffonNameUtils {
      * Converts foo-bar into fooBar
      *
      * @param name The lower case hyphen separated name
+     *
      * @return The property name equivalent
      */
     public static String getPropertyNameForLowerCaseHyphenSeparatedName(String name) {
@@ -308,6 +322,7 @@ public class GriffonNameUtils {
      * Returns the class name without the package prefix
      *
      * @param targetClass The class to get a short name for
+     *
      * @return The short name of the class
      */
     public static String getShortName(Class<?> targetClass) {
@@ -319,10 +334,11 @@ public class GriffonNameUtils {
      * Returns the class name without the package prefix
      *
      * @param className The class name to get a short name for
+     *
      * @return The short name of the class
      */
     public static String getShortName(String className) {
-        if (isBlank(className)) return className;
+        if (isBlank(className)) { return className; }
         int i = className.lastIndexOf(".");
         if (i > -1) {
             className = className.substring(i + 1, className.length());
@@ -334,11 +350,12 @@ public class GriffonNameUtils {
      * Converts a property name into its natural language equivalent eg ('firstName' becomes 'First Name')
      *
      * @param name The property name to convert
+     *
      * @return The converted property name
      */
     public static String getNaturalName(String name) {
         name = getShortName(name);
-        if (isBlank(name)) return name;
+        if (isBlank(name)) { return name; }
         List<String> words = new ArrayList<>();
         int i = 0;
         char[] chars = name.toCharArray();
@@ -390,6 +407,7 @@ public class GriffonNameUtils {
      * dependencies required to bootstrap Griffon.</p>
      *
      * @param str The string to test.
+     *
      * @return <code>true</code> if the string is <code>null</code>, or
      * blank.
      */
@@ -417,7 +435,9 @@ public class GriffonNameUtils {
      * </pre></blockquote>
      *
      * @param str the String to check for blank
+     *
      * @return {@code str} if not {@code blank}
+     *
      * @throws IllegalArgumentException if {@code str} is {@code blank}
      */
     public static String requireNonBlank(String str) {
@@ -441,7 +461,9 @@ public class GriffonNameUtils {
      * @param str     the String to check for blank
      * @param message detail message to be used in the event that a {@code
      *                IllegalArgumentException} is thrown
+     *
      * @return {@code str} if not {@code blank}
+     *
      * @throws IllegalArgumentException if {@code str} is {@code blank}
      */
     public static String requireNonBlank(String str, String message) {
@@ -456,6 +478,7 @@ public class GriffonNameUtils {
      * MyFunkyGriffonThingy would be my-funky-griffon-thingy.
      *
      * @param clazz The class to convert
+     *
      * @return The hyphenated name representation
      */
     public static String getHyphenatedName(Class<?> clazz) {
@@ -470,10 +493,11 @@ public class GriffonNameUtils {
      * For example MyFunkyGriffonThingy would be my-funky-griffon-thingy.
      *
      * @param name The class name to convert.
+     *
      * @return The hyphenated name representation.
      */
     public static String getHyphenatedName(String name) {
-        if (isBlank(name)) return name;
+        if (isBlank(name)) { return name; }
         if (name.endsWith(".groovy")) {
             name = name.substring(0, name.length() - 7);
         }
@@ -487,6 +511,7 @@ public class GriffonNameUtils {
      *
      * @param self      an Iterable of objects
      * @param separator a String separator
+     *
      * @return the joined String
      */
     @Nonnull
@@ -494,7 +519,7 @@ public class GriffonNameUtils {
         StringBuilder buffer = new StringBuilder();
         boolean first = true;
 
-        if (separator == null) separator = "";
+        if (separator == null) { separator = ""; }
 
         for (Object value : self) {
             if (first) {
@@ -511,10 +536,11 @@ public class GriffonNameUtils {
      * Applies single or double quotes to a string if it contains whitespace characters
      *
      * @param str the String to be surrounded by quotes
+     *
      * @return a copy of the original String, surrounded by quotes
      */
     public static String quote(String str) {
-        if (isBlank(str)) return str;
+        if (isBlank(str)) { return str; }
         for (int i = 0; i < str.length(); i++) {
             if (Character.isWhitespace(str.charAt(i))) {
                 str = applyQuotes(str);
@@ -528,10 +554,11 @@ public class GriffonNameUtils {
      * Removes single or double quotes from a String
      *
      * @param str the String from which quotes will be removed
+     *
      * @return the unquoted String
      */
     public static String unquote(String str) {
-        if (isBlank(str)) return str;
+        if (isBlank(str)) { return str; }
         if ((str.startsWith("'") && str.endsWith("'")) ||
             (str.startsWith("\"") && str.endsWith("\""))) {
             return str.substring(1, str.length() - 1);
