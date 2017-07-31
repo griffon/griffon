@@ -22,7 +22,7 @@ import org.testfx.api.FxRobot;
  * @since 2.3.0
  */
 public class TestContext extends FxRobot {
-    private final static TestContext INSTANCE;
+    private static final TestContext INSTANCE;
 
     static {
         INSTANCE = new TestContext();

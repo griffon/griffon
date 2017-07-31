@@ -2145,7 +2145,6 @@ public class GriffonClassUtils {
 
         Class<?> c = clazz;
         while (c != null && !c.equals(Object.class)) {
-            Field field = null;
             try {
                 return c.getDeclaredField(name);
             } catch (Exception e) {
@@ -3247,7 +3246,6 @@ public class GriffonClassUtils {
     public static boolean hasMethodAnnotatedwith(@Nonnull final Object instance, @Nonnull final Class<? extends Annotation> annotation) {
         Class<?> klass = instance.getClass();
         while (klass != null) {
-            boolean found = false;
             for (Method method : klass.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(annotation) &&
                     method.getParameterTypes().length == 0) {

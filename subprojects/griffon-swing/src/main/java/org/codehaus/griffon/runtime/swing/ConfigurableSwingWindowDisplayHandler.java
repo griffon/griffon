@@ -42,6 +42,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements SwingWindowDisplayHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurableSwingWindowDisplayHandler.class);
+    private static final String HANDLER = "handler";
 
     @Inject
     public ConfigurableSwingWindowDisplayHandler(@Nonnull GriffonApplication application, @Nonnull @Named("defaultWindowDisplayHandler") SwingWindowDisplayHandler delegateWindowsDisplayHandler) {
@@ -59,9 +60,9 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
                 LOG.trace("Showing {} with show: handler", name);
                 run(handler, name, window);
                 return;
-            } else if (options.get("handler") instanceof SwingWindowDisplayHandler) {
+            } else if (options.get(HANDLER) instanceof SwingWindowDisplayHandler) {
                 LOG.trace("Showing {} with handler: handler", name);
-                ((SwingWindowDisplayHandler) options.get("handler")).show(name, window);
+                ((SwingWindowDisplayHandler) options.get(HANDLER)).show(name, window);
                 return;
             }
         }
@@ -98,9 +99,9 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
                 LOG.trace("Hiding {} with hide: handler", name);
                 run(handler, name, window);
                 return;
-            } else if (options.get("handler") instanceof SwingWindowDisplayHandler) {
+            } else if (options.get(HANDLER) instanceof SwingWindowDisplayHandler) {
                 LOG.trace("Hiding {} with handler: handler", name);
-                ((SwingWindowDisplayHandler) options.get("handler")).hide(name, window);
+                ((SwingWindowDisplayHandler) options.get(HANDLER)).hide(name, window);
                 return;
             }
         }
