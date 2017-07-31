@@ -872,7 +872,7 @@ public final class JavaFXUtils {
 
         int start = style.indexOf(key);
         if (start != -1) {
-            int end = style.indexOf(";", start);
+            int end = style.indexOf(';', start);
             end = end >= start ? end : style.length() - 1;
             style = style.substring(0, start) + style.substring(end + 1);
         }
@@ -1231,7 +1231,7 @@ public final class JavaFXUtils {
         if (args.length == 2) {
             Class<?> iconClass = null;
             try {
-                iconClass = (Class<?>) JavaFXUtils.class.getClassLoader().loadClass(args[0]);
+                iconClass = JavaFXUtils.class.getClassLoader().loadClass(args[0]);
             } catch (ClassNotFoundException e) {
                 throw illegalValue(str, Node.class, e);
             }

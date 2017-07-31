@@ -36,6 +36,7 @@ import static javafx.collections.FXCollections.observableArrayList;
  */
 public class TableCellFactories {
     private static final String ERROR_ITEMS_NULL = "Argument 'items' must not be null";
+    private static final String ERROR_ENUMTYPE_NULL = "Argument 'enumType' must not be null";
 
     @Nonnull
     public static <E, T> TableCellFactory<E, T> checkboxTableCellFactory() {
@@ -120,7 +121,7 @@ public class TableCellFactories {
 
     @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull Class<E> enumType) {
-        requireNonNull(enumType, "Argument 'enumType' must not be null");
+        requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
             @Nonnull
@@ -136,7 +137,7 @@ public class TableCellFactories {
 
     @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull Class<E> enumType) {
-        requireNonNull(enumType, "Argument 'enumType' must not be null");
+        requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
             @Nonnull
@@ -244,7 +245,7 @@ public class TableCellFactories {
 
     @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull Class<E> enumType) {
-        requireNonNull(enumType, "Argument 'enumType' must not be null");
+        requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
             @Nonnull
@@ -260,7 +261,7 @@ public class TableCellFactories {
 
     @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull Class<E> enumType) {
-        requireNonNull(enumType, "Argument 'enumType' must not be null");
+        requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
             @Nonnull

@@ -21,5 +21,6 @@ package griffon.javafx.support;
  * @since 2.9.0
  * @deprecated use {@code griffon.javafx.collections.ObservableSetBase} instead.
  */
+@Deprecated
 public abstract class ObservableSetBase<E> extends griffon.javafx.collections.ObservableSetBase<E> {
 }

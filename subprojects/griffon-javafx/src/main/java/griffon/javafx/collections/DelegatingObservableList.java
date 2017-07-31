@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -160,10 +159,6 @@ public abstract class DelegatingObservableList<E> extends ObservableListBase<E> 
 
     public ListIterator<E> listIterator() {
         return getDelegate().listIterator();
-    }
-
-    public void forEach(Consumer<? super E> action) {
-        getDelegate().forEach(action);
     }
 
     public E get(int index) {

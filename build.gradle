@@ -323,6 +323,12 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
     }
 }
 
+sonarqube {
+    properties {
+        property 'sonar.jacoco.reportPath', file("${buildDir}/reports/jacoco/report.xml").absolutePath
+    }
+}
+
 coveralls {
     sourceDirs = projectsWithCoverage.sourceSets.main.allSource.srcDirs.flatten()
     jacocoReportPath = "${buildDir}/reports/jacoco/report.xml"

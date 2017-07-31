@@ -109,6 +109,7 @@ public class GriffonClassUtils {
     private static final String ERROR_FIELDS_NULL = "Argument 'fields' must not be null";
     private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' must not be blank";
     private static final String ERROR_METHOD_NULL = "Argument 'method' must not be null";
+    private static final String MESSAGE = "message";
 
     /**
      * Just add two entries to the class compatibility map
@@ -242,6 +243,10 @@ public class GriffonClassUtils {
         }
     }
 
+    private GriffonClassUtils() {
+        // prevent instantiation
+    }
+
     /**
      * Checks that the specified condition is met. This method is designed
      * primarily for doing parameter validation in methods and constructors,
@@ -253,6 +258,7 @@ public class GriffonClassUtils {
      * </pre></blockquote>
      *
      * @param condition the condition to check
+     *
      * @throws IllegalStateException if {@code condition} evaluates to false
      */
     public static void requireState(boolean condition) {
@@ -275,6 +281,7 @@ public class GriffonClassUtils {
      * @param condition the condition to check
      * @param message   detail message to be used in the event that a {@code
      *                  IllegalStateException} is thrown
+     *
      * @throws IllegalStateException if {@code condition} evaluates to false
      */
     public static void requireState(boolean condition, String message) {
@@ -288,6 +295,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -304,13 +312,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static byte[] requireNonEmpty(@Nonnull byte[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -319,6 +328,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -335,13 +345,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static short[] requireNonEmpty(@Nonnull short[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -350,6 +361,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -366,13 +378,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static int[] requireNonEmpty(@Nonnull int[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -381,6 +394,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -397,13 +411,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static long[] requireNonEmpty(@Nonnull long[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -412,6 +427,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -428,13 +444,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static float[] requireNonEmpty(@Nonnull float[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -443,6 +460,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -459,13 +477,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static double[] requireNonEmpty(@Nonnull double[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -474,6 +493,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -490,13 +510,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static char[] requireNonEmpty(@Nonnull char[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -505,6 +526,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -521,13 +543,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static boolean[] requireNonEmpty(@Nonnull boolean[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -536,6 +559,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param array the array to check
+     *
      * @throws NullPointerException  if {@code array} is null
      * @throws IllegalStateException if {@code array} is empty
      */
@@ -552,13 +576,14 @@ public class GriffonClassUtils {
      * @param array   the array to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code array} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code array} is empty
      */
     public static <E> E[] requireNonEmpty(@Nonnull E[] array, @Nonnull String message) {
         requireNonNull(array);
-        requireState(array.length != 0, requireNonBlank(message, "message"));
+        requireState(array.length != 0, requireNonBlank(message, MESSAGE));
         return array;
     }
 
@@ -567,6 +592,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param collection the collection to check
+     *
      * @throws NullPointerException  if {@code collection} is null
      * @throws IllegalStateException if {@code collection} is empty
      */
@@ -583,13 +609,14 @@ public class GriffonClassUtils {
      * @param collection the collection to check
      * @param message    detail message to be used in the event that a {@code
      *                   IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code collection} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code collection} is empty
      */
     public static Collection<?> requireNonEmpty(@Nonnull Collection<?> collection, @Nonnull String message) {
         requireNonNull(collection);
-        requireState(!collection.isEmpty(), requireNonBlank(message, "message"));
+        requireState(!collection.isEmpty(), requireNonBlank(message, MESSAGE));
         return collection;
     }
 
@@ -598,6 +625,7 @@ public class GriffonClassUtils {
      * {@link IllegalStateException} if it is.
      *
      * @param map the map to check
+     *
      * @throws NullPointerException  if {@code map} is null
      * @throws IllegalStateException if {@code map} is empty
      */
@@ -614,13 +642,14 @@ public class GriffonClassUtils {
      * @param map     the map to check
      * @param message detail message to be used in the event that a {@code
      *                IllegalStateException} is thrown
+     *
      * @throws NullPointerException     if {@code map} is null
      * @throws IllegalArgumentException if {@code message} is {@code blank}
      * @throws IllegalStateException    if {@code map} is empty
      */
     public static Map<?, ?> requireNonEmpty(@Nonnull Map<?, ?> map, @Nonnull String message) {
         requireNonNull(map);
-        requireState(!map.isEmpty(), requireNonBlank(message, "message"));
+        requireState(!map.isEmpty(), requireNonBlank(message, MESSAGE));
         return map;
     }
 
@@ -636,6 +665,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param name the name of a possible event handler
+     *
      * @return true if the name matches the given event handler
      * pattern, false otherwise.
      */
@@ -657,6 +687,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method name matches the given event handler
      * pattern, false otherwise.
      */
@@ -676,6 +707,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method name matches the given event handler
      * pattern, false otherwise.
      */
@@ -696,6 +728,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method name matches the given event handler
      * pattern, false otherwise.
      */
@@ -710,6 +743,7 @@ public class GriffonClassUtils {
      * {@code Object} class or the {@code GroovyObject} class.<p>
      *
      * @param method a Method reference
+     *
      * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
@@ -722,6 +756,7 @@ public class GriffonClassUtils {
      * {@code Object} class or the {@code GroovyObject} class.<p>
      *
      * @param method a Method reference
+     *
      * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
@@ -735,6 +770,7 @@ public class GriffonClassUtils {
      * {@code Object} class or the {@code GroovyObject} class.<p>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method belongs to {@code Object} or
      * {@code GroovyObject}, false otherwise.
      */
@@ -755,6 +791,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param name the name of a possible contribution method
+     *
      * @return true if the name matches the given contribution method
      * pattern, false otherwise.
      */
@@ -775,6 +812,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method name matches the given contribution method
      * pattern, false otherwise.
      */
@@ -794,6 +832,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method name matches the given contribution method
      * pattern, false otherwise.
      */
@@ -814,6 +853,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method name matches the given contribution method
      * pattern, false otherwise.
      */
@@ -830,6 +870,7 @@ public class GriffonClassUtils {
      * if the name starts with either "super$" or "this$".
      *
      * @param method a Method reference
+     *
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isGroovyInjectedMethod(@Nonnull Method method) {
@@ -843,6 +884,7 @@ public class GriffonClassUtils {
      * if the name starts with either "super$" or "this$".
      *
      * @param method a Method reference
+     *
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isGroovyInjectedMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -857,6 +899,7 @@ public class GriffonClassUtils {
      * if the name starts with either "super$" or "this$".
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isGroovyInjectedMethod(@Nonnull MethodDescriptor method) {
@@ -878,6 +921,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is a getter, false otherwise.
      */
     public static boolean isGetterMethod(@Nonnull Method method) {
@@ -897,6 +941,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is a getter, false otherwise.
      */
     public static boolean isGetterMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -917,6 +962,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is a getter, false otherwise.
      */
     public static boolean isGetterMethod(@Nonnull MethodDescriptor method) {
@@ -936,6 +982,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(@Nonnull Method method) {
@@ -953,6 +1000,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -971,6 +1019,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is a setter, false otherwise.
      */
     public static boolean isSetterMethod(@Nonnull MethodDescriptor method) {
@@ -990,6 +1039,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an Artifact method, false otherwise.
      */
     public static boolean isArtifactMethod(@Nonnull Method method) {
@@ -1008,6 +1058,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an Artifact method, false otherwise.
      */
     public static boolean isArtifactMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1027,6 +1078,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an Artifact method, false otherwise.
      */
     public static boolean isArtifactMethod(@Nonnull MethodDescriptor method) {
@@ -1047,6 +1099,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(@Nonnull Method method) {
@@ -1065,6 +1118,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1084,6 +1138,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an MVC method, false otherwise.
      */
     public static boolean isMvcMethod(@Nonnull MethodDescriptor method) {
@@ -1104,6 +1159,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is a threading method, false otherwise.
      */
     public static boolean isThreadingMethod(@Nonnull Method method) {
@@ -1122,6 +1178,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is a threading method, false otherwise.
      */
     public static boolean isThreadingMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1141,6 +1198,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is a threading method, false otherwise.
      */
     public static boolean isThreadingMethod(@Nonnull MethodDescriptor method) {
@@ -1161,6 +1219,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(@Nonnull Method method) {
@@ -1179,6 +1238,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1198,6 +1258,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an @EventPublisher method, false otherwise.
      */
     public static boolean isEventPublisherMethod(@Nonnull MethodDescriptor method) {
@@ -1218,6 +1279,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isObservableMethod(@Nonnull Method method) {
@@ -1236,6 +1298,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isObservableMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1255,6 +1318,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an Observable method, false otherwise.
      */
     public static boolean isObservableMethod(@Nonnull MethodDescriptor method) {
@@ -1275,6 +1339,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an ResourceHandler method, false otherwise.
      */
     public static boolean isResourceHandlerMethod(@Nonnull Method method) {
@@ -1293,6 +1358,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an ResourceHandler method, false otherwise.
      */
     public static boolean isResourceHandlerMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1312,6 +1378,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an ResourceHandler method, false otherwise.
      */
     public static boolean isResourceHandlerMethod(@Nonnull MethodDescriptor method) {
@@ -1331,6 +1398,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an MessageSource method, false otherwise.
      */
     public static boolean isMessageSourceMethod(@Nonnull Method method) {
@@ -1348,6 +1416,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an MessageSource method, false otherwise.
      */
     public static boolean isMessageSourceMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1366,6 +1435,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an MessageSource method, false otherwise.
      */
     public static boolean isMessageSourceMethod(@Nonnull MethodDescriptor method) {
@@ -1385,6 +1455,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an ResourceResolver method, false otherwise.
      */
     public static boolean isResourceResolverMethod(@Nonnull Method method) {
@@ -1402,6 +1473,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a Method reference
+     *
      * @return true if the method is an ResourceResolver method, false otherwise.
      */
     public static boolean isResourceResolverMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1420,6 +1492,7 @@ public class GriffonClassUtils {
      * </pre>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an ResourceResolver method, false otherwise.
      */
     public static boolean isResourceResolverMethod(@Nonnull MethodDescriptor method) {
@@ -1433,6 +1506,7 @@ public class GriffonClassUtils {
      * it is public and non-static.
      *
      * @param method a Method reference
+     *
      * @return true if the method is an instance method, false otherwise.
      */
     public static boolean isInstanceMethod(@Nonnull Method method) {
@@ -1444,6 +1518,7 @@ public class GriffonClassUtils {
      * it is public and non-static.
      *
      * @param method a Method reference
+     *
      * @return true if the method is an instance method, false otherwise.
      */
     public static boolean isInstanceMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1456,6 +1531,7 @@ public class GriffonClassUtils {
      * it is public and non-static.
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method is an instance method, false otherwise.
      */
     public static boolean isInstanceMethod(@Nonnull MethodDescriptor method) {
@@ -1484,6 +1560,7 @@ public class GriffonClassUtils {
      * </ul>
      *
      * @param method a Method reference
+     *
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isPlainMethod(@Nonnull Method method) {
@@ -1508,6 +1585,7 @@ public class GriffonClassUtils {
      * </ul>
      *
      * @param method a Method reference
+     *
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isPlainMethod(@Nonnull Method method, boolean removeAbstractModifier) {
@@ -1533,6 +1611,7 @@ public class GriffonClassUtils {
      * </ul>
      *
      * @param method a MethodDescriptor reference
+     *
      * @return true if the method matches the given criteria, false otherwise.
      */
     public static boolean isPlainMethod(@Nonnull MethodDescriptor method) {
@@ -1557,6 +1636,7 @@ public class GriffonClassUtils {
      * @param clazz        The class which contains the property
      * @param propertyName The property name
      * @param type         The type to check
+     *
      * @return A boolean value
      */
     public static boolean isPropertyOfType(Class<?> clazz, String propertyName, Class<?> type) {
@@ -1572,7 +1652,9 @@ public class GriffonClassUtils {
      * Instantiates a Class, wrapping any exceptions in a RuntimeException.
      *
      * @param clazz target Class for which an object will be instantiated
+     *
      * @return the newly instantiated object.
+     *
      * @throws BeanInstantiationException if an error occurs when creating the object
      */
     @Nonnull
@@ -1609,6 +1691,7 @@ public class GriffonClassUtils {
      * @param clazz        The name of the class which contains the property
      * @param propertyName The property name
      * @param propertyType The property type
+     *
      * @return The value of the property or null if none exists
      */
     @Nullable
@@ -1633,6 +1716,7 @@ public class GriffonClassUtils {
      *
      * @param clazz        The name of the class which contains the property
      * @param propertyName The property name
+     *
      * @return The value of the property or null if none exists
      */
     public static Object getPropertyValueOfNewInstance(Class<?> clazz, String propertyName) {
@@ -1656,11 +1740,11 @@ public class GriffonClassUtils {
      *
      * @param instance      The instance
      * @param propertyValue The value of the property
+     *
      * @return The PropertyDescriptor
      */
     public static PropertyDescriptor getPropertyDescriptorForValue(Object instance, Object propertyValue) {
-        if (instance == null || propertyValue == null)
-            return null;
+        if (instance == null || propertyValue == null) { return null; }
 
         PropertyDescriptor[] descriptors = getPropertyDescriptors(instance.getClass());
 
@@ -1672,8 +1756,7 @@ public class GriffonClassUtils {
                 } catch (Exception e) {
                     throw new RuntimeException("Problem calling readMethod of " + pd, e);
                 }
-                if (propertyValue.equals(value))
-                    return pd;
+                if (propertyValue.equals(value)) { return pd; }
             }
         }
         return null;
@@ -1684,6 +1767,7 @@ public class GriffonClassUtils {
      *
      * @param clazz        The class which contains the property
      * @param propertyName The name of the property
+     *
      * @return The property type or null if none exists
      */
     @Nullable
@@ -1710,6 +1794,7 @@ public class GriffonClassUtils {
      *
      * @param clazz        The class to retrieve the properties from
      * @param propertyType The type of the properties you wish to retrieve
+     *
      * @return An array of PropertyDescriptor instances
      */
     @Nonnull
@@ -1744,11 +1829,11 @@ public class GriffonClassUtils {
      *
      * @param clazz             The class to retrieve the properties from
      * @param propertySuperType The type of the properties you wish to retrieve
+     *
      * @return An array of PropertyDescriptor instances
      */
     public static PropertyDescriptor[] getPropertiesAssignableToType(Class<?> clazz, Class<?> propertySuperType) {
-        if (clazz == null || propertySuperType == null)
-            return new PropertyDescriptor[0];
+        if (clazz == null || propertySuperType == null) { return new PropertyDescriptor[0]; }
 
         Set<PropertyDescriptor> properties = new HashSet<>();
         try {
@@ -1771,11 +1856,11 @@ public class GriffonClassUtils {
      * @param clazz        The class to retrieve the property from
      * @param propertyName The name of the property
      * @param propertyType The type of the property
+     *
      * @return A PropertyDescriptor instance or null if none exists
      */
     public static PropertyDescriptor getProperty(Class<?> clazz, String propertyName, Class<?> propertyType) {
-        if (clazz == null || propertyName == null || propertyType == null)
-            return null;
+        if (clazz == null || propertyName == null || propertyType == null) { return null; }
 
         try {
             PropertyDescriptor pd = getPropertyDescriptor(clazz, propertyName);
@@ -1794,10 +1879,11 @@ public class GriffonClassUtils {
      * Convenience method for converting a collection to an Object[]
      *
      * @param c The collection
+     *
      * @return An object array
      */
     public static Object[] collectionToObjectArray(Collection<?> c) {
-        if (c == null) return EMPTY_OBJECT_ARRAY;
+        if (c == null) { return EMPTY_OBJECT_ARRAY; }
         return c.toArray(new Object[c.size()]);
     }
 
@@ -1809,6 +1895,7 @@ public class GriffonClassUtils {
      *
      * @param leftType
      * @param rightType
+     *
      * @return true if one of the classes is a native type and the other the object representation
      * of the same native type
      */
@@ -1826,6 +1913,7 @@ public class GriffonClassUtils {
      *
      * @param leftType
      * @param rightType
+     *
      * @return true if one of the classes is a native type and the other the object representation
      * of the same native type
      */
@@ -1844,7 +1932,7 @@ public class GriffonClassUtils {
         while (clazz != null) {
             try {
                 Method method = clazz.getDeclaredMethod(methodName, parameterTypes);
-                if (method != null) return method;
+                if (method != null) { return method; }
             } catch (NoSuchMethodException | SecurityException e) {
                 // skip
             }
@@ -1861,6 +1949,7 @@ public class GriffonClassUtils {
      *
      * @param clazz        The class to check for static property
      * @param propertyName The property name
+     *
      * @return true if the property with name propertyName has a static getter method
      */
     public static boolean isStaticProperty(@Nonnull Class<?> clazz, @Nonnull String propertyName) {
@@ -1887,6 +1976,7 @@ public class GriffonClassUtils {
      * Determine whether the method is declared public static
      *
      * @param m the method to be tested
+     *
      * @return True if the method is declared public static
      */
     public static boolean isPublicStatic(@Nonnull Method m) {
@@ -1899,6 +1989,7 @@ public class GriffonClassUtils {
      * Determine whether the field is declared public static
      *
      * @param f the field to be tested
+     *
      * @return True if the field is declared public static
      */
     public static boolean isPublicStatic(@Nonnull Field f) {
@@ -1911,6 +2002,7 @@ public class GriffonClassUtils {
      * Calculate the name for a getter method to retrieve the specified property
      *
      * @param propertyName the name of the property
+     *
      * @return The name for the getter method for this property, if it were to exist, i.e. getConstraints
      */
     @Nonnull
@@ -1925,6 +2017,7 @@ public class GriffonClassUtils {
      *
      * @param clazz The class to check for static property
      * @param name  The property name
+     *
      * @return The value if there is one, or null if unset OR there is no such property
      */
     @Nullable
@@ -1991,6 +2084,7 @@ public class GriffonClassUtils {
      *
      * @param obj  the instance that owns the field
      * @param name the name of the file to lookup
+     *
      * @return The object value or null if there is no such field or access problems
      */
     @Nullable
@@ -2026,6 +2120,7 @@ public class GriffonClassUtils {
      *
      * @param obj  the instance that owns the field
      * @param name the name of the file to lookup
+     *
      * @return The field or null if there is no such field or access problems
      */
     @Nullable
@@ -2040,6 +2135,7 @@ public class GriffonClassUtils {
      *
      * @param clazz the clazz that owns the field
      * @param name  the name of the file to lookup
+     *
      * @return The field or null if there is no such field or access problems
      */
     @Nullable
@@ -2070,6 +2166,7 @@ public class GriffonClassUtils {
      * particular order.
      *
      * @param clazz the clazz that will be queried.
+     *
      * @return the array of {@code Field} objects representing all the
      * declared fields of this class and its hierarchy
      */
@@ -2095,6 +2192,7 @@ public class GriffonClassUtils {
      *
      * @param obj  the instance that owns the field
      * @param name the name of the file to lookup
+     *
      * @return True if a public field with the name exists
      */
     public static boolean isPublicField(@Nonnull Object obj, @Nonnull String name) {
@@ -2115,10 +2213,11 @@ public class GriffonClassUtils {
      *
      * @param clz          The class to check
      * @param propertyName The property name
+     *
      * @return True if the property is inherited
      */
     public static boolean isPropertyInherited(@Nullable Class<?> clz, @Nonnull String propertyName) {
-        if (clz == null) return false;
+        if (clz == null) { return false; }
         requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK);
         Class<?> superClass = clz.getSuperclass();
 
@@ -2135,6 +2234,7 @@ public class GriffonClassUtils {
      * Creates a concrete collection for the supplied interface
      *
      * @param interfaceType The interface
+     *
      * @return ArrayList for List, TreeSet for SortedSet, HashSet for Set etc.
      */
     @Nonnull
@@ -2155,6 +2255,7 @@ public class GriffonClassUtils {
      * Retrieves the name of a setter for the specified property name
      *
      * @param propertyName The property name
+     *
      * @return The setter equivalent
      */
     @Nonnull
@@ -2168,21 +2269,20 @@ public class GriffonClassUtils {
      *
      * @param name True if its a Javabean property
      * @param args The arguments
+     *
      * @return True if it is a javabean property method
      */
     @SuppressWarnings("ConstantConditions")
     public static boolean isGetter(@Nullable String name, @Nullable Class[] args) {
-        if (GriffonNameUtils.isBlank(name) || args == null) return false;
-        if (args.length != 0) return false;
+        if (GriffonNameUtils.isBlank(name) || args == null) { return false; }
+        if (args.length != 0) { return false; }
 
         if (name.startsWith(PROPERTY_GET_PREFIX)) {
             name = name.substring(3);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0)))
-                return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) { return true; }
         } else if (name.startsWith(PROPERTY_IS_PREFIX)) {
             name = name.substring(2);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0)))
-                return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) { return true; }
         }
         return false;
     }
@@ -2191,12 +2291,13 @@ public class GriffonClassUtils {
      * Returns a property name equivalent for the given getter name or null if it is not a getter
      *
      * @param getterName The getter name
+     *
      * @return The property name equivalent
      */
     @Nullable
     @SuppressWarnings("ConstantConditions")
     public static String getPropertyForGetter(@Nullable String getterName) {
-        if (GriffonNameUtils.isBlank(getterName)) return null;
+        if (GriffonNameUtils.isBlank(getterName)) { return null; }
 
         if (getterName.startsWith(PROPERTY_GET_PREFIX)) {
             String prop = getterName.substring(3);
@@ -2223,12 +2324,13 @@ public class GriffonClassUtils {
      * Returns a property name equivalent for the given setter name or null if it is not a getter
      *
      * @param setterName The setter name
+     *
      * @return The property name equivalent
      */
     @Nullable
     @SuppressWarnings("ConstantConditions")
     public static String getPropertyForSetter(@Nullable String setterName) {
-        if (GriffonNameUtils.isBlank(setterName)) return null;
+        if (GriffonNameUtils.isBlank(setterName)) { return null; }
 
         if (setterName.startsWith(PROPERTY_SET_PREFIX)) {
             String prop = setterName.substring(3);
@@ -2239,13 +2341,12 @@ public class GriffonClassUtils {
 
     @SuppressWarnings("ConstantConditions")
     public static boolean isSetter(@Nullable String name, @Nullable Class[] args) {
-        if (GriffonNameUtils.isBlank(name) || args == null) return false;
+        if (GriffonNameUtils.isBlank(name) || args == null) { return false; }
 
         if (name.startsWith(PROPERTY_SET_PREFIX)) {
-            if (args.length != 1) return false;
+            if (args.length != 1) { return false; }
             name = name.substring(3);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0)))
-                return true;
+            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) { return true; }
         }
 
         return false;
@@ -2257,7 +2358,9 @@ public class GriffonClassUtils {
      *
      * @param clazz
      * @param type
+     *
      * @return True if the class is a taglib
+     *
      * @see java.lang.Class#isAssignableFrom(Class)
      */
     public static boolean isAssignableOrConvertibleFrom(@Nullable Class<?> clazz, @Nullable Class<?> type) {
@@ -2277,14 +2380,14 @@ public class GriffonClassUtils {
      *
      * @param key The key that references the boolean value
      * @param map The map to look in
+     *
      * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
      */
     public static boolean getBooleanFromMap(@Nullable String key, @Nullable Map<String, Object> map) {
-        if (map == null) return false;
+        if (map == null) { return false; }
         if (map.containsKey(key)) {
             Object o = map.get(key);
-            if (o == null) return false;
-            else if (o instanceof Boolean) {
+            if (o == null) { return false; } else if (o instanceof Boolean) {
                 return (Boolean) o;
             } else {
                 return Boolean.valueOf(o.toString());
@@ -2299,6 +2402,7 @@ public class GriffonClassUtils {
      *
      * @param clazz       The class
      * @param packageList The list of packages
+     *
      * @return True if it is within the list of specified packages
      */
     public static boolean isClassBelowPackage(@Nonnull Class<?> clazz, @Nonnull List<?> packageList) {
@@ -2324,6 +2428,7 @@ public class GriffonClassUtils {
      *
      * @param bean       the target object on which properties will be set
      * @param properties names and values for properties to be set
+     *
      * @throws PropertyException if a property could be found
      * @since 2.1.0
      */
@@ -2344,6 +2449,7 @@ public class GriffonClassUtils {
      *
      * @param bean       the target object on which properties will be set
      * @param properties names and values for properties to be set
+     *
      * @since 2.1.0
      */
     public static void setPropertiesOrFieldsNoException(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
@@ -2368,6 +2474,7 @@ public class GriffonClassUtils {
      * @param bean  the target object on which the property will be set
      * @param name  the name of the property to set
      * @param value the value to be set
+     *
      * @throws PropertyException if the property could not be found
      * @since 2.1.0
      */
@@ -2393,6 +2500,7 @@ public class GriffonClassUtils {
      * @param bean  the target object on which the property will be set
      * @param name  the name of the property to set
      * @param value the value to be set
+     *
      * @throws PropertyException if the property could not be found
      * @since 2.4.0
      */
@@ -2413,6 +2521,7 @@ public class GriffonClassUtils {
      *
      * @param bean       the target object on which properties will be set
      * @param properties names and values for properties to be set
+     *
      * @throws FieldException if the field could not be found
      * @since 2.1.0
      */
@@ -2433,6 +2542,7 @@ public class GriffonClassUtils {
      *
      * @param bean       the target object on which properties will be set
      * @param properties names and values for properties to be set
+     *
      * @since 2.1.0
      */
     public static void setFieldsOrPropertiesNoException(@Nonnull Object bean, @Nonnull Map<String, Object> properties) {
@@ -2457,6 +2567,7 @@ public class GriffonClassUtils {
      * @param bean  the target object on which the property will be set
      * @param name  the name of the property to set
      * @param value the value to be set
+     *
      * @throws FieldException if the property could not be found
      * @since 2.1.0
      */
@@ -2477,6 +2588,7 @@ public class GriffonClassUtils {
      *
      * @param bean   the target object on which field values will be set
      * @param fields names and values of fields to be set
+     *
      * @throws FieldException if a field could not be found
      * @since 2.1.0
      */
@@ -2493,6 +2605,7 @@ public class GriffonClassUtils {
      *
      * @param bean   the target object on which field values will be set
      * @param fields names and values of fields to be set
+     *
      * @since 2.1.0
      */
     public static void setFieldsNoException(@Nonnull Object bean, @Nonnull Map<String, Object> fields) {
@@ -2513,6 +2626,7 @@ public class GriffonClassUtils {
      * @param bean  the target object on which the field will be set
      * @param name  the name of the field to set
      * @param value the value to be set
+     *
      * @throws FieldException if the field could not be found
      * @since 2.1.0
      */
@@ -2532,6 +2646,7 @@ public class GriffonClassUtils {
      * @param bean  the target object on which the field will be set
      * @param name  the name of the field to set
      * @param value the value to be set
+     *
      * @throws FieldException if the field could not be found
      * @since 2.4.0
      */
@@ -2548,6 +2663,7 @@ public class GriffonClassUtils {
      *
      * @param bean       the target object on which properties will be set
      * @param properties names and values of properties to be set
+     *
      * @throws PropertyException if a property could not be found
      */
     public static void setProperties(@Nonnull Object bean, @Nonnull Map<String, Object> properties) throws PropertyException {
@@ -2583,6 +2699,7 @@ public class GriffonClassUtils {
      * @param bean  the target object on which the property will be set
      * @param name  the name of the property to set
      * @param value the value to be set
+     *
      * @throws PropertyException if the property could not be found
      */
     public static void setPropertyValue(@Nonnull Object bean, @Nonnull String name, @Nullable Object value) throws PropertyException {
@@ -2602,7 +2719,9 @@ public class GriffonClassUtils {
      *
      * @param bean the owner of the property
      * @param name the name of the property to retrieve
+     *
      * @return the value read from the matching property
+     *
      * @throws PropertyException if the property could not be found
      */
     @Nullable
@@ -2631,8 +2750,10 @@ public class GriffonClassUtils {
      * @param bean Bean for which a property descriptor is requested
      * @param name name of the property for which a property descriptor
      *             is requested
+     *
      * @return the property descriptor or null if the bean does not have
      * a property that matches the specified name.
+     *
      * @throws IllegalAccessException    if the caller does not have
      *                                   access to the property accessor method
      * @throws IllegalArgumentException  if <code>bean</code> or
@@ -2662,8 +2783,10 @@ public class GriffonClassUtils {
      * @param clazz class for which a property descriptor is requested
      * @param name  name of the property for which a property descriptor
      *              is requested
+     *
      * @return the property descriptor or null if the bean does not have
      * a property that matches the specified name.
+     *
      * @throws IllegalAccessException    if the caller does not have
      *                                   access to the property accessor method
      * @throws IllegalArgumentException  if <code>bean</code> or
@@ -2697,7 +2820,9 @@ public class GriffonClassUtils {
      * is encountered.</p>
      *
      * @param beanClass Bean class for which property descriptors are requested
+     *
      * @return the property descriptors
+     *
      * @throws IllegalArgumentException if <code>beanClass</code> is null
      */
     @Nonnull
@@ -2732,6 +2857,7 @@ public class GriffonClassUtils {
      * if there is one; otherwise return <code>null</code>.</p>
      *
      * @param descriptor Property descriptor to return a getter for
+     *
      * @return The read method
      */
     @Nullable
@@ -2747,8 +2873,10 @@ public class GriffonClassUtils {
      *
      * @param bean Bean to be examined
      * @param name Property name to be evaluated
+     *
      * @return <code>true</code> if the property is readable,
      * otherwise <code>false</code>
+     *
      * @throws IllegalArgumentException if <code>bean</code>
      *                                  or <code>name</code> is <code>null</code>
      * @since BeanUtils 1.6
@@ -2783,6 +2911,7 @@ public class GriffonClassUtils {
      * if there is one; otherwise return <code>null</code>.</p>
      *
      * @param descriptor Property descriptor to return a setter for
+     *
      * @return The write method
      */
     @Nullable
@@ -2798,8 +2927,10 @@ public class GriffonClassUtils {
      *
      * @param bean Bean to be examined
      * @param name Property name to be evaluated
+     *
      * @return <code>true</code> if the property is writable,
      * otherwise <code>false</code>
+     *
      * @throws IllegalArgumentException if <code>bean</code>
      *                                  or <code>name</code> is <code>null</code>
      */
@@ -2834,6 +2965,7 @@ public class GriffonClassUtils {
      * @param bean  Bean whose field is to be mutated
      * @param name  Name of the field to be mutated
      * @param value The value to be set on the property
+     *
      * @throws IllegalAccessException   if the caller does not have
      *                                  access to the field
      * @throws IllegalArgumentException if <code>bean</code> or
@@ -2878,6 +3010,7 @@ public class GriffonClassUtils {
      * @param bean  Bean whose property is to be mutated
      * @param name  Name of the property to be mutated
      * @param value The value to be set on the property
+     *
      * @throws IllegalAccessException    if the caller does not have
      *                                   access to the property accessor method
      * @throws IllegalArgumentException  if <code>bean</code> or
@@ -2928,7 +3061,9 @@ public class GriffonClassUtils {
      * @param bean Bean whose property is to be extracted
      * @param name Possibly indexed and/or nested name of the property
      *             to be extracted
+     *
      * @return the property value
+     *
      * @throws IllegalAccessException    if the caller does not have
      *                                   access to the property accessor method
      * @throws IllegalArgumentException  if <code>bean</code> or
@@ -2967,6 +3102,7 @@ public class GriffonClassUtils {
      *
      * @param clazz      The class of the read method will be invoked on
      * @param descriptor Property descriptor to return a getter for
+     *
      * @return The read method
      */
     @Nullable
@@ -2982,6 +3118,7 @@ public class GriffonClassUtils {
      *
      * @param clazz      The class of the write method will be invoked on
      * @param descriptor Property descriptor to return a setter for
+     *
      * @return The write method
      */
     @Nullable
@@ -3006,6 +3143,7 @@ public class GriffonClassUtils {
      *
      * @param expression the boolean expression to check
      * @param message    the exception message if invalid
+     *
      * @throws IllegalArgumentException if expression is <code>false</code>
      */
     public static void isTrue(boolean expression, String message) {
@@ -3237,6 +3375,7 @@ public class GriffonClassUtils {
      *
      * @param object      the class to get the short name for, may be null
      * @param valueIfNull the value to return if null
+     *
      * @return the class name of the object without the package name, or the null value
      */
     @Nonnull
@@ -3251,6 +3390,7 @@ public class GriffonClassUtils {
      * <p>Gets the class name minus the package name from a <code>Class</code>.</p>
      *
      * @param cls the class to get the short name for.
+     *
      * @return the class name without the package name or an empty string
      */
     @Nonnull
@@ -3267,6 +3407,7 @@ public class GriffonClassUtils {
      * <p>The string passed in is assumed to be a class name - it is not checked.</p>
      *
      * @param className the className to get the short name for
+     *
      * @return the class name of the class without the package name or an empty string
      */
     @Nonnull
@@ -3314,6 +3455,7 @@ public class GriffonClassUtils {
      *
      * @param object      the class to get the package name for, may be null
      * @param valueIfNull the value to return if null
+     *
      * @return the package name of the object, or the null value
      */
     @Nonnull
@@ -3328,6 +3470,7 @@ public class GriffonClassUtils {
      * <p>Gets the package name of a <code>Class</code>.</p>
      *
      * @param cls the class to get the package name for, may be <code>null</code>.
+     *
      * @return the package name or an empty string
      */
     @Nonnull
@@ -3345,6 +3488,7 @@ public class GriffonClassUtils {
      * <p>If the class is unpackaged, return an empty string.</p>
      *
      * @param className the className to get the package name for, may be <code>null</code>
+     *
      * @return the package name or an empty string
      */
     @Nonnull
@@ -3373,6 +3517,7 @@ public class GriffonClassUtils {
      * param instance array to the type array
      *
      * @param args the arguments
+     *
      * @return the types of the arguments
      */
     @Nullable

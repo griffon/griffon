@@ -41,10 +41,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class ServiceLoaderUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceLoaderUtils.class);
-    private static final String JAR_FILE_SCHEME = "jar:file:";
+    private static final String HASH = "#";
 
     private ServiceLoaderUtils() {
-
+        // prevent instantiation
     }
 
     public static boolean load(@Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull Class<?> type, @Nonnull LineProcessor processor) {
@@ -64,7 +64,7 @@ public class ServiceLoaderUtils {
             return false;
         }
 
-        if (urls == null) return false;
+        if (urls == null) { return false; }
 
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
@@ -73,7 +73,7 @@ public class ServiceLoaderUtils {
             try (Scanner scanner = new Scanner(url.openStream())) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
-                    if (line.startsWith("#") || isBlank(line)) continue;
+                    if (line.startsWith(HASH) || isBlank(line)) { continue; }
                     processor.process(classLoader, type, line);
                 }
             } catch (IOException e) {
@@ -99,7 +99,7 @@ public class ServiceLoaderUtils {
             return false;
         }
 
-        if (urls == null) return false;
+        if (urls == null) { return false; }
 
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
@@ -127,7 +127,7 @@ public class ServiceLoaderUtils {
                     try (Scanner scanner = new Scanner(entry)) {
                         while (scanner.hasNextLine()) {
                             String line = scanner.nextLine();
-                            if (line.startsWith("#") || isBlank(line)) continue;
+                            if (line.startsWith(HASH) || isBlank(line)) { continue; }
                             processor.process(classLoader, line);
                         }
                     } catch (IOException e) {
@@ -143,7 +143,7 @@ public class ServiceLoaderUtils {
     private static void handleJarResource(@Nonnull URL url, @Nonnull ClassLoader classLoader, @Nonnull String path, @Nonnull PathFilter pathFilter, @Nonnull ResourceProcessor processor) {
         try {
             URLConnection urlConnection = url.openConnection();
-            if(urlConnection instanceof JarURLConnection) {
+            if (urlConnection instanceof JarURLConnection) {
                 JarURLConnection jarURLConnection = (JarURLConnection) urlConnection;
                 JarFile jar = jarURLConnection.getJarFile();
                 Enumeration<JarEntry> entries = jar.entries();
@@ -153,7 +153,7 @@ public class ServiceLoaderUtils {
                         try (Scanner scanner = new Scanner(jar.getInputStream(jarEntry))) {
                             while (scanner.hasNextLine()) {
                                 String line = scanner.nextLine();
-                                if (line.startsWith("#") || isBlank(line)) continue;
+                                if (line.startsWith(HASH) || isBlank(line)) { continue; }
                                 processor.process(classLoader, line);
                             }
                         } catch (IOException e) {

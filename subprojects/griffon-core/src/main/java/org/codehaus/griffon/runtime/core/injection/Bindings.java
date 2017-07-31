@@ -42,7 +42,7 @@ public class Bindings {
         return new AnnotatedBindingBuilderImpl<>(clazz);
     }
 
-    private static abstract class SingletonBindingBuilderImpl<T> implements SingletonBindingBuilder<T> {
+    private abstract static class SingletonBindingBuilderImpl<T> implements SingletonBindingBuilder<T> {
         protected boolean singleton;
 
         @Override
@@ -128,7 +128,7 @@ public class Bindings {
         }
     }
 
-    private static abstract class AbstractBindingImpl<T> implements Binding<T> {
+    private abstract static class AbstractBindingImpl<T> implements Binding<T> {
         protected final Class<T> source;
         protected final boolean singleton;
         protected Annotation classifier;

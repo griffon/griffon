@@ -100,6 +100,7 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
     protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurableWindowDisplayHandler.class);
+    private static final String HANDLER = "handler";
     private final GriffonApplication application;
     private final WindowDisplayHandler<W> delegateWindowsDisplayHandler;
 
@@ -121,9 +122,9 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
                 LOG.trace("Showing {} with show: handler", name);
                 run(handler, name, window);
                 return;
-            } else if (options.get("handler") instanceof WindowDisplayHandler) {
+            } else if (options.get(HANDLER) instanceof WindowDisplayHandler) {
                 LOG.trace("Showing {} with handler: handler", name);
-                ((WindowDisplayHandler<W>) options.get("handler")).show(name, window);
+                ((WindowDisplayHandler<W>) options.get(HANDLER)).show(name, window);
                 return;
             }
         }
@@ -158,9 +159,9 @@ public class ConfigurableWindowDisplayHandler<W> implements WindowDisplayHandler
                 LOG.trace("Hiding {} with hide: handler", name);
                 run(handler, name, window);
                 return;
-            } else if (options.get("handler") instanceof WindowDisplayHandler) {
+            } else if (options.get(HANDLER) instanceof WindowDisplayHandler) {
                 LOG.trace("Hiding {} with handler: handler", name);
-                ((WindowDisplayHandler<W>) options.get("handler")).hide(name, window);
+                ((WindowDisplayHandler<W>) options.get(HANDLER)).hide(name, window);
                 return;
             }
         }

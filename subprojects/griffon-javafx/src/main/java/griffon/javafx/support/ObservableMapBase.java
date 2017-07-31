@@ -21,5 +21,6 @@ package griffon.javafx.support;
  * @since 2.9.0
  * @deprecated use {@code griffon.javafx.collections.ObservableMapBase} instead.
  */
+@Deprecated
 public abstract class ObservableMapBase<K, V> extends griffon.javafx.collections.ObservableMapBase<K, V> {
 }

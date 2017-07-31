@@ -51,6 +51,10 @@ import static java.util.Objects.requireNonNull;
 public class SwingUtils {
     private static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
 
+    private SwingUtils() {
+        // prevent instantiation
+    }
+
     /**
      * Centers a Window on the screen<p>
      * Sets the window on the top left corner if the window's
@@ -88,7 +92,7 @@ public class SwingUtils {
         requireNonNull(internalFrame, "Argument 'internalFrame' must not be null");
 
         JDesktopPane desktop = internalFrame.getDesktopPane();
-        if (desktop == null) return;
+        if (desktop == null) { return; }
         Dimension screen = desktop.getSize();
         Point center = new Point(screen.width / 2, screen.height / 2);
 
@@ -109,6 +113,7 @@ public class SwingUtils {
      * Returns the window's current opacity value.
      *
      * @param window the window on which the opacity will be queried
+     *
      * @return the window's opacity value
      */
     public static float getWindowOpacity(@Nonnull Window window) {
@@ -136,6 +141,7 @@ public class SwingUtils {
      * @param name the value of the component's <tt>name</tt> property
      * @param root the root of the component hierarchy from where searching
      *             searching should start
+     *
      * @return the component reference if found, null otherwise
      */
     @Nullable
@@ -164,6 +170,7 @@ public class SwingUtils {
      * Takes a snapshot of the target component.
      *
      * @param component the component to draw
+     *
      * @return a Graphics compatible image of the component
      */
     @Nonnull
@@ -176,6 +183,7 @@ public class SwingUtils {
      *
      * @param component the component to draw
      * @param usePrint  whether <tt>print()</tt> or <tt>paint()</tt> is used to grab the snapshot
+     *
      * @return a Graphics compatible image of the component
      */
     @Nonnull
@@ -209,14 +217,6 @@ public class SwingUtils {
         return image;
     }
 
-    private static Class<?> loadClass(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
     /**
      * Creates a Window based on the application's configuration.<p>
      * Class lookup order is<ol>
@@ -224,11 +224,11 @@ public class SwingUtils {
      * <li>'org.jdesktop.swingx.JXFrame' if SwingX is in the classpath</li>
      * <li>'javax.swing.JFrame'</li>
      *
-     *
      * @param application the current running application
-     * @param attributes window attributes
+     * @param attributes  window attributes
+     *
      * @return a newly instantiated window according to the application's
-     *         preferences
+     * preferences
      */
     @Nonnull
     public static Window createApplicationFrame(@Nonnull GriffonApplication application, @Nonnull Map<String, Object> attributes) {

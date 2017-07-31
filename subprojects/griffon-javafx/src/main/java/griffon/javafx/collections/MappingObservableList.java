@@ -47,7 +47,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
         int size = source.size();
         this.elements = (T[]) new Object[size];
         for (int i = 0; i < size; ++i) {
-            this.elements[i] = (T) mapper.apply(source.get(i));
+            this.elements[i] = mapper.apply(source.get(i));
         }
     }
 
@@ -59,7 +59,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
         Function<S, T> function = resolveMapper();
 
         for (int i = 0; i < size; ++i) {
-            this.elements[i] = (T) function.apply(source.get(i));
+            this.elements[i] = function.apply(source.get(i));
         }
 
         mapper.addListener((v, o, n) -> updateAll());
@@ -113,7 +113,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
 
         for (int i = from, j = 0; i < to; i++) {
             perms[j++] = c.getPermutation(i);
-            elements[i] = (T) function.apply(c.getList().get(i));
+            elements[i] = function.apply(c.getList().get(i));
         }
         nextPermutation(from, to, perms);
     }
@@ -125,7 +125,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
         Function<S, T> function = resolveMapper();
 
         for (int i = from; i < to; i++) {
-            elements[i] = (T) function.apply(c.getList().get(i));
+            elements[i] = function.apply(c.getList().get(i));
             removed.add(elements[i]);
         }
         nextReplace(from, to, removed);
@@ -137,7 +137,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
         Function<S, T> function = resolveMapper();
 
         for (int i = from; i < to; i++) {
-            elements[i] = (T) function.apply(c.getList().get(i));
+            elements[i] = function.apply(c.getList().get(i));
             nextUpdate(i);
         }
     }
@@ -150,7 +150,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
         Function<S, T> function = resolveMapper();
 
         for (int i = 0; i < to; ++i) {
-            tmp[offset + i] = (T) function.apply(c.getAddedSubList().get(i));
+            tmp[offset + i] = function.apply(c.getAddedSubList().get(i));
         }
 
         elements = tmp;
@@ -186,7 +186,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
 
         beginChange();
         for (int i = 0; i < removed.size(); i++) {
-            tmp[i] = (T) function.apply(copy.get(i));
+            tmp[i] = function.apply(copy.get(i));
         }
         elements = tmp;
         nextReplace(0, elements.length, removed);

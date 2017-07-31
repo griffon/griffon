@@ -44,8 +44,8 @@ import static org.awaitility.Awaitility.await;
  * Use it in combination with {@code FunctionalJavaFXRunner}.
  *
  * @author Andres Almiray
- * @since 2.3.0
  * @see griffon.javafx.test.FunctionalJavaFXRunner
+ * @since 2.3.0
  */
 public class GriffonTestFXClassRule extends TestFX implements TestRule {
     protected String windowName;
@@ -97,7 +97,7 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
             WindowShownHandler startingWindow = new WindowShownHandler(windowName);
             application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
 
-            await().timeout(timeout).until(() -> startingWindow.isShowing());
+            await().timeout(timeout).until(startingWindow::isShowing);
         } catch (TimeoutException e) {
             throw new GriffonException("An error occurred while starting up the application", e);
         }

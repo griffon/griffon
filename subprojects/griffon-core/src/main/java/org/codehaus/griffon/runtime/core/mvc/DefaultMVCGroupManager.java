@@ -313,7 +313,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         // empty
     }
 
-    protected static abstract class InjectionPoint {
+    protected abstract static class InjectionPoint {
         protected final String name;
         protected final boolean nullable;
         protected final Type type;

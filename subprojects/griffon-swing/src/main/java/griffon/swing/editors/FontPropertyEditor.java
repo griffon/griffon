@@ -31,7 +31,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 public class FontPropertyEditor extends AbstractPropertyEditor {
     @Override
     public String getAsText() {
-        if (null == getValue()) return null;
+        if (null == getValue()) { return null; }
         Font font = (Font) getValue();
         return font.getFamily() + "-" + formatStyle(font) + "-" + font.getSize();
     }
@@ -82,7 +82,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected void handleAsList(List<?> list) {
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
@@ -99,7 +99,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected void handleAsMap(Map<?, ?> map) {
-        if(map.isEmpty()) {
+        if (map.isEmpty()) {
             super.setValueInternal(null);
             return;
         }
@@ -112,7 +112,7 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
 
     protected String getMapValue(Map<?, ?> map, String key, String defaultValue) {
         Object val = map.get(key);
-        if (null == val) val = map.get(String.valueOf(key.charAt(0)));
+        if (null == val) { val = map.get(String.valueOf(key.charAt(0))); }
         if (null == val) {
             return defaultValue;
         } else if (val instanceof CharSequence) {
@@ -132,13 +132,13 @@ public class FontPropertyEditor extends AbstractPropertyEditor {
     }
 
     protected int resolveStyle(Object source, String str) {
-        if ("PLAIN".equals(str.toUpperCase())) {
+        if ("PLAIN".equalsIgnoreCase(str)) {
             return Font.PLAIN;
-        } else if ("BOLD".equals(str.toUpperCase())) {
+        } else if ("BOLD".equalsIgnoreCase(str)) {
             return Font.BOLD;
-        } else if ("ITALIC".equals(str.toUpperCase())) {
+        } else if ("ITALIC".equalsIgnoreCase(str)) {
             return Font.ITALIC;
-        } else if ("BOLDITALIC".equals(str.toUpperCase())) {
+        } else if ("BOLDITALIC".equalsIgnoreCase(str)) {
             return Font.BOLD | Font.ITALIC;
         }
         throw illegalValue(source, Font.class);

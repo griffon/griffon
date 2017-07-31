@@ -28,6 +28,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 public final class GriffonApplicationUtils {
     private GriffonApplicationUtils() {
+        // prevent instantiation
     }
 
     private static final boolean isWindows;

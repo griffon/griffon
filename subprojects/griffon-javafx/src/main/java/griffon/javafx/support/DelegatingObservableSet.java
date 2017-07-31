@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
  * @since 2.9.0
  * @deprecated use {@code griffon.javafx.collections.DelegatingObservableSet} instead.
  */
+@Deprecated
 public abstract class DelegatingObservableSet<E> extends griffon.javafx.collections.DelegatingObservableSet<E> {
     public DelegatingObservableSet(@Nonnull ObservableSet<E> delegate) {
         super(delegate);

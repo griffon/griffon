@@ -27,6 +27,7 @@ import java.util.function.Function;
  * @since 2.9.0
  * @deprecated use {@code griffon.javafx.collections.MappingObservableList} instead.
  */
+@Deprecated
 public class MappingObservableList<T, S> extends griffon.javafx.collections.MappingObservableList<T, S> {
     public MappingObservableList(@Nonnull ObservableList<? extends S> source, @Nonnull Function<S, T> mapper) {
         super(source, mapper);

@@ -104,7 +104,7 @@ public final class UIThreadAwareBindings {
     @Nonnull
     public static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull ChangeListener<T> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        return listener instanceof UIThreadAware ? listener : new UIThreadAwareChangeListener<T>(listener);
+        return listener instanceof UIThreadAware ? listener : new UIThreadAwareChangeListener<>(listener);
     }
 
     /**
@@ -272,7 +272,7 @@ public final class UIThreadAwareBindings {
     @Nonnull
     public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull ListChangeListener<E> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        return listener instanceof UIThreadAware ? listener : new UIThreadAwareListChangeListener<E>(listener);
+        return listener instanceof UIThreadAware ? listener : new UIThreadAwareListChangeListener<>(listener);
     }
 
     /**
@@ -356,7 +356,7 @@ public final class UIThreadAwareBindings {
     @Nonnull
     public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull MapChangeListener<K, V> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        return listener instanceof UIThreadAware ? listener : new UIThreadAwareMapChangeListener<K, V>(listener);
+        return listener instanceof UIThreadAware ? listener : new UIThreadAwareMapChangeListener<>(listener);
     }
 
     /**
@@ -440,7 +440,7 @@ public final class UIThreadAwareBindings {
     @Nonnull
     public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull SetChangeListener<E> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        return listener instanceof UIThreadAware ? listener : new UIThreadAwareSetChangeListener<E>(listener);
+        return listener instanceof UIThreadAware ? listener : new UIThreadAwareSetChangeListener<>(listener);
     }
 
     /**

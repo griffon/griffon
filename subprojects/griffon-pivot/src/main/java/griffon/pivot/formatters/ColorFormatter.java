@@ -215,7 +215,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         Color parse(@Nonnull String str) throws ParseException;
     }
 
-    private static abstract class AbstractColorFormatterDelegate implements ColorFormatterDelegate {
+    private abstract static class AbstractColorFormatterDelegate implements ColorFormatterDelegate {
         private final String pattern;
 
         private AbstractColorFormatterDelegate(@Nonnull String pattern) {

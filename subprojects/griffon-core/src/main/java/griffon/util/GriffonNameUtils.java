@@ -80,6 +80,10 @@ public class GriffonNameUtils {
         "while"
     };
 
+    private GriffonNameUtils() {
+        // prevent instantiation
+    }
+
     /**
      * Finds out if the given String is a Java/Groovy keyword.
      *

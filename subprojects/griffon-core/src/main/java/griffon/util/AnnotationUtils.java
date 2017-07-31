@@ -62,9 +62,10 @@ public class AnnotationUtils {
     private static final String ERROR_ANNOTATION_TYPE_NULL = "Argument 'annotationType' must not be null";
     private static final String ERROR_FIELD_NULL = "Argument 'field' must not be null";
     private static final String ERROR_SETTER_METHOD_NULL = "Argument 'setterMethod' must not be null";
+    private static final String VALUE = "value";
 
     private AnnotationUtils() {
-
+        // prevent instantiation
     }
 
     @Nonnull
@@ -556,7 +557,7 @@ public class AnnotationUtils {
         private final String value;
 
         public NamedImpl(String value) {
-            this.value = requireNonNull(value, "value");
+            this.value = requireNonNull(value, VALUE);
         }
 
         public String value() {
@@ -565,7 +566,7 @@ public class AnnotationUtils {
 
         public int hashCode() {
             // This is specified in java.lang.Annotation.
-            return (127 * "value".hashCode()) ^ value.hashCode();
+            return (127 * VALUE.hashCode()) ^ value.hashCode();
         }
 
         public boolean equals(Object o) {
@@ -596,7 +597,7 @@ public class AnnotationUtils {
         private final Class<?> value;
 
         public TypedImpl(Class<?> value) {
-            this.value = requireNonNull(value, "value");
+            this.value = requireNonNull(value, VALUE);
         }
 
         public Class<?> value() {
@@ -605,7 +606,7 @@ public class AnnotationUtils {
 
         public int hashCode() {
             // This is specified in java.lang.Annotation.
-            return (127 * "value".hashCode()) ^ value.hashCode();
+            return (127 * VALUE.hashCode()) ^ value.hashCode();
         }
 
         public boolean equals(Object o) {
@@ -636,7 +637,7 @@ public class AnnotationUtils {
         private final Class<?> value;
 
         public BindToImpl(Class<?> value) {
-            this.value = requireNonNull(value, "value");
+            this.value = requireNonNull(value, VALUE);
         }
 
         public Class<?> value() {
@@ -645,7 +646,7 @@ public class AnnotationUtils {
 
         public int hashCode() {
             // This is specified in java.lang.Annotation.
-            return (127 * "value".hashCode()) ^ value.hashCode();
+            return (127 * VALUE.hashCode()) ^ value.hashCode();
         }
 
         public boolean equals(Object o) {
