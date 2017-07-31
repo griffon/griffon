@@ -442,7 +442,7 @@ public abstract class AbstractActionManager implements ActionManager {
         String keyName = KEY_THREADING + "." + actionName;
         while (!KEY_THREADING.equals(keyName)) {
             Object value = settings.get(keyName);
-            keyName = keyName.substring(0, keyName.lastIndexOf("."));
+            keyName = keyName.substring(0, keyName.lastIndexOf('.'));
             if (value != null && !castToBoolean(value)) { return true; }
         }
 

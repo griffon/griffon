@@ -42,6 +42,7 @@ public class ConfigurableJavaFXWindowDisplayHandler extends ConfigurableWindowDi
     }
 
     @Nonnull
+    @Override
     protected JavaFXWindowDisplayHandler fetchDefaultWindowDisplayHandler() {
         Object handler = windowManagerBlock().get("defaultHandler");
         return (JavaFXWindowDisplayHandler) (handler instanceof JavaFXWindowDisplayHandler ? handler : getDelegateWindowsDisplayHandler());

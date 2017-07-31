@@ -48,6 +48,7 @@ public class GriffonServiceASTTransformation extends GriffonArtifactASTTransform
         return GriffonServiceClass.TYPE;
     }
 
+    @Override
     protected ClassNode getSuperClassNode(ClassNode classNode) {
         return ABSTRACT_GRIFFON_SERVICE_CLASS;
     }

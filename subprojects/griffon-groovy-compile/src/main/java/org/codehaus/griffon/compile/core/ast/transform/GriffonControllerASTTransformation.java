@@ -48,6 +48,7 @@ public class GriffonControllerASTTransformation extends GriffonArtifactASTTransf
         return GriffonControllerClass.TYPE;
     }
 
+    @Override
     protected ClassNode getSuperClassNode(ClassNode classNode) {
         return ABSTRACT_GRIFFON_CONTROLLER_CLASS;
     }

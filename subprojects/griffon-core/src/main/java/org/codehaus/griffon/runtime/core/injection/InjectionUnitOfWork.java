@@ -30,6 +30,10 @@ public class InjectionUnitOfWork {
     private static final ThreadLocal<List<Object>> CONTEXT = new ThreadLocal<>();
     private static final String ERROR_NO_UNITOFWORK_IN_PROCESS = "There is no InjectionUnitOfWork in process!";
 
+    private InjectionUnitOfWork() {
+        // prevent instantiation
+    }
+
     public static void start() {
         requireState(CONTEXT.get() == null, "There is already an existing InjectionUnitOfWork in process!");
         CONTEXT.set(new ArrayList<>());

@@ -37,6 +37,10 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class Bindings {
+    private Bindings() {
+        // prevent instantiation
+    }
+
     public static <T> AnnotatedBindingBuilder<T> bind(@Nonnull Class<T> clazz) {
         requireNonNull(clazz, "Argument 'class' must not be null");
         return new AnnotatedBindingBuilderImpl<>(clazz);

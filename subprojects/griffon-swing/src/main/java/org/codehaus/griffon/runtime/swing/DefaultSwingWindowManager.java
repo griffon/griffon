@@ -168,6 +168,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * @param name the value of the of the Window's name
      * @since 2.0.0
      */
+    @Override
     public void detach(@Nonnull String name) {
         requireNonBlank(name, ERROR_NAME_BLANK);
         if (internalFrames.containsKey(name)) {
@@ -318,6 +319,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * @author Andres Almiray
      */
     private class WindowHelper extends WindowAdapter {
+        @Override
         public void windowClosing(WindowEvent event) {
             if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {
                 return;
@@ -344,6 +346,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         /**
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
+        @Override
         public void componentShown(ComponentEvent event) {
             Window window = (Window) event.getSource();
             event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
@@ -352,6 +355,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
+        @Override
         public void componentHidden(ComponentEvent event) {
             Window window = (Window) event.getSource();
             event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
@@ -365,6 +369,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      * @author Andres Almiray
      */
     private class InternalFrameHelper extends InternalFrameAdapter {
+        @Override
         public void internalFrameClosing(InternalFrameEvent event) {
             hide(event.getInternalFrame());
         }
@@ -372,6 +377,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         /**
          * Triggers a <tt>WindowShown</tt> event with the internal frame as sole argument
          */
+        @Override
         public void internalFrameOpened(InternalFrameEvent event) {
             JInternalFrame window = (JInternalFrame) event.getSource();
             event(ApplicationEvent.WINDOW_SHOWN, asList(findInternalWindowName(window), window));
@@ -381,6 +387,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         /**
          * Triggers a <tt>WindowHidden</tt> event with the internal frame as sole argument
          */
+        @Override
         public void internalFrameClosed(InternalFrameEvent event) {
             JInternalFrame window = (JInternalFrame) event.getSource();
             event(ApplicationEvent.WINDOW_HIDDEN, asList(findInternalWindowName(window), window));

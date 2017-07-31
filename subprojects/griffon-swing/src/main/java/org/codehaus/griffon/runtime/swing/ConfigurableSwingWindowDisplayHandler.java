@@ -135,6 +135,7 @@ public class ConfigurableSwingWindowDisplayHandler extends ConfigurableWindowDis
     }
 
     @Nonnull
+    @Override
     protected SwingWindowDisplayHandler fetchDefaultWindowDisplayHandler() {
         Object handler = windowManagerBlock().get("defaultHandler");
         return (SwingWindowDisplayHandler) (handler instanceof SwingWindowDisplayHandler ? handler : getDelegateWindowsDisplayHandler());

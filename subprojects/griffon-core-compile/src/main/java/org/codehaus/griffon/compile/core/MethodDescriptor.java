@@ -86,7 +86,7 @@ public class MethodDescriptor {
                 b.append("<");
                 for (int i = 0; i < parameters.length; i++) {
                     b.append(parameters[i].signature());
-                    if (i < parameters.length - 1) b.append(", ");
+                    if (i < parameters.length - 1) { b.append(", "); }
                 }
                 b.append(">");
             }
@@ -129,13 +129,14 @@ public class MethodDescriptor {
             return SUPER.equals(bound);
         }
 
+        @Override
         protected String createTypeSignature() {
             StringBuilder b = new StringBuilder(type);
             if (parameters.length > 0) {
                 b.append(" ").append(bound).append(" ");
                 for (int i = 0; i < parameters.length; i++) {
                     b.append(parameters[i].signature());
-                    if (i < parameters.length - 1) b.append(", ");
+                    if (i < parameters.length - 1) { b.append(", "); }
                 }
             }
             return b.toString();
@@ -222,7 +223,7 @@ public class MethodDescriptor {
             b.append("<");
             for (int i = 0; i < typeParameters.length; i++) {
                 b.append(typeParameters[i].signature);
-                if (i < typeParameters.length - 1) b.append(", ");
+                if (i < typeParameters.length - 1) { b.append(", "); }
             }
             b.append("> ");
         }
@@ -235,7 +236,7 @@ public class MethodDescriptor {
                 b.append(arguments[i].signature())
                     .append(" arg")
                     .append(i);
-                if (i < arguments.length - 1) b.append(", ");
+                if (i < arguments.length - 1) { b.append(", "); }
             }
         }
         b.append(")");
@@ -243,7 +244,7 @@ public class MethodDescriptor {
             b.append(" throws ");
             for (int i = 0; i < exceptions.length; i++) {
                 b.append(exceptions[i].signature());
-                if (i < exceptions.length - 1) b.append(", ");
+                if (i < exceptions.length - 1) { b.append(", "); }
             }
         }
         return b.toString();

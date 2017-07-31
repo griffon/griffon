@@ -124,7 +124,7 @@ public abstract class AbstractArtifactHandler<A extends GriffonArtifact> impleme
 
         String simpleName = propertyName;
 
-        int lastDot = propertyName.lastIndexOf(".");
+        int lastDot = propertyName.lastIndexOf('.');
         if (lastDot > -1) {
             simpleName = simpleName.substring(lastDot + 1);
         }

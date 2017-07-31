@@ -48,6 +48,7 @@ public class GriffonViewASTTransformation extends GriffonArtifactASTTransformati
         return GriffonViewClass.TYPE;
     }
 
+    @Override
     protected ClassNode getSuperClassNode(ClassNode classNode) {
         return ABSTRACT_GRIFFON_VIEW_CLASS;
     }

@@ -32,7 +32,9 @@ import static griffon.util.GriffonNameUtils.getSetterName
  * @author Andres Almiray
  */
 final class PivotUtils {
-    private PivotUtils() {}
+    private PivotUtils() {
+        // prevent instantiation
+    }
 
     private static final String ENHANCED = "_ENHANCED_METACLASS_"
 

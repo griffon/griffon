@@ -39,6 +39,7 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 public class GriffonMvcArtifactASTInjector extends GriffonArtifactASTInjector {
     private static final ClassNode MVC_GROUP_TYPE = makeClassSafe(MVCGroup.class);
 
+    @Override
     public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
         super.inject(classNode, artifactType);
 

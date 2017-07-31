@@ -42,6 +42,7 @@ public class ConfigurablePivotWindowDisplayHandler extends ConfigurableWindowDis
     }
 
     @Nonnull
+    @Override
     protected PivotWindowDisplayHandler fetchDefaultWindowDisplayHandler() {
         Object handler = windowManagerBlock().get("defaultHandler");
         return (PivotWindowDisplayHandler) (handler instanceof PivotWindowDisplayHandler ? handler : getDelegateWindowsDisplayHandler());

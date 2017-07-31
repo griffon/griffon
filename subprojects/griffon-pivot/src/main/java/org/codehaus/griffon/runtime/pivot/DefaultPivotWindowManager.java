@@ -102,6 +102,7 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
         /**
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
+        @Override
         public void windowOpened(Window window) {
             event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
         }
@@ -109,6 +110,7 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
+        @Override
         public void windowClosed(Window window, Display arg1, Window arg2) {
             event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
         }

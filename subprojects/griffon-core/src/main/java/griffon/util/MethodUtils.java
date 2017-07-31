@@ -57,6 +57,9 @@ import java.util.WeakHashMap;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class MethodUtils {
+    private MethodUtils() {
+        // prevent instantiation
+    }
 
     // --------------------------------------------------------- Private Methods
 

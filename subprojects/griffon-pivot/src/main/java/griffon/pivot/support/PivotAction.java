@@ -56,6 +56,7 @@ public class PivotAction extends Action {
         this.name = name;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }

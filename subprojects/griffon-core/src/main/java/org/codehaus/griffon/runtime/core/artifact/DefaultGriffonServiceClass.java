@@ -35,6 +35,7 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
         super(application, clazz, TYPE, TRAILING);
     }
 
+    @Override
     public void resetCaches() {
         super.resetCaches();
         serviceCache.clear();

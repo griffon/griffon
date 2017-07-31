@@ -39,6 +39,7 @@ public class DefaultGriffonControllerClass extends DefaultGriffonClass implement
         super(application, clazz, TYPE, TRAILING);
     }
 
+    @Override
     public void resetCaches() {
         super.resetCaches();
         actionsCache.clear();

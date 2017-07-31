@@ -47,6 +47,7 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
         super(application, clazz, TYPE, TRAILING);
     }
 
+    @Override
     public void resetCaches() {
         super.resetCaches();
         propertiesCache.clear();

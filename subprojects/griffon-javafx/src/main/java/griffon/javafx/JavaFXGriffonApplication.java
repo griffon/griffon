@@ -98,6 +98,7 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
         // empty
     }
 
+    @Override
     public boolean shutdown() {
         if (super.shutdown()) {
             exit();

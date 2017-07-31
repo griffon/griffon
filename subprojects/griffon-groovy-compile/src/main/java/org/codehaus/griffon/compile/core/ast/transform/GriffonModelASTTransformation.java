@@ -49,6 +49,7 @@ public class GriffonModelASTTransformation extends GriffonArtifactASTTransformat
         return GriffonModelClass.TYPE;
     }
 
+    @Override
     protected ClassNode getSuperClassNode(ClassNode classNode) {
         return ABSTRACT_GRIFFON_MODEL_CLASS;
     }

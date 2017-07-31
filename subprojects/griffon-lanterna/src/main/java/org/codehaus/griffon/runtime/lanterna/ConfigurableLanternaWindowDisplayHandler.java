@@ -42,6 +42,7 @@ public class ConfigurableLanternaWindowDisplayHandler extends ConfigurableWindow
     }
 
     @Nonnull
+    @Override
     protected LanternaWindowDisplayHandler fetchDefaultWindowDisplayHandler() {
         Object handler = windowManagerBlock().get("defaultHandler");
         return (LanternaWindowDisplayHandler) (handler instanceof LanternaWindowDisplayHandler ? handler : getDelegateWindowsDisplayHandler());

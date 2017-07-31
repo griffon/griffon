@@ -43,6 +43,7 @@ public class GriffonControllerASTInjector extends GriffonMvcArtifactASTInjector 
     private static final String ACTION_NAME = "actionName";
     private static final String ARGS = "args";
 
+    @Override
     public void inject(@Nonnull ClassNode classNode, @Nonnull String artifactType) {
         super.inject(classNode, artifactType);
 

@@ -31,6 +31,10 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class PivotUtils {
+    private PivotUtils() {
+        // prevent instantiation
+    }
+
     /**
      * Searches a component by name in a particular component hierarchy.<p>
      * A component must have a value for its <tt>name</tt> property if it's
@@ -40,6 +44,7 @@ public class PivotUtils {
      * @param name the value of the component's <tt>name</tt> property
      * @param root the root of the component hierarchy from where searching
      *             searching should start
+     *
      * @return the component reference if found, null otherwise
      */
     @Nullable

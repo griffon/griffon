@@ -65,11 +65,16 @@ import static griffon.util.GriffonNameUtils.isBlank;
 public class GriffonASTUtils {
     private static final String JAVA_LANG_OBJECT = Object.class.getName();
 
+    private GriffonASTUtils() {
+        // prevent instantiation
+    }
+
     /**
      * Returns whether a classNode has the specified property or not
      *
      * @param classNode    The ClassNode
      * @param propertyName The name of the property
+     *
      * @return True if the property exists in the ClassNode
      */
     public static boolean hasProperty(ClassNode classNode, String propertyName) {
@@ -78,7 +83,7 @@ public class GriffonASTUtils {
         }
 
         final MethodNode method = classNode.getMethod(getGetterName(propertyName), new Parameter[0]);
-        if (method != null) return true;
+        if (method != null) { return true; }
 
         for (PropertyNode pn : classNode.getProperties()) {
             if (pn.getName().equals(propertyName) && !pn.isPrivate()) {
@@ -110,6 +115,7 @@ public class GriffonASTUtils {
      *
      * @param classNode  The ClassNode
      * @param methodName The method name
+     *
      * @return True if it does implement the method
      */
     public static boolean implementsZeroArgMethod(ClassNode classNode, String methodName) {
@@ -196,7 +202,7 @@ public class GriffonASTUtils {
 
     public static FieldNode injectField(ClassNode classNode, String name, int modifiers, ClassNode type, Object value, boolean deep) {
         Expression initialExpression = null;
-        if (value != null) initialExpression = new ConstantExpression(value);
+        if (value != null) { initialExpression = new ConstantExpression(value); }
         return injectField(classNode, name, modifiers, type, initialExpression, deep);
     }
 
@@ -249,7 +255,7 @@ public class GriffonASTUtils {
     }
 
     public static void injectInterface(ClassNode classNode, ClassNode type, boolean deep) {
-        if (classNode.implementsInterface(type)) return;
+        if (classNode.implementsInterface(type)) { return; }
         if (deep) {
             getFurthestParent(classNode).addInterface(type);
         } else {
@@ -261,6 +267,7 @@ public class GriffonASTUtils {
      * Gets the full name of a ClassNode.
      *
      * @param classNode The class node
+     *
      * @return The full name
      */
     public static String getFullName(ClassNode classNode) {
@@ -270,8 +277,7 @@ public class GriffonASTUtils {
     public static ClassNode getFurthestParent(ClassNode classNode) {
         ClassNode parent = classNode.getSuperClass();
         while (parent != null && !getFullName(parent).equals(JAVA_LANG_OBJECT)) {
-            if (SourceUnitCollector.getInstance().getSourceUnit(parent) == null)
-                break;
+            if (SourceUnitCollector.getInstance().getSourceUnit(parent) == null) { break; }
             classNode = parent;
             parent = parent.getSuperClass();
         }
@@ -281,7 +287,7 @@ public class GriffonASTUtils {
     public static boolean isEnum(ClassNode classNode) {
         ClassNode parent = classNode.getSuperClass();
         while (parent != null) {
-            if (parent.getName().equals("java.lang.Enum")) return true;
+            if (parent.getName().equals("java.lang.Enum")) { return true; }
             parent = parent.getSuperClass();
         }
         return false;
@@ -350,8 +356,7 @@ public class GriffonASTUtils {
             // inject into furthest relative
             ClassNode parent = getFurthestParent(classNode);
             Expression initialExpression = value instanceof Expression ? (Expression) value : null;
-            if (value != null && initialExpression == null)
-                initialExpression = new ConstantExpression(value);
+            if (value != null && initialExpression == null) { initialExpression = new ConstantExpression(value); }
             parent.addProperty(propertyName, modifiers, propertyClass, initialExpression, null, null);
         }
     }
@@ -467,7 +472,7 @@ public class GriffonASTUtils {
 
     public static BlockStatement block(Statement... stms) {
         BlockStatement block = new BlockStatement();
-        for (Statement stm : stms) block.addStatement(stm);
+        for (Statement stm : stms) { block.addStatement(stm); }
         return block;
     }
 
