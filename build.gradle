@@ -201,6 +201,7 @@ subprojects { subproj ->
             if (subproj.name.startsWith('griffon-')) {
                 subproj.apply plugin: 'org.kordamp.gradle.clirr'
                 subproj.apply plugin: 'org.kordamp.jdeps'
+                subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
 
                 subproj.jdeps {
                     failOnError = false
