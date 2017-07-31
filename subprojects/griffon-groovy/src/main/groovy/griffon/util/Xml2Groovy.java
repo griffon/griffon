@@ -216,7 +216,7 @@ public final class Xml2Groovy {
             printer.print(")");
         }
 
-        if (node.children().size() > 0) {
+        if (!node.children().isEmpty()) {
             printer.println(" {");
             printer.incrementIndent();
             for (Iterator<?> iter = node.childNodes(); iter.hasNext(); ) {

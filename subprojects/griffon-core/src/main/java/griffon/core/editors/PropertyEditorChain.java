@@ -276,7 +276,7 @@ public class PropertyEditorChain extends PropertyEditorSupport implements Extend
                     }
                 }
 
-                if (editors.size() > 0) {
+                if (!editors.isEmpty()) {
                     propertyEditors = editors.toArray(new WeakReference[editors.size()]);
                 } else {
                     throw new IllegalStateException("No available PropertyEditors for " + this);

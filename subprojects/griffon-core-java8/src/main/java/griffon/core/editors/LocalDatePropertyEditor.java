@@ -37,6 +37,7 @@ import static java.time.LocalDate.ofEpochDay;
  */
 @PropertyEditorFor(LocalDate.class)
 public class LocalDatePropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -74,6 +75,7 @@ public class LocalDatePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @Override
     protected Formatter<LocalDate> resolveFormatter() {
         return isBlank(getFormat()) ? null : new LocalDateFormatter(getFormat());
     }

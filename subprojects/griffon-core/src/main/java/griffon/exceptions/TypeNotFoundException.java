@@ -24,16 +24,18 @@ import java.lang.annotation.Annotation;
  */
 public class TypeNotFoundException extends GriffonException {
     private static final long serialVersionUID = -1200238376357824754L;
+    private static final String TYPE = "type";
+    private static final String CAUSE = "cause";
 
     public TypeNotFoundException(@Nonnull String type) {
-        super("Could not find type " + checkNonBlank(type, "type"));
+        super("Could not find type " + checkNonBlank(type, TYPE));
     }
 
     public TypeNotFoundException(@Nonnull String type, @Nonnull Throwable cause) {
-        super("Could not find type " + checkNonBlank(type, "type"), checkNonNull(cause, "cause"));
+        super("Could not find type " + checkNonBlank(type, TYPE), checkNonNull(cause, CAUSE));
     }
 
     public TypeNotFoundException(@Nonnull String type, @Nonnull Annotation qualifier, @Nonnull Throwable cause) {
-        super("Could not find type " + checkNonBlank(type, "type") + " with qualifier " + checkNonNull(qualifier, "qualifier"), checkNonNull(cause, "cause"));
+        super("Could not find type " + checkNonBlank(type, TYPE) + " with qualifier " + checkNonNull(qualifier, "qualifier"), checkNonNull(cause, CAUSE));
     }
 }

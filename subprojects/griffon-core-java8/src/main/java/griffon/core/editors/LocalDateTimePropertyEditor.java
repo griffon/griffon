@@ -36,6 +36,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
  */
 @PropertyEditorFor(LocalDateTime.class)
 public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
@@ -85,6 +86,7 @@ public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
         }
     }
 
+    @Override
     protected Formatter<LocalDateTime> resolveFormatter() {
         return isBlank(getFormat()) ? null : new LocalDateTimeFormatter(getFormat());
     }

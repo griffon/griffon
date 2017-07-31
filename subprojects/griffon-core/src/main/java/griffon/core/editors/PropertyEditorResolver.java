@@ -73,8 +73,10 @@ public final class PropertyEditorResolver {
      * is returned with the {@code type} set as {@code enumType}.
      *
      * @param type The Class object for the type to be edited
+     *
      * @return An editor object for the given target class.
      * The result is null if no suitable editor can be found.
+     *
      * @see griffon.core.editors.EnumPropertyEditor
      */
     @Nonnull
@@ -108,6 +110,7 @@ public final class PropertyEditorResolver {
      * Unregisters an editor class to edit values of the given target class.
      *
      * @param targetType the class object of the type to be edited
+     *
      * @since 2.4.0
      */
     public static void unregisterEditor(@Nonnull Class<?> targetType) {
@@ -130,6 +133,7 @@ public final class PropertyEditorResolver {
      *
      * @param targetType  the class object of the type to be edited
      * @param editorClass the class object of the editor class
+     *
      * @since 2.4.0
      */
     @SuppressWarnings("unchecked")
@@ -230,21 +234,6 @@ public final class PropertyEditorResolver {
 
         private void remove(K key) {
             this.map.remove(key);
-        }
-
-        private boolean contains(K key) {
-            Reference<V> reference = this.map.get(key);
-            if (reference == null) {
-                return false;
-            } else {
-                V value = reference.get();
-                if (value == null) {
-                    this.map.remove(key);
-                    return false;
-                }
-
-                return true;
-            }
         }
 
         private void clear() {

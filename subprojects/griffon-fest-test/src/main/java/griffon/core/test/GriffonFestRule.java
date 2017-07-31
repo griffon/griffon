@@ -59,10 +59,8 @@ public class GriffonFestRule extends GriffonUnitRule {
         application.startup();
         application.ready();
         Object startingWindow = application.getWindowManager().getStartingWindow();
-        if (startingWindow != null) {
-            if (startingWindow instanceof Frame) {
-                window = new FrameFixture(robot, (Frame) startingWindow);
-            }
+        if (startingWindow != null && startingWindow instanceof Frame) {
+            window = new FrameFixture(robot, (Frame) startingWindow);
         }
 
         try {

@@ -115,7 +115,7 @@ public class BooleanFormatter extends AbstractFormatter<Boolean> {
         Boolean parse(@Nonnull String str) throws ParseException;
     }
 
-    private static abstract class AbstractBooleanFormatterDelegate implements BooleanFormatterDelegate {
+    private abstract static class AbstractBooleanFormatterDelegate implements BooleanFormatterDelegate {
         private final String pattern;
         private final String[] tokens;
 

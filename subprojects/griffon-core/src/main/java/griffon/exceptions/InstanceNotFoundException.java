@@ -24,20 +24,25 @@ import java.lang.annotation.Annotation;
  */
 public class InstanceNotFoundException extends GriffonException {
     private static final long serialVersionUID = 4999935012183988413L;
+    private static final String COULD_NOT_FIND_AN_INSTANCE_OF_TYPE = "Could not find an instance of type ";
+    private static final String TYPE = "type";
+    private static final String CAUSE = "cause";
+    private static final String WITH_QUALIFIER = " with qualifier ";
+    private static final String QUALIFIER = "qualifier";
 
     public InstanceNotFoundException(@Nonnull Class<?> type) {
-        super("Could not find an instance of type " + checkNonNull(type, "type").getName());
+        super(COULD_NOT_FIND_AN_INSTANCE_OF_TYPE + checkNonNull(type, TYPE).getName());
     }
 
     public InstanceNotFoundException(@Nonnull Class<?> type, @Nonnull Throwable cause) {
-        super("Could not find an instance of type " + checkNonNull(type, "type").getName(), checkNonNull(cause, "cause"));
+        super(COULD_NOT_FIND_AN_INSTANCE_OF_TYPE + checkNonNull(type, TYPE).getName(), checkNonNull(cause, CAUSE));
     }
 
     public InstanceNotFoundException(@Nonnull Class<?> type, @Nonnull Annotation qualifier) {
-        super("Could not find an instance of type " + checkNonNull(type, "type").getName() + " with qualifier " + checkNonNull(qualifier, "qualifier"));
+        super(COULD_NOT_FIND_AN_INSTANCE_OF_TYPE + checkNonNull(type, TYPE).getName() + WITH_QUALIFIER + checkNonNull(qualifier, QUALIFIER));
     }
 
     public InstanceNotFoundException(@Nonnull Class<?> type, @Nonnull Annotation qualifier, @Nonnull Throwable cause) {
-        super("Could not find an instance of type " + checkNonNull(type, "type").getName() + " with qualifier " + checkNonNull(qualifier, "qualifier"), checkNonNull(cause, "cause"));
+        super(COULD_NOT_FIND_AN_INSTANCE_OF_TYPE + checkNonNull(type, TYPE).getName() + WITH_QUALIFIER + checkNonNull(qualifier, QUALIFIER), checkNonNull(cause, CAUSE));
     }
 }

@@ -26,9 +26,11 @@ import javax.annotation.Nonnull;
  */
 public class ArtifactNotFoundException extends GriffonException {
     private static final long serialVersionUID = -7881105306242340254L;
+    private static final String CAUSE = "cause";
+    private static final String CLAZZ = "clazz";
 
     public ArtifactNotFoundException(@Nonnull Throwable cause) {
-        super("Could not find artifact", checkNonNull(cause, "cause"));
+        super("Could not find artifact", checkNonNull(cause, CAUSE));
     }
 
     public ArtifactNotFoundException(@Nonnull Class<?> clazz) {
@@ -36,7 +38,7 @@ public class ArtifactNotFoundException extends GriffonException {
     }
 
     public ArtifactNotFoundException(@Nonnull GriffonClass griffonClass, @Nonnull Throwable cause) {
-        super(format(griffonClass), checkNonNull(cause, "cause"));
+        super(format(griffonClass), checkNonNull(cause, CAUSE));
     }
 
     public ArtifactNotFoundException(@Nonnull Class<? extends GriffonArtifact> clazz, @Nonnull String name) {
@@ -48,10 +50,10 @@ public class ArtifactNotFoundException extends GriffonException {
     }
 
     private static String format(Class<?> clazz) {
-        return "Could not find artifact for " + checkNonNull(clazz, "clazz").getName();
+        return "Could not find artifact for " + checkNonNull(clazz, CLAZZ).getName();
     }
 
     private static String format(Class<? extends GriffonArtifact> clazz, String name) {
-        return "Could not find artifact of type " + checkNonNull(clazz, "clazz").getName() + " named " + checkNonBlank(name, "name");
+        return "Could not find artifact of type " + checkNonNull(clazz, CLAZZ).getName() + " named " + checkNonBlank(name, "name");
     }
 }

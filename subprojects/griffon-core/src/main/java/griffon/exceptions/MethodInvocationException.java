@@ -27,13 +27,14 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class MethodInvocationException extends GriffonException {
     private static final long serialVersionUID = -4458948337239674524L;
+    private static final String MESSAGE = "message";
 
     public MethodInvocationException(@Nonnull String message) {
-        super(requireNonBlank(message, "message"));
+        super(requireNonBlank(message, MESSAGE));
     }
 
     public MethodInvocationException(@Nonnull String message, @Nonnull Throwable cause) {
-        super(requireNonBlank(message, "message"), requireNonNull(cause));
+        super(requireNonBlank(message, MESSAGE), requireNonNull(cause));
     }
 
     @Nonnull

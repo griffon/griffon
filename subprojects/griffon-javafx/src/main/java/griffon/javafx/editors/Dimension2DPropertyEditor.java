@@ -36,6 +36,7 @@ public class Dimension2DPropertyEditor extends AbstractPropertyEditor {
         return dimension.getWidth() + ", " + dimension.getHeight();
     }
 
+    @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);

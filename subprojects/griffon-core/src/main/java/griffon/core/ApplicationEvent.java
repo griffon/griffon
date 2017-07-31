@@ -41,8 +41,8 @@ public enum ApplicationEvent {
     private final String name;
 
     ApplicationEvent() {
-        String name = name().toLowerCase().replaceAll("_", "-");
-        this.name = getClassNameForLowerCaseHyphenSeparatedName(name);
+        String n = name().toLowerCase().replaceAll("_", "-");
+        this.name = getClassNameForLowerCaseHyphenSeparatedName(n);
     }
 
     ApplicationEvent(String name) {

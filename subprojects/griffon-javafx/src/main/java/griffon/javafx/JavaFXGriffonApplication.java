@@ -87,13 +87,10 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
     }
 
     protected void afterStart() {
-        getUIThreadManager().runOutsideUI(new Runnable() {
-            @Override
-            public void run() {
-                startup();
-                ready();
-                afterReady();
-            }
+        getUIThreadManager().runOutsideUI(() -> {
+            startup();
+            ready();
+            afterReady();
         });
     }
 

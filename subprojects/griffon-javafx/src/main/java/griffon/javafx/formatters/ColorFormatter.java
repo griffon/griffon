@@ -106,6 +106,10 @@ public class ColorFormatter extends AbstractFormatter<Color> {
      */
     public static final ColorFormatter LONG_WITH_ALPHA = new ColorFormatter(PATTERN_LONG_WITH_ALPHA);
 
+    private static final String ERROR_COLOR_NULL = "Cannot format given Color because it's null";
+    private static final String HASH = "#";
+    private static final String ZERO = "0";
+
     /**
      * <p>Returns a {@code ColorFormatter} given a color pattern.</p>
      *
@@ -183,7 +187,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
     @Nonnull
     @SuppressWarnings("ConstantConditions")
     public static Color parseColor(@Nonnull String str) throws ParseException {
-        if (str.startsWith("#")) {
+        if (str.startsWith(HASH)) {
             switch (str.length()) {
                 case 4:
                     return SHORT.parse(str);
@@ -261,9 +265,9 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         @Override
         @Nonnull
         public String format(@Nonnull Color color) {
-            requireNonNull(color, "Cannot format given Color because it's null");
+            requireNonNull(color, ERROR_COLOR_NULL);
 
-            return new StringBuilder("#")
+            return new StringBuilder(HASH)
                 .append(toHexString(red(color)).charAt(0))
                 .append(toHexString(green(color)).charAt(0))
                 .append(toHexString(blue(color)).charAt(0))
@@ -273,7 +277,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         @Override
         @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
-            if (!str.startsWith("#") || str.length() != 4) {
+            if (!str.startsWith(HASH) || str.length() != 4) {
                 throw parseError(str, Color.class);
             }
 
@@ -302,9 +306,9 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         @Override
         @Nonnull
         public String format(@Nonnull Color color) {
-            requireNonNull(color, "Cannot format given Color because it's null");
+            requireNonNull(color, ERROR_COLOR_NULL);
 
-            return new StringBuilder("#")
+            return new StringBuilder(HASH)
                 .append(toHexString(red(color)).charAt(0))
                 .append(toHexString(green(color)).charAt(0))
                 .append(toHexString(blue(color)).charAt(0))
@@ -315,7 +319,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         @Override
         @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
-            if (!str.startsWith("#") || str.length() != 5) {
+            if (!str.startsWith(HASH) || str.length() != 5) {
                 throw parseError(str, Color.class);
             }
 
@@ -348,19 +352,19 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         @Override
         @Nonnull
         public String format(@Nonnull Color color) {
-            requireNonNull(color, "Cannot format given Color because it's null");
+            requireNonNull(color, ERROR_COLOR_NULL);
 
-            return new StringBuilder("#")
-                .append(padLeft(toHexString(red(color)), "0"))
-                .append(padLeft(toHexString(green(color)), "0"))
-                .append(padLeft(toHexString(blue(color)), "0"))
+            return new StringBuilder(HASH)
+                .append(padLeft(toHexString(red(color)), ZERO))
+                .append(padLeft(toHexString(green(color)), ZERO))
+                .append(padLeft(toHexString(blue(color)), ZERO))
                 .toString();
         }
 
         @Override
         @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
-            if (!str.startsWith("#") || str.length() != 7) {
+            if (!str.startsWith(HASH) || str.length() != 7) {
                 throw parseError(str, Color.class);
             }
 
@@ -389,20 +393,20 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         @Override
         @Nonnull
         public String format(@Nonnull Color color) {
-            requireNonNull(color, "Cannot format given Color because it's null");
+            requireNonNull(color, ERROR_COLOR_NULL);
 
-            return new StringBuilder("#")
-                .append(padLeft(toHexString(red(color)), "0"))
-                .append(padLeft(toHexString(green(color)), "0"))
-                .append(padLeft(toHexString(blue(color)), "0"))
-                .append(padLeft(toHexString(alpha(color)), "0"))
+            return new StringBuilder(HASH)
+                .append(padLeft(toHexString(red(color)), ZERO))
+                .append(padLeft(toHexString(green(color)), ZERO))
+                .append(padLeft(toHexString(blue(color)), ZERO))
+                .append(padLeft(toHexString(alpha(color)), ZERO))
                 .toString();
         }
 
         @Override
         @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
-            if (!str.startsWith("#") || str.length() != 9) {
+            if (!str.startsWith(HASH) || str.length() != 9) {
                 throw parseError(str, Color.class);
             }
 

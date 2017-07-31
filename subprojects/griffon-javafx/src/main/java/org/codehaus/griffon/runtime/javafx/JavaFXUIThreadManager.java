@@ -52,14 +52,11 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
         if (isUIThread()) {
             runnable.run();
         } else {
-            FutureTask<Void> task = new FutureTask<>(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        runnable.run();
-                    } catch (Throwable throwable) {
-                        exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
-                    }
+            FutureTask<Void> task = new FutureTask<>(() -> {
+                try {
+                    runnable.run();
+                } catch (Throwable throwable) {
+                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
                 }
             }, null);
 

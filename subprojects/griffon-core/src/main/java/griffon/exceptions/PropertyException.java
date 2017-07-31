@@ -24,13 +24,16 @@ import javax.annotation.Nullable;
  */
 public class PropertyException extends GriffonException {
     private static final long serialVersionUID = 6721682115856360089L;
+    private static final String CAUSE = "cause";
+    private static final String BEAN = "bean";
+    private static final String PROPERTY_NAME = "propertyName";
 
     public PropertyException(@Nonnull Object bean, @Nonnull String propertyName, @Nullable Object value) {
         super(formatArgs(bean, propertyName, value));
     }
 
     public PropertyException(@Nonnull Object bean, @Nonnull String propertyName, @Nullable Object value, @Nonnull Throwable cause) {
-        super(formatArgs(bean, propertyName, value), checkNonNull(cause, "cause"));
+        super(formatArgs(bean, propertyName, value), checkNonNull(cause, CAUSE));
     }
 
     public PropertyException(@Nonnull Object bean, @Nonnull String propertyName) {
@@ -38,7 +41,7 @@ public class PropertyException extends GriffonException {
     }
 
     public PropertyException(@Nonnull Object bean, @Nonnull String propertyName, @Nonnull Throwable cause) {
-        super(formatArgs(bean, propertyName), checkNonNull(cause, "cause"));
+        super(formatArgs(bean, propertyName), checkNonNull(cause, CAUSE));
     }
 
     public PropertyException(@Nonnull Class<?> klass, @Nonnull String propertyName) {
@@ -46,27 +49,27 @@ public class PropertyException extends GriffonException {
     }
 
     public PropertyException(@Nonnull Class<?> klass, @Nonnull String propertyName, @Nonnull Throwable cause) {
-        super(formatArgs(klass, propertyName), checkNonNull(cause, "cause"));
+        super(formatArgs(klass, propertyName), checkNonNull(cause, CAUSE));
     }
 
     @Nonnull
     private static String formatArgs(@Nonnull Object bean, @Nonnull String propertyName, @Nullable Object value) {
-        checkNonNull(bean, "bean");
-        checkNonBlank(propertyName, "propertyName");
+        checkNonNull(bean, BEAN);
+        checkNonBlank(propertyName, PROPERTY_NAME);
         return "Cannot set property " + propertyName + " with value " + value + " on " + bean;
     }
 
     @Nonnull
     private static String formatArgs(@Nonnull Object bean, @Nonnull String propertyName) {
-        checkNonNull(bean, "bean");
-        checkNonBlank(propertyName, "propertyName");
+        checkNonNull(bean, BEAN);
+        checkNonBlank(propertyName, PROPERTY_NAME);
         return "Cannot get property " + propertyName + " from " + bean;
     }
 
     @Nonnull
     private static String formatArgs(@Nonnull Class<?> klass, @Nonnull String propertyName) {
         checkNonNull(klass, "klass");
-        checkNonBlank(propertyName, "propertyName");
+        checkNonBlank(propertyName, PROPERTY_NAME);
         return klass + " does not have a property named " + propertyName;
     }
 }

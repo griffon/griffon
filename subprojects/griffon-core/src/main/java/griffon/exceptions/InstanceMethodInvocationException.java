@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
  */
 public class InstanceMethodInvocationException extends MethodInvocationException {
     private static final long serialVersionUID = -2325571968606780435L;
+    private static final String INSTANCE = "instance";
 
     public InstanceMethodInvocationException(@Nonnull Object instance, @Nonnull String methodName, @Nullable Object[] args) {
         super(formatArguments(instance, methodName, args));
@@ -44,7 +45,7 @@ public class InstanceMethodInvocationException extends MethodInvocationException
 
     @Nonnull
     private static String formatArguments(@Nonnull Object instance, @Nonnull String methodName, @Nullable Object[] args) {
-        checkNonNull(instance, "instance");
+        checkNonNull(instance, INSTANCE);
         checkNonBlank(methodName, "methodName");
         StringBuilder b = new StringBuilder("An error occurred while invoking instance method ")
             .append(instance.getClass().getName())
@@ -72,7 +73,7 @@ public class InstanceMethodInvocationException extends MethodInvocationException
 
     @Nonnull
     protected static String formatArguments(@Nonnull Object instance, @Nonnull Method method) {
-        checkNonNull(instance, "instance");
+        checkNonNull(instance, INSTANCE);
         checkNonNull(method, "method");
         StringBuilder b = new StringBuilder("An error occurred while invoking instance method ")
             .append(instance.getClass().getName())
