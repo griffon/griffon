@@ -343,7 +343,7 @@ public class GriffonNameUtils {
      */
     public static String getShortName(String className) {
         if (isBlank(className)) { return className; }
-        int i = className.lastIndexOf(".");
+        int i = className.lastIndexOf('.');
         if (i > -1) {
             className = className.substring(i + 1, className.length());
         }

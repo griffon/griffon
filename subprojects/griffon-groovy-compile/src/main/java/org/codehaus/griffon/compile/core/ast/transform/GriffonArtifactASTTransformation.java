@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.core.GriffonApplication;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.compile.core.BaseConstants;
 import org.codehaus.griffon.compile.core.ast.SourceUnitCollector;
@@ -31,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -48,8 +46,6 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
     protected static final String ERROR_CLASS_NODE_NULL = "Argument 'classNode' must not be null";
     protected static final String ERROR_SOURCE_NULL = "Argument 'source' must not be null";
     private static final Logger LOG = LoggerFactory.getLogger(GriffonArtifactASTTransformation.class);
-    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
-    private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
 
     public static boolean isOrImplements(ClassNode fieldType, ClassNode interfaceType) {
         return fieldType.equals(interfaceType) || fieldType.implementsInterface(interfaceType);

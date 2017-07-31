@@ -15,7 +15,6 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.core.GriffonApplication;
 import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
@@ -49,7 +48,6 @@ import static org.codehaus.groovy.ast.expr.VariableExpression.THIS_EXPRESSION;
 public abstract class AbstractASTInjector implements ASTInjector {
     public static final ClassNode NAMED_TYPE = makeClassSafe(Named.class);
     private static final ClassNode THREAD_TYPE = ClassHelper.make(Thread.class).getPlainNodeReference();
-    private static final ClassNode GRIFFON_APPLICATION_TYPE = makeClassSafe(GriffonApplication.class);
     private static final ClassNode INJECT_TYPE = makeClassSafe(Inject.class);
     private static final String PROPERTY_APPLICATION = "application";
     private static final String METHOD_GET_APPLICATION = "getApplication";

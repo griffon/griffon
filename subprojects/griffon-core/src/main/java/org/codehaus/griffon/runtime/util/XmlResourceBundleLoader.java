@@ -18,8 +18,6 @@ package org.codehaus.griffon.runtime.util;
 import griffon.core.resources.ResourceHandler;
 import griffon.util.AbstractMapResourceBundle;
 import griffon.util.ResourceBundleReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -47,7 +45,6 @@ import static java.util.Objects.requireNonNull;
  */
 @Named("xml")
 public class XmlResourceBundleLoader extends AbstractResourceBundleLoader {
-    private static final Logger LOG = LoggerFactory.getLogger(XmlResourceBundleLoader.class);
     protected static final String XML_SUFFIX = ".xml";
 
     protected final ResourceBundleReader resourceBundleReader;

@@ -69,7 +69,7 @@ public class ExpandableResourceBundle extends ResourceBundle {
 
     @Nonnull
     private String[] split(@Nonnull String input) {
-        int split = input.indexOf(".");
+        int split = input.indexOf('.');
         String head = split < 0 ? input : input.substring(0, split);
         String tail = split > 0 ? input.substring(split + 1) : null;
         return new String[]{head, tail};

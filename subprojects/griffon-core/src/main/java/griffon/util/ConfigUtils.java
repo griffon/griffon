@@ -600,11 +600,11 @@ public final class ConfigUtils {
         if (path == null) {
             return null;
         }
-        int extIndex = path.lastIndexOf(".");
+        int extIndex = path.lastIndexOf('.');
         if (extIndex == -1) {
             return null;
         }
-        int folderIndex = path.lastIndexOf("/");
+        int folderIndex = path.lastIndexOf('/');
         if (folderIndex > extIndex) {
             return null;
         }
@@ -624,11 +624,11 @@ public final class ConfigUtils {
         if (path == null) {
             return null;
         }
-        int extIndex = path.lastIndexOf(".");
+        int extIndex = path.lastIndexOf('.');
         if (extIndex == -1) {
             return path;
         }
-        int folderIndex = path.lastIndexOf("/");
+        int folderIndex = path.lastIndexOf('/');
         if (folderIndex > extIndex) {
             return path;
         }
