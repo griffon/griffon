@@ -132,7 +132,7 @@ task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
         csv.enabled = false
         xml.enabled = true
         html.enabled = true
-        html.destination = "\${buildDir}/reports/jacoco/root/html"
-        xml.destination = "\${buildDir}/reports/jacoco/root/root.xml"
+        html.destination = file("\${buildDir}/reports/jacoco/root/html")
+        xml.destination = file("\${buildDir}/reports/jacoco/root/root.xml")
     }
 }
