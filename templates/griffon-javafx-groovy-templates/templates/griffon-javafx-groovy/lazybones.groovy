@@ -77,3 +77,5 @@ renameFile(new File(binSources, 'run-app.bat'), binSources.absolutePath + '/' + 
         renameFile(file, artifactSourcesPath.absolutePath + '/' + props.project_capitalized_name + file.name)
     }
 }
+
+new File(projectDir, 'src/main/resources').mkdirs()

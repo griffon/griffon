@@ -78,3 +78,5 @@ File fxml = new File(projectDir, "griffon-app/resources/app.fxml")
 File fxmlPath = new File(projectDir, "griffon-app/resources/$packagePath")
 fxmlPath.mkdirs()
 renameFile(fxml, fxmlPath.absolutePath + '/' + props.project_property_name + '.fxml')
+
+new File(projectDir, 'src/main/resources').mkdirs()
