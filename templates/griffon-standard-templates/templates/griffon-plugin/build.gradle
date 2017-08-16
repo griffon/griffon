@@ -152,7 +152,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         html.enabled = true
         xml.enabled = true
         csv.enabled = false
-        html.destination = "${buildDir}/reports/jacoco/test/html"
-        xml.destination = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        html.destination = file("${buildDir}/reports/jacoco/test/html")
+        xml.destination = file("${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }

@@ -85,9 +85,10 @@ jbake {
     configuration['project-build-dir'] = project.buildDir.absolutePath
     configuration['project-rootdir'] = rootProject.projectDir.absolutePath
 
+    asciidoctorjVersion = '1.5.6'
     freemarkerVersion = '2.3.26-incubating'
-    groovyTemplatesVersion = '2.4.12'
-    thymeleafVersion = '3.0.6.RELEASE'
+    groovyTemplatesVersion = groovyVersion
+    thymeleafVersion = '3.0.7.RELEASE'
 }
 
 task(guide, dependsOn: [':griffon-guide:guide']) {
