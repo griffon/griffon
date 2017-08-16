@@ -39,6 +39,7 @@ buildscript {
         classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.2.0'
         classpath 'com.gradle:build-scan-plugin:1.8'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5'
+        classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
     }
 }
 apply plugin: 'com.gradle.build-scan'
@@ -47,6 +48,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'org.sonarqube'
+apply plugin: 'org.standardout.versioneye'
 
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
@@ -327,6 +329,10 @@ sonarqube {
     properties {
         property 'sonar.jacoco.reportPath', file("${buildDir}/reports/jacoco/report.xml").absolutePath
     }
+}
+
+versioneye {
+    includeSubProjects = true
 }
 
 coveralls {
