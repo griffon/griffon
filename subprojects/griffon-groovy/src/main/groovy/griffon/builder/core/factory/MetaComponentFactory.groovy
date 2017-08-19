@@ -19,6 +19,7 @@ import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
+import griffon.core.mvc.MVCGroupManager
 
 import javax.annotation.Nullable
 
@@ -34,9 +35,10 @@ import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURREN
 class MetaComponentFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         Map attrs = resolveAttributes(attributes)
-        String mvcId = resolveMvcId(name, value, attrs)
+        String mvcType = resolveMvcType(name, value, attrs)
+        String mvcId = resolveMvcId(builder, name, value, attrs)
         Map mvcArgs = resolveMvcArgs(attrs)
-        Map mvcArgsCopy = [*:mvcArgs]
+        Map mvcArgsCopy = [*: mvcArgs]
         attributes.clear()
         attributes.putAll(attrs)
 
@@ -54,22 +56,29 @@ class MetaComponentFactory extends AbstractFactory {
     }
 
     protected Map resolveAttributes(Map attributes) {
-        attributes
+        [*: attributes]
     }
 
-    protected String resolveMvcId(Object name, Object value,  Map attributes) {
+    protected String resolveMvcType(Object name, Object value, Map attributes) {
         String mvcType = ''
         if (value != null && value instanceof CharSequence) {
-            mvcType = value.toString()
-        } else {
-            throw new IllegalArgumentException("In $name value must be an MVC group type")
+            return value.toString()
         }
+        throw new IllegalArgumentException("In $name value must be an MVC group type")
+    }
 
-        return attributes.containsKey('mvcId') ? attributes.remove('mvcId') : mvcType
+    protected String resolveMvcId(FactoryBuilderSupport builder, Object name, String mvcType, Map attributes) {
+        String mvcId = attributes.remove('mvcId') ?: mvcType
+
+        MVCGroupManager mvcGroupManager = builder.application.mvcGroupManager
+        if (mvcGroupManager.findGroup(mvcId)) {
+            mvcId += '-' + UUID.randomUUID().toString()
+        }
+        mvcId
     }
 
     protected Map resolveMvcArgs(Map attributes) {
-        attributes.remove('mvcArgs') ?: [:]
+        (attributes.remove('mvcArgs') ?: [:]) + [metaComponentArgs: attributes]
     }
 
     private static class DestroyEventHandler implements RunnableWithArgs {
