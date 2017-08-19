@@ -50,7 +50,8 @@ public interface ThreadingHandler {
     void runOutsideUI(@Nonnull Runnable runnable);
 
     /**
-     * Executes tje code block on a background thread, always.
+     * Executes a code block on a background thread, always.
+     * @since 2.11.0
      */
     void runOutsideUIAsync(@Nonnull Runnable runnable);
 
