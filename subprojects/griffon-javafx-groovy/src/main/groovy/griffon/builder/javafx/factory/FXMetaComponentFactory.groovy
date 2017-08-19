@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.core.factory
+package griffon.builder.javafx.factory
 
 import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
 import griffon.core.mvc.MVCGroupManager
+import groovyx.javafx.factory.AbstractNodeFactory
+import javafx.scene.Node
 
 import javax.annotation.Nullable
 
@@ -32,7 +34,11 @@ import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURREN
  * @author Alexander Klein
  */
 @SuppressWarnings("rawtypes")
-class MetaComponentFactory extends AbstractFactory {
+class FXMetaComponentFactory extends AbstractNodeFactory {
+    FXMetaComponentFactory() {
+        super(Node, false)
+    }
+
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         Map attrs = resolveAttributes(attributes)
@@ -107,7 +113,9 @@ class MetaComponentFactory extends AbstractFactory {
     @Override
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
         try {
-            return builder.context.mvcGroup.controller.metaClass.invokeMethod(builder.context.mvcGroup.controller, 'onHandleNodeAttributes', builder, node, attributes)
+            boolean defaultBehavior = builder.context.mvcGroup.controller.metaClass.invokeMethod(builder.context.mvcGroup.controller, 'onHandleNodeAttributes', builder, node, attributes)
+            super.onHandleNodeAttributes(builder, node, attributes)
+            return defaultBehavior
         } catch (MissingMethodException e) {
             return false
         }

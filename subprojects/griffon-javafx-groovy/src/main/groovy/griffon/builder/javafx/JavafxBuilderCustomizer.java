@@ -15,10 +15,12 @@
  */
 package griffon.builder.javafx;
 
+import griffon.builder.core.factory.CollectionFactory;
 import griffon.builder.javafx.factory.ActionFactory;
 import griffon.builder.javafx.factory.ApplicationFactory;
 import griffon.builder.javafx.factory.ControlFactory;
 import griffon.builder.javafx.factory.FXMLFactory;
+import griffon.builder.javafx.factory.FXMetaComponentFactory;
 import griffon.builder.javafx.factory.LabeledFactory;
 import griffon.builder.javafx.factory.MenuFactory;
 import griffon.builder.javafx.factory.MenuItemFactory;
@@ -70,6 +72,8 @@ public class JavafxBuilderCustomizer extends AbstractBuilderCustomizer {
         factories.put("action", new ActionFactory());
         factories.put("indexedCardPane", new ContainerFactory(IndexedCardPane.class));
         factories.put("namedCardPane", new ContainerFactory(NamedCardPane.class));
+        factories.put("metaComponent", new FXMetaComponentFactory());
+        factories.put("noparent", new CollectionFactory());
 
         factories.put("menuBar", new MenuFactory(MenuBar.class));
         factories.put("contextMenu", new MenuFactory(ContextMenu.class));

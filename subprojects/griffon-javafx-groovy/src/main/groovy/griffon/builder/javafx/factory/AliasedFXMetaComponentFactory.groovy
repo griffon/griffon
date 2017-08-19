@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.core.factory
-
+package griffon.builder.javafx.factory
 /**
  * Enables MVC groups to be used as component nodes
  *
@@ -22,12 +21,12 @@ package griffon.builder.core.factory
  * @author Alexander Klein
  */
 @SuppressWarnings("rawtypes")
-class AliasedMetaComponentFactory extends MetaComponentFactory {
+class AliasedFXMetaComponentFactory extends FXMetaComponentFactory {
     final String mvcType
     final Map<String, Object> attributes = [:]
     final boolean leaf
 
-    AliasedMetaComponentFactory(String mvcType, boolean leaf = true, Map<String, Object> attributes = [:]) {
+    AliasedFXMetaComponentFactory(String mvcType, boolean leaf = true, Map<String, Object> attributes = [:]) {
         this.leaf = leaf
         this.mvcType = mvcType
         this.attributes.putAll(attributes ?: [:])
