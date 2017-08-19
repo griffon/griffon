@@ -32,12 +32,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static griffon.util.TypeUtils.castToBoolean;
+
 /**
  * @author Andres Almiray
  */
 @Named("core")
 public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
     private static final String KEY_ROOT_NODE_NAME = "ROOT_NODE_NAME";
+    private static final String MVC_ID = "mvcId";
+    private static final String ROOT_NODE_IDENTIFIED_BY_ATTRIBUTE = "rootNodeIdentifiedByAttribute";
+
     @Inject
     private UIThreadManager uiThreadManager;
 
@@ -61,6 +66,12 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
 
     @Nonnull
     @Override
+    public List<Closure> getAttributeDelegates() {
+        return Arrays.<Closure>asList(new MethodClosure(this, "rootAttributeDelegate"));
+    }
+
+    @Nonnull
+    @Override
     public List<Closure> getPreInstantiateDelegates() {
         return Arrays.<Closure>asList(new MethodClosure(this, "rootNodePreInstantiateDelegate"));
     }
@@ -71,6 +82,15 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
         return Arrays.<Closure>asList(new MethodClosure(this, "rootNodePostNodeCompletionDelegate"));
     }
 
+    protected void rootAttributeDelegate(FactoryBuilderSupport builder, Object node, Map attributes) {
+        Object isRootNode = attributes.remove("rootNode");
+        if (isRootNode != null && castToBoolean(isRootNode)) {
+            String mvcId = String.valueOf(builder.getVariable(MVC_ID));
+            builder.getVariables().put(ROOT_NODE_IDENTIFIED_BY_ATTRIBUTE, true);
+            builder.getVariables().put(mvcId + "-rootNode", node);
+        }
+    }
+
     protected void rootNodePreInstantiateDelegate(FactoryBuilderSupport builder, Map attributes, Object value) {
         String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));
         if (!builder.hasVariable(KEY_ROOT_NODE_NAME)) {
@@ -79,9 +99,14 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
     }
 
     protected void rootNodePostNodeCompletionDelegate(FactoryBuilderSupport builder, Object parent, Object node) {
+        Object hasRootNode = builder.getVariables().get(ROOT_NODE_IDENTIFIED_BY_ATTRIBUTE);
+        if (hasRootNode != null && castToBoolean(hasRootNode)) {
+            return;
+        }
+
         String name = String.valueOf(builder.getContext().get(FactoryBuilderSupport.CURRENT_NAME));
-        if (builder.getVariable(KEY_ROOT_NODE_NAME).equals(name) && builder.hasVariable("mvcId")) {
-            String mvcId = String.valueOf(builder.getVariable("mvcId"));
+        if (builder.getVariable(KEY_ROOT_NODE_NAME).equals(name) && builder.hasVariable(MVC_ID)) {
+            String mvcId = String.valueOf(builder.getVariable(MVC_ID));
             builder.getVariables().put(mvcId + "-rootNode", node);
         }
     }

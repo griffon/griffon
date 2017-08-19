@@ -40,7 +40,37 @@ class CoreBuilderCustomizerSpec extends Specification {
         methodName in builder.explicitMethods.keySet()
 
         where:
-        methodName << ['runOutsideUI', 'runInsideUISync', 'runInsideUIAsync', 'runFuture', 'isUIThread']
+        methodName << ['runOutsideUI', 'runOutsideUIAsync', 'runInsideUISync', 'runInsideUIAsync', 'runFuture', 'isUIThread']
+    }
+
+    void "Root node should be implicitly identified"() {
+        given:
+        CompositeBuilder builder = new CompositeBuilder([
+            new TestBuilderCustomizer(),
+            newCoreBuilderCustomizer()
+        ] as BuilderCustomizer[])
+        builder.variables.mvcId = 'mvc'
+
+        when:
+        builder.build(ImplicitRootNodeScript)
+
+        then:
+        builder.variables.'mvc-rootNode'?.name == 'name1'
+    }
+
+    void "Root node should be explicitly identified"() {
+        given:
+        CompositeBuilder builder = new CompositeBuilder([
+            new TestBuilderCustomizer(),
+            newCoreBuilderCustomizer()
+        ] as BuilderCustomizer[])
+        builder.variables.mvcId = 'mvc'
+
+        when:
+        builder.build(ExplicitRootNodeScript)
+
+        then:
+        builder.variables.'mvc-rootNode'?.name == 'name2'
     }
 
     BuilderCustomizer newCoreBuilderCustomizer() {
@@ -55,12 +85,47 @@ class TestBuilderCustomizer extends AbstractBuilderCustomizer {
     TestBuilderCustomizer() {
         setFactories([
             list: new CollectionFactory(),
-            map : new MapFactory()
+            map : new MapFactory(),
+            bean: new BeanFactory()
         ])
+    }
+}
+
+class BeanFactory extends AbstractFactory {
+    @Override
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        new Bean()
+    }
+
+    @Override
+    boolean isLeaf() {
+        false
     }
 }
 
 class ParentScript1 extends Script {
     Object run() {
     }
+}
+
+class ImplicitRootNodeScript extends Script {
+    Object run() {
+        bean(name: 'name1') {
+            bean(name: 'name2') {
+                list()
+                map()
+            }
+        }
+    }
+}
+
+class ExplicitRootNodeScript extends Script {
+    Object run() {
+        bean(name: 'name1')
+        bean(name: 'name2', rootNode: true)
+    }
+}
+
+class Bean {
+    String name
 }
