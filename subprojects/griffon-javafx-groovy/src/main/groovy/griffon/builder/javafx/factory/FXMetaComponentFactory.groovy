@@ -32,6 +32,7 @@ import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURREN
  *
  * @author Andres Almiray
  * @author Alexander Klein
+ * @since 2.12.0
  */
 @SuppressWarnings("rawtypes")
 class FXMetaComponentFactory extends AbstractNodeFactory {

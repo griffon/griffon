@@ -19,6 +19,7 @@ package griffon.builder.javafx.factory
  *
  * @author Andres Almiray
  * @author Alexander Klein
+ * @since 2.12.0
  */
 @SuppressWarnings("rawtypes")
 class AliasedFXMetaComponentFactory extends FXMetaComponentFactory {
