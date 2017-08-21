@@ -20,11 +20,12 @@ import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.exceptions.GriffonException;
+import griffon.javafx.artifact.JavaFXGriffonView;
 import griffon.javafx.support.ActionMatcher;
+import griffon.javafx.support.GriffonBuilderFactory;
 import griffon.javafx.support.JavaFXAction;
 import griffon.javafx.support.JavaFXUtils;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
@@ -45,7 +46,7 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
+public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView implements JavaFXGriffonView {
     private static final String FXML_SUFFIX = ".fxml";
 
     @Inject
@@ -68,12 +69,12 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
         super(application);
     }
 
-    @Nullable
+    @Nonnull
     protected Node loadFromFXML() {
         return loadFromFXML(resolveBasename());
     }
 
-    @Nullable
+    @Nonnull
     protected Node loadFromFXML(@Nonnull String baseName) {
         requireNonBlank(baseName, "Argument 'baseName' must not be blank");
         if (baseName.endsWith(FXML_SUFFIX)) {
@@ -90,7 +91,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView {
 
         FXMLLoader fxmlLoader = new FXMLLoader(viewResource);
         fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());
-        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory(getApplication().getApplicationClassLoader().get()));
+        fxmlLoader.setBuilderFactory(new GriffonBuilderFactory(getApplication(), getMvcGroup()));
         fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());
         fxmlLoader.setControllerFactory(klass -> getMvcGroup().getView());
 
