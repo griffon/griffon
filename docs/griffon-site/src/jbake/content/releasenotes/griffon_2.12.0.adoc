@@ -20,6 +20,74 @@ The following dependencies have been upgraded
  * org.apache.pivot:pivot-wtk:2.0.5
  * org.apache.pivot:pivot-wtk-terra:2.0.5
 
+=== Runtime
+
+==== JavaFX MetaComponent Support
+
+You can now use MVCGroups as components inside an FXML file. Let's assume there's an mvcGroup named `form` with a matching
+`FormView`. This view defines the following content in `form.fxml`
+
+[source, xml]
+.griffon-app/resources/com/acme/form.fxml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import griffon.javafx.support.MetaComponent?>
+<?import griffon.javafx.support.MetaComponent.MvcArg?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com/acme/ContainerView">
+    <MetaComponent mvcType="formItem">
+        <MetaComponent.MvcArg name="key" value="name"/>
+    </MetaComponent>
+    <MetaComponent mvcType="formItem">
+        <MetaComponent.MvcArg name="propertyKey" value="lastname"/>
+    </MetaComponent>
+</VBox>
+----
+
+The `formItem` MVC group defines a Label, a TextField, and handles validation for its input. `FormView` must identify the root
+node that can be added to its parent view; the convention is to use the group's id plus `"-rootNode"`, for example
+
+[source, java]
+.griffon-app/com/acme/FormItemView.java
+----
+package org.example;
+
+import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
+import griffon.metadata.ArtifactProviderFor;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+
+import java.util.Collections;
+import javax.annotation.Nonnull;
+
+@ArtifactProviderFor(GriffonView.class)
+public class FormItemView extends AbstractJavaFXGriffonView {
+    @MVCMember private FormItemController controller;
+    @MVCMember private FormItemModel model;
+    @MVCMember private String propertyKey;
+
+    @FXML private Label propertyLabel;
+    @FXML private TextField propertyValue;
+
+    @Override
+    public void initUI() {
+        Node content = loadFromFXML();
+        propertyLabel.setText(propertyKey);
+        model.valueProperty().bindBidirectional(propertyValue.textProperty());
+        connectActions(content, controller);
+        connectMessageSource(content);
+        getMvcGroup().getContext().put(getMvcGroup().getMvcId() + "-rootNode", content);
+    }
+}
+----
+
 === Buildtime
 
 ==== Gradle Wrapper
