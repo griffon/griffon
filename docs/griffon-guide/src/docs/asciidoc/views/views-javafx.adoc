@@ -115,6 +115,126 @@ public class ApplicationModule extends AbstractModule {
 }
 ----
 
+NOTE: Be aware that using the standard FXML notation (`#actionName`) for event handlers is not compatible with Griffon actions!
+
+FXML conventions dictate that the argument specified in `fx:controller` defines the type on which node injections via
+`@FXML` will take place. It's also the source for any event handler defined using the format `#<actionName>` where `<actionName>`
+matches a public method that takes the required event type as argument. In othwer words, the following code shows a simple
+FXML controller
+
+[source, java]
+.com/acme/SampleView.java
+----
+package com.acme;
+
+import javafx.scene.control.Label;
+import javafx.event.ActionEvent;
+
+public class SampleView {
+    @FXML private void myLabel;
+
+    @FXML
+    public void initialize() {
+        myLabel.setText("random text");
+    }
+
+    public void click(ActionEvent ignored) { ... }
+}
+----
+
+[source, xml]
+[subs="verbatim,attributes"]
+.com/acme/sample.fxml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="com.acme.SampleView">
+    <Label fx:id="myLabel"/>
+    <Button text="click" onAction="#click"/>
+</VBox>
+----
+
+Notice that the name `SampleView` was chosen on purpose. This demonstrates one of the problems with the concept behind
+`fx:controller`, as it defines both the place where widgets may be configured and the source of event handlers. The first
+is the sole responsibility of a View component while the latter is the responsibility of a Controller. Griffon decided to
+split these responsibilities into their proper MVC members; thus the previous example can be rewritten as follows:
+
+[source, java]
+.griffon-app/controllers/com/acme/SampleController.java
+----
+package com.acme;
+
+import griffon.core.artifact.GriffonController;
+import griffon.core.controller.ControllerAction;
+import griffon.metadata.ArtifactProviderFor;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import javafx.event.ActionEvent;
+
+@ArtifactProviderFor(GriffonController.class)
+public class SampleController extends AbstractGriffonController {
+    @ControllerAction
+    public void click(ActionEvent ignored) { ... }
+}
+----
+
+[source, java]
+.griffon-app/views/com/acme/SampleView.java
+----
+package com.acme;
+
+import griffon.core.artifact.GriffonView;
+import griffon.inject.MVCMember;
+import griffon.metadata.ArtifactProviderFor;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import javax.annotation.Nonnull;
+
+@ArtifactProviderFor(GriffonView.class)
+public class SampleView extends AbstractJavaFXGriffonView {
+    @MVCMember @Nonnull
+    private SampleController controller;
+
+    @FXML private void myLabel;
+
+    @Override
+    public void initUI() {
+        VBox content = loadFromFXML();
+        myLabel.setText("random text");
+        connectActions(content, controller);
+        connectMessageSource(content);
+        // add content to SceneGraph ...
+    }
+}
+----
+
+[source, xml]
+[subs="verbatim,attributes"]
+.griffon-app/resources/com/acme/sample.fxml
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.VBox?>
+<?import griffon.javafx.support.JavaFXUtils?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="com.acme.SampleView">
+    <Label fx:id="myLabel"/>
+    <Button JavaFXUtils.griffonActionId="click"/>
+    <!--
+        As an alternative you may define the Button like this too
+        <Button fx:id="clickActionTarget"/>
+    -->
+</VBox>
+----
+
+There may be cases where you would still like to use the standar FXML event handlers, for exmaple where an event handler
+is UI specific such a focus handler or a scroll handler. In this case you would define the event handler as a public
+method on the View class.
+
 == Binding Support
 
 === Collections
