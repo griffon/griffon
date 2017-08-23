@@ -264,7 +264,6 @@ method on the View class.
 
  * Convert `ObservableValue<X>` to is corresponding `XBinding`.
  * Convert `ObservableXValue` to `ObjectBinding<X>`.
- * Create bindings that update their value and notify listeners inside the UI thread.
 
 === Reducing
 
@@ -284,11 +283,11 @@ This lets you write the following code in a `View` artifact:
 
 [source, java]
 ----
-import griffon.javafx.support.JavaFXUtils;
+import griffon.javafx.collections.GriffonFXCollections;
 ...
 
 ObservableList<String> items = model.getItems();
-ObservableList<String> uiItems = JavaFXUtils.createJavaFXThreadProxyList(items);
+ObservableList<String> uiItems = GriffonFXCollections.uiThreadAwareObservableList(items);
 listView.setItems(uiItems);
 ----
 
