@@ -133,4 +133,19 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
             throw new GriffonException("An error occurred while executing a task inside the UI thread", e);
         }
     }
+
+    @Nonnull
+    protected ExecutorServiceManager getExecutorServiceManager() {
+        return executorServiceManager;
+    }
+
+    @Nonnull
+    protected ExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    @Nonnull
+    protected ExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
+    }
 }
