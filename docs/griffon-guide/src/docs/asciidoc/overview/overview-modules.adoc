@@ -40,7 +40,7 @@ public class CustomModule extends AbstractModule {
 }
 ----
 
-results in a module named `org.example.custom`; whereas the following definition
+Results in a module named `org.example.custom`; whereas the following definition
 
 [source,java,linenums,options="nowrap"]
 ----
@@ -62,7 +62,7 @@ public class CustomModule extends AbstractModule {
 }
 ----
 
-results in a module simply called `custom`. A module may depend on another module; when
+Results in a module simply called `custom`. A module may depend on another module; when
 that's the case, then the bindings of this module are processed after their dependencies. This
 allows dependent modules to override bindings made by their dependencies. Module dependencies
 are specified using the `{link_depends_on}` annotation, like so:
@@ -307,6 +307,61 @@ bind(Calculator.class)
 
 NOTE: Equivalent bindings must match qualifiers too.
 
+
+[[_overview_module_evictions]]
+== Module Evictions
+
+Given binding equivalences a module may override bindings supplied by other modules, but you can't avoid the original
+bindings from being added in the first case. With module evictions is possible for a module to evict another one,
+effectively barring the evicted module from contributing its bindings. Let's say there's a module named "foo" defined
+as follows
+
+[source, java]
+----
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@Named("foo")
+@ServiceProviderFor(Module.class)
+public class FooModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // binding definitions
+    }
+}
+----
+
+You may evict this module by defining another module annotated with `@Evicts`, such as
+
+[source, java]
+----
+import griffon.core.injection.Module;
+import griffon.inject.DependsOn;
+import griffon.inject.Evicts;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.inject.Named;
+
+@Named("foo")
+@Evicts("foo")
+@ServiceProviderFor(Module.class)
+public class FooEvictorModule extends AbstractModule {
+    @Override
+    protected void doConfigure() {
+        // binding definitions
+    }
+}
+----
+
+The evicting module (`FooEvictorModule`)  has to have the same name as the evicted module (`FooModule`) hence why both
+modules are annotated with `@Named("foo")`.
+
+[[_overview_guice_injector]]
 == The Guice Injector
 
 The dependency `griffon-guice-{griffon-version}` uses {link_google_guice} to implement the JSR-330 API

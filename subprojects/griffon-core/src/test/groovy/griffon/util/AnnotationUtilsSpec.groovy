@@ -89,7 +89,7 @@ class AnnotationUtilsSpec extends Specification {
         'three' in named.keySet()
     }
 
-    def "Instances are evicted and mapped by their names"() {
+    def "Instances are evicted and mapped by their names (1)"() {
         given:
         List instances = [new Foo(), new FooEvictor()]
 
@@ -99,6 +99,20 @@ class AnnotationUtilsSpec extends Specification {
         then:
         1 == named.size()
         'foo' in named.keySet()
+        [instances[1]] == (named.values() as List)
+    }
+
+    def "Instances are evicted and mapped by their names (2)"() {
+        given:
+        List instances = [new FooEvictor(), new Foo()]
+
+        when:
+        Map named = AnnotationUtils.mapInstancesByName(instances, '', 'Object')
+
+        then:
+        1 == named.size()
+        'foo' in named.keySet()
+        [instances[0]] == (named.values() as List)
     }
 
     def "Multiple instances with same name should cause an exception"() {

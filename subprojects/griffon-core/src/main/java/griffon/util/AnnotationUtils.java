@@ -402,6 +402,7 @@ public class AnnotationUtils {
                 } else {
                     name = currentEvicts;
                     LOG.info("{} {} with instance {} evicted by {}", type, name, evictedInstance, instance);
+                    map.put(name, instance);
                 }
             } else {
                 name = isBlank(currentEvicts) ? name : currentEvicts;
@@ -412,10 +413,10 @@ public class AnnotationUtils {
                     } else {
                         LOG.info("{} {} with instance {} evicted by {}", type, name, instance, previousInstance);
                     }
+                } else {
+                    map.put(name, instance);
                 }
             }
-
-            map.put(name, instance);
         }
 
         return map;
