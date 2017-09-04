@@ -33,7 +33,9 @@ class GriffonPluginResolutionStrategy {
         'compileOnly',
         'testCompileOnly',
         'testCompile',
-        'runtime'
+        'runtime',
+        'apt',
+        'testApt'
     ]
 
     private static final Map<String, List<String>> DEPENDENCY_MAP = [:]
@@ -140,6 +142,13 @@ class GriffonPluginResolutionStrategy {
             if (artifactId.endsWith('-compile')) {
                 projectDependencyMap.get('compileOnly', []) << dependencyCoordinates
                 projectDependencyMap.get('testCompileOnly', []) << dependencyCoordinates
+                ['apt', 'testApt'].each { conf ->
+                    if (!project.configurations.findByName(conf)) {
+                        project.logger.info("Configuration '{}' does not exist. Apply the 'gradle-apt-plugin' and try again", conf)
+                        return
+                    }
+                    projectDependencyMap.get(conf, []) << dependencyCoordinates
+                }
             } else if (scope == 'test' && artifactId.endsWith('-test')) {
                 projectDependencyMap.get('testCompile', []) << dependencyCoordinates
             } else {

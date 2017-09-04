@@ -192,7 +192,6 @@ class GriffonPlugin implements Plugin<Project> {
                     project.mainClassName = '<INVALID>'
                 }
                 project.plugins.withId('application') { plugin ->
-
                     configureApplicationSettings(project, extension)
                 }
 

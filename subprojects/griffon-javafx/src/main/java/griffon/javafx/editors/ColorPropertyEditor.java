@@ -28,7 +28,6 @@ import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 
-
 /**
  * @author Andres Almiray
  */
