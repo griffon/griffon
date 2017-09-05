@@ -17,6 +17,11 @@ package org.codehaus.griffon.runtime.core.addon;
 
 import griffon.core.GriffonApplication;
 import griffon.core.addon.GriffonAddon;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonModel;
+import griffon.core.artifact.GriffonView;
+import griffon.core.mvc.MVCGroup;
+import griffon.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +30,9 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static griffon.util.AnnotationUtils.nameFor;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
@@ -69,5 +77,23 @@ public class AbstractGriffonAddon implements GriffonAddon {
     @Override
     public void onShutdown(@Nonnull GriffonApplication application) {
         // empty
+    }
+
+    @Nonnull
+    public static Map<String, Map<String, Object>> mvcgroup(@Nonnull Class<? extends MVCGroup> g,
+                                                            @Nonnull Class<? extends GriffonModel> m,
+                                                            @Nonnull Class<? extends GriffonView> v,
+                                                            @Nonnull Class<? extends GriffonController> c) {
+        requireNonNull(g, "Argument 'g' must not be null");
+        requireNonNull(v, "Argument 'm' must not be null");
+        requireNonNull(c, "Argument 'v' must not be null");
+        requireNonNull(g, "Argument 'c' must not be null");
+
+        return CollectionUtils.<String, Map<String, Object>>map()
+            .e(nameFor(g, true), CollectionUtils.<String, Object>map()
+                .e("model", m.getName())
+                .e("view", v.getName())
+                .e("controller", c.getName())
+            );
     }
 }
