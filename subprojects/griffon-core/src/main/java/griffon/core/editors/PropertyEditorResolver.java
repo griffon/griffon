@@ -26,9 +26,9 @@ import java.beans.PropertyEditorManager;
 import java.beans.PropertyEditorSupport;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.requireNonNull;
 
@@ -47,8 +47,9 @@ public final class PropertyEditorResolver {
     @GuardedBy("LOCK")
     private static final WeakCache<String, Class<? extends PropertyEditor>> propertyEditorRegistry = new WeakCache<>();
     @GuardedBy("LOCK")
-    private static final Map<String, PropertyEditorChain> propertyEditorChainRegistry = new LinkedHashMap<>();
+    private static final Map<String, PropertyEditorChain> propertyEditorChainRegistry = new ConcurrentHashMap<>();
     private static final String ERROR_TARGET_TYPE_NULL = "Argument 'targetType' must not be null";
+    public static final PropertyEditor NOOP_PROPERTY_EDITOR = new NoopPropertyEditor();
 
     private PropertyEditorResolver() {
 
@@ -82,7 +83,7 @@ public final class PropertyEditorResolver {
     @Nonnull
     @SuppressWarnings("unchecked")
     public static PropertyEditor findEditor(@Nonnull Class<?> type) {
-        requireNonNull(type, "Argument 'type' must not be  null");
+        requireNonNull(type, ERROR_TARGET_TYPE_NULL);
         LOG.trace("Searching PropertyEditor for {}", type.getName());
 
         PropertyEditor editor;
@@ -183,7 +184,8 @@ public final class PropertyEditorResolver {
         }
     }
 
-    private static PropertyEditor doFindEditor(Class<?> targetType) {
+    @Nullable
+    private static PropertyEditor doFindEditor(@Nonnull Class<?> targetType) {
         synchronized (LOCK) {
             String targetTypeName = targetType.getName();
             if (propertyEditorChainRegistry.containsKey(targetTypeName)) {
