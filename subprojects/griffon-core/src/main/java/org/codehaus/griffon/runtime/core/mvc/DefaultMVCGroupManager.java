@@ -459,7 +459,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             for (PropertyDescriptor descriptor : getPropertyDescriptors(resolveMemberClass(member))) {
                 Method method = descriptor.getWriteMethod();
                 if (method == null || isInjectable(method)) { continue; }
-                boolean nullable = findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) == null;
+                boolean nullable = method.getAnnotation(Nonnull.class) == null && findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) == null;
                 InjectionPoint.Type type = resolveType(method);
                 Field field = fields.get(descriptor.getName());
                 if (field != null && type == InjectionPoint.Type.OTHER) {
