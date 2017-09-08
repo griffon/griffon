@@ -16,7 +16,9 @@
 package griffon.javafx.support;
 
 import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
+import griffon.javafx.artifact.ContentProvider;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.util.Builder;
 import javafx.util.BuilderFactory;
@@ -36,9 +38,9 @@ import static java.util.Objects.requireNonNull;
  * @since 2.12.0
  */
 public class GriffonBuilderFactory implements BuilderFactory {
-    private final GriffonApplication application;
-    private final MVCGroup mvcGroup;
-    private final BuilderFactory delegate;
+    protected final GriffonApplication application;
+    protected final MVCGroup mvcGroup;
+    protected final BuilderFactory delegate;
 
     public GriffonBuilderFactory(@Nonnull GriffonApplication application, @Nonnull MVCGroup mvcGroup) {
         this(application, mvcGroup, application.getApplicationClassLoader().get());
@@ -76,6 +78,10 @@ public class GriffonBuilderFactory implements BuilderFactory {
             }
 
             MVCGroup group = mvcGroup.createMVCGroup(mvcType, mvcId, toMap(getMvcArgs()));
+            GriffonView view = group.getView();
+            if (view instanceof ContentProvider) {
+                return ((ContentProvider) view).getContent();
+            }
             return group.getContext().get(group.getMvcId() + "-rootNode");
         }
 

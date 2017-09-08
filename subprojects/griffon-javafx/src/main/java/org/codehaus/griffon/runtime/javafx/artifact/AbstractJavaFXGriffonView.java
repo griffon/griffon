@@ -89,11 +89,8 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView impl
             return null;
         }
 
-        FXMLLoader fxmlLoader = new FXMLLoader(viewResource);
-        fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());
-        fxmlLoader.setBuilderFactory(new GriffonBuilderFactory(getApplication(), getMvcGroup()));
-        fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());
-        fxmlLoader.setControllerFactory(klass -> getMvcGroup().getView());
+        FXMLLoader fxmlLoader = createFxmlLoader(viewResource);
+        configureFxmlLoader(fxmlLoader);
 
         try {
             fxmlLoader.load();
@@ -110,6 +107,18 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView impl
         }
 
         return node;
+    }
+
+    @Nonnull
+    protected FXMLLoader createFxmlLoader(@Nonnull URL viewResource) {
+        return new FXMLLoader(viewResource);
+    }
+
+    protected void configureFxmlLoader(@Nonnull FXMLLoader fxmlLoader) {
+        fxmlLoader.setBuilderFactory(new GriffonBuilderFactory(getApplication(), getMvcGroup()));
+        fxmlLoader.setResources(getApplication().getMessageSource().asResourceBundle());
+        fxmlLoader.setClassLoader(getApplication().getApplicationClassLoader().get());
+        fxmlLoader.setControllerFactory(klass -> getMvcGroup().getView());
     }
 
     @Nonnull
