@@ -41,13 +41,16 @@ izpack {
 }
 
 if (macosx) {
+    File javaHome = new File(System.properties['java.home'])
+    javaHome = javaHome.name == 'jre' ? javaHome.parentFile : javaHome
+
     macAppBundle {
+        jreHome = javaHome.absolutePath
         mainClassName = project.mainClassName
         icon = 'src/media/griffon.icns'
         javaProperties.put('apple.laf.useScreenMenuBar', 'true')
     }
 }
-
 
 if (!project.hasProperty('keyAlias')) ext.keyAlias = ''
 if (!project.hasProperty('keystorePwd')) ext.keystorePwd = ''
