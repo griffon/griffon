@@ -17,12 +17,16 @@ package griffon.javafx.collections;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import org.junit.Test;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 
+import static javafx.collections.FXCollections.observableArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
@@ -31,7 +35,7 @@ public class MappingObservableListTest {
     @Test
     public void testOperations() {
         // given:
-        ObservableList<String> source = FXCollections.observableArrayList();
+        ObservableList<String> source = observableArrayList();
         Function<String, Integer> mapper = Integer::valueOf;
         ObservableList<Integer> target = new MappingObservableList<>(source, mapper);
 
@@ -67,7 +71,7 @@ public class MappingObservableListTest {
     @Test
     public void testOperationsWithObservable() {
         // given:
-        ObservableList<Integer> source = FXCollections.observableArrayList();
+        ObservableList<Integer> source = observableArrayList();
         Function<Integer, Integer> function = Function.identity();
         ObjectProperty<Function<Integer, Integer>> mapper = new SimpleObjectProperty<>(function);
         ObservableList<Integer> target = new MappingObservableList<>(source, mapper);
@@ -90,11 +94,82 @@ public class MappingObservableListTest {
 
         // when:
         source.remove(1, 4);
-        System.out.println(source);
-        System.out.println(target);
 
         // then:
         assertThat(source, contains(1, 5));
         assertThat(target, contains(2, 10));
+    }
+
+    @Test
+    public void testOperationsWithObservableBean() {
+        // given:
+        ObservableList<ObservablePerson> source = new ElementObservableList<>(observableArrayList());
+        Function<ObservablePerson, String> mapper = ObservablePerson::getName;
+        ObservableList<String> target = new MappingObservableList<>(source, mapper);
+
+        // expect:
+        assertThat(target, empty());
+
+        // when:
+        source.addAll(
+            new ObservablePerson("n1", "l1"),
+            new ObservablePerson("n2", "l2"),
+            new ObservablePerson("n3", "l3"));
+
+        // then:
+        assertThat(target, contains("n1", "n2", "n3"));
+
+        // when:
+        source.get(2).setLastname("l33");
+
+        // then:
+        assertThat(target, contains("n1", "n2", "n3"));
+
+        // when:
+        source.get(2).setName("n33");
+
+        // then:
+        assertThat(target, contains("n1", "n2", "n33"));
+    }
+
+    public static class ObservablePerson implements ElementObservableList.ObservableValueContainer {
+        private StringProperty name = new SimpleStringProperty(this, "name");
+        private StringProperty lastname = new SimpleStringProperty(this, "lastname");
+
+
+        public ObservablePerson(String name, String lastname) {
+            setName(name);
+            setLastname(lastname);
+        }
+
+        public String getName() {
+            return name.get();
+        }
+
+        public StringProperty nameProperty() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name.set(name);
+        }
+
+        public String getLastname() {
+            return lastname.get();
+        }
+
+        public StringProperty lastnameProperty() {
+            return lastname;
+        }
+
+        public void setLastname(String lastname) {
+            this.lastname.set(lastname);
+        }
+
+        @Nonnull
+        @Override
+        public ObservableValue<?>[] observableValues() {
+            return new StringProperty[]{nameProperty(), lastnameProperty()};
+        }
     }
 }
