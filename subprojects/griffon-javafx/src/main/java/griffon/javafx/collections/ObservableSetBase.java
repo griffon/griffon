@@ -20,7 +20,10 @@ import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 
+import javax.annotation.Nonnull;
 import java.util.AbstractSet;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
@@ -58,5 +61,73 @@ public abstract class ObservableSetBase<E> extends AbstractSet<E> implements Obs
      */
     protected final boolean hasListeners() {
         return SetListenerHelper.hasListeners(listenerHelper);
+    }
+
+    public static class BaseAddChange<T> extends SetChangeListener.Change<T> {
+        private final T added;
+
+        public BaseAddChange(@Nonnull ObservableSet<T> set, @Nonnull T added) {
+            super(requireNonNull(set, "Argument 'set' must not be null"));
+            this.added = requireNonNull(added, "Argument 'added' must not be null");
+        }
+
+        @Override
+        public boolean wasAdded() {
+            return true;
+        }
+
+        @Override
+        public boolean wasRemoved() {
+            return false;
+        }
+
+        @Override
+        public T getElementAdded() {
+            return added;
+        }
+
+        @Override
+        public T getElementRemoved() {
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "added " + added;
+        }
+    }
+
+    public static class BaseRemoveChange<T> extends SetChangeListener.Change<T> {
+        private final T removed;
+
+        public BaseRemoveChange(@Nonnull ObservableSet<T> set, @Nonnull T removed) {
+            super(requireNonNull(set, "Argument 'set' must not be null"));
+            this.removed = requireNonNull(removed, "Argument 'removed' must not be null");
+        }
+
+        @Override
+        public boolean wasAdded() {
+            return false;
+        }
+
+        @Override
+        public boolean wasRemoved() {
+            return true;
+        }
+
+        @Override
+        public T getElementAdded() {
+            return null;
+        }
+
+        @Override
+        public T getElementRemoved() {
+            return removed;
+        }
+
+        @Override
+        public String toString() {
+            return "removed " + removed;
+        }
     }
 }
