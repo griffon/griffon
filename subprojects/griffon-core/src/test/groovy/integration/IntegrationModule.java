@@ -69,5 +69,7 @@ public class IntegrationModule extends AbstractModule {
         bind(ActionHandler.class)
             .to(InvokeActionHandler.class)
             .asSingleton();
+
+        bind(ContextualBean.class);
     }
 }

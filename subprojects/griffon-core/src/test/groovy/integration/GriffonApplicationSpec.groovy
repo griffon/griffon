@@ -35,6 +35,8 @@ import griffon.core.env.ApplicationPhase
 import griffon.core.env.Lifecycle
 import griffon.core.mvc.MVCFunction
 import griffon.core.mvc.MVCGroup
+import griffon.exceptions.InstanceNotFoundException
+import griffon.exceptions.NewInstanceException
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
 import spock.lang.Shared
 import spock.lang.Specification
@@ -1011,6 +1013,28 @@ class GriffonApplicationSpec extends Specification {
         bean.pboolean
         bean.pdate.clearTime() == Date.parse('yyyy/MM/dd', '2000/01/01').clearTime()
         bean.customString == 'custom'
+    }
+
+    def 'Verify contextual injection on non-griffon artifact (success)'() {
+        given:
+        application.context.put('someKey', 'someValue')
+
+        when:
+        ContextualBean contextualBean = application.injector.getInstance(ContextualBean)
+
+        then:
+        contextualBean.someKey == 'someValue'
+    }
+
+    def 'Verify contextual injection on non-griffon artifact (failure)'() {
+        given:
+        application.context.remove('someKey')
+
+        when:
+        application.injector.getInstance(ContextualBean)
+
+        then:
+        thrown(InstanceNotFoundException)
     }
 
     private
