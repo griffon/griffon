@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.beans.PropertyEditor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -35,8 +36,8 @@ public class MethodInjectionPoint extends InjectionPoint {
     private final Method writeMethod;
     private final Class type;
 
-    public MethodInjectionPoint(@Nonnull Method writeMethod, @Nonnull String configuration, @Nonnull String key, @Nonnull String format) {
-        super(configuration, key, format);
+    public MethodInjectionPoint(@Nonnull Method writeMethod, @Nonnull String configuration, @Nonnull String key, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
+        super(configuration, key, format, editor);
         this.writeMethod = requireNonNull(writeMethod, "Argument 'writeMethod' must not be null");
         this.type = writeMethod.getParameterTypes()[0];
     }
@@ -70,6 +71,7 @@ public class MethodInjectionPoint extends InjectionPoint {
         sb.append(", configuration='").append(getConfiguration()).append('\'');
         sb.append(", key='").append(getKey()).append('\'');
         sb.append(", format='").append(getFormat()).append('\'');
+        sb.append(", editor='").append(getEditor()).append('\'');
         sb.append('}');
         return sb.toString();
     }

@@ -15,6 +15,9 @@
  */
 package griffon.core.configuration;
 
+import griffon.core.editors.PropertyEditorResolver;
+
+import java.beans.PropertyEditor;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -27,11 +30,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface Configured {
+    String NO_VALUE = "!!<<== NO_VALUE ==>>!!";
+
     String configuration() default "";
 
     String value();
 
-    String defaultValue() default "";
+    String defaultValue() default NO_VALUE;
 
     String format() default "";
+
+    Class<? extends PropertyEditor> editor() default PropertyEditorResolver.NoopPropertyEditor.class;
 }

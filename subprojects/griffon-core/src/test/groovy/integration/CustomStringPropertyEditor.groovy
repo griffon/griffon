@@ -15,29 +15,19 @@
  */
 package integration
 
-import griffon.core.configuration.Configured
+import java.beans.PropertyEditorSupport
 
-import javax.annotation.Nonnull
-
-class ConfigurableBean {
-    private String pstring
-
-    @Configured(value = 'keys.key2', defaultValue = 'true')
-    boolean pboolean
-
-    @Configured(value = 'keys.key3', defaultValue = '01/01/2000', format = 'dd/MM/yyyy')
-    Date pdate
-
-    @Nonnull
-    String getPstring() {
-        return pstring
+/**
+ * @author Andres Almiray
+ */
+class CustomStringPropertyEditor extends PropertyEditorSupport {
+    @Override
+    String getAsText() {
+        return '*' + super.getAsText() + '*'
     }
 
-    @Configured('keys.key1')
-    void setPstring(String pstring) {
-        this.pstring = pstring
+    @Override
+    void setAsText(String text) throws IllegalArgumentException {
+        setValue(text[1..-2].toString())
     }
-
-    @Configured(value='keys.key4', defaultValue = '*custom*', editor = CustomStringPropertyEditor)
-    String customString
 }

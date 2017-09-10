@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.configuration;
 
 import javax.annotation.Nonnull;
+import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 
 import static java.util.Objects.requireNonNull;
@@ -27,8 +28,8 @@ import static java.util.Objects.requireNonNull;
 public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
     private final Field field;
 
-    public FieldConfigurationDescriptor(@Nonnull Field field, @Nonnull String configuration, @Nonnull String key, @Nonnull String defaultValue, @Nonnull String format) {
-        super(configuration, key, defaultValue, format);
+    public FieldConfigurationDescriptor(@Nonnull Field field, @Nonnull String configuration, @Nonnull String key, @Nonnull String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
+        super(configuration, key, defaultValue, format, editor);
         this.field = requireNonNull(field, "Argument 'field' must not be null");
     }
 
@@ -39,7 +40,7 @@ public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
 
     @Nonnull
     public InjectionPoint asInjectionPoint() {
-        return new FieldInjectionPoint(field, getConfiguration(), getKey(), getFormat());
+        return new FieldInjectionPoint(field, getConfiguration(), getKey(), getFormat(), getEditor());
     }
 
     @Override
@@ -50,6 +51,7 @@ public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
         sb.append(", key='").append(getKey()).append('\'');
         sb.append(", defaultValue='").append(getDefaultValue()).append('\'');
         sb.append(", format='").append(getFormat()).append('\'');
+        sb.append(", editor='").append(getEditor()).append('\'');
         sb.append('}');
         return sb.toString();
     }

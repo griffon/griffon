@@ -29,4 +29,6 @@ public interface ConfigurationManager {
 
     @Nonnull
     Configuration getConfiguration(@Nonnull String name);
+
+    void injectConfiguration(@Nonnull Object instance);
 }

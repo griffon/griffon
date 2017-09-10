@@ -23,6 +23,7 @@ import griffon.core.configuration.ConfigurationManager;
 import griffon.core.configuration.Configured;
 import griffon.core.editors.ExtendedPropertyEditor;
 import griffon.core.editors.PropertyEditorResolver;
+import griffon.exceptions.GriffonException;
 import griffon.util.GriffonClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,8 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
         });
     }
 
-    protected void injectConfiguration(@Nonnull Object instance) {
+    @Override
+    public void injectConfiguration(@Nonnull Object instance) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
         Map<String, ConfigurationDescriptor> descriptors = new LinkedHashMap<>();
@@ -99,7 +101,9 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
             String configuration = annotation.configuration().trim();
             String key = annotation.value();
             String defaultValue = annotation.defaultValue();
+            defaultValue = Configured.NO_VALUE.equals(defaultValue) ? null : defaultValue;
             String format = annotation.format();
+            Class<? extends PropertyEditor> editor = annotation.editor();
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Property " + propertyName +
@@ -110,7 +114,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
                     "', format='" + format +
                     "'] is marked for configuration injection.");
             }
-            descriptors.put(propertyName, new MethodConfigurationDescriptor(writeMethod, configuration, key, defaultValue, format));
+            descriptors.put(propertyName, new MethodConfigurationDescriptor(writeMethod, configuration, key, defaultValue, format, editor));
         }
 
         for (Field field : currentClass.getDeclaredFields()) {
@@ -125,7 +129,9 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
             String configuration = annotation.configuration().trim();
             String key = annotation.value();
             String defaultValue = annotation.defaultValue();
+            defaultValue = Configured.NO_VALUE.equals(defaultValue) ? null : defaultValue;
             String format = annotation.format();
+            Class<? extends PropertyEditor> editor = annotation.editor();
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Field " + fqFieldName +
@@ -137,18 +143,21 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
                     "'] is marked for configuration injection.");
             }
 
-            descriptors.put(field.getName(), new FieldConfigurationDescriptor(field, configuration, key, defaultValue, format));
+            descriptors.put(field.getName(), new FieldConfigurationDescriptor(field, configuration, key, defaultValue, format, editor));
         }
     }
 
     protected void doConfigurationInjection(@Nonnull Object instance, @Nonnull Map<String, ConfigurationDescriptor> descriptors) {
         for (ConfigurationDescriptor descriptor : descriptors.values()) {
             Object value = resolveConfiguration(descriptor.getConfiguration(), descriptor.getKey(), descriptor.getDefaultValue());
-            InjectionPoint injectionPoint = descriptor.asInjectionPoint();
-            if (!injectionPoint.getType().isAssignableFrom(value.getClass())) {
-                value = convertValue(injectionPoint.getType(), value, descriptor.getFormat());
+
+            if (value != null) {
+                InjectionPoint injectionPoint = descriptor.asInjectionPoint();
+                if (!isNoopPropertyEditor(descriptor.getEditor()) || !injectionPoint.getType().isAssignableFrom(value.getClass())) {
+                    value = convertValue(injectionPoint.getType(), value, descriptor.getFormat(), descriptor.getEditor());
+                }
+                injectionPoint.setValue(instance, value);
             }
-            injectionPoint.setValue(instance, value);
         }
     }
 
@@ -167,11 +176,12 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     }
 
     @Nonnull
-    protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format) {
+    protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
         requireNonNull(type, ERROR_TYPE_NULL);
         requireNonNull(value, ERROR_VALUE_NULL);
-        PropertyEditor propertyEditor = resolvePropertyEditor(type, format);
-        if (propertyEditor instanceof PropertyEditorResolver.NoopPropertyEditor) { return value; }
+
+        PropertyEditor propertyEditor = resolvePropertyEditor(type, format, editor);
+        if (isNoopPropertyEditor(propertyEditor.getClass())) { return value; }
         if (value instanceof CharSequence) {
             propertyEditor.setAsText(String.valueOf(value));
         } else {
@@ -181,12 +191,27 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     }
 
     @Nonnull
-    protected PropertyEditor resolvePropertyEditor(@Nonnull Class<?> type, @Nullable String format) {
+    protected PropertyEditor resolvePropertyEditor(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
         requireNonNull(type, ERROR_TYPE_NULL);
-        PropertyEditor propertyEditor = findEditor(type);
+
+        PropertyEditor propertyEditor = null;
+        if (isNoopPropertyEditor(editor)) {
+            propertyEditor = findEditor(type);
+        } else {
+            try {
+                propertyEditor = editor.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new GriffonException("Could not instantiate editor with " + editor, e);
+            }
+        }
+
         if (propertyEditor instanceof ExtendedPropertyEditor) {
             ((ExtendedPropertyEditor) propertyEditor).setFormat(format);
         }
         return propertyEditor;
+    }
+
+    protected boolean isNoopPropertyEditor(@Nonnull Class<? extends PropertyEditor> editor) {
+        return PropertyEditorResolver.NoopPropertyEditor.class.isAssignableFrom(editor);
     }
 }

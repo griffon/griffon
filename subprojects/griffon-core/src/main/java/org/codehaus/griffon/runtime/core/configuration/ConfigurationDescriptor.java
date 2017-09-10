@@ -17,6 +17,8 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import javax.annotation.Nonnull;
 
+import java.beans.PropertyEditor;
+
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 
 /**
@@ -28,12 +30,14 @@ public abstract class ConfigurationDescriptor {
     private final String key;
     private final String defaultValue;
     private final String format;
+    private final Class<? extends PropertyEditor> editor;
 
-    public ConfigurationDescriptor(@Nonnull String configuration, @Nonnull String key, @Nonnull String defaultValue, @Nonnull String format) {
+    public ConfigurationDescriptor(@Nonnull String configuration, @Nonnull String key, @Nonnull String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
         this.configuration = configuration;
         this.key = requireNonBlank(key, "Argument 'key' must not be blank");
         this.defaultValue = defaultValue;
         this.format = format;
+        this.editor = editor;
     }
 
     @Nonnull
@@ -54,6 +58,11 @@ public abstract class ConfigurationDescriptor {
     @Nonnull
     public String getFormat() {
         return format;
+    }
+
+    @Nonnull
+    public Class<? extends PropertyEditor> getEditor() {
+        return editor;
     }
 
     @Nonnull

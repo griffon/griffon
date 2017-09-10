@@ -1010,6 +1010,7 @@ class GriffonApplicationSpec extends Specification {
         bean.pstring == 'value1'
         bean.pboolean
         bean.pdate.clearTime() == Date.parse('yyyy/MM/dd', '2000/01/01').clearTime()
+        bean.customString == 'custom'
     }
 
     private
