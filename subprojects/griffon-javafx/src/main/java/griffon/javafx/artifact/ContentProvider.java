@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray
- * @since 2.12.1
+ * @since 2.13.0
  */
 public interface ContentProvider {
     @Nonnull
