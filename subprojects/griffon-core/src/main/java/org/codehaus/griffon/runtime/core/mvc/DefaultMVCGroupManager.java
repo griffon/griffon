@@ -604,11 +604,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void destroyContextualMemberProperties(@Nonnull String type, @Nonnull GriffonArtifact member) {
         for (Field field : getAllDeclaredFields(member.getTypeClass())) {
-            if (isContextual(field)) {
+            if (isContextual(field) && !field.getType().isPrimitive()) {
                 try {
                     setFieldValue(member, field.getName(), null);
                 } catch (FieldException e) {
-                    throw new IllegalStateException("Could not nullify field " +
+                    throw new IllegalStateException("Could not nullify field '" +
                         field.getName() + "' in " + type + " (" + member.getTypeClass().getName() + ")", e);
                 }
             }
