@@ -24,6 +24,8 @@ import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
+import griffon.core.editors.ExtendedPropertyEditor;
+import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.FieldException;
@@ -43,9 +45,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -55,9 +57,11 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.namesFor;
+import static griffon.util.AnnotationUtils.parameterTypeAt;
 import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
 import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
 import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
@@ -77,12 +81,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);
-    private static final String CONFIG_KEY_COMPONENT = "component";
-    private static final String CONFIG_KEY_EVENTS_LIFECYCLE = "events.lifecycle";
-    private static final String CONFIG_KEY_EVENTS_INSTANTIATION = "events.instantiation";
-    private static final String CONFIG_KEY_EVENTS_DESTRUCTION = "events.destruction";
-    private static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
-    private static final String KEY_PARENT_GROUP = "parentGroup";
+
+    protected static final String ERROR_VALUE_NULL = "Argument 'value' must not be null";
+    protected static final String CONFIG_KEY_COMPONENT = "component";
+    protected static final String CONFIG_KEY_EVENTS_LIFECYCLE = "events.lifecycle";
+    protected static final String CONFIG_KEY_EVENTS_INSTANTIATION = "events.instantiation";
+    protected static final String CONFIG_KEY_EVENTS_DESTRUCTION = "events.destruction";
+    protected static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
+    protected static final String KEY_PARENT_GROUP = "parentGroup";
 
     protected final ApplicationClassLoader applicationClassLoader;
     protected final Instantiator instantiator;
@@ -316,28 +322,73 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     protected abstract static class InjectionPoint {
         protected final String name;
         protected final boolean nullable;
-        protected final Type type;
+        protected final Kind kind;
+        protected final Class<?> type;
+        protected final String format;
+        protected final Class<? extends PropertyEditor> editor;
 
-        protected InjectionPoint(String name, boolean nullable, Type type) {
+        protected InjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, String format, Class<? extends PropertyEditor> editor) {
             this.name = name;
             this.nullable = nullable;
-            this.type = type;
+            this.kind = kind;
+            this.type = type; this.format = format;
+            this.editor = editor;
         }
 
-        protected enum Type {
+        protected enum Kind {
             MEMBER,
             CONTEXTUAL,
             OTHER
         }
 
         protected abstract void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args);
+
+        @Nonnull
+        protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
+            requireNonNull(type, ERROR_TYPE_NULL);
+            requireNonNull(value, ERROR_VALUE_NULL);
+
+            PropertyEditor propertyEditor = resolvePropertyEditor(type, format, editor);
+            if (isNoopPropertyEditor(propertyEditor.getClass())) { return value; }
+            if (value instanceof CharSequence) {
+                propertyEditor.setAsText(String.valueOf(value));
+            } else {
+                propertyEditor.setValue(value);
+            }
+            return propertyEditor.getValue();
+        }
+
+        @Nonnull
+        protected PropertyEditor resolvePropertyEditor(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
+            requireNonNull(type, ERROR_TYPE_NULL);
+
+            PropertyEditor propertyEditor = null;
+            if (isNoopPropertyEditor(editor)) {
+                propertyEditor = findEditor(type);
+            } else {
+                try {
+                    propertyEditor = editor.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new GriffonException("Could not instantiate editor with " + editor, e);
+                }
+            }
+
+            if (propertyEditor instanceof ExtendedPropertyEditor) {
+                ((ExtendedPropertyEditor) propertyEditor).setFormat(format);
+            }
+            return propertyEditor;
+        }
+
+        protected boolean isNoopPropertyEditor(@Nonnull Class<? extends PropertyEditor> editor) {
+            return PropertyEditorResolver.NoopPropertyEditor.class.isAssignableFrom(editor);
+        }
     }
 
     protected static class FieldInjectionPoint extends InjectionPoint {
         protected final Field field;
 
-        protected FieldInjectionPoint(String name, boolean nullable, Type type, Field field) {
-            super(name, nullable, type);
+        protected FieldInjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, Field field, String format, Class<? extends PropertyEditor> editor) {
+            super(name, nullable, kind, type, format, editor);
             this.field = field;
         }
 
@@ -346,7 +397,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             String[] keys = namesFor(field);
             Object argValue = args.get(name);
 
-            if (type == Type.CONTEXTUAL) {
+            if (kind == Kind.CONTEXTUAL) {
                 for (String key : keys) {
                     if (group.getContext().containsKey(key)) {
                         argValue = group.getContext().get(key);
@@ -355,30 +406,32 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 }
             }
 
-            if (argValue == null) {
-                if (!nullable) {
-                    if (type == Type.CONTEXTUAL) {
-                        throw new IllegalStateException("Could not find an instance of type " +
-                            field.getType().getName() + " under keys '" + Arrays.toString(keys) +
-                            "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
-                            "] to be injected on field '" + field.getName() +
-                            "' in " + type + " (" + resolveMemberClass(instance).getName() + "). Field does not accept null values.");
-                    } else if (type == Type.MEMBER) {
-                        throw new IllegalStateException("Could not inject argument on field '"
-                            + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
-                            "). Field does not accept null values.");
-                    }
-                }
-                return;
-            }
-
             try {
+                if (argValue == null) {
+                    if (!nullable) {
+                        if (kind == Kind.CONTEXTUAL) {
+                            throw new IllegalStateException("Could not find an instance of type " +
+                                field.getType().getName() + " under keys '" + Arrays.toString(keys) +
+                                "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
+                                "] to be injected on field '" + field.getName() +
+                                "' in " + kind + " (" + resolveMemberClass(instance).getName() + "). Field does not accept null values.");
+                        } else if (kind == Kind.MEMBER) {
+                            throw new IllegalStateException("Could not inject argument on field '"
+                                + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
+                                "). Field does not accept null values.");
+                        }
+                    }
+                    return;
+                } else if (kind == Kind.MEMBER && (!isNoopPropertyEditor(editor) || !type.isAssignableFrom(argValue.getClass()))) {
+                    argValue = convertValue(type, argValue, format, editor);
+                }
+
                 setFieldValue(instance, name, argValue);
-                if (type == Type.OTHER) {
+                if (kind == Kind.OTHER) {
                     LOG.warn("Field '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
                         ") must be annotated with @" + MVCMember.class.getName() + ".");
                 }
-            } catch (FieldException e) {
+            } catch (Exception e) {
                 throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
             }
         }
@@ -387,14 +440,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     protected static class MethodInjectionPoint extends InjectionPoint {
         protected final Method method;
 
-        protected MethodInjectionPoint(String name, boolean nullable, Type type, Method method) {
-            super(name, nullable, type);
+        protected MethodInjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, Method method, String format, Class<? extends PropertyEditor> editor) {
+            super(name, nullable, kind, type, format, editor);
             this.method = method;
         }
 
         @Override
         protected void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args) {
-            if (type == Type.CONTEXTUAL) {
+            if (kind == Kind.CONTEXTUAL) {
                 String[] keys = namesFor(method);
                 Object argValue = args.get(name);
 
@@ -405,39 +458,41 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     }
                 }
 
-                if (argValue == null && !nullable) {
-                    throw new IllegalStateException("Could not find an instance of type " +
-                        method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
-                        "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
-                        "] to be injected on property '" + name +
-                        "' in " + type + " (" + resolveMemberClass(instance).getName() + "). Property does not accept null values.");
-                }
-
                 try {
+                    if (argValue == null && !nullable) {
+                        throw new IllegalStateException("Could not find an instance of type " +
+                            method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
+                            "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
+                            "] to be injected on property '" + name +
+                            "' in " + kind + " (" + resolveMemberClass(instance).getName() + "). Property does not accept null values.");
+                    }
+
                     method.invoke(instance, argValue);
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                } catch (Exception e) {
                     throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
                 }
             } else {
-                Object argValue = args.get(name);
-                if (argValue == null) {
-                    if (!nullable) {
-                        if (type == Type.MEMBER) {
-                            throw new IllegalStateException("Could not inject argument on property '" +
-                                name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
-                                "). Property does not accept null values.");
-                        }
-                    }
-                    return;
-                }
-
                 try {
+                    Object argValue = args.get(name);
+                    if (argValue == null) {
+                        if (!nullable) {
+                            if (kind == Kind.MEMBER) {
+                                throw new IllegalStateException("Could not inject argument on property '" +
+                                    name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
+                                    "). Property does not accept null values.");
+                            }
+                        }
+                        return;
+                    } else if (kind == Kind.MEMBER && (!isNoopPropertyEditor(editor) || !type.isAssignableFrom(argValue.getClass()))) {
+                        argValue = convertValue(type, argValue, format, editor);
+                    }
+
                     method.invoke(instance, argValue);
-                    if (type == Type.OTHER) {
+                    if (kind == Kind.OTHER) {
                         LOG.warn("Property '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
                             ") must be annotated with @" + MVCMember.class.getName() + ".");
                     }
-                } catch (IllegalAccessException | InvocationTargetException e) {
+                } catch (Exception e) {
                     throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
                 }
             }
@@ -459,22 +514,31 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             for (PropertyDescriptor descriptor : getPropertyDescriptors(resolveMemberClass(member))) {
                 Method method = descriptor.getWriteMethod();
                 if (method == null || isInjectable(method)) { continue; }
+                Class<?> type = parameterTypeAt(method, 0);
                 boolean nullable = method.getAnnotation(Nonnull.class) == null && findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) == null;
-                InjectionPoint.Type type = resolveType(method);
+                InjectionPoint.Kind kind = resolveKind(method);
+                String format = resolveFormat(method);
+                Class<? extends PropertyEditor> editor = resolveEditor(method);
                 Field field = fields.get(descriptor.getName());
-                if (field != null && type == InjectionPoint.Type.OTHER) {
-                    type = resolveType(field);
+                if (field != null && kind == InjectionPoint.Kind.OTHER) {
+                    kind = resolveKind(field);
                     nullable = field.getAnnotation(Nonnull.class) == null;
+                    type = field.getType();
+                    format = resolveFormat(field);
+                    editor = resolveEditor(field);
                 }
-                injectionPoints.put(descriptor.getName(), new MethodInjectionPoint(descriptor.getName(), nullable, type, method));
+                injectionPoints.put(descriptor.getName(), new MethodInjectionPoint(descriptor.getName(), nullable, kind, type, method, format, editor));
             }
 
             for (Field field : getAllDeclaredFields(resolveMemberClass(member))) {
                 if (Modifier.isStatic(field.getModifiers()) || isInjectable(field)) { continue; }
                 if (!injectionPoints.containsKey(field.getName())) {
                     boolean nullable = field.getAnnotation(Nonnull.class) == null;
-                    InjectionPoint.Type type = resolveType(field);
-                    injectionPoints.put(field.getName(), new FieldInjectionPoint(field.getName(), nullable, type, field));
+                    InjectionPoint.Kind kind = resolveKind(field);
+                    Class<?> type = field.getType();
+                    String format = resolveFormat(field);
+                    Class<? extends PropertyEditor> editor = resolveEditor(field);
+                    injectionPoints.put(field.getName(), new FieldInjectionPoint(field.getName(), nullable, kind, type, field, format, editor));
                 }
             }
 
@@ -499,13 +563,29 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     @Nonnull
-    protected InjectionPoint.Type resolveType(@Nonnull AnnotatedElement element) {
+    protected InjectionPoint.Kind resolveKind(@Nonnull AnnotatedElement element) {
         if (isContextual(element)) {
-            return InjectionPoint.Type.CONTEXTUAL;
+            return InjectionPoint.Kind.CONTEXTUAL;
         } else if (isMvcMember(element)) {
-            return InjectionPoint.Type.MEMBER;
+            return InjectionPoint.Kind.MEMBER;
         }
-        return InjectionPoint.Type.OTHER;
+        return InjectionPoint.Kind.OTHER;
+    }
+
+    @Nonnull
+    protected String resolveFormat(@Nonnull AnnotatedElement element) {
+        if (isMvcMember(element)) {
+            return element.getAnnotation(MVCMember.class).format();
+        }
+        return "";
+    }
+
+    @Nonnull
+    protected Class<? extends PropertyEditor> resolveEditor(@Nonnull AnnotatedElement element) {
+        if (isMvcMember(element)) {
+            return element.getAnnotation(MVCMember.class).editor();
+        }
+        return PropertyEditorResolver.NoopPropertyEditor.class;
     }
 
     protected boolean isContextual(AnnotatedElement element) {

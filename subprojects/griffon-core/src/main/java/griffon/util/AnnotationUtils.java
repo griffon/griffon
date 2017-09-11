@@ -366,13 +366,19 @@ public class AnnotationUtils {
     }
 
     @Nonnull
-    public static Annotation[] annotationsOfMethodParameter(@Nonnull Method method, int paramIndex) {
+    public static Class<?> parameterTypeAt(@Nonnull Method method, int index) {
         requireNonNull(method, "Argument 'method' must not be null");
 
         Class<?>[] parameterTypes = method.getParameterTypes();
-        requireState(parameterTypes != null && parameterTypes.length > paramIndex, "Index " + paramIndex + " is out of bounds");
+        requireState(parameterTypes != null && parameterTypes.length >= index, "Index " + index + " is out of bounds");
 
-        return method.getParameterAnnotations()[paramIndex];
+        return parameterTypes[index];
+    }
+
+    @Nonnull
+    public static Annotation[] annotationsOfMethodParameter(@Nonnull Method method, int index) {
+        parameterTypeAt(method, index);
+        return method.getParameterAnnotations()[index];
     }
 
     @Nonnull

@@ -22,12 +22,19 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChildController extends AbstractGriffonController {
     private ChildModel model;
     private ChildView view;
     private MVCGroup parentGroup;
     private RootController parentController;
+
+    @MVCMember(editor = ListPropertyEditor.class)
+    private List<String> list1 = new ArrayList<>();
+    private List<String> list2 = new ArrayList<>();
+    private List<String> list3 = new ArrayList<>();
 
     @Contextual @Named("KEY")
     private String value;
@@ -78,5 +85,30 @@ public class ChildController extends AbstractGriffonController {
     @MVCMember
     public void setParentController(@Nonnull RootController parentController) {
         this.parentController = parentController;
+    }
+
+    @Nonnull
+    public List<String> getList1() {
+        return list1;
+    }
+
+    @MVCMember(editor = ListPropertyEditor.class)
+    public void setList2(List<String> list) {
+        this.list2.addAll(list);
+    }
+
+    @Nonnull
+    public List<String> getList2() {
+        return list2;
+    }
+
+    @MVCMember
+    public void setList3(List<String> list) {
+        this.list3.addAll(list);
+    }
+
+    @Nonnull
+    public List<String> getList3() {
+        return list3;
     }
 }
