@@ -16,8 +16,6 @@
     <properties>
         <griffon.version>${griffon_version}</griffon.version>
         <application.main.class>${project_package}.Launcher</application.main.class>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <application_name>\${project.name}</application_name>
         <application_version>\${project.version}</application_version>
         <build_date>\${git.build.time}</build_date>
@@ -26,17 +24,17 @@
     </properties>
 
     <build>
+        <!-- Uncomment if project is versioned using Git
+        <filters>
+            <filter>\${project.build.outputDirectory}/git.properties</filter>
+        </filters>
+        -->
         <plugins>
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
             </plugin>
         </plugins>
-        <!-- Uncomment if project is versioned using Git
-        <filters>
-            <filter>\${project.build.outputDirectory}/git.properties</filter>
-        </filters>
-        -->
     </build>
 
     <dependencies>
