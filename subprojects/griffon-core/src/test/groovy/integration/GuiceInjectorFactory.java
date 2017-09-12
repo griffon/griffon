@@ -240,7 +240,6 @@ public class GuiceInjectorFactory implements InjectorFactory {
                 String[] keys = namesFor(field);
                 Object argValue = null;
 
-
                 for (String key : keys) {
                     if (context.containsKey(key)) {
                         argValue = context.get(key);
@@ -249,11 +248,14 @@ public class GuiceInjectorFactory implements InjectorFactory {
                 }
 
                 try {
-                    if (argValue == null && !nullable) {
-                        throw new IllegalStateException("Could not find an instance of type " +
-                            field.getType().getName() + " under keys '" + Arrays.toString(keys) +
-                            "' in the application context to be injected on field '" + field.getName() +
-                            "' in " + instance.getClass().getName() + ". Field does not accept null values.");
+                    if (argValue == null) {
+                        if (!nullable) {
+                            throw new IllegalStateException("Could not find an instance of type " +
+                                field.getType().getName() + " under keys '" + Arrays.toString(keys) +
+                                "' in the application context to be injected on field '" + field.getName() +
+                                "' in " + instance.getClass().getName() + ". Field does not accept null values.");
+                        }
+                        return;
                     }
 
                     setFieldValue(instance, name, argValue);
@@ -286,11 +288,13 @@ public class GuiceInjectorFactory implements InjectorFactory {
                 }
 
                 try {
-                    if (argValue == null && !nullable) {
-                        throw new IllegalStateException("Could not find an instance of type " +
-                            method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
-                            "' in the application context to be injected on property '" + name +
-                            "' in " + instance.getClass().getName() + "). Property does not accept null values.");
+                    if (argValue == null) {
+                        if (!nullable) {
+                            throw new IllegalStateException("Could not find an instance of type " +
+                                method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
+                                "' in the application context to be injected on property '" + name +
+                                "' in " + instance.getClass().getName() + "). Property does not accept null values.");
+                        } return;
                     }
 
                     method.invoke(instance, argValue);
