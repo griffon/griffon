@@ -1,0 +1,121 @@
+= Griffon 2.13.0 Release Notes
+Andres Almiray
+2017-12-01
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.13.0/api/griffon/core
+
+=== Dependencies
+
+The following dependencies have been upgraded
+
+
+
+=== Runtime
+
+==== Custom PropertyEditor support for @Configured and @MVCMember
+
+There may be times when a value coming from a `Configuration` instance or set as an MVC argument is not of the desired
+type. Normally the value would be converted using the predefined set of `PropertyEditor``s`available to the application,
+however you can't specify the format if needed. Now it's possible to do so, for example say there's a configuration key
+with the following value
+
+[source, java]
+.griffon-app/resources/Config.properties
+----
+numbers = 1, 2, 3
+----
+
+And a `Controller` class defined as follows
+
+[source, java]
+.griffon-app/coontrollers/org/example/SampleController.java
+----
+package org.example;
+
+import griffon.core.artifact.GriffonController;
+import griffon.core.configuration.Configured;
+import griffon.metadata.ArtifactProviderFor;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+
+import java.util.List;
+
+@ArtifactProviderFor(GriffonController.class)
+public class BarController extends AbstractGriffonController {
+    @Configured(value = "numbers")
+    private List<String> numbers;
+
+    ...
+}
+----
+
+Running the application results in an error because the runtime can convert a `java.lang.String` value into a
+`java.util.List` one. Ammending the code with the following settings will make it work
+
+[source, java]
+.griffon-app/coontrollers/org/example/SampleController.java
+----
+package org.example;
+
+import griffon.core.artifact.GriffonController;
+import griffon.core.configuration.Configured;
+import griffon.metadata.ArtifactProviderFor;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.beans.PropertyEditorSupport;
+import griffon.util.GriffonNameUtils;
+
+@ArtifactProviderFor(GriffonController.class)
+public class BarController extends AbstractGriffonController {
+    @Configured(value = "numbers", editor = ListPropertyEditor.class)
+    private List<String> numbers;
+
+    ...
+
+    public static class ListPropertyEditor extends PropertyEditorSupport {
+        @Override
+        public String getAsText() {
+            Object value = getValue();
+            return value != null ? value.toString() : "";
+        }
+
+        @Override
+        public void setAsText(String text) throws IllegalArgumentException {
+            if (GriffonNameUtils.isBlank(text)) {
+                setValue(new ArrayList<>());
+            } else {
+                List<String> value = new ArrayList<String>();
+                for(String s : text.trim().split(",")) {
+                    value.add(s.trim());
+                }
+                setValue(value);
+            }
+        }
+    }
+}
+----
+
+==== @Contextual injection support for non-griffon artifacts
+
+On previous versions you could define a `@Contextual` injection on a `Model`, `View`, or `Controller` MVC member. It's
+now possible to do the same for non-griffon artifacts with the restriction that said injections will only take place
+when an instance is requested to the Injector after the `Initialize` phase has ended. Also, contextaul injections made
+in this way will occur before any method annotated with `@PostConstruct` is invoked. Contextual values will be supplied
+by the application's global context.
+
+=== Buildtime
+
+
+=== Compatibility
+
+
+Full binary compatibility report between Griffon 2.13.0 and 2.12.0 can be found
+link:../reports/2.13.0/compatibility-report.html[here].
+
+A list of fixed issues can be found at the
+link:https://github.com/griffon/griffon/issues?q=milestone%3A2.13.0+is%3Aclosed[2.13.0 milestone] page.
