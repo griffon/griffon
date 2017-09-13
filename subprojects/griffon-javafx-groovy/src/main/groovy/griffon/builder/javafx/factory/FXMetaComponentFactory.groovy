@@ -20,6 +20,7 @@ import griffon.core.GriffonApplication
 import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
 import griffon.core.mvc.MVCGroupManager
+import griffon.javafx.artifact.ContentProvider
 import groovyx.javafx.factory.AbstractNodeFactory
 import javafx.scene.Node
 
@@ -53,7 +54,8 @@ class FXMetaComponentFactory extends AbstractNodeFactory {
         MVCGroup parentGroup = builder.getVariables().get(CURRENT_MVCGROUP)
         def receiver = parentGroup ?: builder.application.mvcGroupManager
         MVCGroup mvcGroup = receiver.createMVCGroup(mvcType, mvcId, mvcArgs)
-        def root = mvcGroup.rootNode
+        def view = mvcGroup.view
+        def root = view instanceof ContentProvider? view.content : mvcGroup.rootNode
 
         new DestroyEventHandler(mvcId, mvcGroup, builder.application)
 
