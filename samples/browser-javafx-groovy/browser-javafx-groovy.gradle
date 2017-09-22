@@ -65,6 +65,12 @@ sourceSets {
     }
 }
 
-javafx {
-    mainClass = mainClassName
+jfx {
+    mainClass         = mainClassName
+    allPermissions    = true
+    keyStoreAlias     = 'example-user'
+    keyStorePassword  = 'example-password'
+    jfxMainAppJarName = jar.archiveName
+    appName           = project.name
+    vendor            = project.name
 }

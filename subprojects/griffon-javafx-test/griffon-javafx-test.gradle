@@ -16,14 +16,11 @@
 
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
-apply from: rootProject.file('gradle/javafx.gradle')
 
 dependencies {
     compile project(':griffon-javafx')
     compile project(':griffon-core-test')
     compile "org.testfx:testfx-core:$testfxVersion"
-    compileOnly project.files(project.jfxrtLocation)
 
     testRuntime project(':griffon-guice')
-    testCompile project.files(project.jfxrtLocation)
 }

@@ -42,8 +42,14 @@ apply from: rootProject.file('client/calculator-client-common/gradle/code-qualit
 apply from: rootProject.file('client/calculator-client-common/gradle/javafx-plugin.gradle')
 apply from: rootProject.file('client/calculator-client-common/gradle/docs.gradle')
 
-javafx {
-    mainClass = mainClassName
+jfx {
+    mainClass         = mainClassName
+    allPermissions    = true
+    keyStoreAlias     = 'example-user'
+    keyStorePassword  = 'example-password'
+    jfxMainAppJarName = jar.archiveName
+    appName           = project.name
+    vendor            = project.name
 }
 
 dependencies {

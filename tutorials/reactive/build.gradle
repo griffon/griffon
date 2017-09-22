@@ -54,8 +54,14 @@ apply from: 'gradle/docs.gradle'
 apply plugin: 'org.kordamp.gradle.stats'
 apply plugin: 'com.github.ben-manes.versions'
 
-javafx {
-    mainClass = mainClassName
+jfx {
+    mainClass         = mainClassName
+    allPermissions    = true
+    keyStoreAlias     = 'example-user'
+    keyStorePassword  = 'example-password'
+    jfxMainAppJarName = jar.archiveName
+    appName           = project.name
+    vendor            = project.name
 }
 
 dependencies {

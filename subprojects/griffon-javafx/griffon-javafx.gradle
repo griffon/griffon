@@ -16,15 +16,12 @@
 
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
-apply from: rootProject.file('gradle/javafx.gradle')
 
 dependencies {
     compile project(':griffon-core')
 
-    compileOnly project.files(project.jfxrtLocation)
     compileOnly project(':griffon-core-compile')
 
-    testCompile project.files(project.jfxrtLocation)
     testCompile "org.awaitility:awaitility:$awaitilityVersion"
     testCompile("org.awaitility:awaitility-groovy:$awaitilityVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'

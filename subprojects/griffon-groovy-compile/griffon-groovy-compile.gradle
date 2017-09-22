@@ -16,18 +16,14 @@
 
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
-apply from: rootProject.file('gradle/javafx.gradle')
 
 dependencies {
-    compileOnly project.files(project.jfxrtLocation)
     compile project(':griffon-core-compile')
     compile project(':griffon-groovy')
     compile "org.codehaus.groovy:groovy-all:${groovyVersion}"
     compile("org.kordamp.gipsy:gipsy:${jipsyVersion}") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-
-    testCompile project.files(project.jfxrtLocation)
 }
 
 compileGroovy.enabled = false

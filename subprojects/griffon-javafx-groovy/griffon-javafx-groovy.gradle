@@ -16,7 +16,6 @@
 
 apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
-apply from: rootProject.file('gradle/javafx.gradle')
 
 dependencies {
     compile project(':griffon-groovy')
@@ -25,10 +24,7 @@ dependencies {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 
-    compileOnly project.files(project.jfxrtLocation)
     compileOnly project(':griffon-core-compile')
-
-    testCompileOnly project.files(project.jfxrtLocation)
 
     testCompile project(':griffon-core-test')
     testRuntime project(':griffon-guice')
