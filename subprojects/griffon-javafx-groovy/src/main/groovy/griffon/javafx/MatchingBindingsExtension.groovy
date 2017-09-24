@@ -35,20 +35,20 @@ import java.util.function.Predicate
 final class MatchingBindingsExtension {
     @Nonnull
     static <T> BooleanBinding anyMatch(@Nonnull ObservableList<T> self, @Nonnull Predicate<? super T> predicate) {
-        return MatchingBindings.anyMatch(self, predicate)
+        MatchingBindings.anyMatch(self, predicate)
     }
 
     @Nonnull
     static <T, R> BooleanBinding anyMatch(
         @Nonnull ObservableList<T> self,
         @Nonnull Function<? super T, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.anyMatch(self, mapper, predicate)
+        MatchingBindings.anyMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding anyMatch(
         @Nonnull ObservableList<T> self, @Nonnull ObservableValue<Predicate<? super T>> predicate) {
-        return MatchingBindings.anyMatch(self, predicate)
+        MatchingBindings.anyMatch(self, predicate)
     }
 
     @Nonnull
@@ -56,25 +56,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableList<T> self,
         @Nonnull ObservableValue<Function<? super T, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.anyMatch(self, mapper, predicate)
+        MatchingBindings.anyMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding noneMatch(@Nonnull ObservableList<T> self, @Nonnull Predicate<? super T> predicate) {
-        return MatchingBindings.noneMatch(self, predicate)
+        MatchingBindings.noneMatch(self, predicate)
     }
 
     @Nonnull
     static <T, R> BooleanBinding noneMatch(
         @Nonnull ObservableList<T> self,
         @Nonnull Function<? super T, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.noneMatch(self, mapper, predicate)
+        MatchingBindings.noneMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding noneMatch(
         @Nonnull ObservableList<T> self, @Nonnull ObservableValue<Predicate<? super T>> predicate) {
-        return MatchingBindings.noneMatch(self, predicate)
+        MatchingBindings.noneMatch(self, predicate)
     }
 
     @Nonnull
@@ -82,25 +82,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableList<T> self,
         @Nonnull ObservableValue<Function<? super T, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.noneMatch(self, mapper, predicate)
+        MatchingBindings.noneMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding allMatch(@Nonnull ObservableList<T> self, @Nonnull Predicate<? super T> predicate) {
-        return MatchingBindings.allMatch(self, predicate)
+        MatchingBindings.allMatch(self, predicate)
     }
 
     @Nonnull
     static <T, R> BooleanBinding allMatch(
         @Nonnull ObservableList<T> self,
         @Nonnull Function<? super T, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.allMatch(self, mapper, predicate)
+        MatchingBindings.allMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding allMatch(
         @Nonnull ObservableList<T> self, @Nonnull ObservableValue<Predicate<? super T>> predicate) {
-        return MatchingBindings.allMatch(self, predicate)
+        MatchingBindings.allMatch(self, predicate)
     }
 
     @Nonnull
@@ -108,25 +108,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableList<T> self,
         @Nonnull ObservableValue<Function<? super T, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.allMatch(self, mapper, predicate)
+        MatchingBindings.allMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding anyMatch(@Nonnull ObservableSet<T> self, @Nonnull Predicate<? super T> predicate) {
-        return MatchingBindings.anyMatch(self, predicate)
+        MatchingBindings.anyMatch(self, predicate)
     }
 
     @Nonnull
     static <T, R> BooleanBinding anyMatch(
         @Nonnull ObservableSet<T> self,
         @Nonnull Function<? super T, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.anyMatch(self, mapper, predicate)
+        MatchingBindings.anyMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding anyMatch(
         @Nonnull ObservableSet<T> self, @Nonnull ObservableValue<Predicate<? super T>> predicate) {
-        return MatchingBindings.anyMatch(self, predicate)
+        MatchingBindings.anyMatch(self, predicate)
     }
 
     @Nonnull
@@ -134,25 +134,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableSet<T> self,
         @Nonnull ObservableValue<Function<? super T, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.anyMatch(self, mapper, predicate)
+        MatchingBindings.anyMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding noneMatch(@Nonnull ObservableSet<T> self, @Nonnull Predicate<? super T> predicate) {
-        return MatchingBindings.noneMatch(self, predicate)
+        MatchingBindings.noneMatch(self, predicate)
     }
 
     @Nonnull
     static <T, R> BooleanBinding noneMatch(
         @Nonnull ObservableSet<T> self,
         @Nonnull Function<? super T, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.noneMatch(self, mapper, predicate)
+        MatchingBindings.noneMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding noneMatch(
         @Nonnull ObservableSet<T> self, @Nonnull ObservableValue<Predicate<? super T>> predicate) {
-        return MatchingBindings.noneMatch(self, predicate)
+        MatchingBindings.noneMatch(self, predicate)
     }
 
     @Nonnull
@@ -160,25 +160,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableSet<T> self,
         @Nonnull ObservableValue<Function<? super T, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.noneMatch(self, mapper, predicate)
+        MatchingBindings.noneMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding allMatch(@Nonnull ObservableSet<T> self, @Nonnull Predicate<? super T> predicate) {
-        return MatchingBindings.allMatch(self, predicate)
+        MatchingBindings.allMatch(self, predicate)
     }
 
     @Nonnull
     static <T, R> BooleanBinding allMatch(
         @Nonnull ObservableSet<T> self,
         @Nonnull Function<? super T, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.allMatch(self, mapper, predicate)
+        MatchingBindings.allMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <T> BooleanBinding allMatch(
         @Nonnull ObservableSet<T> self, @Nonnull ObservableValue<Predicate<? super T>> predicate) {
-        return MatchingBindings.allMatch(self, predicate)
+        MatchingBindings.allMatch(self, predicate)
     }
 
     @Nonnull
@@ -186,25 +186,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableSet<T> self,
         @Nonnull ObservableValue<Function<? super T, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.allMatch(self, mapper, predicate)
+        MatchingBindings.allMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <K, V> BooleanBinding anyMatch(@Nonnull ObservableMap<K, V> self, @Nonnull Predicate<? super V> predicate) {
-        return MatchingBindings.anyMatch(self, predicate)
+        MatchingBindings.anyMatch(self, predicate)
     }
 
     @Nonnull
     static <K, V, R> BooleanBinding anyMatch(
         @Nonnull ObservableMap<K, V> self,
         @Nonnull Function<? super V, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.anyMatch(self, mapper, predicate)
+        MatchingBindings.anyMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <K, V> BooleanBinding anyMatch(
         @Nonnull ObservableMap<K, V> self, @Nonnull ObservableValue<Predicate<? super V>> predicate) {
-        return MatchingBindings.anyMatch(self, predicate)
+        MatchingBindings.anyMatch(self, predicate)
     }
 
     @Nonnull
@@ -212,25 +212,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableMap<K, V> self,
         @Nonnull ObservableValue<Function<? super V, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.anyMatch(self, mapper, predicate)
+        MatchingBindings.anyMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <K, V> BooleanBinding noneMatch(@Nonnull ObservableMap<K, V> self, @Nonnull Predicate<? super V> predicate) {
-        return MatchingBindings.noneMatch(self, predicate)
+        MatchingBindings.noneMatch(self, predicate)
     }
 
     @Nonnull
     static <K, V, R> BooleanBinding noneMatch(
         @Nonnull ObservableMap<K, V> self,
         @Nonnull Function<? super V, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.noneMatch(self, mapper, predicate)
+        MatchingBindings.noneMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <K, V> BooleanBinding noneMatch(
         @Nonnull ObservableMap<K, V> self, @Nonnull ObservableValue<Predicate<? super V>> predicate) {
-        return MatchingBindings.noneMatch(self, predicate)
+        MatchingBindings.noneMatch(self, predicate)
     }
 
     @Nonnull
@@ -238,25 +238,25 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableMap<K, V> self,
         @Nonnull ObservableValue<Function<? super V, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.noneMatch(self, mapper, predicate)
+        MatchingBindings.noneMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <K, V> BooleanBinding allMatch(@Nonnull ObservableMap<K, V> self, @Nonnull Predicate<? super V> predicate) {
-        return MatchingBindings.allMatch(self, predicate)
+        MatchingBindings.allMatch(self, predicate)
     }
 
     @Nonnull
     static <K, V, R> BooleanBinding allMatch(
         @Nonnull ObservableMap<K, V> self,
         @Nonnull Function<? super V, R> mapper, @Nonnull Predicate<? super R> predicate) {
-        return MatchingBindings.allMatch(self, mapper, predicate)
+        MatchingBindings.allMatch(self, mapper, predicate)
     }
 
     @Nonnull
     static <K, V> BooleanBinding allMatch(
         @Nonnull ObservableMap<K, V> self, @Nonnull ObservableValue<Predicate<? super V>> predicate) {
-        return MatchingBindings.allMatch(self, predicate)
+        MatchingBindings.allMatch(self, predicate)
     }
 
     @Nonnull
@@ -264,6 +264,6 @@ final class MatchingBindingsExtension {
         @Nonnull ObservableMap<K, V> self,
         @Nonnull ObservableValue<Function<? super V, R>> mapper,
         @Nonnull ObservableValue<Predicate<? super R>> predicate) {
-        return MatchingBindings.allMatch(self, mapper, predicate)
+        MatchingBindings.allMatch(self, mapper, predicate)
     }
 }

@@ -48,429 +48,429 @@ import java.util.function.Supplier
 final class MappingBindingsExtension {
     @Nonnull
     static <T, R> ObjectBinding<R> mapAsObject(@Nonnull ObservableValue<T> observable, @Nonnull Function<T, R> mapper) {
-        return MappingBindings.mapAsObject(observable, mapper)
+        MappingBindings.mapAsObject(observable, mapper)
     }
 
     @Nonnull
     static <T, R> ObjectBinding<R> mapAsObject(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<T, R>> mapper) {
-        return MappingBindings.mapAsObject(observable, mapper)
+        MappingBindings.mapAsObject(observable, mapper)
     }
 
     @Nonnull
     static <T> BooleanBinding mapAsBoolean(
         @Nonnull ObservableValue<T> observable, @Nonnull Function<T, Boolean> mapper) {
-        return MappingBindings.mapAsBoolean(observable, mapper)
+        MappingBindings.mapAsBoolean(observable, mapper)
     }
 
     @Nonnull
     static <T> BooleanBinding mapAsBoolean(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<T, Boolean>> mapper) {
-        return MappingBindings.mapAsBoolean(observable, mapper)
+        MappingBindings.mapAsBoolean(observable, mapper)
     }
 
     @Nonnull
     static <T> IntegerBinding mapAsInteger(
         @Nonnull ObservableValue<T> observable, @Nonnull Function<T, Integer> mapper) {
-        return MappingBindings.mapAsInteger(observable, mapper)
+        MappingBindings.mapAsInteger(observable, mapper)
     }
 
     @Nonnull
     static <T> IntegerBinding mapAsInteger(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<T, Integer>> mapper) {
-        return MappingBindings.mapAsInteger(observable, mapper)
+        MappingBindings.mapAsInteger(observable, mapper)
     }
 
     @Nonnull
     static <T> LongBinding mapAsLong(@Nonnull ObservableValue<T> observable, @Nonnull Function<T, Long> mapper) {
-        return MappingBindings.mapAsLong(observable, mapper)
+        MappingBindings.mapAsLong(observable, mapper)
     }
 
     @Nonnull
     static <T> LongBinding mapAsLong(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<T, Long>> mapper) {
-        return MappingBindings.mapAsLong(observable, mapper)
+        MappingBindings.mapAsLong(observable, mapper)
     }
 
     @Nonnull
     static <T> FloatBinding mapAsFloat(@Nonnull ObservableValue<T> observable, @Nonnull Function<T, Float> mapper) {
-        return MappingBindings.mapAsFloat(observable, mapper)
+        MappingBindings.mapAsFloat(observable, mapper)
     }
 
     @Nonnull
     static <T> FloatBinding mapAsFloat(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<T, Float>> mapper) {
-        return MappingBindings.mapAsFloat(observable, mapper)
+        MappingBindings.mapAsFloat(observable, mapper)
     }
 
     @Nonnull
     static <T> DoubleBinding mapAsDouble(@Nonnull ObservableValue<T> observable, @Nonnull Function<T, Double> mapper) {
-        return MappingBindings.mapAsDouble(observable, mapper)
+        MappingBindings.mapAsDouble(observable, mapper)
     }
 
     @Nonnull
     static <T> DoubleBinding mapAsDouble(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<T, Double>> mapper) {
-        return MappingBindings.mapAsDouble(observable, mapper)
+        MappingBindings.mapAsDouble(observable, mapper)
     }
 
     @Nonnull
     static <T> StringBinding mapAsString(@Nonnull ObservableValue<T> observable, @Nonnull Function<T, String> mapper) {
-        return MappingBindings.mapAsString(observable, mapper)
+        MappingBindings.mapAsString(observable, mapper)
     }
 
     @Nonnull
     static <T> StringBinding mapAsString(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<T, String>> mapper) {
-        return MappingBindings.mapAsString(observable, mapper)
+        MappingBindings.mapAsString(observable, mapper)
     }
 
     @Nonnull
     static ObjectBinding<String> mapToObject(@Nonnull ObservableStringValue observable) {
-        return MappingBindings.mapToObject(observable)
+        MappingBindings.mapToObject(observable)
     }
 
     @Nonnull
     static ObjectBinding<Boolean> mapToObject(@Nonnull ObservableBooleanValue observable) {
-        return MappingBindings.mapToObject(observable)
+        MappingBindings.mapToObject(observable)
     }
 
     @Nonnull
     static ObjectBinding<Integer> mapToObject(@Nonnull ObservableIntegerValue observable) {
-        return MappingBindings.mapToObject(observable)
+        MappingBindings.mapToObject(observable)
     }
 
     @Nonnull
     static ObjectBinding<Long> mapToObject(@Nonnull ObservableLongValue observable) {
-        return MappingBindings.mapToObject(observable)
+        MappingBindings.mapToObject(observable)
     }
 
     @Nonnull
     static ObjectBinding<Float> mapToObject(@Nonnull ObservableFloatValue observable) {
-        return MappingBindings.mapToObject(observable)
+        MappingBindings.mapToObject(observable)
     }
 
     @Nonnull
     static ObjectBinding<Double> mapToObject(@Nonnull ObservableDoubleValue observable) {
-        return MappingBindings.mapToObject(observable)
+        MappingBindings.mapToObject(observable)
     }
 
     @Nonnull
     static BooleanBinding mapToBoolean(@Nonnull ObservableObjectValue<Boolean> observable) {
-        return MappingBindings.mapToBoolean(observable)
+        MappingBindings.mapToBoolean(observable)
     }
 
     @Nonnull
     static IntegerBinding mapToInteger(@Nonnull ObservableObjectValue<Integer> observable) {
-        return MappingBindings.mapToInteger(observable)
+        MappingBindings.mapToInteger(observable)
     }
 
     @Nonnull
     static LongBinding mapToLong(@Nonnull ObservableObjectValue<Long> observable) {
-        return MappingBindings.mapToLong(observable)
+        MappingBindings.mapToLong(observable)
     }
 
     @Nonnull
     static FloatBinding mapToFloat(@Nonnull ObservableObjectValue<Float> observable) {
-        return MappingBindings.mapToFloat(observable)
+        MappingBindings.mapToFloat(observable)
     }
 
     @Nonnull
     static DoubleBinding mapToDouble(@Nonnull ObservableObjectValue<Double> observable) {
-        return MappingBindings.mapToDouble(observable)
+        MappingBindings.mapToDouble(observable)
     }
 
     @Nonnull
     static StringBinding mapToString(@Nonnull ObservableObjectValue<String> observable) {
-        return MappingBindings.mapToString(observable)
+        MappingBindings.mapToString(observable)
     }
 
     @Nonnull
     static <S, T> ObservableList<T> mapList(@Nonnull ObservableList<? super S> source, @Nonnull Function<S, T> mapper) {
-        return MappingBindings.mapList(source, mapper)
+        MappingBindings.mapList(source, mapper)
     }
 
     @Nonnull
     static <S, T> ObservableList<T> mapList(
         @Nonnull ObservableList<S> source, @Nonnull ObservableValue<Function<S, T>> mapper) {
-        return MappingBindings.mapList(source, mapper)
+        MappingBindings.mapList(source, mapper)
     }
 
     @Nonnull
     static <T, R> ObjectBinding<R> mapObject(
         @Nonnull ObservableValue<T> observable, @Nonnull Function<? super T, ? extends R> mapper) {
-        return MappingBindings.mapObject(observable, mapper)
+        MappingBindings.mapObject(observable, mapper)
     }
 
     @Nonnull
     static <T, R> ObjectBinding<R> mapObject(
         @Nonnull ObservableValue<T> observable,
         @Nonnull Function<? super T, ? extends R> mapper, @Nullable R defaultValue) {
-        return MappingBindings.mapObject(observable, mapper, defaultValue)
+        MappingBindings.mapObject(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static <T, R> ObjectBinding<R> mapObject(
         @Nonnull ObservableValue<T> observable,
         @Nonnull Function<? super T, ? extends R> mapper, @Nonnull Supplier<R> supplier) {
-        return MappingBindings.mapObject(observable, mapper, supplier)
+        MappingBindings.mapObject(observable, mapper, supplier)
     }
 
     @Nonnull
     static <T, R> ObjectBinding<R> mapObject(
         @Nonnull ObservableValue<T> observable, @Nonnull ObservableValue<Function<? super T, ? extends R>> mapper) {
-        return MappingBindings.mapObject(observable, mapper)
+        MappingBindings.mapObject(observable, mapper)
     }
 
     @Nonnull
     static <T, R> ObjectBinding<R> mapObject(
         @Nonnull ObservableValue<T> observable,
         @Nonnull ObservableValue<Function<? super T, ? extends R>> mapper, @Nullable R defaultValue) {
-        return MappingBindings.mapObject(observable, mapper, defaultValue)
+        MappingBindings.mapObject(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static <T, R> ObjectBinding<R> mapObject(
         @Nonnull ObservableValue<T> observable,
         @Nonnull ObservableValue<Function<? super T, ? extends R>> mapper, @Nonnull Supplier<R> supplier) {
-        return MappingBindings.mapObject(observable, mapper, supplier)
+        MappingBindings.mapObject(observable, mapper, supplier)
     }
 
     @Nonnull
     static BooleanBinding mapBoolean(
         @Nonnull ObservableValue<Boolean> observable, @Nonnull Function<Boolean, Boolean> mapper) {
-        return MappingBindings.mapBoolean(observable, mapper)
+        MappingBindings.mapBoolean(observable, mapper)
     }
 
     @Nonnull
     static BooleanBinding mapBoolean(
         @Nonnull ObservableValue<Boolean> observable,
         @Nonnull Function<Boolean, Boolean> mapper, @Nonnull Boolean defaultValue) {
-        return MappingBindings.mapBoolean(observable, mapper, defaultValue)
+        MappingBindings.mapBoolean(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static BooleanBinding mapBoolean(
         @Nonnull ObservableValue<Boolean> observable,
         @Nonnull Function<Boolean, Boolean> mapper, @Nonnull Supplier<Boolean> supplier) {
-        return MappingBindings.mapBoolean(observable, mapper, supplier)
+        MappingBindings.mapBoolean(observable, mapper, supplier)
     }
 
     @Nonnull
     static BooleanBinding mapBoolean(
         @Nonnull ObservableValue<Boolean> observable, @Nonnull ObservableValue<Function<Boolean, Boolean>> mapper) {
-        return MappingBindings.mapBoolean(observable, mapper)
+        MappingBindings.mapBoolean(observable, mapper)
     }
 
     @Nonnull
     static BooleanBinding mapBoolean(
         @Nonnull ObservableValue<Boolean> observable,
         @Nonnull ObservableValue<Function<Boolean, Boolean>> mapper, @Nonnull Boolean defaultValue) {
-        return MappingBindings.mapBoolean(observable, mapper, defaultValue)
+        MappingBindings.mapBoolean(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static BooleanBinding mapBoolean(
         @Nonnull ObservableValue<Boolean> observable,
         @Nonnull ObservableValue<Function<Boolean, Boolean>> mapper, @Nonnull Supplier<Boolean> supplier) {
-        return MappingBindings.mapBoolean(observable, mapper, supplier)
+        MappingBindings.mapBoolean(observable, mapper, supplier)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<Integer> observable, @Nonnull Function<Integer, Integer> mapper) {
-        return MappingBindings.mapInteger(observable, mapper)
+        MappingBindings.mapInteger(observable, mapper)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<Integer> observable,
         @Nonnull Function<Integer, Integer> mapper, @Nonnull Integer defaultValue) {
-        return MappingBindings.mapInteger(observable, mapper, defaultValue)
+        MappingBindings.mapInteger(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<Integer> observable,
         @Nonnull Function<Integer, Integer> mapper, @Nonnull Supplier<Integer> supplier) {
-        return MappingBindings.mapInteger(observable, mapper, supplier)
+        MappingBindings.mapInteger(observable, mapper, supplier)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<Integer> observable, @Nonnull ObservableValue<Function<Integer, Integer>> mapper) {
-        return MappingBindings.mapInteger(observable, mapper)
+        MappingBindings.mapInteger(observable, mapper)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<Integer> observable,
         @Nonnull ObservableValue<Function<Integer, Integer>> mapper, @Nonnull Integer defaultValue) {
-        return MappingBindings.mapInteger(observable, mapper, defaultValue)
+        MappingBindings.mapInteger(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<Integer> observable,
         @Nonnull ObservableValue<Function<Integer, Integer>> mapper, @Nonnull Supplier<Integer> supplier) {
-        return MappingBindings.mapInteger(observable, mapper, supplier)
+        MappingBindings.mapInteger(observable, mapper, supplier)
     }
 
     @Nonnull
     static LongBinding mapLong(@Nonnull ObservableValue<Long> observable, @Nonnull Function<Long, Long> mapper) {
-        return MappingBindings.mapLong(observable, mapper)
+        MappingBindings.mapLong(observable, mapper)
     }
 
     @Nonnull
     static LongBinding mapLong(
         @Nonnull ObservableValue<Long> observable, @Nonnull Function<Long, Long> mapper, @Nonnull Long defaultValue) {
-        return MappingBindings.mapLong(observable, mapper, defaultValue)
+        MappingBindings.mapLong(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static LongBinding mapLong(
         @Nonnull ObservableValue<Long> observable,
         @Nonnull Function<Long, Long> mapper, @Nonnull Supplier<Long> supplier) {
-        return MappingBindings.mapLong(observable, mapper, supplier)
+        MappingBindings.mapLong(observable, mapper, supplier)
     }
 
     @Nonnull
     static LongBinding mapLong(
         @Nonnull ObservableValue<Long> observable, @Nonnull ObservableValue<Function<Long, Long>> mapper) {
-        return MappingBindings.mapLong(observable, mapper)
+        MappingBindings.mapLong(observable, mapper)
     }
 
     @Nonnull
     static LongBinding mapLong(
         @Nonnull ObservableValue<Long> observable,
         @Nonnull ObservableValue<Function<Long, Long>> mapper, @Nonnull Long defaultValue) {
-        return MappingBindings.mapLong(observable, mapper, defaultValue)
+        MappingBindings.mapLong(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static LongBinding mapLong(
         @Nonnull ObservableValue<Long> observable,
         @Nonnull ObservableValue<Function<Long, Long>> mapper, @Nonnull Supplier<Long> supplier) {
-        return MappingBindings.mapLong(observable, mapper, supplier)
+        MappingBindings.mapLong(observable, mapper, supplier)
     }
 
     @Nonnull
     static FloatBinding mapFloat(@Nonnull ObservableValue<Float> observable, @Nonnull Function<Float, Float> mapper) {
-        return MappingBindings.mapFloat(observable, mapper)
+        MappingBindings.mapFloat(observable, mapper)
     }
 
     @Nonnull
     static FloatBinding mapFloat(
         @Nonnull ObservableValue<Float> observable,
         @Nonnull Function<Float, Float> mapper, @Nonnull Float defaultValue) {
-        return MappingBindings.mapFloat(observable, mapper, defaultValue)
+        MappingBindings.mapFloat(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static FloatBinding mapFloat(
         @Nonnull ObservableValue<Float> observable,
         @Nonnull Function<Float, Float> mapper, @Nonnull Supplier<Float> supplier) {
-        return MappingBindings.mapFloat(observable, mapper, supplier)
+        MappingBindings.mapFloat(observable, mapper, supplier)
     }
 
     @Nonnull
     static FloatBinding mapFloat(
         @Nonnull ObservableValue<Float> observable, @Nonnull ObservableValue<Function<Float, Float>> mapper) {
-        return MappingBindings.mapFloat(observable, mapper)
+        MappingBindings.mapFloat(observable, mapper)
     }
 
     @Nonnull
     static FloatBinding mapFloat(
         @Nonnull ObservableValue<Float> observable,
         @Nonnull ObservableValue<Function<Float, Float>> mapper, @Nullable Float defaultValue) {
-        return MappingBindings.mapFloat(observable, mapper, defaultValue)
+        MappingBindings.mapFloat(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static FloatBinding mapFloat(
         @Nonnull ObservableValue<Float> observable,
         @Nonnull ObservableValue<Function<Float, Float>> mapper, @Nonnull Supplier<Float> supplier) {
-        return MappingBindings.mapFloat(observable, mapper, supplier)
+        MappingBindings.mapFloat(observable, mapper, supplier)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<Double> observable, @Nonnull Function<Double, Double> mapper) {
-        return MappingBindings.mapDouble(observable, mapper)
+        MappingBindings.mapDouble(observable, mapper)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<Double> observable,
         @Nonnull Function<Double, Double> mapper, @Nullable Double defaultValue) {
-        return MappingBindings.mapDouble(observable, mapper, defaultValue)
+        MappingBindings.mapDouble(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<Double> observable,
         @Nonnull Function<Double, Double> mapper, @Nonnull Supplier<Double> supplier) {
-        return MappingBindings.mapDouble(observable, mapper, supplier)
+        MappingBindings.mapDouble(observable, mapper, supplier)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<Double> observable, @Nonnull ObservableValue<Function<Double, Double>> mapper) {
-        return MappingBindings.mapDouble(observable, mapper)
+        MappingBindings.mapDouble(observable, mapper)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<Double> observable,
         @Nonnull ObservableValue<Function<Double, Double>> mapper, @Nonnull Double defaultValue) {
-        return MappingBindings.mapDouble(observable, mapper, defaultValue)
+        MappingBindings.mapDouble(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<Double> observable,
         @Nonnull ObservableValue<Function<Double, Double>> mapper, @Nonnull Supplier<Double> supplier) {
-        return MappingBindings.mapDouble(observable, mapper, supplier)
+        MappingBindings.mapDouble(observable, mapper, supplier)
     }
 
     @Nonnull
     static StringBinding mapString(
         @Nonnull ObservableValue<String> observable, @Nonnull Function<String, String> mapper) {
-        return MappingBindings.mapString(observable, mapper)
+        MappingBindings.mapString(observable, mapper)
     }
 
     @Nonnull
     static StringBinding mapString(
         @Nonnull ObservableValue<String> observable,
         @Nonnull Function<String, String> mapper, @Nonnull String defaultValue) {
-        return MappingBindings.mapString(observable, mapper, defaultValue)
+        MappingBindings.mapString(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static StringBinding mapString(
         @Nonnull ObservableValue<String> observable,
         @Nonnull Function<String, String> mapper, @Nonnull Supplier<String> supplier) {
-        return MappingBindings.mapString(observable, mapper, supplier)
+        MappingBindings.mapString(observable, mapper, supplier)
     }
 
     @Nonnull
     static StringBinding mapString(
         @Nonnull ObservableValue<String> observable, @Nonnull ObservableValue<Function<String, String>> mapper) {
-        return MappingBindings.mapString(observable, mapper)
+        MappingBindings.mapString(observable, mapper)
     }
 
     @Nonnull
     static StringBinding mapString(
         @Nonnull ObservableValue<String> observable,
         @Nonnull ObservableValue<Function<String, String>> mapper, @Nonnull String defaultValue) {
-        return MappingBindings.mapString(observable, mapper, defaultValue)
+        MappingBindings.mapString(observable, mapper, defaultValue)
     }
 
     @Nonnull
     static StringBinding mapString(
         @Nonnull ObservableValue<String> observable,
         @Nonnull ObservableValue<Function<String, String>> mapper, @Nonnull Supplier<String> supplier) {
-        return MappingBindings.mapString(observable, mapper, supplier)
+        MappingBindings.mapString(observable, mapper, supplier)
     }
 
     @Nonnull
@@ -478,7 +478,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<Boolean> observable1,
         @Nonnull ObservableValue<Boolean> observable2,
         @Nonnull Boolean defaultValue, @Nonnull BiFunction<Boolean, Boolean, Boolean> mapper) {
-        return MappingBindings.mapBooleans(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapBooleans(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -486,7 +486,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<Boolean> observable1,
         @Nonnull ObservableValue<Boolean> observable2,
         @Nonnull Supplier<Boolean> supplier, @Nonnull BiFunction<Boolean, Boolean, Boolean> mapper) {
-        return MappingBindings.mapBooleans(observable1, observable2, supplier, mapper)
+        MappingBindings.mapBooleans(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -494,7 +494,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<Boolean> observable1,
         @Nonnull ObservableValue<Boolean> observable2,
         @Nonnull Boolean defaultValue, @Nonnull ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
-        return MappingBindings.mapBooleans(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapBooleans(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -502,7 +502,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<Boolean> observable1,
         @Nonnull ObservableValue<Boolean> observable2,
         @Nonnull Supplier<Boolean> supplier, @Nonnull ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
-        return MappingBindings.mapBooleans(observable1, observable2, supplier, mapper)
+        MappingBindings.mapBooleans(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -510,7 +510,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Integer defaultValue, @Nonnull BiFunction<? super Number, ? super Number, Integer> mapper) {
-        return MappingBindings.mapIntegers(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapIntegers(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -518,7 +518,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Integer> supplier, @Nonnull BiFunction<? super Number, ? super Number, Integer> mapper) {
-        return MappingBindings.mapIntegers(observable1, observable2, supplier, mapper)
+        MappingBindings.mapIntegers(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -527,7 +527,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Integer defaultValue,
         @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
-        return MappingBindings.mapIntegers(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapIntegers(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -536,7 +536,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Integer> supplier,
         @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
-        return MappingBindings.mapIntegers(observable1, observable2, supplier, mapper)
+        MappingBindings.mapIntegers(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -544,7 +544,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Long defaultValue, @Nonnull BiFunction<? super Number, ? super Number, Long> mapper) {
-        return MappingBindings.mapLongs(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapLongs(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -552,7 +552,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Long> supplier, @Nonnull BiFunction<? super Number, ? super Number, Long> mapper) {
-        return MappingBindings.mapLongs(observable1, observable2, supplier, mapper)
+        MappingBindings.mapLongs(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -560,7 +560,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Long defaultValue, @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
-        return MappingBindings.mapLongs(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapLongs(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -569,7 +569,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Long> supplier,
         @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
-        return MappingBindings.mapLongs(observable1, observable2, supplier, mapper)
+        MappingBindings.mapLongs(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -577,7 +577,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Float defaultValue, @Nonnull BiFunction<? super Number, ? super Number, Float> mapper) {
-        return MappingBindings.mapFloats(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapFloats(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -585,7 +585,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Float> supplier, @Nonnull BiFunction<? super Number, ? super Number, Float> mapper) {
-        return MappingBindings.mapFloats(observable1, observable2, supplier, mapper)
+        MappingBindings.mapFloats(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -594,7 +594,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Float defaultValue,
         @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
-        return MappingBindings.mapFloats(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapFloats(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -603,7 +603,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Float> supplier,
         @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
-        return MappingBindings.mapFloats(observable1, observable2, supplier, mapper)
+        MappingBindings.mapFloats(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -611,7 +611,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Double defaultValue, @Nonnull BiFunction<? super Number, ? super Number, Double> mapper) {
-        return MappingBindings.mapDoubles(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapDoubles(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -619,7 +619,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable1,
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Double> supplier, @Nonnull BiFunction<? super Number, ? super Number, Double> mapper) {
-        return MappingBindings.mapDoubles(observable1, observable2, supplier, mapper)
+        MappingBindings.mapDoubles(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -628,7 +628,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Double defaultValue,
         @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
-        return MappingBindings.mapDoubles(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapDoubles(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -637,7 +637,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<? extends Number> observable2,
         @Nonnull Supplier<Double> supplier,
         @Nonnull ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
-        return MappingBindings.mapDoubles(observable1, observable2, supplier, mapper)
+        MappingBindings.mapDoubles(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -645,7 +645,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<A> observable1,
         @Nonnull ObservableValue<B> observable2,
         @Nullable R defaultValue, @Nonnull BiFunction<? super A, ? super B, R> mapper) {
-        return MappingBindings.mapObjects(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapObjects(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -653,7 +653,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<A> observable1,
         @Nonnull ObservableValue<B> observable2,
         @Nonnull Supplier<R> supplier, @Nonnull BiFunction<? super A, ? super B, R> mapper) {
-        return MappingBindings.mapObjects(observable1, observable2, supplier, mapper)
+        MappingBindings.mapObjects(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -661,7 +661,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<A> observable1,
         @Nonnull ObservableValue<B> observable2,
         @Nullable R defaultValue, @Nonnull ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
-        return MappingBindings.mapObjects(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapObjects(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -669,7 +669,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<A> observable1,
         @Nonnull ObservableValue<B> observable2,
         @Nonnull Supplier<R> supplier, @Nonnull ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
-        return MappingBindings.mapObjects(observable1, observable2, supplier, mapper)
+        MappingBindings.mapObjects(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -677,7 +677,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<String> observable1,
         @Nonnull ObservableValue<String> observable2,
         @Nullable String defaultValue, @Nonnull BiFunction<String, String, String> mapper) {
-        return MappingBindings.mapStrings(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapStrings(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -685,7 +685,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<String> observable1,
         @Nonnull ObservableValue<String> observable2,
         @Nonnull Supplier<String> supplier, @Nonnull BiFunction<String, String, String> mapper) {
-        return MappingBindings.mapStrings(observable1, observable2, supplier, mapper)
+        MappingBindings.mapStrings(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
@@ -693,7 +693,7 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<String> observable1,
         @Nonnull ObservableValue<String> observable2,
         @Nullable String defaultValue, @Nonnull ObservableValue<BiFunction<String, String, String>> mapper) {
-        return MappingBindings.mapStrings(observable1, observable2, defaultValue, mapper)
+        MappingBindings.mapStrings(observable1, observable2, defaultValue, mapper)
     }
 
     @Nonnull
@@ -701,72 +701,72 @@ final class MappingBindingsExtension {
         @Nonnull ObservableValue<String> observable1,
         @Nonnull ObservableValue<String> observable2,
         @Nonnull Supplier<String> supplier, @Nonnull ObservableValue<BiFunction<String, String, String>> mapper) {
-        return MappingBindings.mapStrings(observable1, observable2, supplier, mapper)
+        MappingBindings.mapStrings(observable1, observable2, supplier, mapper)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(@Nonnull ObservableValue<? extends Number> observable) {
-        return MappingBindings.mapInteger(observable)
+        MappingBindings.mapInteger(observable)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<? extends Number> observable, @Nullable Integer defaultValue) {
-        return MappingBindings.mapInteger(observable, defaultValue)
+        MappingBindings.mapInteger(observable, defaultValue)
     }
 
     @Nonnull
     static IntegerBinding mapInteger(
         @Nonnull ObservableValue<? extends Number> observable, @Nullable Supplier<Integer> supplier) {
-        return MappingBindings.mapInteger(observable, supplier)
+        MappingBindings.mapInteger(observable, supplier)
     }
 
     @Nonnull
     static LongBinding mapLong(@Nonnull ObservableValue<? extends Number> observable) {
-        return MappingBindings.mapLong(observable)
+        MappingBindings.mapLong(observable)
     }
 
     @Nonnull
     static LongBinding mapLong(@Nonnull ObservableValue<? extends Number> observable, @Nullable Long defaultValue) {
-        return MappingBindings.mapLong(observable, defaultValue)
+        MappingBindings.mapLong(observable, defaultValue)
     }
 
     @Nonnull
     static LongBinding mapLong(
         @Nonnull ObservableValue<? extends Number> observable, @Nullable Supplier<Long> supplier) {
-        return MappingBindings.mapLong(observable, supplier)
+        MappingBindings.mapLong(observable, supplier)
     }
 
     @Nonnull
     static FloatBinding mapFloat(@Nonnull ObservableValue<? extends Number> observable) {
-        return MappingBindings.mapFloat(observable)
+        MappingBindings.mapFloat(observable)
     }
 
     @Nonnull
     static FloatBinding mapFloat(@Nonnull ObservableValue<? extends Number> observable, @Nullable Float defaultValue) {
-        return MappingBindings.mapFloat(observable, defaultValue)
+        MappingBindings.mapFloat(observable, defaultValue)
     }
 
     @Nonnull
     static FloatBinding mapFloat(
         @Nonnull ObservableValue<? extends Number> observable, @Nullable Supplier<Float> supplier) {
-        return MappingBindings.mapFloat(observable, supplier)
+        MappingBindings.mapFloat(observable, supplier)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(@Nonnull ObservableValue<? extends Number> observable) {
-        return MappingBindings.mapDouble(observable)
+        MappingBindings.mapDouble(observable)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<? extends Number> observable, @Nullable Double defaultValue) {
-        return MappingBindings.mapDouble(observable, defaultValue)
+        MappingBindings.mapDouble(observable, defaultValue)
     }
 
     @Nonnull
     static DoubleBinding mapDouble(
         @Nonnull ObservableValue<? extends Number> observable, @Nullable Supplier<Double> supplier) {
-        return MappingBindings.mapDouble(observable, supplier)
+        MappingBindings.mapDouble(observable, supplier)
     }
 }

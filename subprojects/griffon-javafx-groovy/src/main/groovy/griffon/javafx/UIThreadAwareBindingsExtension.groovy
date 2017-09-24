@@ -57,290 +57,290 @@ final class UIThreadAwareBindingsExtension {
     @Nonnull
     static <T> ChangeListener<T> uiThreadAwareBind(
         @Nonnull Property<T> property, @Nonnull ObservableValue<T> observable) {
-        return UIThreadAwareBindings.uiThreadAwareBind(property, observable)
+        UIThreadAwareBindings.uiThreadAwareBind(property, observable)
     }
 
     @Nonnull
     static <T> ChangeListener<T> uiThreadAwareChangeListener(
         @Nonnull ObservableValue<T> observable, @Nonnull ChangeListener<T> listener) {
-        return UIThreadAwareBindings.uiThreadAwareChangeListener(observable, listener)
+        UIThreadAwareBindings.uiThreadAwareChangeListener(observable, listener)
     }
 
     @Nonnull
     static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull ChangeListener<T> listener) {
-        return UIThreadAwareBindings.uiThreadAwareChangeListener(listener)
+        UIThreadAwareBindings.uiThreadAwareChangeListener(listener)
     }
 
     @Nonnull
     static <T> ChangeListener<T> uiThreadAwareChangeListener(
         @Nonnull ObservableValue<T> observable, @Nonnull Consumer<T> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareChangeListener(observable, consumer)
+        UIThreadAwareBindings.uiThreadAwareChangeListener(observable, consumer)
     }
 
     @Nonnull
     static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull Consumer<T> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareChangeListener(consumer)
+        UIThreadAwareBindings.uiThreadAwareChangeListener(consumer)
     }
 
     @Nonnull
     static <T> ChangeListener<T> uiThreadAwareChangeListener(
         @Nonnull ObservableValue<T> observable, @Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareChangeListener(observable, runnable)
+        UIThreadAwareBindings.uiThreadAwareChangeListener(observable, runnable)
     }
 
     @Nonnull
     static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareChangeListener(runnable)
+        UIThreadAwareBindings.uiThreadAwareChangeListener(runnable)
     }
 
     @Nonnull
     static InvalidationListener uiThreadAwareInvalidationListener(
         @Nonnull Observable observable, @Nonnull InvalidationListener listener) {
-        return UIThreadAwareBindings.uiThreadAwareInvalidationListener(observable, listener)
+        UIThreadAwareBindings.uiThreadAwareInvalidationListener(observable, listener)
     }
 
     @Nonnull
     static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull InvalidationListener listener) {
-        return UIThreadAwareBindings.uiThreadAwareInvalidationListener(listener)
+        UIThreadAwareBindings.uiThreadAwareInvalidationListener(listener)
     }
 
     @Nonnull
     static InvalidationListener uiThreadAwareInvalidationListener(
         @Nonnull Observable observable, @Nonnull Consumer<Observable> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareInvalidationListener(observable, consumer)
+        UIThreadAwareBindings.uiThreadAwareInvalidationListener(observable, consumer)
     }
 
     @Nonnull
     static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull Consumer<Observable> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareInvalidationListener(consumer)
+        UIThreadAwareBindings.uiThreadAwareInvalidationListener(consumer)
     }
 
     @Nonnull
     static InvalidationListener uiThreadAwareInvalidationListener(
         @Nonnull Observable observable, @Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareInvalidationListener(observable, runnable)
+        UIThreadAwareBindings.uiThreadAwareInvalidationListener(observable, runnable)
     }
 
     @Nonnull
     InvalidationListener uiThreadAwareInvalidationListener(@Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareInvalidationListener(runnable)
+        UIThreadAwareBindings.uiThreadAwareInvalidationListener(runnable)
     }
 
     @Nonnull
     static <E> ListChangeListener<E> uiThreadAwareListChangeListener(
         @Nonnull ObservableList<E> observable, @Nonnull ListChangeListener<E> listener) {
-        return UIThreadAwareBindings.uiThreadAwareListChangeListener(observable, listener)
+        UIThreadAwareBindings.uiThreadAwareListChangeListener(observable, listener)
     }
 
     @Nonnull
     static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull ListChangeListener<E> listener) {
-        return UIThreadAwareBindings.uiThreadAwareListChangeListener(listener)
+        UIThreadAwareBindings.uiThreadAwareListChangeListener(listener)
     }
 
     @Nonnull
     static <E> ListChangeListener<E> uiThreadAwareListChangeListener(
         @Nonnull ObservableList<E> observable, @Nonnull Consumer<ListChangeListener.Change<? extends E>> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareListChangeListener(observable, consumer)
+        UIThreadAwareBindings.uiThreadAwareListChangeListener(observable, consumer)
     }
 
     @Nonnull
     static <E> ListChangeListener<E> uiThreadAwareListChangeListener(
         @Nonnull Consumer<ListChangeListener.Change<? extends E>> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareListChangeListener(consumer)
+        UIThreadAwareBindings.uiThreadAwareListChangeListener(consumer)
     }
 
     @Nonnull
     static <E> ListChangeListener<E> uiThreadAwareListChangeListener(
         @Nonnull ObservableList<E> observable, @Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareListChangeListener(observable, runnable)
+        UIThreadAwareBindings.uiThreadAwareListChangeListener(observable, runnable)
     }
 
     @Nonnull
     static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareListChangeListener(runnable)
+        UIThreadAwareBindings.uiThreadAwareListChangeListener(runnable)
     }
 
     @Nonnull
     static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(
         @Nonnull ObservableMap<K, V> observable, @Nonnull MapChangeListener<K, V> listener) {
-        return UIThreadAwareBindings.uiThreadAwareMapChangeListener(observable, listener)
+        UIThreadAwareBindings.uiThreadAwareMapChangeListener(observable, listener)
     }
 
     @Nonnull
     static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull MapChangeListener<K, V> listener) {
-        return UIThreadAwareBindings.uiThreadAwareMapChangeListener(listener)
+        UIThreadAwareBindings.uiThreadAwareMapChangeListener(listener)
     }
 
     @Nonnull
     static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(
         @Nonnull ObservableMap<K, V> observable,
         @Nonnull Consumer<MapChangeListener.Change<? extends K, ? extends V>> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareMapChangeListener(observable, consumer)
+        UIThreadAwareBindings.uiThreadAwareMapChangeListener(observable, consumer)
     }
 
     @Nonnull
     static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(
         @Nonnull Consumer<MapChangeListener.Change<? extends K, ? extends V>> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareMapChangeListener(consumer)
+        UIThreadAwareBindings.uiThreadAwareMapChangeListener(consumer)
     }
 
     @Nonnull
     static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(
         @Nonnull ObservableMap<K, V> observable, @Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareMapChangeListener(observable, runnable)
+        UIThreadAwareBindings.uiThreadAwareMapChangeListener(observable, runnable)
     }
 
     @Nonnull
     static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareMapChangeListener(runnable)
+        UIThreadAwareBindings.uiThreadAwareMapChangeListener(runnable)
     }
 
     @Nonnull
     static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(
         @Nonnull ObservableSet<E> observable, @Nonnull SetChangeListener<E> listener) {
-        return UIThreadAwareBindings.uiThreadAwareSetChangeListener(observable, listener)
+        UIThreadAwareBindings.uiThreadAwareSetChangeListener(observable, listener)
     }
 
     @Nonnull
     static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull SetChangeListener<E> listener) {
-        return UIThreadAwareBindings.uiThreadAwareSetChangeListener(listener)
+        UIThreadAwareBindings.uiThreadAwareSetChangeListener(listener)
     }
 
     @Nonnull
     static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(
         @Nonnull ObservableSet<E> observable, @Nonnull Consumer<SetChangeListener.Change<? extends E>> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareSetChangeListener(observable, consumer)
+        UIThreadAwareBindings.uiThreadAwareSetChangeListener(observable, consumer)
     }
 
     @Nonnull
     static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(
         @Nonnull Consumer<SetChangeListener.Change<? extends E>> consumer) {
-        return UIThreadAwareBindings.uiThreadAwareSetChangeListener(consumer)
+        UIThreadAwareBindings.uiThreadAwareSetChangeListener(consumer)
     }
 
     @Nonnull
     static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(
         @Nonnull ObservableSet<E> observable, @Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareSetChangeListener(observable, runnable)
+        UIThreadAwareBindings.uiThreadAwareSetChangeListener(observable, runnable)
     }
 
     @Nonnull
     static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull Runnable runnable) {
-        return UIThreadAwareBindings.uiThreadAwareSetChangeListener(runnable)
+        UIThreadAwareBindings.uiThreadAwareSetChangeListener(runnable)
     }
 
     @Nonnull
     static BooleanProperty uiThreadAware(@Nonnull BooleanProperty observable) {
-        return UIThreadAwareBindings.uiThreadAwareBooleanProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareBooleanProperty(observable)
     }
 
     @Nonnull
     static IntegerProperty uiThreadAware(@Nonnull IntegerProperty observable) {
-        return UIThreadAwareBindings.uiThreadAwareIntegerProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareIntegerProperty(observable)
     }
 
     @Nonnull
     static LongProperty uiThreadAware(@Nonnull LongProperty observable) {
-        return UIThreadAwareBindings.uiThreadAwareLongProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareLongProperty(observable)
     }
 
     @Nonnull
     static FloatProperty uiThreadAware(@Nonnull FloatProperty observable) {
-        return UIThreadAwareBindings.uiThreadAwareFloatProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareFloatProperty(observable)
     }
 
     @Nonnull
     static DoubleProperty uiThreadAware(@Nonnull DoubleProperty observable) {
-        return UIThreadAwareBindings.uiThreadAwareDoubleProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareDoubleProperty(observable)
     }
 
     @Nonnull
     static StringProperty uiThreadAware(@Nonnull StringProperty observable) {
-        return UIThreadAwareBindings.uiThreadAwareStringProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareStringProperty(observable)
     }
 
     @Nonnull
     static Property<Boolean> uiThreadAwarePropertyBoolean(@Nonnull Property<Boolean> observable) {
-        return UIThreadAwareBindings.uiThreadAwarePropertyBoolean(observable)
+        UIThreadAwareBindings.uiThreadAwarePropertyBoolean(observable)
     }
 
     @Nonnull
     static Property<Integer> uiThreadAwarePropertyInteger(@Nonnull Property<Integer> observable) {
-        return UIThreadAwareBindings.uiThreadAwarePropertyInteger(observable)
+        UIThreadAwareBindings.uiThreadAwarePropertyInteger(observable)
     }
 
     @Nonnull
     static Property<Long> uiThreadAwarePropertyLong(@Nonnull Property<Long> observable) {
-        return UIThreadAwareBindings.uiThreadAwarePropertyLong(observable)
+        UIThreadAwareBindings.uiThreadAwarePropertyLong(observable)
     }
 
     @Nonnull
     static Property<Float> uiThreadAwarePropertyFloat(@Nonnull Property<Float> observable) {
-        return UIThreadAwareBindings.uiThreadAwarePropertyFloat(observable)
+        UIThreadAwareBindings.uiThreadAwarePropertyFloat(observable)
     }
 
     @Nonnull
     static Property<Double> uiThreadAwarePropertyDouble(@Nonnull Property<Double> observable) {
-        return UIThreadAwareBindings.uiThreadAwarePropertyDouble(observable)
+        UIThreadAwareBindings.uiThreadAwarePropertyDouble(observable)
     }
 
     @Nonnull
     static Property<String> uiThreadAwarePropertyString(@Nonnull Property<String> observable) {
-        return UIThreadAwareBindings.uiThreadAwarePropertyString(observable)
+        UIThreadAwareBindings.uiThreadAwarePropertyString(observable)
     }
 
     @Nonnull
     static <T> ObjectProperty<T> uiThreadAware(@Nonnull ObjectProperty<T> observable) {
-        return UIThreadAwareBindings.uiThreadAwareObjectProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareObjectProperty(observable)
     }
 
     @Nonnull
     static <E> ListProperty<E> uiThreadAware(@Nonnull ListProperty<E> observable) {
-        return UIThreadAwareBindings.uiThreadAwareListProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareListProperty(observable)
     }
 
     @Nonnull
     static <E> SetProperty<E> uiThreadAware(@Nonnull SetProperty<E> observable) {
-        return UIThreadAwareBindings.uiThreadAwareSetProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareSetProperty(observable)
     }
 
     @Nonnull
     static <K, V> MapProperty<K, V> uiThreadAware(@Nonnull MapProperty<K, V> observable) {
-        return UIThreadAwareBindings.uiThreadAwareMapProperty(observable)
+        UIThreadAwareBindings.uiThreadAwareMapProperty(observable)
     }
 
     @Nonnull
     static <T> ObservableValue<T> uiThreadAware(@Nonnull ObservableValue<T> observable) {
-        return UIThreadAwareBindings.uiThreadAwareObservable(observable)
+        UIThreadAwareBindings.uiThreadAwareObservable(observable)
     }
 
     @Nonnull
     static ObservableStringValue uiThreadAware(@Nonnull ObservableStringValue observable) {
-        return UIThreadAwareBindings.uiThreadAwareObservableString(observable)
+        UIThreadAwareBindings.uiThreadAwareObservableString(observable)
     }
 
     @Nonnull
     static ObservableBooleanValue uiThreadAware(@Nonnull ObservableBooleanValue observable) {
-        return UIThreadAwareBindings.uiThreadAwareObservableBoolean(observable)
+        UIThreadAwareBindings.uiThreadAwareObservableBoolean(observable)
     }
 
     @Nonnull
     static ObservableIntegerValue uiThreadAware(@Nonnull ObservableIntegerValue observable) {
-        return UIThreadAwareBindings.uiThreadAwareObservableInteger(observable)
+        UIThreadAwareBindings.uiThreadAwareObservableInteger(observable)
     }
 
     @Nonnull
     static ObservableLongValue uiThreadAware(@Nonnull ObservableLongValue observable) {
-        return UIThreadAwareBindings.uiThreadAwareObservableLong(observable)
+        UIThreadAwareBindings.uiThreadAwareObservableLong(observable)
     }
 
     @Nonnull
     static ObservableFloatValue uiThreadAware(@Nonnull ObservableFloatValue observable) {
-        return UIThreadAwareBindings.uiThreadAwareObservableFloat(observable)
+        UIThreadAwareBindings.uiThreadAwareObservableFloat(observable)
     }
 
     @Nonnull
     static ObservableDoubleValue uiThreadAware(@Nonnull ObservableDoubleValue observable) {
-        return UIThreadAwareBindings.uiThreadAwareObservableDouble(observable)
+        UIThreadAwareBindings.uiThreadAwareObservableDouble(observable)
     }
 }
