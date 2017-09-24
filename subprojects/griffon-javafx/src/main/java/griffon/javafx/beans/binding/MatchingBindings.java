@@ -32,7 +32,7 @@ import static javafx.beans.binding.Bindings.createBooleanBinding;
  * @author Andres Almiray
  * @since 2.11.0
  */
-public class MatchingBindings {
+public final class MatchingBindings {
     private static final String ERROR_ITEMS_NULL = "Argument 'items' must not be null";
     private static final String ERROR_PREDICATE_NULL = "Argument 'predicate' must not be null";
     private static final String ERROR_MAPPER_NULL = "Argument 'mapper' must not be null";
