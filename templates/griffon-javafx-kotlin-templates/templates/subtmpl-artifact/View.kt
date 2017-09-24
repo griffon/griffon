@@ -1,4 +1,4 @@
-package ${project_package};
+package ${project_package}
 
 import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonView
@@ -36,9 +36,9 @@ class ${project_class_name}View : AbstractJavaFXGriffonView() {
         scene.fill = Color.WHITE
 
         val node = loadFromFXML()
-        model.clickCountProperty().bindBidirectional(clickLabel.textProperty());
+        model.clickCountProperty().bindBidirectional(clickLabel.textProperty())
         (scene.root as Group).children.addAll(node)
-        connectActions(node as Any, controller as GriffonController)
+        connectActions(node, controller)
         connectMessageSource(node)
         return scene
     }

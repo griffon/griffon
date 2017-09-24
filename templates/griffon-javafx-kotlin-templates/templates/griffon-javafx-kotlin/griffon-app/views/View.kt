@@ -1,4 +1,4 @@
-package ${project_package};
+package ${project_package}
 
 import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonView
@@ -8,7 +8,6 @@ import javafx.fxml.FXML
 import javafx.scene.Group
 import javafx.scene.Scene
 import javafx.scene.control.Label
-import javafx.scene.control.TextField
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.Window
@@ -36,9 +35,9 @@ class ${project_class_name}View : AbstractJavaFXGriffonView() {
         scene.fill = Color.WHITE
 
         val node = loadFromFXML()
-        model.clickCountProperty().bindBidirectional(clickLabel.textProperty());
+        model.clickCountProperty().bindBidirectional(clickLabel.textProperty())
         (scene.root as Group).children.addAll(node)
-        connectActions(node as Any, controller as GriffonController)
+        connectActions(node, controller)
         connectMessageSource(node)
         return scene
     }
