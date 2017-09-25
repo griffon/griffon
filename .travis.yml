@@ -44,7 +44,7 @@ before_script:
   - sudo service resolvconf stop
   - sudo service sshguard stop
   - sudo service ssh stop
-script: ./gradlew --console=plain --no-daemon -S --scan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-java:jfxJar -x clirr sonarqube
+script: ./gradlew --console=plain --no-daemon -S --scan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-java:jfxJar -x clirr
 after_success:
   - ./update-gh-pages.sh
   - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
