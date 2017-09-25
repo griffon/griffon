@@ -52,7 +52,6 @@ final class GriffonFXCollectionsExtension {
         new MappingObservableList<T, S>(self, mapper)
     }
 
-
     @Nonnull
     static <T, S> ObservableList<T> mappedAs(
         @Nonnull ObservableList<S> self, @Nonnull ObservableValue<Function<S, T>> mapper) {
