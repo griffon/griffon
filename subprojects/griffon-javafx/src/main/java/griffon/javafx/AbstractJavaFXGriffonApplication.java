@@ -303,7 +303,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     public void initialize() {
         if (getPhase() == ApplicationPhase.INITIALIZE) {
             Parameters parameters = getParameters();
-            if (parameters != null && parameters.getRaw().size() > 0) {
+            if (parameters != null && !parameters.getRaw().isEmpty()) {
                 int length = parameters.getRaw().size();
                 startupArgs = new String[length];
                 System.arraycopy(parameters.getRaw().toArray(), 0, startupArgs, 0, length);

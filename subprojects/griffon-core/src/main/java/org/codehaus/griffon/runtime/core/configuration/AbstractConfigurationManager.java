@@ -89,10 +89,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
         PropertyDescriptor[] propertyDescriptors = GriffonClassUtils.getPropertyDescriptors(currentClass);
         for (PropertyDescriptor pd : propertyDescriptors) {
             Method writeMethod = pd.getWriteMethod();
-            if (null == writeMethod) { continue; }
-            if (isStatic(writeMethod.getModifiers())) {
-                continue;
-            }
+            if (null == writeMethod || isStatic(writeMethod.getModifiers())) { continue; }
 
             Configured annotation = writeMethod.getAnnotation(Configured.class);
             if (null == annotation) { continue; }
@@ -161,8 +158,8 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
         }
     }
 
-    @Nonnull
-    protected Object resolveConfiguration(@Nonnull String name, @Nonnull String key, @Nonnull String defaultValue) {
+    @Nullable
+    protected Object resolveConfiguration(@Nonnull String name, @Nonnull String key, @Nullable String defaultValue) {
         Configuration configuration = getConfiguration();
         if (!isBlank(name)) {
             configuration = getConfiguration(name);

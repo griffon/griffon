@@ -175,7 +175,7 @@ public class IndexedCardPane extends StackPane {
     }
 
     public void first() {
-        if (nodes.size() > 0) {
+        if (!nodes.isEmpty()) {
             show(0);
         }
     }

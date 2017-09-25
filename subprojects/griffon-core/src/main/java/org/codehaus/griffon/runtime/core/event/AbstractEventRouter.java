@@ -497,7 +497,7 @@ public abstract class AbstractEventRouter implements EventRouter {
                         toRemove.add(listener);
                     }
                 }
-                removed = toRemove.size() > 0;
+                removed = !toRemove.isEmpty();
                 for (Object listener : toRemove) {
                     LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
                     listenerList.remove(listener);

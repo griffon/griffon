@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.configuration;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 
@@ -28,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
     private final Field field;
 
-    public FieldConfigurationDescriptor(@Nonnull Field field, @Nonnull String configuration, @Nonnull String key, @Nonnull String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
+    public FieldConfigurationDescriptor(@Nonnull Field field, @Nonnull String configuration, @Nonnull String key, @Nullable String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
         super(configuration, key, defaultValue, format, editor);
         this.field = requireNonNull(field, "Argument 'field' must not be null");
     }

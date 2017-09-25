@@ -522,7 +522,7 @@ public final class TypeUtils {
             if (!found) return false;
             rightItems.remove(foundItem);
         }
-        return rightItems.size() == 0;
+        return rightItems.isEmpty();
     }
 
 

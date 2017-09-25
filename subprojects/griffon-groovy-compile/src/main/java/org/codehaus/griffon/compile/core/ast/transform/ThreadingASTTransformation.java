@@ -142,7 +142,7 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
 
     public static Threading.Policy getThreadingPolicy(MethodNode method, Threading.Policy defaultPolicy) {
         List<AnnotationNode> annotations = method.getAnnotations(THREADING_CNODE);
-        if (annotations.size() > 0) {
+        if (!annotations.isEmpty()) {
             return getThreadingPolicy(annotations.get(0));
         }
         return defaultPolicy;

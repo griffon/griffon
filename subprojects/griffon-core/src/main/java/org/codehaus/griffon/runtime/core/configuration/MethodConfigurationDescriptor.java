@@ -16,6 +16,7 @@
 package org.codehaus.griffon.runtime.core.configuration;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.beans.PropertyEditor;
 import java.lang.reflect.Method;
 
@@ -28,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 public class MethodConfigurationDescriptor extends ConfigurationDescriptor {
     private final Method writeMethod;
 
-    public MethodConfigurationDescriptor(@Nonnull Method writeMethod, @Nonnull String configuration, @Nonnull String key, @Nonnull String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
+    public MethodConfigurationDescriptor(@Nonnull Method writeMethod, @Nonnull String configuration, @Nonnull String key, @Nullable String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
         super(configuration, key, defaultValue, format, editor);
         this.writeMethod = requireNonNull(writeMethod, "Argument 'writeMethod' must not be null");
     }

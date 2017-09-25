@@ -86,7 +86,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView impl
 
         URL viewResource = getResourceAsURL(viewName);
         if (viewResource == null) {
-            return null;
+            throw new IllegalStateException("resource " + viewName + " not found");
         }
 
         FXMLLoader fxmlLoader = createFxmlLoader(viewResource);
