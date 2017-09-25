@@ -71,6 +71,10 @@ ext {
     projectsWithCoverage = []
     projectsWithIntegrationCoverage = []
     projectsWithFunctionalCoverage = []
+    baseJaCocoDir = "${buildDir}/reports/jacoco/test/"
+    jacocoMergeExecFile = "${baseJaCocoDir}jacocoTestReport.exec"
+    jacocoMergeReportHTMLFile = "${baseJaCocoDir}/html/"
+    jacocoMergeReportXMLFile = "${baseJaCocoDir}/jacocoTestReport.xml"
     projectsWithClirr = []
     depProjects = []
     fullBuild = !travis && !appveyor
@@ -304,30 +308,36 @@ subprojects { subproj ->
 
 evaluationDependsOnChildren()
 
-task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
     dependsOn = projectsWithCoverage.test + projectsWithIntegrationCoverage.integrationTest + projectsWithFunctionalCoverage.functionalTest
+    executionData = files([
+        projectsWithCoverage.jacocoTestReport +
+            projectsWithIntegrationCoverage.jacocoIntegrationTestReport +
+            projectsWithFunctionalCoverage.jacocoFunctionalTestReport
+    ].unique().executionData)
+    destinationFile = file(jacocoMergeExecFile)
+}
+
+task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
     group = 'Reporting'
     description = 'Aggregate Jacoco coverage reports.'
 
     additionalSourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(projectsWithCoverage .sourceSets.main.allSource.srcDirs)
     classDirectories = files(projectsWithCoverage.sourceSets.main.output)
-    executionData = files([
-        projectsWithCoverage.jacocoTestReport +
-        projectsWithIntegrationCoverage.jacocoIntegrationTestReport +
-        projectsWithFunctionalCoverage.jacocoFunctionalTestReport
-    ].unique().executionData)
+    executionData = files(jacocoRootMerge.destinationFile)
+
     reports {
-        xml.enabled true
-        html.enabled true
-        xml.destination = file("${buildDir}/reports/jacoco/report.xml")
-        html.destination = file("${buildDir}/reports/jacoco/html")
+        html.enabled = true
+        xml.enabled = true
+        html.destination = file(jacocoMergeReportHTMLFile)
+        xml.destination = file(jacocoMergeReportXMLFile)
     }
 }
 
 sonarqube {
     properties {
-        property 'sonar.jacoco.reportPath', file("${buildDir}/reports/jacoco/report.xml").absolutePath
+        property 'sonar.jacoco.reportPath', file(jacocoMergeExecFile).absolutePath
     }
 }
 
