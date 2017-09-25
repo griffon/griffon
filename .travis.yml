@@ -9,6 +9,7 @@ cache:
   directories:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
+  - $HOME/.sonar/cache/
 env:
   matrix:
   - TERM=dumb
@@ -17,12 +18,13 @@ env:
 addons:
   apt:
     packages:
-      - oracle-java8-installer
+    - oracle-java8-installer
     organization:
-      - griffon
-  sonar:
+    - griffon
+  sonarcloud:
+    organization: "griffon"
     token:
-      secure: i42zSa0Q9jdtAZY8MyDjTImr4ARoxpuZwm3RSVHgpC6Dg4an/eZ8PcR9/MqWYAAzxuPY/ILqnT9524bU9YoCxzVXz00k9ri41DUVRV+5TwJrQYA24Eil7bxWXWfEWWSV6zrK4jk3unir8RQrPZFIj9hsErGeC2yHI+GlSf8IBWc=
+      secure: pJj2PwFEUGR6kNW5o2zuCmY+U+Yre66ft+G1MU4IoFGDb4nwlCYwdA2doKhHdo7vnZt1zSCf2xFm/2rt1yDVNt3peK/YQv+JiOUMBzUpicP3/Cy3juPea6MLNPNl74NxqDyQylV9lU5D8H7CfelgJ8yUe+EvEB+oWsPOma9/uts=
 before_install:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
@@ -40,7 +42,7 @@ before_script:
   - sudo service resolvconf stop
   - sudo service sshguard stop
   - sudo service ssh stop
-script: ./gradlew --console=plain --no-daemon -S --scan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-java:jfxJar -x clirr
+script: ./gradlew --console=plain --no-daemon -S --scan sonarqube check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-java:jfxJar -x clirr
 after_success:
   - ./update-gh-pages.sh
   - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
