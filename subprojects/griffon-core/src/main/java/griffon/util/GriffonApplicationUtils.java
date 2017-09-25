@@ -263,16 +263,16 @@ public final class GriffonApplicationUtils {
 
         osVersion = System.getProperty("os.version");
         javaVersion = System.getProperty("java.version");
-        String version = javaVersion.substring(0, 3);
         isJdk4 = true;
 
-        if (version.startsWith("9")) {
+        if (javaVersion.startsWith("9")) {
             isJdk9 = true;
             isJdk8 = true;
             isJdk7 = true;
             isJdk6 = true;
             isJdk5 = true;
         } else {
+            String version = javaVersion.substring(0, 3);
             switch (version) {
                 case "1.8":
                     isJdk9 = false;
