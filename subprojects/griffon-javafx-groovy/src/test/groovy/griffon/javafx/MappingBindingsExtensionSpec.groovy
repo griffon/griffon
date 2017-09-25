@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.javafx.beans.binding
+package griffon.javafx
 
+import griffon.javafx.beans.binding.MappingBindings
 import groovy.transform.Canonical
 import javafx.beans.binding.Binding
 import javafx.beans.binding.ObjectBinding
@@ -34,10 +35,10 @@ import java.util.function.Function
 import java.util.function.Supplier
 
 @Unroll
-class MappingBindingsSpec extends Specification {
+class MappingBindingsExtensionSpec extends Specification {
     def "Map #type to object literal"() {
         given:
-        ObjectBinding binding = MappingBindings.mapToObject(source)
+        ObjectBinding binding = source.mapToObject()
 
         expect:
         !binding.get()
@@ -60,7 +61,7 @@ class MappingBindingsSpec extends Specification {
 
     def "Map object observable to #type binding"() {
         given:
-        Binding binding = MappingBindings."mapTo${type}"(source)
+        Binding binding = source."mapTo${type}"()
 
         expect:
         !binding.get()
@@ -83,7 +84,7 @@ class MappingBindingsSpec extends Specification {
 
     def "Map#type with function"() {
         given:
-        Binding binding = MappingBindings."map${type}"(source, function as Function)
+        Binding binding = source."map${type}"(function as Function)
 
         when:
         source.set(value)
@@ -105,7 +106,7 @@ class MappingBindingsSpec extends Specification {
     def "Map#type with observable function"() {
         given:
         ObjectProperty mapper = new SimpleObjectProperty(function1 as Function)
-        Binding binding = MappingBindings."map${type}"(source, mapper)
+        Binding binding = source."map${type}"(mapper)
 
         when:
         source.set(value)
@@ -132,7 +133,7 @@ class MappingBindingsSpec extends Specification {
 
     def "Map#type with function (observables) value1=#value1 value2=#value2"() {
         given:
-        Binding binding = MappingBindings."map${type}s"(ob1, ob2, defaultValue, function as BiFunction)
+        Binding binding = ob1."map${type}s"(ob2, defaultValue, function as BiFunction)
 
         when:
         ob1.set(value1)
@@ -158,7 +159,7 @@ class MappingBindingsSpec extends Specification {
     def "Map#type with observable function (observables)"() {
         given:
         ObjectProperty mapper = new SimpleObjectProperty(function1 as BiFunction)
-        Binding binding = MappingBindings."map${type}s"(ob1, ob2, defaultValue, mapper)
+        Binding binding = ob1."map${type}s"(ob2, defaultValue, mapper)
 
         when:
         ob1.set(value1)
@@ -189,7 +190,7 @@ class MappingBindingsSpec extends Specification {
 
     def "Map#type with function and supplier (observables) value1=#value1 value2=#value2"() {
         given:
-        Binding binding = MappingBindings."map${type}s"(ob1, ob2, supplier as Supplier, function as BiFunction)
+        Binding binding = ob1."map${type}s"(ob2, supplier as Supplier, function as BiFunction)
 
         when:
         ob1.set(value1)
@@ -215,7 +216,7 @@ class MappingBindingsSpec extends Specification {
     def "Map#type with observable function and supplier (observables)"() {
         given:
         ObjectProperty mapper = new SimpleObjectProperty(function1 as BiFunction)
-        Binding binding = MappingBindings."map${type}s"(ob1, ob2, supplier as Supplier, mapper)
+        Binding binding = ob1."map${type}s"(ob2, supplier as Supplier, mapper)
 
         when:
         ob1.set(value1)

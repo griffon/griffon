@@ -205,7 +205,7 @@ final class FilteringBindingsExtension {
     }
 
     @Nonnull
-    StringBinding filterThenFindFirstString(
+    static StringBinding filterThenFindFirstString(
         @Nonnull ObservableList<String> self,
         @Nonnull String defaultValue, @Nonnull Predicate<? super String> filter) {
         FilteringBindings.filterThenFindFirstString(self, defaultValue, filter)
@@ -259,14 +259,14 @@ final class FilteringBindingsExtension {
     }
 
     @Nonnull
-    BooleanBinding filterThenFindFirstBoolean(
+    static BooleanBinding filterThenFindFirstBoolean(
         @Nonnull ObservableSet<Boolean> self,
         @Nonnull Boolean defaultValue, @Nonnull Predicate<? super Boolean> filter) {
         FilteringBindings.filterThenFindFirstBoolean(self, defaultValue, filter)
     }
 
     @Nonnull
-    BooleanBinding filterThenFindFirstBoolean(
+    static BooleanBinding filterThenFindFirstBoolean(
         @Nonnull ObservableSet<Boolean> self,
         @Nonnull Supplier<Boolean> supplier, @Nonnull Predicate<? super Boolean> filter) {
         FilteringBindings.filterThenFindFirstBoolean(self, supplier, filter)
