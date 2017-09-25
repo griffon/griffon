@@ -17,10 +17,12 @@ package griffon.javafx.support
 
 import javafx.application.Platform
 import javafx.embed.swing.JFXPanel
+import javafx.scene.chart.NumberAxis
 import javafx.scene.control.Accordion
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.Label
 import javafx.scene.control.Menu
 import javafx.scene.control.MenuBar
 import javafx.scene.control.MenuItem
@@ -28,6 +30,7 @@ import javafx.scene.control.ScrollPane
 import javafx.scene.control.SplitPane
 import javafx.scene.control.Tab
 import javafx.scene.control.TabPane
+import javafx.scene.control.TableColumn
 import javafx.scene.control.TitledPane
 import javafx.scene.control.ToolBar
 import javafx.scene.control.Tooltip
@@ -44,6 +47,37 @@ class JavaFXUtilsSpec extends Specification {
     static {
         // initialize UI toolkit
         new JFXPanel()
+    }
+
+    void "Check I18N#method on #type"() {
+        given:
+
+        expect:
+        !JavaFXUtils."getI18n${method}"(instance)
+
+        when:
+        JavaFXUtils."setI18n${method}"(instance, arg)
+
+        then:
+        value == JavaFXUtils."getI18n${method}"(instance)
+
+        where:
+        type          | instance          | method         | arg   | value
+        'Labeled'     | new Label()       | 'Key'          | 'foo' | 'foo'
+        'Tab'         | new Tab()         | 'Key'          | 'foo' | 'foo'
+        'MenuItem'    | new MenuItem()    | 'Key'          | 'foo' | 'foo'
+        'Axis'        | new NumberAxis()  | 'Key'          | 'foo' | 'foo'
+        'TableColumn' | new TableColumn() | 'Key'          | 'foo' | 'foo'
+        'Labeled'     | new Label()       | 'DefaultValue' | 'foo' | 'foo'
+        'Tab'         | new Tab()         | 'DefaultValue' | 'foo' | 'foo'
+        'MenuItem'    | new MenuItem()    | 'DefaultValue' | 'foo' | 'foo'
+        'Axis'        | new NumberAxis()  | 'DefaultValue' | 'foo' | 'foo'
+        'TableColumn' | new TableColumn() | 'DefaultValue' | 'foo' | 'foo'
+        'Labeled'     | new Label()       | 'Args'         | 'foo' | 'foo'
+        'Tab'         | new Tab()         | 'Args'         | 'foo' | 'foo'
+        'MenuItem'    | new MenuItem()    | 'Args'         | 'foo' | 'foo'
+        'Axis'        | new NumberAxis()  | 'Args'         | 'foo' | 'foo'
+        'TableColumn' | new TableColumn() | 'Args'         | 'foo' | 'foo'
     }
 
     void "Find the button on #container.class using findNode method"() {
