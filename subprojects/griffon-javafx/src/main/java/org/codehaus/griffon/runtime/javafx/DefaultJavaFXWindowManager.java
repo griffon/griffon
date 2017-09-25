@@ -84,8 +84,8 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
             }
         }
 
-        if (isAutoShutdown() && visibleWindows.size() <= 1 && visibleWindows.contains(widget)) {
-            if (!getApplication().shutdown()) show(widget);
+        if (isAutoShutdown() && visibleWindows.size() <= 1 && visibleWindows.contains(widget) && !getApplication().shutdown()) {
+            show(widget);
         }
     }
 

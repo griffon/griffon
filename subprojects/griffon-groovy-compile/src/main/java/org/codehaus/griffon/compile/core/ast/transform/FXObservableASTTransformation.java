@@ -179,6 +179,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * Convenience method to see if an annotated node is {@code @FXObservable}.
      *
      * @param node the node to check
+     *
      * @return true if the node is observable
      */
     public static boolean hasFXObservableAnnotation(AnnotatedNode node) {
@@ -293,7 +294,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
         List<AnnotationNode> methodAnnotations = new ArrayList<>();
         List<AnnotationNode> fieldAnnotations = new ArrayList<>();
         for (AnnotationNode annotation : originalProp.getField().getAnnotations()) {
-            if (FXOBSERVABLE_CNODE.equals(annotation.getClassNode())) continue;
+            if (FXOBSERVABLE_CNODE.equals(annotation.getClassNode())) { continue; }
             Class annotationClass = annotation.getClassNode().getTypeClass();
             Target target = (Target) annotationClass.getAnnotation(Target.class);
             if (isTargetAllowed(target, ElementType.METHOD)) {
@@ -348,6 +349,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * will have "Property" appended to its name and its type will be one of the *Property types in JavaFX.
      *
      * @param orig The original property
+     *
      * @return A new PropertyNode for the JavaFX property
      */
     private PropertyNode createFXProperty(PropertyNode orig) {
@@ -403,7 +405,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
 
         MethodNode setter = new MethodNode(setterName, mod, ClassHelper.VOID_TYPE, setterParameterTypes,
             ClassNode.EMPTY_ARRAY, setterBlock);
-        if (annotations != null) setter.addAnnotations(annotations);
+        if (annotations != null) { setter.addAnnotations(annotations); }
         setter.setSynthetic(true);
         declaringClass.addMethod(setter);
     }
@@ -437,7 +439,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
         int mod = propertyNode.getModifiers() | Opcodes.ACC_FINAL;
         MethodNode getter = new MethodNode(getterName, mod, propertyNode.getType(), Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY, getterBlock);
-        if (annotations != null) getter.addAnnotations(annotations);
+        if (annotations != null) { getter.addAnnotations(annotations); }
         getter.setSynthetic(true);
         declaringClass.addMethod(getter);
     }
@@ -484,59 +486,53 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
         ClassNode implNode = PROPERTY_IMPL_MAP.get(fxType);
         if (implNode == null) {
             if (fxType.getTypeClass() == SIMPLE_LIST_PROPERTY_CNODE.getTypeClass()) {
-                if (initExp != null) {
-                    if (initExp instanceof ListExpression ||
-                        (initExp instanceof CastExpression &&
-                            (((CastExpression) initExp).getType().equals(LIST_TYPE) ||
-                                ((CastExpression) initExp).getType().declaresInterface(LIST_TYPE))) ||
-                        (initExp instanceof ConstructorCallExpression &&
-                            (((ConstructorCallExpression) initExp).getType().equals(LIST_TYPE) ||
-                                ((ConstructorCallExpression) initExp).getType().declaresInterface(LIST_TYPE)))
-                        ) {
-                        ctorArgs = new ArgumentListExpression(
-                            new MethodCallExpression(
-                                new ClassExpression(FXCOLLECTIONS_CNODE),
-                                "observableList",
-                                ctorArgs)
-                        );
-                    }
+                if (initExp != null && initExp instanceof ListExpression ||
+                    (initExp instanceof CastExpression &&
+                        (((CastExpression) initExp).getType().equals(LIST_TYPE) ||
+                            ((CastExpression) initExp).getType().declaresInterface(LIST_TYPE))) ||
+                    (initExp instanceof ConstructorCallExpression &&
+                        (((ConstructorCallExpression) initExp).getType().equals(LIST_TYPE) ||
+                            ((ConstructorCallExpression) initExp).getType().declaresInterface(LIST_TYPE)))
+                    ) {
+                    ctorArgs = new ArgumentListExpression(
+                        new MethodCallExpression(
+                            new ClassExpression(FXCOLLECTIONS_CNODE),
+                            "observableList",
+                            ctorArgs)
+                    );
                 }
                 implNode = fxType;
             } else if (fxType.getTypeClass() == SIMPLE_MAP_PROPERTY_CNODE.getTypeClass()) {
-                if (initExp != null) {
-                    if (initExp instanceof MapExpression ||
-                        (initExp instanceof CastExpression &&
-                            (((CastExpression) initExp).getType().equals(MAP_TYPE) ||
-                                ((CastExpression) initExp).getType().declaresInterface(MAP_TYPE))) ||
-                        (initExp instanceof ConstructorCallExpression &&
-                            (((ConstructorCallExpression) initExp).getType().equals(MAP_TYPE) ||
-                                ((ConstructorCallExpression) initExp).getType().declaresInterface(MAP_TYPE)))
-                        ) {
-                        ctorArgs = new ArgumentListExpression(
-                            new MethodCallExpression(
-                                new ClassExpression(FXCOLLECTIONS_CNODE),
-                                "observableMap",
-                                ctorArgs)
-                        );
-                    }
+                if (initExp != null && initExp instanceof MapExpression ||
+                    (initExp instanceof CastExpression &&
+                        (((CastExpression) initExp).getType().equals(MAP_TYPE) ||
+                            ((CastExpression) initExp).getType().declaresInterface(MAP_TYPE))) ||
+                    (initExp instanceof ConstructorCallExpression &&
+                        (((ConstructorCallExpression) initExp).getType().equals(MAP_TYPE) ||
+                            ((ConstructorCallExpression) initExp).getType().declaresInterface(MAP_TYPE)))
+                    ) {
+                    ctorArgs = new ArgumentListExpression(
+                        new MethodCallExpression(
+                            new ClassExpression(FXCOLLECTIONS_CNODE),
+                            "observableMap",
+                            ctorArgs)
+                    );
                 }
                 implNode = fxType;
             } else if (fxType.getTypeClass() == SIMPLE_SET_PROPERTY_CNODE.getTypeClass()) {
-                if (initExp != null) {
-                    if ((initExp instanceof CastExpression &&
-                        (((CastExpression) initExp).getType().equals(SET_TYPE) ||
-                            ((CastExpression) initExp).getType().declaresInterface(SET_TYPE))) ||
-                        (initExp instanceof ConstructorCallExpression &&
-                            (((ConstructorCallExpression) initExp).getType().equals(SET_TYPE) ||
-                                ((ConstructorCallExpression) initExp).getType().declaresInterface(SET_TYPE)))
-                        ) {
-                        ctorArgs = new ArgumentListExpression(
-                            new MethodCallExpression(
-                                new ClassExpression(FXCOLLECTIONS_CNODE),
-                                "observableSet",
-                                ctorArgs)
-                        );
-                    }
+                if (initExp != null && (initExp instanceof CastExpression &&
+                    (((CastExpression) initExp).getType().equals(SET_TYPE) ||
+                        ((CastExpression) initExp).getType().declaresInterface(SET_TYPE))) ||
+                    (initExp instanceof ConstructorCallExpression &&
+                        (((ConstructorCallExpression) initExp).getType().equals(SET_TYPE) ||
+                            ((ConstructorCallExpression) initExp).getType().declaresInterface(SET_TYPE)))
+                    ) {
+                    ctorArgs = new ArgumentListExpression(
+                        new MethodCallExpression(
+                            new ClassExpression(FXCOLLECTIONS_CNODE),
+                            "observableSet",
+                            ctorArgs)
+                    );
                 }
                 implNode = fxType;
             } else {
@@ -615,6 +611,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * $property.setValue(value)
      *
      * @param fxProperty The original Groovy property that we're creating a setter for.
+     *
      * @return A Statement that is the body of the new setter.
      */
     protected Statement createSetterStatement(PropertyNode fxProperty) {
@@ -638,6 +635,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * return $property.getValue()
      *
      * @param fxProperty The new JavaFX property.
+     *
      * @return A Statement that is the body of the new getter.
      */
     protected Statement createGetterStatement(PropertyNode fxProperty) {
@@ -646,9 +644,9 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
         ArgumentListExpression emptyArguments = ArgumentListExpression.EMPTY_ARGUMENTS;
 
         // We're relying on the *Property() method to provide the return value - is this still needed??
-//        Expression defaultReturn = defaultReturnMap.get(originalProperty.getType());
-//        if (defaultReturn == null)
-//            defaultReturn = ConstantExpression.NULL;
+        //        Expression defaultReturn = defaultReturnMap.get(originalProperty.getType());
+        //        if (defaultReturn == null)
+        //            defaultReturn = ConstantExpression.NULL;
 
         MethodCallExpression getProperty = new MethodCallExpression(thisExpression, fxPropertyGetter, emptyArguments);
         MethodCallExpression getValue = new MethodCallExpression(getProperty, "getValue", emptyArguments);
@@ -675,11 +673,11 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * @param newName The name for the new field node.
      * @param newType The new type of the field.  If null, the old FieldNode's type will be used.
      * @param f       The FieldNode to copy.
+     *
      * @return The new FieldNode.
      */
     private FieldNode createFieldNodeCopy(String newName, ClassNode newType, FieldNode f) {
-        if (newType == null)
-            newType = f.getType();
+        if (newType == null) { newType = f.getType(); }
         newType = newType.getPlainNodeReference();
 
         return new FieldNode(newName, f.getModifiers(), newType, f.getOwner(), f.getInitialValueExpression());
@@ -689,6 +687,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
      * Generates the correct getter method name for a JavaFX property.
      *
      * @param fxProperty The property for which the getter should be generated.
+     *
      * @return The getter name as a String.
      */
     private String getFXPropertyGetterName(PropertyNode fxProperty) {

@@ -76,9 +76,8 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
             }
         }
 
-        if (visibleWindows <= 1 && isAutoShutdown()) {
-            if (!getApplication().shutdown())
-                show(widget);
+        if (visibleWindows <= 1 && isAutoShutdown() && !getApplication().shutdown()) {
+            show(widget);
         }
     }
 

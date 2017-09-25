@@ -223,12 +223,10 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             .e("mvcId", mvcId)
             .e("configuration", configuration);
 
-        if (args.containsKey(KEY_PARENT_GROUP)) {
-            if (args.get(KEY_PARENT_GROUP) instanceof MVCGroup) {
-                MVCGroup parentGroup = (MVCGroup) args.get(KEY_PARENT_GROUP);
-                for (Map.Entry<String, Object> e : parentGroup.getMembers().entrySet()) {
-                    args.put("parent" + capitalize(e.getKey()), e.getValue());
-                }
+        if (args.containsKey(KEY_PARENT_GROUP) && args.get(KEY_PARENT_GROUP) instanceof MVCGroup) {
+            MVCGroup parentGroup = (MVCGroup) args.get(KEY_PARENT_GROUP);
+            for (Map.Entry<String, Object> e : parentGroup.getMembers().entrySet()) {
+                args.put("parent" + capitalize(e.getKey()), e.getValue());
             }
         }
 

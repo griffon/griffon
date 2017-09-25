@@ -2409,10 +2409,8 @@ public class GriffonClassUtils {
         requireNonNull(packageList, "Argument 'packageList' must not be null");
         String classPackage = clazz.getPackage().getName();
         for (Object packageName : packageList) {
-            if (packageName != null) {
-                if (classPackage.startsWith(packageName.toString())) {
-                    return true;
-                }
+            if (packageName != null && classPackage.startsWith(packageName.toString())) {
+                return true;
             }
         }
         return false;

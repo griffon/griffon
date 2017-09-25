@@ -60,7 +60,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
 
     @PostConstruct
     private void initialize() {
-        this.application = requireNonNull(application, "Argument 'application' cannot ne null");
+        requireNonNull(application, "Argument 'application' cannot ne null");
 
         application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {
             @Override

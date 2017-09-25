@@ -68,9 +68,8 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
         }
 
         int visibleWindows = getWindows().size();
-        if (visibleWindows <= 1 && isAutoShutdown()) {
-            if (!getApplication().shutdown())
-                show(widget);
+        if (visibleWindows <= 1 && isAutoShutdown() && !getApplication().shutdown()) {
+            show(widget);
         }
     }
 
