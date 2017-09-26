@@ -717,7 +717,7 @@ public final class UIThreadAwareBindings {
     @Nonnull
     public static <T> ObservableValue<T> uiThreadAwareObservable(@Nonnull final ObservableValue<T> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
-        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableValue<>(observable);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableObjectValue<>(observable);
     }
 
     /**

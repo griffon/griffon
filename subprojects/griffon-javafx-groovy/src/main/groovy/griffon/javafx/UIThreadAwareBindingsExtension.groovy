@@ -122,7 +122,7 @@ final class UIThreadAwareBindingsExtension {
     }
 
     @Nonnull
-    InvalidationListener uiThreadAwareInvalidationListener(@Nonnull Runnable runnable) {
+    static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull Runnable runnable) {
         UIThreadAwareBindings.uiThreadAwareInvalidationListener(runnable)
     }
 
