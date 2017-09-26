@@ -72,9 +72,9 @@ ext {
     projectsWithIntegrationCoverage = []
     projectsWithFunctionalCoverage = []
     baseJaCocoDir = "${buildDir}/reports/jacoco/test/"
-    jacocoMergeExecFile = "${baseJaCocoDir}jacocoTestReport.exec"
+    jacocoMergeExecFile = "${baseJaCocoDir}jacocoRootReport.exec"
     jacocoMergeReportHTMLFile = "${baseJaCocoDir}/html/"
-    jacocoMergeReportXMLFile = "${baseJaCocoDir}/jacocoTestReport.xml"
+    jacocoMergeReportXMLFile = "${baseJaCocoDir}/jacocoRootReport.xml"
     projectsWithClirr = []
     depProjects = []
     fullBuild = !travis && !appveyor
@@ -347,7 +347,7 @@ versioneye {
 
 coveralls {
     sourceDirs = projectsWithCoverage.sourceSets.main.allSource.srcDirs.flatten()
-    jacocoReportPath = "${buildDir}/reports/jacoco/report.xml"
+    jacocoReportPath = jacocoMergeReportXMLFile
 }
 
 task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
