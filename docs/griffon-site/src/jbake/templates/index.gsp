@@ -13,32 +13,28 @@
 
     <p><a
         href="http://griffon-framework.org/">Griffon</a> is desktop application development platform for the JVM.Inspired by <a
-        href="http://grails.org/">Grails</a>, Griffon leverages the use of the <a
-        href="http://groovy-lang.org/">Groovy</a> language and concepts like Convention over
-    Configuration. The Swing toolkit is the default UI toolkit of choice however others may be used,
-    for example JavaFX.
+        href="http://grails.org/">Grails</a>, Griffon leverages concepts like
+        Convention over Configuration, modularity, and freedom of choice. The framework
+        at its core is written 100% in Java allowing developers to write their own applications
+        with only Java. Other programming languages suchas Groovy and Kotlin may be used too, in
+        which case additional capabilities such as builders and extension methods become available.
     </p>
 
     <p>
-        Griffon encourages the use of the MVC pattern. Griffon also follows in the spirit of
-        the Swing Application Framework (JSR 296), it defines a simple yet powerful application
-        life cycle and event publishing mechanism. Another interesting feature comes from the
-        Groovy language itself: automatic property support and property binding (inspired by
-        BeansBinding (JSR 295)), which makes creating observable beans and binding to their
-        properties a snap! As if property binding was not enough Groovy’s SwingBuilder also
-        simplifies building multi-threaded applications, say goodbye to the ugly gray rectangle
-        (the bane of Swing apps)!
+        Griffon supports 4 different UI toolkits: Swing, JavaFX, Apache Pivot, and Lanterna.
     </p>
 
     <p>
-        Grails developers should feel right at home when trying out Griffon. Many of Grails’
-        conventions and commands are shared with Griffon. Granted, Swing is not the same as
-        HTML/GSP but Builders simplify the task of creating the UI.
+        Griffon encourages the use of the MVC pattern but it's not limited to a single interpretation,
+        you can for example apply standard MVC, MVP, MVVM, PMVC and others.
+        Griffon also follows in the spirit of the Swing Application Framework (JSR 296), it defines
+        a simple yet powerful application life cycle and event publishing mechanism regardless of
+        the UI toolkit of choice.
     </p>
 
     <p>
-        Seasoned Java developers will also be able to pick up the pace quickly, as the framework
-        relieves you of the burden of maintaining an application structure, allowing you to
+        Seasoned Java developers should be able to pick up the pace quickly, as the framework
+        relieves them from the burden of maintaining an application structure, allowing them to
         concentrate on getting the code right.
     </p>
 
