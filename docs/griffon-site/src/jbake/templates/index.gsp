@@ -16,7 +16,7 @@
         href="http://grails.org/">Grails</a>, Griffon leverages concepts like
         Convention over Configuration, modularity, and freedom of choice. The framework
         at its core is written 100% in Java allowing developers to write their own applications
-        with only Java. Other programming languages suchas Groovy and Kotlin may be used too, in
+        with only Java. Other programming languages such as Groovy and Kotlin may be used too, in
         which case additional capabilities such as builders and extension methods become available.
     </p>
 

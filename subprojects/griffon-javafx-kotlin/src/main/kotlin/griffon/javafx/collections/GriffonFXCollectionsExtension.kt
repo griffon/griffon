@@ -38,10 +38,10 @@ fun <K, V> ObservableMap<K, V>.uiThreadAware(): ObservableMap<K, V> {
     return GriffonFXCollections.uiThreadAwareObservableMap(this)
 }
 
-fun <T, S> ObservableList<S>.mappedAs(mapper: Function<S, T>): ObservableList<T> {
+fun <T, S> ObservableList<S>.mappedWith(mapper: Function<S, T>): ObservableList<T> {
     return MappingObservableList<T, S>(this, mapper)
 }
 
-fun <T, S> ObservableList<S>.mappedAs(mapper: ObservableValue<Function<S, T>>): ObservableList<T> {
+fun <T, S> ObservableList<S>.mappedWith(mapper: ObservableValue<Function<S, T>>): ObservableList<T> {
     return MappingObservableList<T, S>(this, mapper)
 }

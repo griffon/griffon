@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.javafx.collections
+package griffon.javafx
 
 import javafx.application.Platform
 import javafx.collections.FXCollections
@@ -31,7 +31,7 @@ import static java.util.concurrent.TimeUnit.SECONDS
 import static org.awaitility.Awaitility.await
 
 @Unroll
-class GriffonFXCollectionsSpec extends Specification {
+class GriffonFXCollectionsExtensionSpec extends Specification {
     static {
         // initialize UI toolkit
         new JFXPanel()
@@ -40,7 +40,7 @@ class GriffonFXCollectionsSpec extends Specification {
     void "Trigger list events inside UI thread (source) "() {
         given:
         ObservableList<String> source = FXCollections.observableArrayList()
-        ObservableList<String> target = GriffonFXCollections.uiThreadAwareObservableList(source)
+        ObservableList<String> target = source.uiThreadAware()
         ListChangeListener<String> witness = new ListChangeListener<String>() {
             boolean changed
             boolean changedInsideUIThread
@@ -64,7 +64,7 @@ class GriffonFXCollectionsSpec extends Specification {
     void "Trigger list events inside UI thread (target) "() {
         given:
         ObservableList<String> source = FXCollections.observableArrayList()
-        ObservableList<String> target = GriffonFXCollections.uiThreadAwareObservableList(source)
+        ObservableList<String> target = source.uiThreadAware()
         ListChangeListener<String> witness = new ListChangeListener<String>() {
             boolean changed
             boolean changedInsideUIThread
@@ -88,7 +88,7 @@ class GriffonFXCollectionsSpec extends Specification {
     void "Trigger set events inside UI thread (source) "() {
         given:
         ObservableSet<String> source = FXCollections.observableSet()
-        ObservableSet<String> target = GriffonFXCollections.uiThreadAwareObservableSet(source)
+        ObservableSet<String> target = source.uiThreadAware()
         SetChangeListener<String> witness = new SetChangeListener<String>() {
             boolean changed
             boolean changedInsideUIThread
@@ -112,7 +112,7 @@ class GriffonFXCollectionsSpec extends Specification {
     void "Trigger set events inside UI thread (target) "() {
         given:
         ObservableSet<String> source = FXCollections.observableSet()
-        ObservableSet<String> target = GriffonFXCollections.uiThreadAwareObservableSet(source)
+        ObservableSet<String> target = source.uiThreadAware()
         SetChangeListener<String> witness = new SetChangeListener<String>() {
             boolean changed
             boolean changedInsideUIThread
@@ -136,7 +136,7 @@ class GriffonFXCollectionsSpec extends Specification {
     void "Trigger map events inside UI thread (source) "() {
         given:
         ObservableMap<String, String> source = FXCollections.observableHashMap()
-        ObservableMap<String, String> target = GriffonFXCollections.uiThreadAwareObservableMap(source)
+        ObservableMap<String, String> target = source.uiThreadAware()
         MapChangeListener<String, String> witness = new MapChangeListener<String, String>() {
             boolean changed
             boolean changedInsideUIThread
@@ -160,7 +160,7 @@ class GriffonFXCollectionsSpec extends Specification {
     void "Trigger map events inside UI thread (target) "() {
         given:
         ObservableMap<String, String> source = FXCollections.observableHashMap()
-        ObservableMap<String, String> target = GriffonFXCollections.uiThreadAwareObservableMap(source)
+        ObservableMap<String, String> target = source.uiThreadAware()
         MapChangeListener<String, String> witness = new MapChangeListener<String, String>() {
             boolean changed
             boolean changedInsideUIThread
