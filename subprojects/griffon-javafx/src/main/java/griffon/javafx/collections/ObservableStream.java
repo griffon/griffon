@@ -107,6 +107,18 @@ public interface ObservableStream<T> {
     ObjectBinding<T> max(@Nonnull Comparator<? super T> comparator);
 
     @Nonnull
+    ObjectBinding<T> min(@Nullable T defaultValue, @Nonnull Comparator<? super T> comparator);
+
+    @Nonnull
+    ObjectBinding<T> max(@Nullable T defaultValue, @Nonnull Comparator<? super T> comparator);
+
+    @Nonnull
+    ObjectBinding<T> min(@Nonnull Supplier<T> supplier, @Nonnull Comparator<? super T> comparator);
+
+    @Nonnull
+    ObjectBinding<T> max(@Nonnull Supplier<T> supplier, @Nonnull Comparator<? super T> comparator);
+
+    @Nonnull
     BooleanBinding anyMatch(@Nonnull Predicate<? super T> predicate);
 
     @Nonnull
@@ -120,6 +132,18 @@ public interface ObservableStream<T> {
 
     @Nonnull
     ObjectBinding<T> max(@Nonnull ObservableValue<Comparator<? super T>> comparator);
+
+    @Nonnull
+    ObjectBinding<T> min(@Nullable T defaultValue, @Nonnull ObservableValue<Comparator<? super T>> comparator);
+
+    @Nonnull
+    ObjectBinding<T> max(@Nullable T defaultValue, @Nonnull ObservableValue<Comparator<? super T>> comparator);
+
+    @Nonnull
+    ObjectBinding<T> min(@Nonnull Supplier<T> supplier, @Nonnull ObservableValue<Comparator<? super T>> comparator);
+
+    @Nonnull
+    ObjectBinding<T> max(@Nonnull Supplier<T> supplier, @Nonnull ObservableValue<Comparator<? super T>> comparator);
 
     @Nonnull
     BooleanBinding anyMatch(@Nonnull ObservableValue<Predicate<? super T>> predicate);

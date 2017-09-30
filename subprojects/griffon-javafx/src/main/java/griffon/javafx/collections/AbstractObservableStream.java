@@ -118,7 +118,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
             @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
-                return stream.limit(n.get());
+                return stream.skip(n.get());
             }
 
             @Nullable
@@ -370,64 +370,140 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
 
     @Nonnull
     @Override
-    public ObjectBinding<T> min(@Nonnull Comparator<? super T> comparator) {
+    public ObjectBinding<T> min(@Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
-        return createObjectBinding(() -> (T) stream().min(comparator), dependencies());
+        return createObjectBinding(() -> (T) stream().min(comparator).orElse(null), dependencies());
     }
 
     @Nonnull
     @Override
-    public ObjectBinding<T> max(@Nonnull Comparator<? super T> comparator) {
+    public ObjectBinding<T> max(@Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
-        return createObjectBinding(() -> (T) stream().max(comparator), dependencies());
+        return createObjectBinding(() -> (T) stream().max(comparator).orElse(null), dependencies());
     }
 
     @Nonnull
     @Override
-    public BooleanBinding anyMatch(@Nonnull Predicate<? super T> predicate) {
+    public ObjectBinding<T> min(@Nullable final T defaultValue, @Nonnull final Comparator<? super T> comparator) {
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        return createObjectBinding(() -> (T) stream().min(comparator).orElse(defaultValue), dependencies());
+    }
+
+    @Nonnull
+    @Override
+    public ObjectBinding<T> max(@Nullable final T defaultValue, @Nonnull final Comparator<? super T> comparator) {
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        return createObjectBinding(() -> (T) stream().max(comparator).orElse(defaultValue), dependencies());
+    }
+
+    @Nonnull
+    @Override
+    public ObjectBinding<T> min(@Nonnull final Supplier<T> supplier, @Nonnull final Comparator<? super T> comparator) {
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        return createObjectBinding(() -> (T) stream().min(comparator).orElseGet(supplier), dependencies());
+    }
+
+    @Nonnull
+    @Override
+    public ObjectBinding<T> max(@Nonnull final Supplier<T> supplier, @Nonnull final Comparator<? super T> comparator) {
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        return createObjectBinding(() -> (T) stream().max(comparator).orElseGet(supplier), dependencies());
+    }
+
+    @Nonnull
+    @Override
+    public BooleanBinding anyMatch(@Nonnull final Predicate<? super T> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> stream().anyMatch(predicate), dependencies());
     }
 
     @Nonnull
     @Override
-    public BooleanBinding allMatch(@Nonnull Predicate<? super T> predicate) {
+    public BooleanBinding allMatch(@Nonnull final Predicate<? super T> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> stream().allMatch(predicate), dependencies());
     }
 
     @Nonnull
     @Override
-    public BooleanBinding noneMatch(@Nonnull Predicate<? super T> predicate) {
+    public BooleanBinding noneMatch(@Nonnull final Predicate<? super T> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> stream().noneMatch(predicate), dependencies());
     }
 
     @Nonnull
     @Override
-    public ObjectBinding<T> min(@Nonnull ObservableValue<Comparator<? super T>> comparator) {
+    public ObjectBinding<T> min(@Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createObjectBinding(() -> {
             Comparator<? super T> c = comparator.getValue();
             requireNonNull(c, ERROR_COMPARATOR_NULL);
-            return (T) stream().min(c);
+            return (T) stream().min(c).orElse(null);
         }, dependencies(comparator));
     }
 
     @Nonnull
     @Override
-    public ObjectBinding<T> max(@Nonnull ObservableValue<Comparator<? super T>> comparator) {
+    public ObjectBinding<T> max(@Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createObjectBinding(() -> {
             Comparator<? super T> c = comparator.getValue();
             requireNonNull(c, ERROR_COMPARATOR_NULL);
-            return (T) stream().max(c);
+            return (T) stream().max(c).orElse(null);
         }, dependencies(comparator));
     }
 
     @Nonnull
     @Override
-    public BooleanBinding anyMatch(@Nonnull ObservableValue<Predicate<? super T>> predicate) {
+    public ObjectBinding<T> min(@Nullable final T defaultValue, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        return createObjectBinding(() -> {
+            Comparator<? super T> c = comparator.getValue();
+            requireNonNull(c, ERROR_COMPARATOR_NULL);
+            return (T) stream().min(c).orElse(defaultValue);
+        }, dependencies(comparator));
+    }
+
+    @Nonnull
+    @Override
+    public ObjectBinding<T> max(@Nullable final T defaultValue, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        return createObjectBinding(() -> {
+            Comparator<? super T> c = comparator.getValue();
+            requireNonNull(c, ERROR_COMPARATOR_NULL);
+            return (T) stream().max(c).orElse(defaultValue);
+        }, dependencies(comparator));
+    }
+
+    @Nonnull
+    @Override
+    public ObjectBinding<T> min(@Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        return createObjectBinding(() -> {
+            Comparator<? super T> c = comparator.getValue();
+            requireNonNull(c, ERROR_COMPARATOR_NULL);
+            return (T) stream().min(c).orElseGet(supplier);
+        }, dependencies(comparator));
+    }
+
+    @Nonnull
+    @Override
+    public ObjectBinding<T> max(@Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
+        requireNonNull(comparator, ERROR_COMPARATOR_NULL);
+        requireNonNull(supplier, ERROR_SUPPLIER_NULL);
+        return createObjectBinding(() -> {
+            Comparator<? super T> c = comparator.getValue();
+            requireNonNull(c, ERROR_COMPARATOR_NULL);
+            return (T) stream().max(c).orElseGet(supplier);
+        }, dependencies(comparator));
+    }
+
+    @Nonnull
+    @Override
+    public BooleanBinding anyMatch(@Nonnull final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
             Predicate<? super T> p = predicate.getValue();
@@ -438,7 +514,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
 
     @Nonnull
     @Override
-    public BooleanBinding allMatch(@Nonnull ObservableValue<Predicate<? super T>> predicate) {
+    public BooleanBinding allMatch(@Nonnull final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
             Predicate<? super T> p = predicate.getValue();
@@ -449,7 +525,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
 
     @Nonnull
     @Override
-    public BooleanBinding noneMatch(@Nonnull ObservableValue<Predicate<? super T>> predicate) {
+    public BooleanBinding noneMatch(@Nonnull final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
             Predicate<? super T> p = predicate.getValue();
@@ -466,7 +542,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
 
     @Nonnull
     @Override
-    public ObjectBinding<T> findFirst(@Nullable T defaultValue) {
+    public ObjectBinding<T> findFirst(@Nullable final T defaultValue) {
         return createObjectBinding(() -> (T) stream().findFirst().orElse(defaultValue), dependencies());
     }
 
@@ -485,7 +561,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
 
     @Nonnull
     @Override
-    public ObjectBinding<T> findAny(@Nullable T defaultValue) {
+    public ObjectBinding<T> findAny(@Nullable final T defaultValue) {
         return createObjectBinding(() -> (T) stream().findAny().orElse(defaultValue), dependencies());
     }
 
@@ -493,7 +569,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
     @Override
     public ObjectBinding<T> findAny(@Nonnull final Supplier<T> supplier) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
-        return createObjectBinding(() -> (T) stream().findAny().orElse(null), dependencies());
+        return createObjectBinding(() -> (T) stream().findAny().orElseGet(supplier), dependencies());
     }
 
     @Nonnull

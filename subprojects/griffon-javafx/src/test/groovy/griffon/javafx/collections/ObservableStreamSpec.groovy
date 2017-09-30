@@ -17,11 +17,14 @@ package griffon.javafx.collections
 
 import javafx.beans.binding.BooleanBinding
 import javafx.beans.binding.ObjectBinding
+import javafx.beans.property.LongProperty
 import javafx.beans.property.ObjectProperty
+import javafx.beans.property.SimpleLongProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.ObservableList
 import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -39,6 +42,11 @@ import static javafx.collections.FXCollections.observableSet
  */
 @Unroll
 class ObservableStreamSpec extends Specification {
+    @Shared private Ghost INKY = new Ghost(id: 1, name: 'Inky')
+    @Shared private Ghost PINKY = new Ghost(id: 2, name: 'Pinky')
+    @Shared private Ghost BLINKY = new Ghost(id: 3, name: 'Blinky')
+    @Shared private Ghost CLYDE = new Ghost(id: 4, name: 'Clyde')
+
     void "Check map/filter/reduce (default value) on #type"() {
         given:
         ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(ghosts)
@@ -185,7 +193,7 @@ class ObservableStreamSpec extends Specification {
         'ObservableMap'  | observableMapOfGhosts()   | 'noneMatch' | { it.id > 4 } | { it.id < 3 }
     }
 
-    void "Check sorted() on #type"() {
+    void "Check sorted on #type"() {
         given:
         ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(ghosts)
 
@@ -194,6 +202,12 @@ class ObservableStreamSpec extends Specification {
 
         then:
         first.get().id == 1
+
+        when:
+        first = stream.sorted(comparator2 as Comparator).findFirst()
+
+        then:
+        first.get().id == 4
 
         when:
         ObjectProperty c = new SimpleObjectProperty<>(comparator1 as Comparator)
@@ -215,30 +229,244 @@ class ObservableStreamSpec extends Specification {
         'ObservableMap'  | observableMapOfGhosts()   | { a, b -> a.id - b.id } | { a, b -> b.id - a.id }
     }
 
+    void "Check limit on #type"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(ghosts)
+
+        when:
+        ObjectBinding<Number> result = stream.limit(1l)
+            .map({ g -> g.name })
+            .filter({ n -> n.endsWith('y') })
+            .map({ n -> n.size() })
+            .reduce(0, { a, b -> a + b })
+
+        then:
+        result.get() == 4
+
+        when:
+        LongProperty m = new SimpleLongProperty<>(1l)
+        result = stream.limit(m)
+            .map({ g -> g.name })
+            .filter({ n -> n.endsWith('y') })
+            .map({ n -> n.size() })
+            .reduce(0, { a, b -> a + b })
+
+        then:
+        result.get() == 4
+
+        when:
+        m.setValue(2L)
+
+        then:
+        result.get() == 9
+
+        where:
+        type             | ghosts
+        'ObservableList' | observableListsOfGhosts()
+        'ObservableSet'  | observableSetOfGhosts()
+        'ObservableMap'  | observableMapOfGhosts()
+    }
+
+    void "Check skip on #type"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(ghosts)
+
+        when:
+        ObjectBinding<Number> result = stream.skip(1l)
+            .map({ g -> g.name })
+            .filter({ n -> n.endsWith('y') })
+            .map({ n -> n.size() })
+            .reduce(0, { a, b -> a + b })
+
+        then:
+        result.get() == 11
+
+        when:
+        LongProperty m = new SimpleLongProperty<>(1l)
+        result = stream.skip(m)
+            .map({ g -> g.name })
+            .filter({ n -> n.endsWith('y') })
+            .map({ n -> n.size() })
+            .reduce(0, { a, b -> a + b })
+
+        then:
+        result.get() == 11
+
+        when:
+        m.setValue(2L)
+
+        then:
+        result.get() == 6
+
+        where:
+        type             | ghosts
+        'ObservableList' | observableListsOfGhosts()
+        'ObservableSet'  | observableSetOfGhosts()
+        'ObservableMap'  | observableMapOfGhosts()
+    }
+
+    void "Check #method"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(observableArrayList())
+        Ghost value = CLYDE
+
+        when:
+        ObjectBinding<Ghost> result = stream."$method"()
+
+        then:
+        !result.get()
+
+        where:
+        method << ['findFirst', 'findAny']
+    }
+
+    void "Check #method (default value)"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(observableArrayList())
+        Ghost value = CLYDE
+
+        when:
+        ObjectBinding<Ghost> result = stream."$method"(value)
+
+        then:
+        value == result.get()
+
+        where:
+        method << ['findFirst', 'findAny']
+    }
+
+    void "Check #method (supplier)"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(observableArrayList())
+        Ghost value = CLYDE
+
+        when:
+        ObjectBinding<Ghost> result = stream."$method"({ -> value } as Supplier)
+
+        then:
+        value == result.get()
+
+        where:
+        method << ['findFirst', 'findAny']
+    }
+
+    void "Check #method on #type"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(ghosts)
+
+        when:
+        ObjectBinding<Ghost> result = stream."$method"(comparator1 as Comparator)
+
+        then:
+        result.get() == value1
+
+        when:
+        result = stream."$method"(comparator2 as Comparator)
+
+        then:
+        result.get() == value2
+
+        when:
+        ObjectProperty c = new SimpleObjectProperty<>(comparator1 as Comparator)
+        result = stream."$method"(c)
+
+        then:
+        result.get() == value1
+
+        when:
+        c.setValue(comparator2 as Comparator)
+
+        then:
+        result.get() == value2
+
+        where:
+        type             | ghosts                    | method | comparator1             | comparator2             | value1 | value2
+        'ObservableList' | observableListsOfGhosts() | 'min'  | { a, b -> a.id - b.id } | { a, b -> b.id - a.id } | INKY   | CLYDE
+        'ObservableSet'  | observableSetOfGhosts()   | 'min'  | { a, b -> a.id - b.id } | { a, b -> b.id - a.id } | INKY   | CLYDE
+        'ObservableMap'  | observableMapOfGhosts()   | 'min'  | { a, b -> a.id - b.id } | { a, b -> b.id - a.id } | INKY   | CLYDE
+        'ObservableList' | observableListsOfGhosts() | 'max'  | { a, b -> a.id - b.id } | { a, b -> b.id - a.id } | CLYDE  | INKY
+        'ObservableSet'  | observableSetOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | { a, b -> b.id - a.id } | CLYDE  | INKY
+        'ObservableMap'  | observableMapOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | { a, b -> b.id - a.id } | CLYDE  | INKY
+    }
+
+    void "Check #method on #type (default value)"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(observableArrayList())
+
+        when:
+        ObjectBinding<Ghost> result = stream."$method"(value1, comparator1 as Comparator)
+
+        then:
+        result.get() == value1
+
+        when:
+        ObjectProperty c = new SimpleObjectProperty<>(comparator1 as Comparator)
+        result = stream."$method"(value1, c)
+
+        then:
+        result.get() == value1
+
+        where:
+        type             | ghosts                    | method | comparator1             | value1
+        'ObservableList' | observableListsOfGhosts() | 'min'  | { a, b -> a.id - b.id } | INKY
+        'ObservableSet'  | observableSetOfGhosts()   | 'min'  | { a, b -> a.id - b.id } | INKY
+        'ObservableMap'  | observableMapOfGhosts()   | 'min'  | { a, b -> a.id - b.id } | INKY
+        'ObservableList' | observableListsOfGhosts() | 'max'  | { a, b -> a.id - b.id } | CLYDE
+        'ObservableSet'  | observableSetOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | CLYDE
+        'ObservableMap'  | observableMapOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | CLYDE
+    }
+
+    void "Check #method on #type (supplier)"() {
+        given:
+        ObservableStream<Ghost> stream = GriffonFXCollections.observableStream(observableArrayList())
+
+        when:
+        ObjectBinding<Ghost> result = stream."$method"({ -> value1 } as Supplier, comparator1 as Comparator)
+
+        then:
+        result.get() == value1
+
+        when:
+        ObjectProperty c = new SimpleObjectProperty<>(comparator1 as Comparator)
+        result = stream."$method"({ -> value1 } as Supplier, c)
+
+        then:
+        result.get() == value1
+
+        where:
+        type             | ghosts                    | method | comparator1             | value1
+        'ObservableList' | observableListsOfGhosts() | 'min'  | { a, b -> a.id - b.id } | INKY
+        'ObservableSet'  | observableSetOfGhosts()   | 'min'  | { a, b -> a.id - b.id } | INKY
+        'ObservableMap'  | observableMapOfGhosts()   | 'min'  | { a, b -> a.id - b.id } | INKY
+        'ObservableList' | observableListsOfGhosts() | 'max'  | { a, b -> a.id - b.id } | CLYDE
+        'ObservableSet'  | observableSetOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | CLYDE
+        'ObservableMap'  | observableMapOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | CLYDE
+    }
+
     private ObservableList<Ghost> observableListsOfGhosts() {
         return observableArrayList(
-            new Ghost(id: 1, name: 'Inky'),
-            new Ghost(id: 2, name: 'Pinky'),
-            new Ghost(id: 3, name: 'Blinky'),
-            new Ghost(id: 4, name: 'Clyde')
+            INKY,
+            PINKY,
+            BLINKY,
+            CLYDE
         )
     }
 
     private ObservableSet<Ghost> observableSetOfGhosts() {
-        return observableSet(
-            new Ghost(id: 1, name: 'Inky'),
-            new Ghost(id: 2, name: 'Pinky'),
-            new Ghost(id: 3, name: 'Blinky'),
-            new Ghost(id: 4, name: 'Clyde')
-        )
+        return observableSet([
+            INKY,
+            PINKY,
+            BLINKY,
+            CLYDE
+        ] as LinkedHashSet)
     }
 
     private ObservableMap<String, Ghost> observableMapOfGhosts() {
         return observableMap(
-            g1: new Ghost(id: 1, name: 'Inky'),
-            g2: new Ghost(id: 2, name: 'Pinky'),
-            g3: new Ghost(id: 3, name: 'Blinky'),
-            g4: new Ghost(id: 4, name: 'Clyde')
+            g1: INKY,
+            g2: PINKY,
+            g3: BLINKY,
+            g4: CLYDE
         )
     }
 
@@ -249,6 +477,12 @@ class ObservableStreamSpec extends Specification {
         @Override
         int compareTo(Ghost o) {
             id - o?.id
+        }
+
+
+        @Override
+        String toString() {
+            name
         }
     }
 }
