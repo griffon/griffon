@@ -108,6 +108,12 @@ when an instance is requested to the Injector after the `Initialize` phase has e
 in this way will occur before any method annotated with `@PostConstruct` is invoked. Contextual values will be supplied
 by the application's global context.
 
+==== JavaFX: ObservableStream
+
+Griffon 2.9.0 introduced a new set of Binding producers (`FilteringBindings`, `MappingBindings`, `ReducingBindings` which
+produce single value Bindings out of observable collections by applying specific Stream operations. The new `ObservableStream`
+type lets you combine any number of stream operations using an observable collection as source.
+
 === Buildtime
 
 
