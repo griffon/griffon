@@ -79,6 +79,7 @@ import static griffon.util.GriffonClassUtils.getPropertyValue;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -552,11 +553,11 @@ public final class JavaFXUtils {
         requireNonNull(node, ERROR_NODE_NULL);
         requireNonNull(application, ERROR_APPLICATION_NULL);
 
-        findElements(node, arg -> (arg instanceof Labeled && !isBlank(getI18nKey((Labeled) arg))) ||
-            (arg instanceof Tab && !isBlank(getI18nKey((Tab) arg))) ||
-            (arg instanceof MenuItem && !isBlank(getI18nKey((MenuItem) arg))) ||
-            (arg instanceof TableColumn && !isBlank(getI18nKey((TableColumn<?, ?>) arg))) ||
-            (arg instanceof Axis && !isBlank(getI18nKey((Axis<?>) arg))))
+        findElements(node, arg -> (arg instanceof Labeled && isNotBlank(getI18nKey((Labeled) arg))) ||
+            (arg instanceof Tab && isNotBlank(getI18nKey((Tab) arg))) ||
+            (arg instanceof MenuItem && isNotBlank(getI18nKey((MenuItem) arg))) ||
+            (arg instanceof TableColumn && isNotBlank(getI18nKey((TableColumn<?, ?>) arg))) ||
+            (arg instanceof Axis && isNotBlank(getI18nKey((Axis<?>) arg))))
             .forEach(element -> {
                 if (element instanceof Labeled) {
                     doConnectMessageSource((Labeled) element, application);
@@ -914,7 +915,7 @@ public final class JavaFXUtils {
         setTooltip(control, action.getDescription());
 
         action.iconProperty().addListener((v, o, n) -> setIcon(control, n));
-        if (!isBlank(action.getIcon())) {
+        if (isNotBlank(action.getIcon())) {
             setIcon(control, action.getIcon());
         }
 
@@ -978,7 +979,7 @@ public final class JavaFXUtils {
         runInsideUIThread(() -> control.setText(action.getName()));
 
         action.iconProperty().addListener((v, o, n) -> setIcon(control, n));
-        if (!isBlank(action.getIcon())) {
+        if (isNotBlank(action.getIcon())) {
             setIcon(control, action.getIcon());
         }
 

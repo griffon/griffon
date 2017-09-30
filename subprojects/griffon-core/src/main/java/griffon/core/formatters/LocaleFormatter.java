@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 import static griffon.util.GriffonApplicationUtils.parseLocale;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 
 /**
  * @author Andres Almiray
@@ -29,12 +29,12 @@ public class LocaleFormatter extends AbstractFormatter<Locale> {
     @Nullable
     @Override
     public String format(@Nullable Locale locale) {
-        if (locale == null) return null;
+        if (locale == null) { return null; }
         StringBuilder b = new StringBuilder();
         b.append(locale.getLanguage());
-        if (!isBlank(locale.getCountry())) {
+        if (isNotBlank(locale.getCountry())) {
             b.append("_").append(locale.getCountry());
-            if (!isBlank(locale.getVariant())) {
+            if (isNotBlank(locale.getVariant())) {
                 b.append("_").append(locale.getVariant());
             }
         }

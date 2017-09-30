@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import static griffon.util.ConfigUtils.stripFilenameExtension;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 
 /**
@@ -126,7 +126,7 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView impl
         GriffonClass griffonClass = getGriffonClass();
         String packageName = griffonClass.getPackageName();
         String baseName = griffonClass.getLogicalPropertyName();
-        if (!isBlank(packageName)) {
+        if (isNotBlank(packageName)) {
             baseName = packageName + "." + baseName;
         }
         return baseName;

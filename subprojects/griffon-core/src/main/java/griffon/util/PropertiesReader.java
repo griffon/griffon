@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -57,7 +58,7 @@ public class PropertiesReader {
     }
 
     public void registerConditionalBlock(@Nullable String blockName, @Nullable String blockValue) {
-        if (!isBlank(blockName)) {
+        if (isNotBlank(blockName)) {
             if (isBlank(blockValue)) {
                 conditionValues.remove(blockName);
             } else {

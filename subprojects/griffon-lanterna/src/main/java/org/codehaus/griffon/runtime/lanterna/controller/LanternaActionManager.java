@@ -30,7 +30,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static griffon.util.GriffonNameUtils.getNaturalName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 
 /**
  * @author Andres Almiray
@@ -65,7 +65,7 @@ public class LanternaActionManager extends AbstractActionManager {
 
     protected void resolveName(@Nonnull LanternaGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));
-        if (!isBlank(rsActionName)) {
+        if (isNotBlank(rsActionName)) {
             trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);
             action.setName(rsActionName);
         }

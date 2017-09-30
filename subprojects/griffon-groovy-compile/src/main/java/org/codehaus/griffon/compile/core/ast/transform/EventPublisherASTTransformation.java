@@ -39,6 +39,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.lang.reflect.Modifier.PRIVATE;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
@@ -77,6 +78,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation i
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
      *
      * @param node the node to check
+     *
      * @return true if the node is an event publisher
      */
     public static boolean hasEventPublisherAnnotation(AnnotatedNode node) {
@@ -124,7 +126,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation i
             ctor(EVENT_PUBLISHER_FIELD_CNODE));
 
         Parameter erParam = param(EVENT_ROUTER_CNODE, EVENT_ROUTER_PROPERTY);
-        if (!isBlank(beanName)) {
+        if (isNotBlank(beanName)) {
             AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);
             namedAnnotation.addMember("value", new ConstantExpression(beanName));
             erParam.addAnnotation(namedAnnotation);

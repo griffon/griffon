@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -239,7 +239,7 @@ public final class TypeUtils {
     @Nullable
     private static <T> PropertyEditor resolveTargetPropertyEditor(@Nonnull Class<T> targetType, @Nullable String format) {
         PropertyEditor editor = doResolveTargetPropertyEditor(targetType);
-        if (editor instanceof ExtendedPropertyEditor && !isBlank(format)) {
+        if (editor instanceof ExtendedPropertyEditor && isNotBlank(format)) {
             ((ExtendedPropertyEditor) editor).setFormat(format);
         }
         return editor;
@@ -307,8 +307,8 @@ public final class TypeUtils {
     // org.codehaus.groovy.runtime.typehandling.DefaultTypeTransformation
 
     public static boolean equals(@Nullable Object left, @Nullable Object right) {
-        if (left == right) return true;
-        if (left == null || right == null) return false;
+        if (left == right) { return true; }
+        if (left == null || right == null) { return false; }
 
         // handle arrays on both sides as special case for efficiency
         Class<?> leftClass = left.getClass();
@@ -337,8 +337,7 @@ public final class TypeUtils {
             if (k1 == k2 || (k1 != null && k1.equals(k2))) {
                 Object v1 = ((Map.Entry) left).getValue();
                 Object v2 = ((Map.Entry) right).getValue();
-                if (v1 == v2 || (v1 != null && equals(v1, v2)))
-                    return true;
+                if (v1 == v2 || (v1 != null && equals(v1, v2))) { return true; }
             }
             return false;
         }
@@ -359,7 +358,7 @@ public final class TypeUtils {
         for (int i = 0; i < Array.getLength(left); i++) {
             Object l = Array.get(left, i);
             Object r = Array.get(right, i);
-            if (!equals(l, r)) return false;
+            if (!equals(l, r)) { return false; }
         }
         return true;
     }
@@ -369,6 +368,7 @@ public final class TypeUtils {
      *
      * @param left  an int array
      * @param right the array being compared
+     *
      * @return true if the contents of both arrays are equal.
      */
     public static boolean equals(int[] left, int[] right) {
@@ -385,7 +385,7 @@ public final class TypeUtils {
             return false;
         }
         for (int i = 0; i < left.length; i++) {
-            if (left[i] != right[i]) return false;
+            if (left[i] != right[i]) { return false; }
         }
         return true;
     }
@@ -397,6 +397,7 @@ public final class TypeUtils {
      *
      * @param left  an array
      * @param right the List being compared
+     *
      * @return true if the contents of both collections are equal
      */
     public static boolean equals(Object[] left, List right) {
@@ -410,6 +411,7 @@ public final class TypeUtils {
      *
      * @param left  a List
      * @param right the Object[] being compared to
+     *
      * @return true if the contents of both collections are equal
      */
     public static boolean equals(List left, Object[] right) {
@@ -430,7 +432,7 @@ public final class TypeUtils {
             final Object o1 = left[i];
             final Object o2 = right.get(i);
             if (o1 == null) {
-                if (o2 != null) return false;
+                if (o2 != null) { return false; }
             } else if (!equals(o1, o2)) {
                 return false;
             }
@@ -447,6 +449,7 @@ public final class TypeUtils {
      *
      * @param left  a List
      * @param right the List being compared to
+     *
      * @return boolean   <code>true</code> if the contents of both lists are identical,
      * <code>false</code> rightwise.
      */
@@ -468,7 +471,7 @@ public final class TypeUtils {
             final T o1 = it1.next();
             final T o2 = it2.next();
             if (o1 == null) {
-                if (o2 != null) return false;
+                if (o2 != null) { return false; }
             } else if (!equals(o1, o2)) {
                 return false;
             }
@@ -489,7 +492,9 @@ public final class TypeUtils {
      *
      * @param left  a Set
      * @param right the Set being compared to
+     *
      * @return <tt>true</tt> if the contents of both sets are identical
+     *
      * @since 1.8.0
      */
     public static <T> boolean equals(Set<T> left, Set<T> right) {
@@ -519,7 +524,7 @@ public final class TypeUtils {
                     found = true;
                 }
             }
-            if (!found) return false;
+            if (!found) { return false; }
             rightItems.remove(foundItem);
         }
         return rightItems.isEmpty();
@@ -532,6 +537,7 @@ public final class TypeUtils {
      *
      * @param left  this Map
      * @param right the Map being compared to
+     *
      * @return <tt>true</tt> if the contents of both maps are identical
      */
     public static <K, V> boolean equals(Map<K, V> left, Map<K, V> right) {
@@ -562,6 +568,7 @@ public final class TypeUtils {
      * Allows conversion of arrays into a mutable List
      *
      * @param array an array
+     *
      * @return the array as a List
      */
     public static List primitiveArrayToList(Object array) {

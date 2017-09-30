@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 
 public class Links {
     private static final Pattern REL_PATTERN = Pattern.compile("rel=\"(.*)\"");
@@ -35,7 +35,7 @@ public class Links {
     }
 
     private Links(@Nonnull String input) {
-        if (!isBlank(input)) {
+        if (isNotBlank(input)) {
             for (String s : input.split(",")) {
                 String[] parts = s.split(";");
                 Matcher matcher = REL_PATTERN.matcher(parts[1].trim());
@@ -68,19 +68,19 @@ public class Links {
     }
 
     public boolean hasFirst() {
-        return !isBlank(first);
+        return isNotBlank(first);
     }
 
     public boolean hasNext() {
-        return !isBlank(next);
+        return isNotBlank(next);
     }
 
     public boolean hasPrev() {
-        return !isBlank(prev);
+        return isNotBlank(prev);
     }
 
     public boolean hasLast() {
-        return !isBlank(last);
+        return isNotBlank(last);
     }
 
     @Nullable

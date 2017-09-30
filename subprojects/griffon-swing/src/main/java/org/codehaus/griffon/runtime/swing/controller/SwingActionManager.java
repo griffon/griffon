@@ -31,7 +31,7 @@ import java.beans.PropertyChangeListener;
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
 import static griffon.util.GriffonNameUtils.getNaturalName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 
 /**
@@ -87,7 +87,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveName(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));
-        if (!isBlank(rsActionName)) {
+        if (isNotBlank(rsActionName)) {
             trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);
             action.setName(rsActionName);
         }
@@ -95,7 +95,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveAccelerator(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsAccelerator = msg(keyPrefix, normalizeNamed, KEY_ACCELERATOR, EMPTY_STRING);
-        if (!isBlank(rsAccelerator)) {
+        if (isNotBlank(rsAccelerator)) {
             //noinspection ConstantConditions
             if (!isMacOSX() && rsAccelerator.contains(KEY_META) && !rsAccelerator.contains(KEY_CTRL)) {
                 rsAccelerator = rsAccelerator.replace(KEY_META, KEY_CTRL);
@@ -107,7 +107,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveCommand(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsCommand = msg(keyPrefix, normalizeNamed, KEY_COMMAND, EMPTY_STRING);
-        if (!isBlank(rsCommand)) {
+        if (isNotBlank(rsCommand)) {
             trace(keyPrefix + normalizeNamed, KEY_COMMAND, rsCommand);
             action.setCommand(rsCommand);
         }
@@ -115,7 +115,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveShortDescription(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsShortDescription = msg(keyPrefix, normalizeNamed, KEY_SHORT_DESCRIPTION, EMPTY_STRING);
-        if (!isBlank(rsShortDescription)) {
+        if (isNotBlank(rsShortDescription)) {
             trace(keyPrefix + normalizeNamed, KEY_SHORT_DESCRIPTION, rsShortDescription);
             action.setShortDescription(rsShortDescription);
         }
@@ -123,7 +123,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveLongDescription(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsLongDescription = msg(keyPrefix, normalizeNamed, KEY_LONG_DESCRIPTION, EMPTY_STRING);
-        if (!isBlank(rsLongDescription)) {
+        if (isNotBlank(rsLongDescription)) {
             trace(keyPrefix + normalizeNamed, KEY_LONG_DESCRIPTION, rsLongDescription);
             action.setLongDescription(rsLongDescription);
         }
@@ -131,7 +131,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveMnemonic(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsMnemonic = msg(keyPrefix, normalizeNamed, KEY_MNEMONIC, EMPTY_STRING);
-        if (!isBlank(rsMnemonic)) {
+        if (isNotBlank(rsMnemonic)) {
             trace(keyPrefix + normalizeNamed, KEY_MNEMONIC, rsMnemonic);
             action.setMnemonic(rsMnemonic);
         }
@@ -139,7 +139,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveSmallIcon(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsSmallIcon = msg(keyPrefix, normalizeNamed, KEY_SMALL_ICON, EMPTY_STRING);
-        if (!isBlank(rsSmallIcon)) {
+        if (isNotBlank(rsSmallIcon)) {
             trace(keyPrefix + normalizeNamed, KEY_SMALL_ICON, rsSmallIcon);
             action.setSmallIcon(rsSmallIcon);
         }
@@ -147,7 +147,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveLargeIcon(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsLargeIcon = msg(keyPrefix, normalizeNamed, KEY_LARGE_ICON, EMPTY_STRING);
-        if (!isBlank(rsLargeIcon)) {
+        if (isNotBlank(rsLargeIcon)) {
             trace(keyPrefix + normalizeNamed, KEY_LARGE_ICON, rsLargeIcon);
             action.setLargeIcon(rsLargeIcon);
         }
@@ -155,7 +155,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveEnabled(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, "true");
-        if (!isBlank(rsEnabled)) {
+        if (isNotBlank(rsEnabled)) {
             trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);
             action.setEnabled(castToBoolean(rsEnabled));
         }
@@ -163,7 +163,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     protected void resolveSelected(@Nonnull SwingGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsSelected = msg(keyPrefix, normalizeNamed, KEY_SELECTED, "false");
-        if (!isBlank(rsSelected)) {
+        if (isNotBlank(rsSelected)) {
             trace(keyPrefix + normalizeNamed, KEY_SELECTED, rsSelected);
             action.setSelected(castToBoolean(rsSelected));
         }

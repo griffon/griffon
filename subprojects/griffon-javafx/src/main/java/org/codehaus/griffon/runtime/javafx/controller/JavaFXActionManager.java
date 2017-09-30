@@ -29,7 +29,7 @@ import javax.inject.Inject;
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
 import static griffon.util.GriffonNameUtils.getNaturalName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 
 /**
@@ -87,7 +87,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveName(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));
-        if (!isBlank(rsActionName)) {
+        if (isNotBlank(rsActionName)) {
             trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);
             action.setName(rsActionName);
         }
@@ -95,7 +95,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveAccelerator(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsAccelerator = msg(keyPrefix, normalizeNamed, KEY_ACCELERATOR, EMPTY_STRING);
-        if (!isBlank(rsAccelerator)) {
+        if (isNotBlank(rsAccelerator)) {
             //noinspection ConstantConditions
             if (!isMacOSX() && rsAccelerator.contains(KEY_META) && !rsAccelerator.contains(KEY_CTRL)) {
                 rsAccelerator = rsAccelerator.replace(KEY_META, KEY_CTRL);
@@ -107,7 +107,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveDescription(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsDescription = msg(keyPrefix, normalizeNamed, KEY_DESCRIPTION, EMPTY_STRING);
-        if (!isBlank(rsDescription)) {
+        if (isNotBlank(rsDescription)) {
             trace(keyPrefix + normalizeNamed, KEY_DESCRIPTION, rsDescription);
             action.setDescription(rsDescription);
         }
@@ -115,7 +115,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveIcon(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsIcon = msg(keyPrefix, normalizeNamed, KEY_ICON, EMPTY_STRING);
-        if (!isBlank(rsIcon)) {
+        if (isNotBlank(rsIcon)) {
             trace(keyPrefix + normalizeNamed, KEY_ICON, rsIcon);
             action.setIcon(rsIcon);
         }
@@ -123,7 +123,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveImage(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsImage = msg(keyPrefix, normalizeNamed, KEY_IMAGE, EMPTY_STRING);
-        if (!isBlank(rsImage)) {
+        if (isNotBlank(rsImage)) {
             trace(keyPrefix + normalizeNamed, KEY_IMAGE, rsImage);
             action.setImage(rsImage);
         }
@@ -131,7 +131,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveEnabled(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, TRUE);
-        if (!isBlank(rsEnabled)) {
+        if (isNotBlank(rsEnabled)) {
             trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);
             action.setEnabled(castToBoolean(rsEnabled));
         }
@@ -139,7 +139,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveSelected(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsSelected = msg(keyPrefix, normalizeNamed, KEY_SELECTED, FALSE);
-        if (!isBlank(rsSelected)) {
+        if (isNotBlank(rsSelected)) {
             trace(keyPrefix + normalizeNamed, KEY_SELECTED, rsSelected);
             action.setSelected(castToBoolean(rsSelected));
         }
@@ -147,7 +147,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveVisible(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsVisible = msg(keyPrefix, normalizeNamed, KEY_VISIBLE, TRUE);
-        if (!isBlank(rsVisible)) {
+        if (isNotBlank(rsVisible)) {
             trace(keyPrefix + normalizeNamed, KEY_VISIBLE, rsVisible);
             action.setVisible(castToBoolean(rsVisible));
         }
@@ -155,7 +155,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveStyleClass(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsStyleClass = msg(keyPrefix, normalizeNamed, KEY_STYLE_CLASS, EMPTY_STRING);
-        if (!isBlank(rsStyleClass)) {
+        if (isNotBlank(rsStyleClass)) {
             trace(keyPrefix + normalizeNamed, KEY_STYLE_CLASS, rsStyleClass);
             action.setStyleClass(rsStyleClass);
         }
@@ -163,7 +163,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveStyle(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsStyle = msg(keyPrefix, normalizeNamed, KEY_STYLE, EMPTY_STRING);
-        if (!isBlank(rsStyle)) {
+        if (isNotBlank(rsStyle)) {
             trace(keyPrefix + normalizeNamed, KEY_STYLE, rsStyle);
             action.setStyle(rsStyle);
         }
@@ -171,7 +171,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveGraphicStyleClass(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsGraphicStyleClass = msg(keyPrefix, normalizeNamed, KEY_GRAPHIC_STYLE_CLASS, EMPTY_STRING);
-        if (!isBlank(rsGraphicStyleClass)) {
+        if (isNotBlank(rsGraphicStyleClass)) {
             trace(keyPrefix + normalizeNamed, KEY_GRAPHIC_STYLE_CLASS, rsGraphicStyleClass);
             action.setGraphicStyleClass(rsGraphicStyleClass);
         }
@@ -179,7 +179,7 @@ public class JavaFXActionManager extends AbstractActionManager {
 
     protected void resolveGraphicStyle(@Nonnull JavaFXGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsGraphicStyle = msg(keyPrefix, normalizeNamed, KEY_GRAPHIC_STYLE, EMPTY_STRING);
-        if (!isBlank(rsGraphicStyle)) {
+        if (isNotBlank(rsGraphicStyle)) {
             trace(keyPrefix + normalizeNamed, KEY_GRAPHIC_STYLE, rsGraphicStyle);
             action.setGraphicStyle(rsGraphicStyle);
         }

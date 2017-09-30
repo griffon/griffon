@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
@@ -185,7 +185,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
 
     public void removeConfiguration(@Nonnull String name) {
         requireNonBlank(name, "Argument 'name' must not be blank");
-        if (!isBlank(name)) {
+        if (isNotBlank(name)) {
             synchronized (lock) {
                 configurations.remove(name);
             }

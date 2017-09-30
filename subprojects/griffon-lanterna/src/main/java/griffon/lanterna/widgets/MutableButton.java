@@ -24,7 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 
 /**
  * @author Andres Almiray
@@ -56,7 +56,7 @@ public class MutableButton extends Button {
                     setText(event.getNewValue().toString());
                 }
             });
-            if (!isBlank(lanternaAction.getName())) {
+            if (isNotBlank(lanternaAction.getName())) {
                 setText(lanternaAction.getName());
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {

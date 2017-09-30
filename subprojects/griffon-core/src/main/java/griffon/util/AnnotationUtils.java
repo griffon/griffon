@@ -45,6 +45,7 @@ import static griffon.util.GriffonClassUtils.requireState;
 import static griffon.util.GriffonNameUtils.getLogicalPropertyName;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.GriffonNameUtils.uncapitalize;
 import static java.util.Objects.requireNonNull;
 
@@ -271,7 +272,7 @@ public class AnnotationUtils {
         requireNonNull(klass, ERROR_CLASS_NULL);
 
         Named annotation = klass.getAnnotation(Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
+        if (annotation != null && isNotBlank(annotation.value())) {
             return annotation.value();
         } else {
             return simple ? klass.getSimpleName() : klass.getName();
@@ -288,7 +289,7 @@ public class AnnotationUtils {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
 
         Named annotation = instance.getClass().getAnnotation(Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
+        if (annotation != null && isNotBlank(annotation.value())) {
             return annotation.value();
         } else {
             return simple ? instance.getClass().getSimpleName() : instance.getClass().getName();
@@ -305,7 +306,7 @@ public class AnnotationUtils {
         requireNonNull(field, ERROR_FIELD_NULL);
 
         Named annotation = field.getAnnotation(Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
+        if (annotation != null && isNotBlank(annotation.value())) {
             return annotation.value();
         } else {
             return simple ? field.getType().getSimpleName() : field.getType().getName();
@@ -318,7 +319,7 @@ public class AnnotationUtils {
 
         List<String> names = new ArrayList<>();
         Named annotation = field.getAnnotation(Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
+        if (annotation != null && isNotBlank(annotation.value())) {
             names.add(annotation.value());
         } else {
             names.add(field.getName());
@@ -335,7 +336,7 @@ public class AnnotationUtils {
         requireState(parameterTypes != null && parameterTypes.length > 0, "Argument 'setterMethod' must have at least one parameter. " + MethodDescriptor.forMethod(setterMethod));
 
         Named annotation = findAnnotation(annotationsOfMethodParameter(setterMethod, 0), Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
+        if (annotation != null && isNotBlank(annotation.value())) {
             return annotation.value();
         } else {
             return parameterTypes[0].getName();
@@ -352,7 +353,7 @@ public class AnnotationUtils {
 
         List<String> names = new ArrayList<>();
         Named annotation = findAnnotation(annotationsOfMethodParameter(setterMethod, 0), Named.class);
-        if (annotation != null && !isBlank(annotation.value())) {
+        if (annotation != null && isNotBlank(annotation.value())) {
             names.add(annotation.value());
         } else {
             if (GriffonClassUtils.isSetterMethod(setterMethod)) {
@@ -403,7 +404,7 @@ public class AnnotationUtils {
 
             if (evictedInstance != null) {
                 String evictedEvicts = getEvicts(evictedInstance);
-                if (!isBlank(evictedEvicts)) {
+                if (isNotBlank(evictedEvicts)) {
                     throw new IllegalArgumentException(type + " " + name + " has an eviction conflict between " + instance + " and " + evictedInstance);
                 } else {
                     name = currentEvicts;

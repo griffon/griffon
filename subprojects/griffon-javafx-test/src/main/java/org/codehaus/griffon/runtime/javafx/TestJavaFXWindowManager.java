@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 
 import static griffon.javafx.test.TestContext.getTestContext;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 
 /**
  * @author Andres Almiray
@@ -38,6 +38,6 @@ public class TestJavaFXWindowManager extends DefaultJavaFXWindowManager {
     @Override
     protected Object resolveStartingWindowFromConfiguration() {
         String startingWindowName = getTestContext().getWindowName();
-        return !isBlank(startingWindowName) ? startingWindowName : super.resolveStartingWindowFromConfiguration();
+        return isNotBlank(startingWindowName) ? startingWindowName : super.resolveStartingWindowFromConfiguration();
     }
 }

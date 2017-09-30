@@ -34,7 +34,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -101,12 +101,12 @@ public class SwingGriffonControllerAction extends AbstractAction {
             toolkitAction.putValue(Action.SELECTED_KEY, evt.getNewValue());
         } else if (KEY_MNEMONIC.equals(evt.getPropertyName())) {
             String mnemonic = (String) evt.getNewValue();
-            if (!isBlank(mnemonic)) {
+            if (isNotBlank(mnemonic)) {
                 toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());
             }
         } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
             String accelerator = (String) evt.getNewValue();
-            if (!isBlank(accelerator)) {
+            if (isNotBlank(accelerator)) {
                 toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
             }
         } else if (KEY_SMALL_ICON.equals(evt.getPropertyName())) {
@@ -132,11 +132,11 @@ public class SwingGriffonControllerAction extends AbstractAction {
         toolkitAction.setEnabled(isEnabled());
         toolkitAction.putValue(Action.SELECTED_KEY, isSelected());
         String mnemonic = getMnemonic();
-        if (!isBlank(mnemonic)) {
+        if (isNotBlank(mnemonic)) {
             toolkitAction.putValue(Action.MNEMONIC_KEY, KeyStroke.getKeyStroke(mnemonic).getKeyCode());
         }
         String accelerator = getAccelerator();
-        if (!isBlank(accelerator)) {
+        if (isNotBlank(accelerator)) {
             toolkitAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator));
         }
         handleIcon(getSmallIcon(), Action.SMALL_ICON);

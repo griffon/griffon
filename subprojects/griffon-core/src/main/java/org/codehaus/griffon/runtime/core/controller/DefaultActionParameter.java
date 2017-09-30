@@ -26,7 +26,7 @@ import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 import static griffon.util.GriffonClassUtils.requireState;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.lang.System.arraycopy;
 
 /**
@@ -68,7 +68,7 @@ public class DefaultActionParameter implements ActionParameter {
             }
             this.contextual = c;
             this.nullable = !u;
-            this.name = !isBlank(n) ? n : resolveParameterName(actionMetadata, index);
+            this.name = isNotBlank(n) ? n : resolveParameterName(actionMetadata, index);
         } else {
             this.annotations = EMPTY_ARRAY;
             this.contextual = false;

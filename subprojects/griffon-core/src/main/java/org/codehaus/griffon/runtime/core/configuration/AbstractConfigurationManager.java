@@ -40,7 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static griffon.core.editors.PropertyEditorResolver.findEditor;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Objects.requireNonNull;
 
@@ -161,7 +161,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     @Nullable
     protected Object resolveConfiguration(@Nonnull String name, @Nonnull String key, @Nullable String defaultValue) {
         Configuration configuration = getConfiguration();
-        if (!isBlank(name)) {
+        if (isNotBlank(name)) {
             configuration = getConfiguration(name);
         }
 

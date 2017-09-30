@@ -31,7 +31,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyEditor;
 
 import static griffon.core.editors.PropertyEditorResolver.findEditor;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 import static java.util.Objects.requireNonNull;
 
@@ -91,16 +91,16 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
             toolkitAction.setVisible(castToBoolean(evt.getNewValue()));
         } else if (KEY_ACCELERATOR.equals(evt.getPropertyName())) {
             String accelerator = (String) evt.getNewValue();
-            if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }
+            if (isNotBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }
         } else if (KEY_STYLECLASS.equals(evt.getPropertyName())) {
             String styleClass = (String) evt.getNewValue();
-            if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }
+            if (isNotBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }
         } else if (KEY_STYLE.equals(evt.getPropertyName())) {
             String style = (String) evt.getNewValue();
-            if (!isBlank(style)) { toolkitAction.setStyle(style); }
+            if (isNotBlank(style)) { toolkitAction.setStyle(style); }
         } else if (KEY_ICON.equals(evt.getPropertyName())) {
             String icon = (String) evt.getNewValue();
-            if (!isBlank(icon)) { toolkitAction.setIcon(icon); }
+            if (isNotBlank(icon)) { toolkitAction.setIcon(icon); }
         } else if (KEY_IMAGE.equals(evt.getPropertyName())) {
             Image image = (Image) evt.getNewValue();
             if (null != image) { toolkitAction.setImage(image); }
@@ -109,10 +109,10 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
             if (null != graphic) { toolkitAction.setGraphic(graphic); }
         } else if (KEY_GRAPHICSTYLECLASS.equals(evt.getPropertyName())) {
             String graphicStyleClass = (String) evt.getNewValue();
-            if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }
+            if (isNotBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }
         } else if (KEY_GRAPHICSTYLE.equals(evt.getPropertyName())) {
             String graphicStyle = (String) evt.getNewValue();
-            if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }
+            if (isNotBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }
         }
     }
 
@@ -237,14 +237,14 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         toolkitAction.setSelected(isSelected());
         toolkitAction.setVisible(isVisible());
         String accelerator = getAccelerator();
-        if (!isBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }
-        if (!isBlank(style)) { toolkitAction.setStyle(style); }
-        if (!isBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }
+        if (isNotBlank(accelerator)) { toolkitAction.setAccelerator(accelerator); }
+        if (isNotBlank(style)) { toolkitAction.setStyle(style); }
+        if (isNotBlank(styleClass)) { toolkitAction.setStyleClass(styleClass); }
         String icon = getIcon();
-        if (!isBlank(icon)) { toolkitAction.setIcon(icon); }
+        if (isNotBlank(icon)) { toolkitAction.setIcon(icon); }
         if (null != getImage()) { toolkitAction.setImage(getImage()); }
         if (null != getGraphic()) { toolkitAction.setGraphic(getGraphic()); }
-        if (!isBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }
-        if (!isBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }
+        if (isNotBlank(graphicStyle)) { toolkitAction.setGraphicStyle(graphicStyle); }
+        if (isNotBlank(graphicStyleClass)) { toolkitAction.setGraphicStyleClass(graphicStyleClass); }
     }
 }

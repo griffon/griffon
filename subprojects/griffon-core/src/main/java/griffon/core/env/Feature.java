@@ -17,7 +17,7 @@ package griffon.core.env;
 
 import javax.annotation.Nonnull;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -29,7 +29,7 @@ public class Feature {
 
     public static boolean isFeatureEnabled(@Nonnull String featureName) {
         requireNonBlank(featureName, ERROR_FEATURE_NAME_BLANK);
-        return !isBlank(System.getProperty(featureName)) && Boolean.getBoolean(featureName);
+        return isNotBlank(System.getProperty(featureName)) && Boolean.getBoolean(featureName);
     }
 
     public static void setFeatureEnabled(@Nonnull String featureName, boolean enabled) {

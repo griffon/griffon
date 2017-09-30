@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -52,7 +53,7 @@ public class MapReader {
     }
 
     public void registerConditionalBlock(@Nullable String blockName, @Nullable String blockValue) {
-        if (!isBlank(blockName)) {
+        if (isNotBlank(blockName)) {
             if (isBlank(blockValue)) {
                 conditionValues.remove(blockName);
             } else {

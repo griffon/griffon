@@ -26,7 +26,7 @@ import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -45,6 +45,7 @@ public class SwingAction extends AbstractAction {
      * Creates a new action.
      *
      * @param callable
+     *
      * @deprecated use the {@code RunnableWithArgs} constructor instead.
      */
     @Deprecated
@@ -140,7 +141,7 @@ public class SwingAction extends AbstractAction {
 
         @Nonnull
         public ActionBuilder withMnemonic(@Nullable String mnemonic) {
-            if (!isBlank(mnemonic)) {
+            if (isNotBlank(mnemonic)) {
                 this.mnemonic = KeyStroke.getKeyStroke(mnemonic).getKeyCode();
             }
             mnemonicSet = true;
@@ -156,7 +157,7 @@ public class SwingAction extends AbstractAction {
 
         @Nonnull
         public ActionBuilder withAccelerator(@Nullable String accelerator) {
-            if (!isBlank(accelerator)) {
+            if (isNotBlank(accelerator)) {
                 this.accelerator = KeyStroke.getKeyStroke(accelerator);
             }
             return this;
@@ -221,10 +222,10 @@ public class SwingAction extends AbstractAction {
             if (action == null) {
                 action = new SwingAction(runnable);
             }
-            if (!isBlank(command)) {
+            if (isNotBlank(command)) {
                 action.putValue(Action.ACTION_COMMAND_KEY, command);
             }
-            if (!isBlank(name)) {
+            if (isNotBlank(name)) {
                 action.putValue(Action.NAME, name);
             }
             if (mnemonicSet) {
@@ -239,10 +240,10 @@ public class SwingAction extends AbstractAction {
             if (smallIcon != null) {
                 action.putValue(Action.SMALL_ICON, smallIcon);
             }
-            if (!isBlank(longDescription)) {
+            if (isNotBlank(longDescription)) {
                 action.putValue(Action.LONG_DESCRIPTION, longDescription);
             }
-            if (!isBlank(shortDescription)) {
+            if (isNotBlank(shortDescription)) {
                 action.putValue(Action.SHORT_DESCRIPTION, shortDescription);
             }
             if (enabledSet) {

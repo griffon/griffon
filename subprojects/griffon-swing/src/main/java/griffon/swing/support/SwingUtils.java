@@ -38,7 +38,7 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 
 import static griffon.util.GriffonClassUtils.setPropertiesNoException;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -236,7 +236,7 @@ public class SwingUtils {
         JFrame frame = null;
         // try config specified first
         String frameClass = application.getConfiguration().getAsString("application.frameClass", JFrame.class.getName());
-        if (!isBlank(frameClass)) {
+        if (isNotBlank(frameClass)) {
             try {
                 ClassLoader cl = SwingUtils.class.getClassLoader();
                 if (cl != null) {

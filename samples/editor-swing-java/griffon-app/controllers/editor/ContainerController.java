@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 
 @ArtifactProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
@@ -71,7 +71,7 @@ public class ContainerController extends AbstractGriffonController {
 
     @Nullable
     private EditorController resolveEditorController() {
-        if (!isBlank(model.getMvcIdentifier())) {
+        if (isNotBlank(model.getMvcIdentifier())) {
             return getApplication().getMvcGroupManager()
                 .findController(model.getMvcIdentifier(), EditorController.class);
         }

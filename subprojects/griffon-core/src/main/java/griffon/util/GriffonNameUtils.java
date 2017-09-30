@@ -92,7 +92,7 @@ public class GriffonNameUtils {
      * @return <tt>true</tt> if the given String is a keyword, false otherwise
      */
     public static boolean isKeyword(String str) {
-        return !isBlank(str) && Arrays.binarySearch(KEYWORDS, str.toLowerCase(Locale.ENGLISH)) > -1;
+        return isNotBlank(str) && Arrays.binarySearch(KEYWORDS, str.toLowerCase(Locale.ENGLISH)) > -1;
     }
 
     /**
@@ -232,7 +232,7 @@ public class GriffonNameUtils {
      * @return The logical name
      */
     public static String getLogicalName(String name, String trailingName) {
-        if (!isBlank(name) && !isBlank(trailingName)) {
+        if (isNotBlank(name) && isNotBlank(trailingName)) {
             String shortName = getShortName(name);
             if (shortName.endsWith(trailingName)) {
                 return shortName.substring(0, shortName.length() - trailingName.length());
@@ -242,7 +242,7 @@ public class GriffonNameUtils {
     }
 
     public static String getLogicalPropertyName(String className, String trailingName) {
-        if (!isBlank(className) && !isBlank(trailingName) && className.length() == trailingName.length() + 1 && className.endsWith(trailingName)) {
+        if (isNotBlank(className) && isNotBlank(trailingName) && className.length() == trailingName.length() + 1 && className.endsWith(trailingName)) {
             return className.substring(0, 1).toLowerCase();
         }
         return getLogicalName(getPropertyName(className), trailingName);
@@ -404,9 +404,6 @@ public class GriffonNameUtils {
      * or only contains whitespace. If it contains anything other than
      * whitespace then the string is not considered to be blank and the
      * method returns <code>false</code>.</p>
-     * <p>We could use Commons Lang for this, but we don't want GriffonNameUtils
-     * to have a dependency on any external library to minimise the number of
-     * dependencies required to bootstrap Griffon.</p>
      *
      * @param str The string to test.
      *
@@ -424,6 +421,21 @@ public class GriffonNameUtils {
         }
 
         return true;
+    }
+
+    /**
+     * <p>Determines whether a given string is not <code>null</code>, empty,
+     * or only contains whitespace. If it contains anything other than
+     * whitespace then the string is not considered to be blank and the
+     * method returns <code>true</code>.</p>
+     *
+     * @param str The string to test.
+     *
+     * @return <code>true</code> if the string is not <code>null</code>, nor
+     * blank.
+     */
+    public static boolean isNotBlank(String str) {
+        return !isBlank(str);
     }
 
     /**

@@ -25,6 +25,7 @@ import javax.annotation.Nonnull
 import javax.inject.Inject
 
 import static griffon.util.GriffonNameUtils.isBlank
+import static griffon.util.GriffonNameUtils.isNotBlank
 
 /**
  * Updated version of {@code groovy.util.ConfigSlurper}.<br/>
@@ -73,7 +74,7 @@ class ConfigReader {
     }
 
     void registerConditionalBlock(String blockName, String blockValue) {
-        if (!isBlank(blockName)) {
+        if (isNotBlank(blockName)) {
             if (isBlank(blockValue)) {
                 conditionValues.remove(blockName)
             } else {

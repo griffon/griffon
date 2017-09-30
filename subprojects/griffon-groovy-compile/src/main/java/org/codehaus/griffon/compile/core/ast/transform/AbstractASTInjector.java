@@ -32,7 +32,7 @@ import javax.inject.Named;
 import java.lang.reflect.Modifier;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.lang.reflect.Modifier.isPrivate;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
@@ -117,7 +117,7 @@ public abstract class AbstractASTInjector implements ASTInjector {
         if (fieldNode.getAnnotations(INJECT_TYPE) == null) {
             fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
         }
-        if (!isBlank(qualifierName) && fieldNode.getAnnotations(NAMED_TYPE) == null) {
+        if (isNotBlank(qualifierName) && fieldNode.getAnnotations(NAMED_TYPE) == null) {
             AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);
             namedAnnotation.addMember("value", new ConstantExpression(qualifierName));
             fieldNode.addAnnotation(namedAnnotation);

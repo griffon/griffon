@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 
 /**
  * @author Andres Almiray
@@ -39,7 +40,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     public String getAsText() {
-        if (null == getValue()) return null;
+        if (null == getValue()) { return null; }
         return isBlank(getFormat()) ? format((Color) getValueInternal()) : getFormattedValue();
     }
 
@@ -64,7 +65,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     @Override
     protected Formatter<Color> resolveFormatter() {
-        return !isBlank(getFormat()) ? ColorFormatter.getInstance(getFormat()) : null;
+        return isNotBlank(getFormat()) ? ColorFormatter.getInstance(getFormat()) : null;
     }
 
     protected void handleAsString(String str) {
@@ -144,7 +145,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
 
     protected double getMapValue(Map<?, ?> map, String key, double defaultValue) {
         Object val = map.get(key);
-        if (null == val) val = map.get(String.valueOf(key.charAt(0)));
+        if (null == val) { val = map.get(String.valueOf(key.charAt(0))); }
         if (null == val) {
             return defaultValue;
         } else if (val instanceof CharSequence) {

@@ -46,7 +46,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.lang.reflect.Modifier.PRIVATE;
 import static java.lang.reflect.Modifier.PUBLIC;
 import static java.lang.reflect.Modifier.isPrivate;
@@ -148,7 +148,7 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
     public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
         FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);
         fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
-        if (!isBlank(qualifierName)) {
+        if (isNotBlank(qualifierName)) {
             AnnotationNode namedAnnotation = new AnnotationNode(NAMED_TYPE);
             namedAnnotation.addMember("value", new ConstantExpression(qualifierName));
             fieldNode.addAnnotation(namedAnnotation);

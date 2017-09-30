@@ -35,7 +35,7 @@ import java.beans.PropertyChangeListener;
 import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonNameUtils.getNaturalName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 
 /**
@@ -76,7 +76,7 @@ public class PivotActionManager extends AbstractActionManager {
 
     protected void resolveName(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsActionName = msg(keyPrefix, normalizeNamed, KEY_NAME, getNaturalName(normalizeNamed));
-        if (!isBlank(rsActionName)) {
+        if (isNotBlank(rsActionName)) {
             trace(keyPrefix + normalizeNamed, KEY_NAME, rsActionName);
             action.setName(rsActionName);
         }
@@ -84,7 +84,7 @@ public class PivotActionManager extends AbstractActionManager {
 
     protected void resolveDescription(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsDescription = msg(keyPrefix, normalizeNamed, KEY_DESCRIPTION, EMPTY_STRING);
-        if (!isBlank(rsDescription)) {
+        if (isNotBlank(rsDescription)) {
             trace(keyPrefix + normalizeNamed, KEY_DESCRIPTION, rsDescription);
             action.setDescription(rsDescription);
         }
@@ -92,7 +92,7 @@ public class PivotActionManager extends AbstractActionManager {
 
     protected void resolveEnabled(@Nonnull PivotGriffonControllerAction action, @Nonnull GriffonController controller, @Nonnull String normalizeNamed, @Nonnull String keyPrefix) {
         String rsEnabled = msg(keyPrefix, normalizeNamed, KEY_ENABLED, "true");
-        if (!isBlank(rsEnabled)) {
+        if (isNotBlank(rsEnabled)) {
             trace(keyPrefix + normalizeNamed, KEY_ENABLED, rsEnabled);
             action.setEnabled(castToBoolean(rsEnabled));
         }
