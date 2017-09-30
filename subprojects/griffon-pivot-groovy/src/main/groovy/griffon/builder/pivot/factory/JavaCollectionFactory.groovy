@@ -32,7 +32,7 @@ class JavaCollectionFactory extends AbstractFactory {
         this.collectionClass = collectionClass
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         FactoryBuilderSupport.checkValueIsNull(value, name)
         if (attributes.isEmpty()) {
             return collectionClass.newInstance()
@@ -44,7 +44,7 @@ class JavaCollectionFactory extends AbstractFactory {
         }
     }
 
-    public void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
+    void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
         parent.add(child)
     }
 }

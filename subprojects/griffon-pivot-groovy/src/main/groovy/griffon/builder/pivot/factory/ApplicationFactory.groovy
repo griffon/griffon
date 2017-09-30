@@ -23,10 +23,10 @@ import org.apache.pivot.wtk.Window
  */
 class ApplicationFactory extends SingleElementContainerFactory {
     ApplicationFactory() {
-        super(Window, "content", Component)
+        super(Window, 'content', Component)
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         String windowName = attributes.remove('name') ?: computeWindowName()
         def window = builder.application.createApplicationContainer([:])
         if (!window.name) window.name = windowName

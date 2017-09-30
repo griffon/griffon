@@ -35,7 +35,7 @@ class MenuFactory extends ComponentFactory {
             return value
         }
         if (value && !attributes.containsKey('section')) attributes.section = value
-        if (!attributes.section) attributes.section = "Menu" + System.currentTimeMillis()
+        if (!attributes.section) attributes.section = 'Menu' + System.currentTimeMillis()
         builder.context.sectionName = attributes.section
         beanClass.newInstance()
     }

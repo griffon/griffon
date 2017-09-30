@@ -22,9 +22,9 @@ import org.apache.pivot.wtk.Rollup
  * @author Andres Almiray
  */
 class RollupFactory extends ComponentFactory {
-    public static final String DELEGATE_PROPERTY_HEADER = "_delegateProperty:header"
-    public static final String DEFAULT_DELEGATE_PROPERTY_HEADER = "header"
-    public static final String CONTEXT_DATA_KEY = "RollupFactoryData"
+    static final String DELEGATE_PROPERTY_HEADER = '_delegateProperty:header'
+    static final String DEFAULT_DELEGATE_PROPERTY_HEADER = 'header'
+    static final String CONTEXT_DATA_KEY = 'RollupFactoryData'
 
     RollupFactory() {
         super(Rollup)
@@ -36,7 +36,7 @@ class RollupFactory extends ComponentFactory {
             if (builder.current == newChild) inspectChild(cBuilder, cNode, cAttributes)
         }
         builder.addAttributeDelegate(builder.context.rollupFactoryClosure)
-        builder.context[DELEGATE_PROPERTY_HEADER] = attributes.remove("header") ?: DEFAULT_DELEGATE_PROPERTY_HEADER
+        builder.context[DELEGATE_PROPERTY_HEADER] = attributes.remove('header') ?: DEFAULT_DELEGATE_PROPERTY_HEADER
 
         return newChild
     }
@@ -61,7 +61,7 @@ class RollupFactory extends ComponentFactory {
         }
     }
 
-    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         super.onNodeCompleted(builder, parent, node)
         builder.removeAttributeDelegate(builder.context.rollupFactoryClosure)
     }

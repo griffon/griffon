@@ -22,13 +22,13 @@ import org.apache.pivot.wtk.ScrollPane
  * @author Andres Almiray
  */
 class ScrollPaneFactory extends ViewportFactory {
-    public static final String DELEGATE_PROPERTY_COLUMN_HEADER = "_delegateProperty:columnHeader"
-    public static final String DEFAULT_DELEGATE_PROPERTY_COLUMN_HEADER = "columnHeader"
-    public static final String DELEGATE_PROPERTY_ROW_HEADER = "_delegateProperty:rowHeader"
-    public static final String DEFAULT_DELEGATE_PROPERTY_ROW_HEADER = "rowHeader"
-    public static final String DELEGATE_PROPERTY_CORNER = "_delegateProperty:corner"
-    public static final String DEFAULT_DELEGATE_PROPERTY_CORNER = "corner"
-    public static final String CONTEXT_DATA_KEY = "ScrollPaneFactoryData"
+    static final String DELEGATE_PROPERTY_COLUMN_HEADER = '_delegateProperty:columnHeader'
+    static final String DEFAULT_DELEGATE_PROPERTY_COLUMN_HEADER = 'columnHeader'
+    static final String DELEGATE_PROPERTY_ROW_HEADER = '_delegateProperty:rowHeader'
+    static final String DEFAULT_DELEGATE_PROPERTY_ROW_HEADER = 'rowHeader'
+    static final String DELEGATE_PROPERTY_CORNER = '_delegateProperty:corner'
+    static final String DEFAULT_DELEGATE_PROPERTY_CORNER = 'corner'
+    static final String CONTEXT_DATA_KEY = 'ScrollPaneFactoryData'
 
     ScrollPaneFactory() {
         super(ScrollPane)
@@ -40,9 +40,9 @@ class ScrollPaneFactory extends ViewportFactory {
             if (builder.current == newChild) inspectChild(cBuilder, cNode, cAttributes)
         }
         builder.addAttributeDelegate(builder.context.scrollPaneFactoryClosure)
-        builder.context[DELEGATE_PROPERTY_COLUMN_HEADER] = attributes.remove("columnHeader") ?: DEFAULT_DELEGATE_PROPERTY_COLUMN_HEADER
-        builder.context[DELEGATE_PROPERTY_ROW_HEADER] = attributes.remove("rowHeader") ?: DEFAULT_DELEGATE_PROPERTY_ROW_HEADER
-        builder.context[DELEGATE_PROPERTY_CORNER] = attributes.remove("corner") ?: DEFAULT_DELEGATE_PROPERTY_CORNER
+        builder.context[DELEGATE_PROPERTY_COLUMN_HEADER] = attributes.remove('columnHeader') ?: DEFAULT_DELEGATE_PROPERTY_COLUMN_HEADER
+        builder.context[DELEGATE_PROPERTY_ROW_HEADER] = attributes.remove('rowHeader') ?: DEFAULT_DELEGATE_PROPERTY_ROW_HEADER
+        builder.context[DELEGATE_PROPERTY_CORNER] = attributes.remove('corner') ?: DEFAULT_DELEGATE_PROPERTY_CORNER
 
         return newChild
     }
@@ -71,7 +71,7 @@ class ScrollPaneFactory extends ViewportFactory {
         }
     }
 
-    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         super.onNodeCompleted(builder, parent, node)
         builder.removeAttributeDelegate(builder.context.scrollPaneFactoryClosure)
     }

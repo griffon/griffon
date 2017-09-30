@@ -26,19 +26,19 @@ import org.apache.pivot.wtk.RadioButton
  * @author Andres Almiray
  */
 class ButtonGroupFactory extends BeanFactory {
-    public static final String DELEGATE_PROPERTY_BUTTON_GROUP = "_delegateProperty:buttonGroup";
-    public static final String DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP = "buttonGroup";
+    static final String DELEGATE_PROPERTY_BUTTON_GROUP = '_delegateProperty:buttonGroup';
+    static final String DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP = 'buttonGroup';
 
-    public ButtonGroupFactory() {
+    ButtonGroupFactory() {
         super(ButtonGroup, false)
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
-        builder.context[DELEGATE_PROPERTY_BUTTON_GROUP] = attributes.remove("buttonGroupProperty") ?: DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
+        builder.context[DELEGATE_PROPERTY_BUTTON_GROUP] = attributes.remove('buttonGroupProperty') ?: DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP
         return super.newInstance(builder, name, value, attributes)
     }
 
-    public static buttonGroupAttributeDelegate(FactoryBuilderSupport builder, Object node, Map attributes) {
+    static buttonGroupAttributeDelegate(FactoryBuilderSupport builder, Object node, Map attributes) {
         def buttonGroupAttr = builder?.context?.getAt(DELEGATE_PROPERTY_BUTTON_GROUP) ?: DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP
         if (attributes.containsKey(buttonGroupAttr)) {
             def o = attributes.get(buttonGroupAttr)

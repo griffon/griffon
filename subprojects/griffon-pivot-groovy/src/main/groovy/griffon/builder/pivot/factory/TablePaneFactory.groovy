@@ -22,11 +22,11 @@ import org.apache.pivot.wtk.TablePane
  * @author Andres Almiray
  */
 class TablePaneFactory extends ComponentFactory {
-    public static final String DELEGATE_PROPERTY_COLUMN_SPAN = "_delegateProperty:columnSpan"
-    public static final String DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN = "columnSpan"
-    public static final String DELEGATE_PROPERTY_ROW_SPAN = "_delegateProperty:rowSpan"
-    public static final String DEFAULT_DELEGATE_PROPERTY_ROW_SPAN = "rowSpan"
-    public static final String CONTEXT_DATA_KEY = "TablePaneFactoryData"
+    static final String DELEGATE_PROPERTY_COLUMN_SPAN = '_delegateProperty:columnSpan'
+    static final String DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN = 'columnSpan'
+    static final String DELEGATE_PROPERTY_ROW_SPAN = '_delegateProperty:rowSpan'
+    static final String DEFAULT_DELEGATE_PROPERTY_ROW_SPAN = 'rowSpan'
+    static final String CONTEXT_DATA_KEY = 'TablePaneFactoryData'
 
     TablePaneFactory() {
         super(TablePane)
@@ -39,8 +39,8 @@ class TablePaneFactory extends ComponentFactory {
             if (builder.current == newChild) inspectChild(cBuilder, cNode, cAttributes)
         }
         builder.addAttributeDelegate(builder.context.tablePaneFactoryClosure)
-        builder.context[DELEGATE_PROPERTY_COLUMN_SPAN] = attributes.remove("columnSpan") ?: DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN
-        builder.context[DELEGATE_PROPERTY_ROW_SPAN] = attributes.remove("rowSpan") ?: DEFAULT_DELEGATE_PROPERTY_ROW_SPAN
+        builder.context[DELEGATE_PROPERTY_COLUMN_SPAN] = attributes.remove('columnSpan') ?: DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN
+        builder.context[DELEGATE_PROPERTY_ROW_SPAN] = attributes.remove('rowSpan') ?: DEFAULT_DELEGATE_PROPERTY_ROW_SPAN
 
         return newChild
     }
@@ -68,7 +68,7 @@ class TablePaneFactory extends ComponentFactory {
         }
     }
 
-    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         super.onNodeCompleted(builder, parent, node)
         builder.removeAttributeDelegate(builder.context.tablePaneFactoryClosure)
     }

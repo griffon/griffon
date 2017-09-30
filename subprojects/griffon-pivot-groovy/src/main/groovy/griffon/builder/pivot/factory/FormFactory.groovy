@@ -39,11 +39,11 @@ class FormFlagFactory extends PivotBeanFactory {
  * @author Andres Almiray
  */
 class FormSectionFactory extends ContainerFactory {
-    public static final String DELEGATE_PROPERTY_FORM_LABEL = "_delegateProperty:formLabel"
-    public static final String DEFAULT_DELEGATE_PROPERTY_FORM_LABEL = "formLabel"
-//    public static final String DELEGATE_PROPERTY_FORM_FLAG = "_delegateProperty:formFlag"
-//    public static final String DEFAULT_DELEGATE_PROPERTY_FORM_FLAG = "formFlag"
-    public static final String SECTIONS_CONTEXT_DATA_KEY = "FormSections"
+    static final String DELEGATE_PROPERTY_FORM_LABEL = '_delegateProperty:formLabel'
+    static final String DEFAULT_DELEGATE_PROPERTY_FORM_LABEL = 'formLabel'
+//    static final String DELEGATE_PROPERTY_FORM_FLAG = '_delegateProperty:formFlag'
+//    static final String DEFAULT_DELEGATE_PROPERTY_FORM_FLAG = 'formFlag'
+    static final String SECTIONS_CONTEXT_DATA_KEY = 'FormSections'
 
     FormSectionFactory() {
         super(Form.Section)
@@ -55,8 +55,8 @@ class FormSectionFactory extends ContainerFactory {
             if (builder.current == newChild) inspectChild(cBuilder, cNode, cAttributes)
         }
         builder.addAttributeDelegate(builder.context.formSectionFactoryClosure)
-        builder.context[DELEGATE_PROPERTY_FORM_LABEL] = attributes.remove("formLabel") ?: DEFAULT_DELEGATE_PROPERTY_FORM_LABEL
-//        builder.context[DELEGATE_PROPERTY_FORM_FLAG] = attributes.remove("formFlag") ?: DEFAULT_DELEGATE_PROPERTY_FORM_FLAG
+        builder.context[DELEGATE_PROPERTY_FORM_LABEL] = attributes.remove('formLabel') ?: DEFAULT_DELEGATE_PROPERTY_FORM_LABEL
+//        builder.context[DELEGATE_PROPERTY_FORM_FLAG] = attributes.remove('formFlag') ?: DEFAULT_DELEGATE_PROPERTY_FORM_FLAG
         builder.context.get(SECTIONS_CONTEXT_DATA_KEY, [])
 
         return newChild
@@ -77,7 +77,7 @@ class FormSectionFactory extends ContainerFactory {
         else super.setParent(builder, parent, node)
     }
 
-    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+    void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
         def sectionData = builder.context.remove(SECTIONS_CONTEXT_DATA_KEY)
         sectionData?.each { chunk ->
             if (chunk?.formLabel) Form.setLabel(chunk.component, chunk.formLabel)

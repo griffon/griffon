@@ -25,7 +25,7 @@ class WidgetFactory extends ComponentFactory {
     final Class restrictedType
     protected final boolean leaf
 
-    public WidgetFactory(Class restrictedType, boolean leaf) {
+    WidgetFactory(Class restrictedType, boolean leaf) {
         super(restrictedType)
         this.restrictedType = restrictedType
         this.leaf = leaf
@@ -35,7 +35,7 @@ class WidgetFactory extends ComponentFactory {
         return leaf
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         if (value == null) {
             value = attributes.remove(name)
         }
