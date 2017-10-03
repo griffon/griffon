@@ -17,13 +17,24 @@
  */
 package griffon.core.mvc;
 
-import java.util.function.Consumer;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonModel;
+import griffon.core.artifact.GriffonView;
+
+import javax.annotation.Nullable;
 
 /**
- * An specialized function for working with MVC groups.
+ * An specialized function for working with MVC members.
  *
  * @author Andres Almiray
- * @since 2.1.0
+ * @since 2.0.0
  */
-public interface MVCGroupFunction extends Consumer<MVCGroup> {
+public interface MVCConsumer<M extends GriffonModel, V extends GriffonView, C extends GriffonController> {
+    /**
+     * Applies this function<p>
+     *  @param model      the Model member of the group
+     * @param view       the View member of the group
+     * @param controller the Controller member of the group
+     */
+    void accept(@Nullable M model, @Nullable V view, @Nullable C controller);
 }

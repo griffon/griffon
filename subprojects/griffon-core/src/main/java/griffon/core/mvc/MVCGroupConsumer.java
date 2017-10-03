@@ -20,10 +20,10 @@ package griffon.core.mvc;
 import java.util.function.Consumer;
 
 /**
- * An specialized function for working with typed MVC groups.
+ * An specialized function for working with MVC groups.
  *
  * @author Andres Almiray
- * @since 2.11.0
+ * @since 2.1.0
  */
-public interface TypedMVCGroupFunction<MVC extends TypedMVCGroup> extends Consumer<MVC> {
+public interface MVCGroupConsumer extends Consumer<MVCGroup> {
 }

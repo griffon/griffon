@@ -24,15 +24,15 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
-import griffon.core.mvc.MVCFunction;
+import griffon.core.mvc.MVCConsumer;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupConfigurationFactory;
 import griffon.core.mvc.MVCGroupFactory;
-import griffon.core.mvc.MVCGroupFunction;
+import griffon.core.mvc.MVCGroupConsumer;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.mvc.TypedMVCGroup;
-import griffon.core.mvc.TypedMVCGroupFunction;
+import griffon.core.mvc.TypedMVCGroupConsumer;
 import griffon.exceptions.ArtifactNotFoundException;
 import griffon.exceptions.MVCGroupConfigurationException;
 import griffon.exceptions.MVCGroupInstantiationException;
@@ -271,11 +271,11 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @SuppressWarnings("unchecked")
-    protected <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
+    protected <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
         MVCGroup group = null;
         try {
             group = createMVCGroup(configuration, mvcId, args);
-            handler.apply((M) group.getModel(), (V) group.getView(), (C) group.getController());
+            handler.accept((M) group.getModel(), (V) group.getView(), (C) group.getController());
         } finally {
             try {
                 if (group != null) {
@@ -288,7 +288,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @SuppressWarnings("unchecked")
-    protected void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
+    protected void withMVCGroup(@Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupConsumer handler) {
         MVCGroup group = null;
         try {
             group = createMVCGroup(configuration, mvcId, args);
@@ -312,13 +312,13 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType) {
-        return createMVCGroup(findConfiguration(mvcType), null, Collections.emptyMap());
+        return createMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
     @Override
     public MVCGroup createMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return createMVCGroup(findConfiguration(mvcType), mvcId, Collections.emptyMap());
+        return createMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
@@ -348,13 +348,13 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Class<? extends MVC> mvcType) {
-        return typedMvcGroup(mvcType, createMVCGroup(findConfiguration(nameOf(mvcType)), null, Collections.emptyMap()));
+        return typedMvcGroup(mvcType, createMVCGroup(findConfiguration(nameOf(mvcType)), null, Collections.<String, Object>emptyMap()));
     }
 
     @Nonnull
     @Override
     public <MVC extends TypedMVCGroup> MVC createMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId) {
-        return typedMvcGroup(mvcType, createMVCGroup(findConfiguration(nameOf(mvcType)), mvcId, Collections.emptyMap()));
+        return typedMvcGroup(mvcType, createMVCGroup(findConfiguration(nameOf(mvcType)), mvcId, Collections.<String, Object>emptyMap()));
     }
 
     @Nonnull
@@ -384,7 +384,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType) {
-        return createMVC(findConfiguration(mvcType), null, Collections.emptyMap());
+        return createMVC(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
@@ -402,7 +402,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public List<? extends GriffonMvcArtifact> createMVC(@Nonnull String mvcType, @Nonnull String mvcId) {
-        return createMVC(findConfiguration(mvcType), mvcId, Collections.emptyMap());
+        return createMVC(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
@@ -420,7 +420,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Class<? extends MVC> mvcType) {
-        return createMVC(findConfiguration(nameOf(mvcType)), null, Collections.emptyMap());
+        return createMVC(findConfiguration(nameOf(mvcType)), null, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
@@ -438,7 +438,7 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     @Nonnull
     @Override
     public <MVC extends TypedMVCGroup> List<? extends GriffonMvcArtifact> createMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId) {
-        return createMVC(findConfiguration(nameOf(mvcType)), mvcId, Collections.emptyMap());
+        return createMVC(findConfiguration(nameOf(mvcType)), mvcId, Collections.<String, Object>emptyMap());
     }
 
     @Nonnull
@@ -454,107 +454,107 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        withMVCGroup(findConfiguration(mvcType), null, Collections.emptyMap(), handler);
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
+        withMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.emptyMap(), handler);
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
+        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        withMVCGroup(findConfiguration(nameOf(mvcType)), null, Collections.emptyMap(), handler);
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
+        withMVCGroup(findConfiguration(nameOf(mvcType)), null, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        withMVCGroup(findConfiguration(nameOf(mvcType)), mvcId, Collections.emptyMap(), handler);
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
+        withMVCGroup(findConfiguration(nameOf(mvcType)), mvcId, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(nameOf(mvcType)), mvcId, args, handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(nameOf(mvcType)), mvcId, args, handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(nameOf(mvcType)), null, args, handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull MVCFunction<M, V, C> handler) {
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
         withMVCGroup(findConfiguration(nameOf(mvcType)), null, args, handler);
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-        withMVCGroup(findConfiguration(mvcType), null, Collections.emptyMap(), handler);
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupConsumer handler) {
+        withMVCGroup(findConfiguration(mvcType), null, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.emptyMap(), handler);
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupConsumer handler) {
+        withMVCGroup(findConfiguration(mvcType), mvcId, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupConsumer handler) {
         withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
     }
 
     @Override
-    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupConsumer handler) {
         withMVCGroup(findConfiguration(mvcType), mvcId, args, handler);
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupConsumer handler) {
         withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     @Override
-    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupConsumer handler) {
         withMVCGroup(findConfiguration(mvcType), null, args, handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        withMVCGroup(mvcType, null, Collections.emptyMap(), handler);
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
+        withMVCGroup(mvcType, null, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        withMVCGroup(mvcType, mvcId, Collections.emptyMap(), handler);
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
+        withMVCGroup(mvcType, mvcId, Collections.<String, Object>emptyMap(), handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupFunction<MVC> handler) {
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
         MVC group = null;
         try {
             group = createMVCGroup(mvcType, mvcId, args);
@@ -571,17 +571,17 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupFunction<MVC> handler) {
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
         withMVCGroup(mvcType, mvcId, args, handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupFunction<MVC> handler) {
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
         withMVCGroup(mvcType, null, args, handler);
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupFunction<MVC> handler) {
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
         withMVCGroup(mvcType, null, args, handler);
     }
 
