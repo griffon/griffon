@@ -18,7 +18,6 @@
 package org.codehaus.griffon.gradle
 
 import org.gradle.BuildAdapter
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
