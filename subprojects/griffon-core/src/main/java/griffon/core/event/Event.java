@@ -17,15 +17,10 @@
  */
 package griffon.core.event;
 
-import javax.annotation.Nonnull;
-import java.util.EventObject;
-
 /**
  * @author Andres Almiray
  */
-public abstract class Event extends EventObject {
-    private static final long serialVersionUID = -2080599710005680415L;
-
+public abstract class Event {
     /**
      * System time when the event happened
      */
@@ -33,11 +28,8 @@ public abstract class Event extends EventObject {
 
     /**
      * Create a new Event.
-     *
-     * @param source the component that published the event (never <code>null</code>)
      */
-    public Event(@Nonnull Object source) {
-        super(source);
+    public Event() {
         this.timestamp = System.currentTimeMillis();
     }
 
