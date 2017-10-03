@@ -17,7 +17,7 @@
  */
 package griffon.core.mvc;
 
-import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * An specialized function for working with typed MVC groups.
@@ -25,11 +25,5 @@ import javax.annotation.Nonnull;
  * @author Andres Almiray
  * @since 2.11.0
  */
-public interface TypedMVCGroupFunction<MVC extends TypedMVCGroup> {
-    /**
-     * Applies this function<p>
-     *
-     * @param group the MVC group
-     */
-    void apply(@Nonnull MVC group);
+public interface TypedMVCGroupFunction<MVC extends TypedMVCGroup> extends Consumer<MVC> {
 }

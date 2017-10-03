@@ -71,9 +71,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
     @Nonnull
     protected SwingAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        return new SwingAction(args -> {
-            actionManager.invokeAction(controller, actionName, args);
-        });
+        return new SwingAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {

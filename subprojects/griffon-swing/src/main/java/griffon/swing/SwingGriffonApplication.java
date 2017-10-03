@@ -47,7 +47,7 @@ public class SwingGriffonApplication extends AbstractGriffonApplication {
             getUIThreadManager().runInsideUISync(() -> {
                 empty[0] = Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() == null;
             });
-            if (empty[0]) break;
+            if (empty[0]) { break; }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

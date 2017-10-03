@@ -178,9 +178,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     protected void initializeResourcesInjector() {
         final ResourceInjector injector = application.getResourceInjector();
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
-            injector.injectResources(args[1]);
-        });
+        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> injector.injectResources(args[1]));
     }
 
     protected void initializeArtifactManager() {

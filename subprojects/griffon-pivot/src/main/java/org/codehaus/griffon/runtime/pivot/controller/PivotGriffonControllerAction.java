@@ -51,9 +51,7 @@ public class PivotGriffonControllerAction extends AbstractAction {
 
     @Nonnull
     protected PivotAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        return new PivotAction(args -> {
-            actionManager.invokeAction(controller, actionName, args);
-        });
+        return new PivotAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
