@@ -22,11 +22,6 @@ apply from: rootProject.file('gradle/javafx-plugin.gradle')
 
 mainClassName = 'editor.Launcher'
 
-tasks.withType(JavaCompile) {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-}
-
 dependencies {
     compileOnly project(':griffon-core-compile')
 
