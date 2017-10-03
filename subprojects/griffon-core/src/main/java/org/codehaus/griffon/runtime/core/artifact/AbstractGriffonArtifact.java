@@ -69,20 +69,6 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
         return getClass();
     }
 
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param application the GriffonApplication that holds this artifact.
-     *
-     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
-     */
-    @Inject
-    @Deprecated
-    public AbstractGriffonArtifact(@Nonnull GriffonApplication application) {
-        this();
-        this.application = application;
-    }
-
     @Nonnull
     public GriffonApplication getApplication() {
         return application;

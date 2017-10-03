@@ -189,12 +189,6 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        removeEventListener(eventClass.getSimpleName(), listener);
-    }
-
-    @Override
     public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         removeEventListener(eventClass.getSimpleName(), listener);
@@ -224,12 +218,6 @@ public abstract class AbstractEventRouter implements EventRouter {
         if (method != null) {
             MethodUtils.invokeUnwrapping(method, instance, asArray(params));
         }
-    }
-
-    @Override
-    public <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        addEventListener(eventClass.getSimpleName(), listener);
     }
 
     @Override
@@ -286,8 +274,6 @@ public abstract class AbstractEventRouter implements EventRouter {
             Object eventHandler = entry.getValue();
             if (eventHandler instanceof RunnableWithArgs) {
                 addEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);
-            } else if (eventHandler instanceof CallableWithArgs) {
-                addEventListener(entry.getKey(), (CallableWithArgs) eventHandler);
             } else {
                 throw new IllegalArgumentException("Unsupported functional event listener " + eventHandler);
             }
@@ -343,23 +329,9 @@ public abstract class AbstractEventRouter implements EventRouter {
             Object eventHandler = entry.getValue();
             if (eventHandler instanceof RunnableWithArgs) {
                 removeEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);
-            } else if (eventHandler instanceof CallableWithArgs) {
-                removeEventListener(entry.getKey(), (CallableWithArgs) eventHandler);
             } else {
                 throw new IllegalArgumentException("Unsupported functional event listener " + eventHandler);
             }
-        }
-    }
-
-    @Override
-    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.computeIfAbsent(capitalize(eventName), k -> new ArrayList<>());
-            if (list.contains(listener)) { return; }
-            LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
-            list.add(listener);
         }
     }
 
@@ -372,19 +344,6 @@ public abstract class AbstractEventRouter implements EventRouter {
             if (list.contains(listener)) { return; }
             LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
             list.add(listener);
-        }
-    }
-
-    @Override
-    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.get(capitalize(eventName));
-            if (list != null) {
-                LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
-                list.remove(listener);
-            }
         }
     }
 
@@ -458,8 +417,6 @@ public abstract class AbstractEventRouter implements EventRouter {
             for (Object listener : listenersCopy) {
                 if (listener instanceof RunnableWithArgs) {
                     fireEvent((RunnableWithArgs) listener, params);
-                } else if (listener instanceof CallableWithArgs) {
-                    fireEvent((CallableWithArgs<?>) listener, params);
                 } else {
                     fireEvent(listener, eventHandler, params);
                 }

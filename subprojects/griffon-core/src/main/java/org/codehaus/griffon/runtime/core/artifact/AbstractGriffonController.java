@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
 import griffon.core.controller.Action;
@@ -25,7 +24,6 @@ import griffon.core.controller.ActionManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 
@@ -38,18 +36,6 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
 public abstract class AbstractGriffonController extends AbstractGriffonMvcArtifact implements GriffonController {
     public AbstractGriffonController() {
 
-    }
-
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param application the GriffonApplication that holds this artifact.
-     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
-     */
-    @Inject
-    @Deprecated
-    public AbstractGriffonController(@Nonnull GriffonApplication application) {
-        super(application);
     }
 
     @Nonnull

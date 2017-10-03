@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.runtime.javafx.artifact;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
@@ -56,19 +55,6 @@ public abstract class AbstractJavaFXGriffonView extends AbstractGriffonView impl
 
     public AbstractJavaFXGriffonView() {
 
-    }
-
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param application the GriffonApplication that holds this artifact.
-     *
-     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
-     */
-    @Inject
-    @Deprecated
-    public AbstractJavaFXGriffonView(@Nonnull GriffonApplication application) {
-        super(application);
     }
 
     @Nonnull

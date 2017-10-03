@@ -17,12 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonService;
 import griffon.core.artifact.GriffonServiceClass;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 
 /**
  * Base implementation of the GriffonService interface.
@@ -33,18 +31,6 @@ import javax.inject.Inject;
 public abstract class AbstractGriffonService extends AbstractGriffonArtifact implements GriffonService {
     public AbstractGriffonService() {
 
-    }
-
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param application the GriffonApplication that holds this artifact.
-     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
-     */
-    @Inject
-    @Deprecated
-    public AbstractGriffonService(@Nonnull GriffonApplication application) {
-        super(application);
     }
 
     @Nonnull

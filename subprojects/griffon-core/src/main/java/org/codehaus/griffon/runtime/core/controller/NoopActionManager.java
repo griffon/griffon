@@ -20,7 +20,6 @@ package org.codehaus.griffon.runtime.core.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionHandler;
-import griffon.core.controller.ActionInterceptor;
 import griffon.core.controller.ActionManager;
 
 import javax.annotation.Nonnull;
@@ -95,12 +94,6 @@ public class NoopActionManager implements ActionManager {
 
     @Override
     public void addActionHandler(@Nonnull ActionHandler actionHandler) {
-
-    }
-
-    @Deprecated
-    @Override
-    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
 
     }
 }

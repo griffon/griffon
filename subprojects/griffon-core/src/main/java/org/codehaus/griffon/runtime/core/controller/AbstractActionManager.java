@@ -27,7 +27,6 @@ import griffon.core.controller.Action;
 import griffon.core.controller.ActionExecutionStatus;
 import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionHandler;
-import griffon.core.controller.ActionInterceptor;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.controller.ActionMetadataFactory;
@@ -454,10 +453,6 @@ public abstract class AbstractActionManager implements ActionManager {
             return;
         }
         handlers.add(actionHandler);
-    }
-
-    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
-        throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
     }
 
     @Nonnull

@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.runtime.swing.artifact;
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.swing.support.SwingAction;
@@ -25,7 +24,6 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 
 /**
  * Swing-friendly implementation of the GriffonView interface.
@@ -36,18 +34,6 @@ import javax.inject.Inject;
 public abstract class AbstractSwingGriffonView extends AbstractGriffonView {
     public AbstractSwingGriffonView() {
 
-    }
-
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param application the GriffonApplication that holds this artifact.
-     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
-     */
-    @Inject
-    @Deprecated
-    public AbstractSwingGriffonView(@Nonnull GriffonApplication application) {
-        super(application);
     }
 
     @Nullable

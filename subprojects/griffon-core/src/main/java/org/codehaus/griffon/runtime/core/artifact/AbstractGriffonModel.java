@@ -18,13 +18,11 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 
-import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonModelClass;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -48,20 +46,6 @@ public abstract class AbstractGriffonModel extends AbstractGriffonMvcArtifact im
     protected final VetoableChangeSupport vcs;
 
     public AbstractGriffonModel() {
-        pcs = new PropertyChangeSupport(this);
-        vcs = new VetoableChangeSupport(this);
-    }
-
-    /**
-     * Creates a new instance of this class.
-     *
-     * @param application the GriffonApplication that holds this artifact.
-     * @deprecated Griffon prefers field injection over constructor injector for artifacts as of 2.1.0
-     */
-    @Inject
-    @Deprecated
-    public AbstractGriffonModel(@Nonnull GriffonApplication application) {
-        super(application);
         pcs = new PropertyChangeSupport(this);
         vcs = new VetoableChangeSupport(this);
     }

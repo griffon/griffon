@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.runtime.core.event;
 
-import griffon.core.CallableWithArgs;
 import griffon.core.RunnableWithArgs;
 import griffon.core.event.Event;
 import griffon.core.event.EventPublisher;
@@ -61,13 +60,6 @@ public abstract class AbstractEventPublisher implements EventPublisher {
     }
 
     @Override
-    public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        eventRouter.removeEventListener(eventClass, listener);
-    }
-
-    @Override
     public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener) {
         requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
         requireNonNull(listener, ERROR_LISTENER_NULL);
@@ -78,13 +70,6 @@ public abstract class AbstractEventPublisher implements EventPublisher {
     public void addEventListener(@Nonnull Object listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.addEventListener(listener);
-    }
-
-    @Override
-    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        eventRouter.addEventListener(eventName, listener);
     }
 
     @Override
@@ -110,13 +95,6 @@ public abstract class AbstractEventPublisher implements EventPublisher {
     public void removeEventListener(@Nonnull Map<String, Object> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         eventRouter.removeEventListener(listener);
-    }
-
-    @Override
-    public <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        eventRouter.addEventListener(eventClass, listener);
     }
 
     @Override
@@ -148,13 +126,6 @@ public abstract class AbstractEventPublisher implements EventPublisher {
     public void publishEventAsync(@Nonnull String eventName, @Nullable List<?> params) {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         eventRouter.publishEventAsync(eventName, params);
-    }
-
-    @Override
-    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        eventRouter.removeEventListener(eventName, listener);
     }
 
     @Override

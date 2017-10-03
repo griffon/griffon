@@ -27,7 +27,6 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionHandler;
-import griffon.core.controller.ActionInterceptor;
 import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.env.Lifecycle;
 import griffon.core.event.EventHandler;
@@ -251,12 +250,6 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         for (ActionHandler handler : sortedHandlers.values()) {
             application.getActionManager().addActionHandler(handler);
-        }
-
-        Collection<ActionInterceptor> interceptorInstances = injector.getInstances(ActionInterceptor.class);
-        if (!interceptorInstances.isEmpty()) {
-            application.getLog().error(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
-            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
         }
     }
 

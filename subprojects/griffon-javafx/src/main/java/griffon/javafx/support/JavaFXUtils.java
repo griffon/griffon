@@ -24,12 +24,9 @@ import griffon.core.controller.ActionManager;
 import griffon.core.editors.ValueConversionException;
 import griffon.core.i18n.MessageSource;
 import griffon.exceptions.InstanceMethodInvocationException;
-import griffon.javafx.collections.GriffonFXCollections;
 import javafx.application.Platform;
 import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.collections.ObservableSet;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -736,61 +733,6 @@ public final class JavaFXUtils {
     public static String getGriffonActionId(@Nonnull MenuItem menuItem) {
         requireNonNull(menuItem, ERROR_NODE_NULL);
         return (String) menuItem.getProperties().get(Action.class.getName());
-    }
-
-    /**
-     * Wraps an <tt>ObservableList</tt>, publishing updates inside the UI thread.
-     *
-     * @param source the <tt>ObservableList</tt> to be wrapped
-     * @param <E>    the list's parameter type.
-     *
-     * @return a new <tt>ObservableList</tt>
-     *
-     * @see GriffonFXCollections#uiThreadAwareObservableList
-     * @since 2.6.0
-     * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableList} instead.
-     */
-    @Deprecated
-    @Nonnull
-    public static <E> ObservableList<E> createJavaFXThreadProxyList(@Nonnull ObservableList<E> source) {
-        return GriffonFXCollections.uiThreadAwareObservableList(source);
-    }
-
-    /**
-     * Wraps an <tt>ObservableSet</tt>, publishing updates inside the UI thread.
-     *
-     * @param source the <tt>ObservableSet</tt> to be wrapped
-     * @param <E>    the set's parameter type.
-     *
-     * @return a new <tt>ObservableSet</tt>
-     *
-     * @see GriffonFXCollections#uiThreadAwareObservableSet
-     * @since 2.9.0
-     * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableSet} instead.
-     */
-    @Deprecated
-    @Nonnull
-    public static <E> ObservableSet<E> createJavaFXThreadProxySet(@Nonnull ObservableSet<E> source) {
-        return GriffonFXCollections.uiThreadAwareObservableSet(source);
-    }
-
-    /**
-     * Wraps an <tt>ObservableMap</tt>, publishing updates inside the UI thread.
-     *
-     * @param source the <tt>ObservableMap</tt> to be wrapped
-     * @param <K>    the type of keys maintained by the map
-     * @param <V>    the type of mapped values
-     *
-     * @return a new <tt>ObservableMap</tt>
-     *
-     * @see GriffonFXCollections#uiThreadAwareObservableMap
-     * @since 2.9.0
-     * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableMap} instead.
-     */
-    @Deprecated
-    @Nonnull
-    public static <K, V> ObservableMap<K, V> createJavaFXThreadProxyMap(@Nonnull ObservableMap<K, V> source) {
-        return GriffonFXCollections.uiThreadAwareObservableMap(source);
     }
 
     @Nonnull
