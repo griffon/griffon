@@ -17,8 +17,6 @@
  */
 package griffon.core.artifact;
 
-import griffon.core.Vetoable;
-
 /**
  * Identifies a Model artifact.<p>
  * Models should always be {@code Observable}.
@@ -26,5 +24,5 @@ import griffon.core.Vetoable;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface GriffonModel extends GriffonMvcArtifact, Vetoable {
+public interface GriffonModel extends GriffonMvcArtifact {
 }
