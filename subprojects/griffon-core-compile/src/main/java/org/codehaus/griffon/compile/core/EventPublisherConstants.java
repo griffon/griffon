@@ -60,29 +60,12 @@ public interface EventPublisherConstants extends BaseConstants {
             METHOD_ADD_EVENT_LISTENER,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
-        ),
-        method(
-            type(VOID),
-            METHOD_ADD_EVENT_LISTENER,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))
         ),
         method(
             type(VOID),
             METHOD_ADD_EVENT_LISTENER,
             args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT)))
-        ),
-        method(
-            type(VOID),
-            typeParams(
-                typeParam(E, EVENT_TYPE)
-            ),
-            METHOD_ADD_EVENT_LISTENER,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
         method(
             type(VOID),
@@ -105,29 +88,12 @@ public interface EventPublisherConstants extends BaseConstants {
             METHOD_REMOVE_EVENT_LISTENER,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
-        ),
-        method(
-            type(VOID),
-            METHOD_REMOVE_EVENT_LISTENER,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_RUNNABLEWITHARGS, WILDCARD))
         ),
         method(
             type(VOID),
             METHOD_REMOVE_EVENT_LISTENER,
             args(typeWithParams(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, type(JAVA_LANG_STRING), type(JAVA_LANG_OBJECT)))
-        ),
-        method(
-            type(VOID),
-            typeParams(
-                typeParam(E, EVENT_TYPE)
-            ),
-            METHOD_REMOVE_EVENT_LISTENER,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, E),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), GRIFFON_CORE_CALLABLEWITHARGS, WILDCARD))
         ),
         method(
             type(VOID),
