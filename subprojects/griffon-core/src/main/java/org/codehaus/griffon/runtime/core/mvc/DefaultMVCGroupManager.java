@@ -430,7 +430,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                         ") must be annotated with @" + MVCMember.class.getName() + ".");
                 }
             } catch (Exception e) {
-                throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
+                throw new MVCGroupInstantiationException("Unexpected error when setting value for " + instance.getClass() + "." + field.getName(), group.getMvcType(), group.getMvcId(), e);
             }
         }
     }
@@ -491,7 +491,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                             ") must be annotated with @" + MVCMember.class.getName() + ".");
                     }
                 } catch (Exception e) {
-                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
+                    throw new MVCGroupInstantiationException("Unexpected error when invoking " + instance.getClass() + "." + method.getName(), group.getMvcType(), group.getMvcId(), e);
                 }
             }
         }
