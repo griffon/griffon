@@ -18,6 +18,13 @@ package griffon.javafx.uithread
 import griffon.javafx.beans.binding.UIThreadAwareBindings
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
+import javafx.beans.binding.BooleanBinding
+import javafx.beans.binding.DoubleBinding
+import javafx.beans.binding.FloatBinding
+import javafx.beans.binding.IntegerBinding
+import javafx.beans.binding.LongBinding
+import javafx.beans.binding.ObjectBinding
+import javafx.beans.binding.StringBinding
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.FloatProperty
@@ -264,4 +271,32 @@ fun ObservableFloatValue.uiThreadAware(): ObservableFloatValue {
 
 fun ObservableDoubleValue.uiThreadAware(): ObservableDoubleValue {
     return UIThreadAwareBindings.uiThreadAwareObservableDouble(this)
+}
+
+fun BooleanBinding.uiThreadAware(): BooleanBinding {
+    return UIThreadAwareBindings.uiThreadAwareBooleanBinding(this)
+}
+
+fun IntegerBinding.uiThreadAware(): IntegerBinding {
+    return UIThreadAwareBindings.uiThreadAwareIntegerBinding(this)
+}
+
+fun LongBinding.uiThreadAware(): LongBinding {
+    return UIThreadAwareBindings.uiThreadAwareLongBinding(this)
+}
+
+fun FloatBinding.uiThreadAware(): FloatBinding {
+    return UIThreadAwareBindings.uiThreadAwareFloatBinding(this)
+}
+
+fun DoubleBinding.uiThreadAware(): DoubleBinding {
+    return UIThreadAwareBindings.uiThreadAwareDoubleBinding(this)
+}
+
+fun StringBinding.uiThreadAware(): StringBinding {
+    return UIThreadAwareBindings.uiThreadAwareStringBinding(this)
+}
+
+fun <T> ObjectBinding<T>.uiThreadAware(): ObjectBinding<T> {
+    return UIThreadAwareBindings.uiThreadAwareObjectBinding(this)
 }

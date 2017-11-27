@@ -17,6 +17,13 @@ package griffon.javafx.beans.binding;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.FloatBinding;
+import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.LongBinding;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
@@ -58,6 +65,7 @@ public final class UIThreadAwareBindings {
     private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
     private static final String ERROR_OBSERVABLE_NULL = "Argument 'observable' must not be null";
     private static final String ERROR_PROPERTY_NULL = "Argument 'property' must not be null";
+    private static final String ERROR_BINDING_NULL = "Argument 'binding' must not be null";
 
     private UIThreadAwareBindings() {
         // prevent instantiation
@@ -70,8 +78,6 @@ public final class UIThreadAwareBindings {
      * @param observable the observable on which the listener will be registered.
      *
      * @return the wrapped change listener.
-     *
-     * @since 2.11.0
      */
     public static <T> ChangeListener<T> uiThreadAwareBind(@Nonnull final Property<T> property, @Nonnull final ObservableValue<T> observable) {
         requireNonNull(property, ERROR_PROPERTY_NULL);
@@ -796,5 +802,110 @@ public final class UIThreadAwareBindings {
     public static ObservableDoubleValue uiThreadAwareObservableDouble(@Nonnull final ObservableDoubleValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableDoubleValue(observable);
+    }
+
+    /**
+     * Creates a boolean binding that notifies its listeners inside the UI thread.
+     *
+     * @param binding the boolean binding to wrap.
+     *
+     * @return a boolean binding.
+     *
+     * @since 2.13.0
+     */
+    @Nonnull
+    public static BooleanBinding uiThreadAwareBooleanBinding(@Nonnull BooleanBinding binding) {
+        requireNonNull(binding, ERROR_BINDING_NULL);
+        return binding instanceof UIThreadAware ? binding : new UIThreadAwareBooleanBinding(binding);
+    }
+
+    /**
+     * Creates an integer binding that notifies its listeners inside the UI thread.
+     *
+     * @param binding the integer binding to wrap.
+     *
+     * @return an integer binding.
+     *
+     * @since 2.13.0
+     */
+    @Nonnull
+    public static IntegerBinding uiThreadAwareIntegerBinding(@Nonnull IntegerBinding binding) {
+        requireNonNull(binding, ERROR_BINDING_NULL);
+        return binding instanceof UIThreadAware ? binding : new UIThreadAwareIntegerBinding(binding);
+    }
+
+    /**
+     * Creates a long binding that notifies its listeners inside the UI thread.
+     *
+     * @param binding the long binding to wrap.
+     *
+     * @return a long binding.
+     *
+     * @since 2.13.0
+     */
+    @Nonnull
+    public static LongBinding uiThreadAwareLongBinding(@Nonnull LongBinding binding) {
+        requireNonNull(binding, ERROR_BINDING_NULL);
+        return binding instanceof UIThreadAware ? binding : new UIThreadAwareLongBinding(binding);
+    }
+
+    /**
+     * Creates a float binding that notifies its listeners inside the UI thread.
+     *
+     * @param binding the float binding to wrap.
+     *
+     * @return a float binding.
+     *
+     * @since 2.13.0
+     */
+    @Nonnull
+    public static FloatBinding uiThreadAwareFloatBinding(@Nonnull FloatBinding binding) {
+        requireNonNull(binding, ERROR_BINDING_NULL);
+        return binding instanceof UIThreadAware ? binding : new UIThreadAwareFloatBinding(binding);
+    }
+
+    /**
+     * Creates a double binding that notifies its listeners inside the UI thread.
+     *
+     * @param binding the double binding to wrap.
+     *
+     * @return a double binding.
+     *
+     * @since 2.13.0
+     */
+    @Nonnull
+    public static DoubleBinding uiThreadAwareDoubleBinding(@Nonnull DoubleBinding binding) {
+        requireNonNull(binding, ERROR_BINDING_NULL);
+        return binding instanceof UIThreadAware ? binding : new UIThreadAwareDoubleBinding(binding);
+    }
+
+    /**
+     * Creates a string binding that notifies its listeners inside the UI thread.
+     *
+     * @param binding the string binding to wrap.
+     *
+     * @return a string binding.
+     *
+     * @since 2.13.0
+     */
+    @Nonnull
+    public static StringBinding uiThreadAwareStringBinding(@Nonnull StringBinding binding) {
+        requireNonNull(binding, ERROR_BINDING_NULL);
+        return binding instanceof UIThreadAware ? binding : new UIThreadAwareStringBinding(binding);
+    }
+
+    /**
+     * Creates an object binding that notifies its listeners inside the UI thread.
+     *
+     * @param binding the object binding to wrap.
+     *
+     * @return an object binding.
+     *
+     * @since 2.13.0
+     */
+    @Nonnull
+    public static <T> ObjectBinding<T> uiThreadAwareObjectBinding(@Nonnull ObjectBinding<T> binding) {
+        requireNonNull(binding, ERROR_BINDING_NULL);
+        return binding instanceof UIThreadAware ? binding : new UIThreadAwareObjectBinding<>(binding);
     }
 }

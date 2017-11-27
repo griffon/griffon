@@ -19,6 +19,13 @@ import griffon.javafx.beans.binding.UIThreadAwareBindings
 import groovy.transform.CompileStatic
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
+import javafx.beans.binding.BooleanBinding
+import javafx.beans.binding.DoubleBinding
+import javafx.beans.binding.FloatBinding
+import javafx.beans.binding.IntegerBinding
+import javafx.beans.binding.LongBinding
+import javafx.beans.binding.ObjectBinding
+import javafx.beans.binding.StringBinding
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.FloatProperty
@@ -342,5 +349,40 @@ final class UIThreadAwareBindingsExtension {
     @Nonnull
     static ObservableDoubleValue uiThreadAware(@Nonnull ObservableDoubleValue observable) {
         UIThreadAwareBindings.uiThreadAwareObservableDouble(observable)
+    }
+
+    @Nonnull
+    static BooleanBinding uiThreadAware(@Nonnull BooleanBinding observable) {
+        UIThreadAwareBindings.uiThreadAwareBooleanBinding(observable)
+    }
+
+    @Nonnull
+    static IntegerBinding uiThreadAware(@Nonnull IntegerBinding observable) {
+        UIThreadAwareBindings.uiThreadAwareIntegerBinding(observable)
+    }
+
+    @Nonnull
+    static LongBinding uiThreadAware(@Nonnull LongBinding observable) {
+        UIThreadAwareBindings.uiThreadAwareLongBinding(observable)
+    }
+
+    @Nonnull
+    static FloatBinding uiThreadAware(@Nonnull FloatBinding observable) {
+        UIThreadAwareBindings.uiThreadAwareFloatBinding(observable)
+    }
+
+    @Nonnull
+    static DoubleBinding uiThreadAware(@Nonnull DoubleBinding observable) {
+        UIThreadAwareBindings.uiThreadAwareDoubleBinding(observable)
+    }
+
+    @Nonnull
+    static StringBinding uiThreadAware(@Nonnull StringBinding observable) {
+        UIThreadAwareBindings.uiThreadAwareStringBinding(observable)
+    }
+
+    @Nonnull
+    static <T> ObjectBinding<T> uiThreadAware(@Nonnull ObjectBinding<T> observable) {
+        UIThreadAwareBindings.uiThreadAwareObjectBinding(observable)
     }
 }

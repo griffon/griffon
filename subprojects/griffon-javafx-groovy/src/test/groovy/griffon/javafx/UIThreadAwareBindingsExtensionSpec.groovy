@@ -15,8 +15,10 @@
  */
 package griffon.javafx
 
+import griffon.javafx.beans.binding.UIThreadAwareBindings
 import javafx.application.Platform
 import javafx.beans.InvalidationListener
+import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleFloatProperty
@@ -161,6 +163,89 @@ class UIThreadAwareBindingsExtensionSpec extends Specification {
         'PropertyString'  | new SimpleStringProperty()  | new SimpleStringProperty()  | 'foo'                 | 'bar'
     }
 
+    void "Check update is triggered inside UI thread for #type (Binding)"() {
+        given:
+        source.set(value1)
+        def sourceBinding = Bindings."create${type}"({ -> source.get() }, source)
+
+        ValueHolder cvh = new ValueHolder()
+        ValueHolder ivh = new ValueHolder()
+
+        def binding = sourceBinding.uiThreadAware()
+        ChangeListener changeListener = { v, o, n ->
+            cvh.value = n
+            cvh.insideUIThread = Platform.isFxApplicationThread()
+        }
+        InvalidationListener invalidationListener = { o ->
+            ivh.insideUIThread = Platform.isFxApplicationThread()
+        }
+
+        binding.addListener(changeListener)
+        binding.addListener(invalidationListener)
+
+        expect:
+        binding.getValue() == value1
+
+        when: 'trigger change outside UI thread'
+        setValue(type, source, binding, value2)
+        await().timeout(2, SECONDS).until { cvh.value != null }
+
+        then:
+        value2 == cvh.value
+        cvh.insideUIThread
+        ivh.insideUIThread
+
+        when: 'trigger change inside UI thread'
+        // reset
+        ivh.insideUIThread = false
+        cvh.insideUIThread = false
+        cvh.value = null
+
+        Platform.runLater { setValue(type, source, binding, value1) }
+        await().timeout(2, SECONDS).until { cvh.value != null }
+
+        then:
+        value1 == cvh.value
+        cvh.insideUIThread
+        ivh.insideUIThread
+
+        when: 'register UI aware listeners'
+        // reset
+        ivh.insideUIThread = false
+        cvh.insideUIThread = false
+        cvh.value = null
+
+        binding.removeListener(changeListener)
+        binding.removeListener(invalidationListener)
+        changeListener = uiThreadAwareChangeListener(changeListener)
+        invalidationListener = uiThreadAwareInvalidationListener(invalidationListener)
+        binding.addListener(changeListener)
+        binding.addListener(invalidationListener)
+
+        setValue(type, source, binding, value2)
+        await().timeout(2, SECONDS).until { cvh.value != null }
+
+        then:
+        value2 == cvh.value
+        value2 == binding.get()
+        cvh.insideUIThread
+        ivh.insideUIThread
+
+        cleanup:
+        binding.removeListener(changeListener)
+        binding.removeListener(invalidationListener)
+
+        where:
+        type             | source                      | target                      | value1 | value2
+        'BooleanBinding' | new SimpleBooleanProperty() | new SimpleBooleanProperty() | false  | true
+        'IntegerBinding' | new SimpleIntegerProperty() | new SimpleIntegerProperty() | 0      | 1
+        'LongBinding'    | new SimpleLongProperty()    | new SimpleLongProperty()    | 0l     | 1l
+        'FloatBinding'   | new SimpleFloatProperty()   | new SimpleFloatProperty()   | 0f     | 1f
+        'DoubleBinding'  | new SimpleDoubleProperty()  | new SimpleDoubleProperty()  | 0d     | 1d
+        'StringBinding'  | new SimpleStringProperty()  | new SimpleStringProperty()  | 'foo'  | 'bar'
+        'ObjectBinding'  | new SimpleObjectProperty()  | new SimpleObjectProperty()  | []     | [:]
+    }
+
     static class ValueHolder {
         Object value
         boolean insideUIThread
@@ -169,7 +254,7 @@ class UIThreadAwareBindingsExtensionSpec extends Specification {
     private static void setValue(type, source, observable, value) {
         if (type.startsWith('Property')) {
             observable.setValue(value)
-        } else if (type.startsWith('Observable')) {
+        } else if (type.startsWith('Observable') || type.endsWith('Binding')) {
             source.set(value)
         } else {
             observable.set(value)
