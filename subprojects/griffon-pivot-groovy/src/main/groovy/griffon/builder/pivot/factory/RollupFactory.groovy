@@ -22,9 +22,9 @@ import org.apache.pivot.wtk.Rollup
  * @author Andres Almiray
  */
 class RollupFactory extends ComponentFactory {
-    static final String DELEGATE_PROPERTY_HEADER = '_delegateProperty:header'
-    static final String DEFAULT_DELEGATE_PROPERTY_HEADER = 'header'
-    static final String CONTEXT_DATA_KEY = 'RollupFactoryData'
+    public static final String DELEGATE_PROPERTY_HEADER = '_delegateProperty:header'
+    public static final String DEFAULT_DELEGATE_PROPERTY_HEADER = 'header'
+    public static final String CONTEXT_DATA_KEY = 'RollupFactoryData'
 
     RollupFactory() {
         super(Rollup)

@@ -39,11 +39,11 @@ class FormFlagFactory extends PivotBeanFactory {
  * @author Andres Almiray
  */
 class FormSectionFactory extends ContainerFactory {
-    static final String DELEGATE_PROPERTY_FORM_LABEL = '_delegateProperty:formLabel'
-    static final String DEFAULT_DELEGATE_PROPERTY_FORM_LABEL = 'formLabel'
-//    static final String DELEGATE_PROPERTY_FORM_FLAG = '_delegateProperty:formFlag'
-//    static final String DEFAULT_DELEGATE_PROPERTY_FORM_FLAG = 'formFlag'
-    static final String SECTIONS_CONTEXT_DATA_KEY = 'FormSections'
+    public static final String DELEGATE_PROPERTY_FORM_LABEL = '_delegateProperty:formLabel'
+    public static final String DEFAULT_DELEGATE_PROPERTY_FORM_LABEL = 'formLabel'
+//    public static final String DELEGATE_PROPERTY_FORM_FLAG = '_delegateProperty:formFlag'
+//    public static final String DEFAULT_DELEGATE_PROPERTY_FORM_FLAG = 'formFlag'
+    public static final String SECTIONS_CONTEXT_DATA_KEY = 'FormSections'
 
     FormSectionFactory() {
         super(Form.Section)

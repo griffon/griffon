@@ -112,7 +112,7 @@ task(site, type: Copy, dependsOn: [bake, copyGuide]) {
     doLast {
         copy {
             into file("${destinationDir}/reports/${project.version}")
-            from(rootProject.tasks.clirrRootReport.reportsDir)
+            from(rootProject.tasks.binaryReport.reportsDir)
         }
     }
 }

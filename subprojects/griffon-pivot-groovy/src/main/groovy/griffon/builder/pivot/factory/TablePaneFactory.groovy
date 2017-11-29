@@ -22,11 +22,11 @@ import org.apache.pivot.wtk.TablePane
  * @author Andres Almiray
  */
 class TablePaneFactory extends ComponentFactory {
-    static final String DELEGATE_PROPERTY_COLUMN_SPAN = '_delegateProperty:columnSpan'
-    static final String DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN = 'columnSpan'
-    static final String DELEGATE_PROPERTY_ROW_SPAN = '_delegateProperty:rowSpan'
-    static final String DEFAULT_DELEGATE_PROPERTY_ROW_SPAN = 'rowSpan'
-    static final String CONTEXT_DATA_KEY = 'TablePaneFactoryData'
+    public static final String DELEGATE_PROPERTY_COLUMN_SPAN = '_delegateProperty:columnSpan'
+    public static final String DEFAULT_DELEGATE_PROPERTY_COLUMN_SPAN = 'columnSpan'
+    public static final String DELEGATE_PROPERTY_ROW_SPAN = '_delegateProperty:rowSpan'
+    public static final String DEFAULT_DELEGATE_PROPERTY_ROW_SPAN = 'rowSpan'
+    public static final String CONTEXT_DATA_KEY = 'TablePaneFactoryData'
 
     TablePaneFactory() {
         super(TablePane)

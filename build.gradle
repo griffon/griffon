@@ -357,7 +357,7 @@ coveralls {
     jacocoReportPath = jacocoMergeReportXMLFile
 }
 
-task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
+task binaryReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
     dependsOn = projectsWithClirr.tasks.clirr
     reports = files(projectsWithClirr.findAll{ it.extensions.clirr.enabled }.tasks.clirr.xmlReport)
     filter = { difference ->
@@ -368,11 +368,13 @@ task clirrRootReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
         difference?.message?.text() =~ /_methodMissing/ ||
         difference?.message?.text() =~ /_propertyMissing/ ||
         difference?.message?.text() =~ /getDE/ ||
+        difference?.message?.text() =~ /getCO/ ||
+        difference?.message?.text() =~ /getSE/ ||
         difference?.classname?.text() =~ /_closure/ ||
         !(difference?.classname?.text() =~ /griffon/)
     }
 }
 
-task aggregateStatsReport(type: org.kordamp.gradle.stats.AggregateStatsReportTask) {
+task sourceReport(type: org.kordamp.gradle.stats.AggregateStatsReportTask) {
     projects = project.subprojects.grep { it.name.startsWith('griffon') }.name
 }

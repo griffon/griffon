@@ -22,15 +22,15 @@ import org.apache.pivot.wtk.TabPane
  * @author Andres Almiray
  */
 class TabPaneFactory extends ViewportFactory {
-    static final String DELEGATE_PROPERTY_ICON = '_delegateProperty:icon'
-    static final String DEFAULT_DELEGATE_PROPERTY_ICON = 'icon'
-    static final String DELEGATE_PROPERTY_LABEL = '_delegateProperty:label'
-    static final String DEFAULT_DELEGATE_PROPERTY_LABEL = 'label'
-    static final String DELEGATE_PROPERTY_CLOSEABLE = '_delegateProperty:closeable'
-    static final String DEFAULT_DELEGATE_PROPERTY_CLOSEABLE = 'closeable'
-    static final String DELEGATE_PROPERTY_CORNER = '_delegateProperty:corner'
-    static final String DEFAULT_DELEGATE_PROPERTY_CORNER = 'corner'
-    static final String CONTEXT_DATA_KEY = 'TabPaneFactoryData'
+    public static final String DELEGATE_PROPERTY_ICON = '_delegateProperty:icon'
+    public static final String DEFAULT_DELEGATE_PROPERTY_ICON = 'icon'
+    public static final String DELEGATE_PROPERTY_LABEL = '_delegateProperty:label'
+    public static final String DEFAULT_DELEGATE_PROPERTY_LABEL = 'label'
+    public static final String DELEGATE_PROPERTY_CLOSEABLE = '_delegateProperty:closeable'
+    public static final String DEFAULT_DELEGATE_PROPERTY_CLOSEABLE = 'closeable'
+    public static final String DELEGATE_PROPERTY_CORNER = '_delegateProperty:corner'
+    public static final String DEFAULT_DELEGATE_PROPERTY_CORNER = 'corner'
+    public static final String CONTEXT_DATA_KEY = 'TabPaneFactoryData'
 
     TabPaneFactory() {
         super(TabPane)

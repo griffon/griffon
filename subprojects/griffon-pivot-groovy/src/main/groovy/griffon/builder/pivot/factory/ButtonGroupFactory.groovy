@@ -26,8 +26,8 @@ import org.apache.pivot.wtk.RadioButton
  * @author Andres Almiray
  */
 class ButtonGroupFactory extends BeanFactory {
-    static final String DELEGATE_PROPERTY_BUTTON_GROUP = '_delegateProperty:buttonGroup';
-    static final String DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP = 'buttonGroup';
+    public static final String DELEGATE_PROPERTY_BUTTON_GROUP = '_delegateProperty:buttonGroup';
+    public static final String DEFAULT_DELEGATE_PROPERTY_BUTTON_GROUP = 'buttonGroup';
 
     ButtonGroupFactory() {
         super(ButtonGroup, false)

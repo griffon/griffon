@@ -22,11 +22,11 @@ import org.apache.pivot.wtk.Component
  * @author Andres Almiray
  */
 class AccordionFactory extends ViewportFactory {
-    static final String DELEGATE_PROPERTY_ICON = '_delegateProperty:icon'
-    static final String DEFAULT_DELEGATE_PROPERTY_ICON = 'icon'
-    static final String DELEGATE_PROPERTY_LABEL = '_delegateProperty:label'
-    static final String DEFAULT_DELEGATE_PROPERTY_LABEL = 'label'
-    static final String CONTEXT_DATA_KEY = 'AccordionFactoryData'
+    public static final String DELEGATE_PROPERTY_ICON = '_delegateProperty:icon'
+    public static final String DEFAULT_DELEGATE_PROPERTY_ICON = 'icon'
+    public static final String DELEGATE_PROPERTY_LABEL = '_delegateProperty:label'
+    public static final String DEFAULT_DELEGATE_PROPERTY_LABEL = 'label'
+    public static final String CONTEXT_DATA_KEY = 'AccordionFactoryData'
 
     AccordionFactory() {
         super(Accordion)
