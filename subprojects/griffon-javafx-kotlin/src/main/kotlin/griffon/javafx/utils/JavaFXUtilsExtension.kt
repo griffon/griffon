@@ -34,7 +34,7 @@ import javafx.scene.image.Image
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 
 fun ButtonBase.configure(action: JavaFXAction) {

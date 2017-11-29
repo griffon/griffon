@@ -33,7 +33,7 @@ import java.util.function.Supplier
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 
 fun ObservableList<String>.filterThenFindFirstString(defaultValue: String, filter: Predicate<in String>): StringBinding {

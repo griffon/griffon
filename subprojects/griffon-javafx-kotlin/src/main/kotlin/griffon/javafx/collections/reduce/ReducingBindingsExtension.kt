@@ -34,7 +34,7 @@ import java.util.function.Supplier
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 
 fun <K, V> ObservableMap<K, V>.reduce(defaultValue: V?, reducer: BinaryOperator<V>): ObjectBinding<V> {

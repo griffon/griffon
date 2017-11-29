@@ -29,7 +29,7 @@ import java.util.function.Predicate
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 @CompileStatic
 final class MatchingBindingsExtension {

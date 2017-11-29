@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 class SetObservableStream<T> extends AbstractObservableStream<T> {
     SetObservableStream(@Nonnull ObservableSet<T> list) {

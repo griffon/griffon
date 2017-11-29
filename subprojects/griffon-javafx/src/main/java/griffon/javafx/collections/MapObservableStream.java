@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 class MapObservableStream<T> extends AbstractObservableStream<T> {
     MapObservableStream(@Nonnull ObservableMap<?, T> list) {

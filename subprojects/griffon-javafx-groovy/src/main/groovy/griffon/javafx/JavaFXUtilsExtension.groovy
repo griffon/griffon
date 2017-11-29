@@ -38,7 +38,7 @@ import javax.annotation.Nullable
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 @CompileStatic
 final class JavaFXUtilsExtension {

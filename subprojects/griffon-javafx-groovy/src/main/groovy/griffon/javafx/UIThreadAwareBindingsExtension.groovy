@@ -57,7 +57,7 @@ import java.util.function.Consumer
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 @CompileStatic
 final class UIThreadAwareBindingsExtension {

@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 public interface ObservableStream<T> {
     @Nonnull

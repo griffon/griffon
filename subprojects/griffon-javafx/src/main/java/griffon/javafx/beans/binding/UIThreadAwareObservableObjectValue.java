@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 class UIThreadAwareObservableObjectValue<T> extends UIThreadAwareObservableValue<T> {
     UIThreadAwareObservableObjectValue(@Nonnull ObservableValue<T> delegate) {

@@ -40,7 +40,7 @@ import static javafx.beans.binding.Bindings.createObjectBinding;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0-SNAPSHOT
+ * @since 2.13.0
  */
 @SuppressWarnings("unchecked")
 abstract class AbstractObservableStream<T> implements ObservableStream<T> {
