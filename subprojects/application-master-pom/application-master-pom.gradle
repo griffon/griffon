@@ -1,15 +1,23 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
-    }
-}
+/*
+ * Copyright 2012-2017 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
+apply from: rootProject.file('gradle/bintray.gradle')
+
+ext.pomFile = "${project.name}-${project.version}.xml".toString()
 
 task copyPom(type: Copy) {
     destinationDir = file("${project.buildDir}/pom")
@@ -22,48 +30,21 @@ task copyPom(type: Copy) {
             'spock.version'  : spockVersion
         ])
     }
+    rename(/.+\.xml/, pomFile)
 }
 
 publishing {
     publications {
-        mavenPom(MavenPublication) {
+        mavenCustom(MavenPublication) {
             artifacts = []
+            pom.withXml {
+                def root = asNode()
+                root.children().clear()
+                def parsedPom = new XmlParser().parse(file("${project.buildDir}/pom/${project.pomFile}"))
+                parsedPom.children().each { childNode -> root.append(childNode) }
+            }
         }
     }
 }
 
 publishToMavenLocal.dependsOn copyPom
-
-gradle.taskGraph.whenReady { g ->
-    def generatePom = gradle.taskGraph.allTasks.find { it.name == 'generatePomFileForMavenPomPublication' }
-    def publicationExt = project.extensions.findByType(PublishingExtension)
-    def pub = publicationExt.publications.findByName('mavenPom')
-    generatePom?.doLast {
-        copy {
-            into pub.asNormalisedPublication().pomFile.parentFile
-            from copyPom.destinationDir
-            rename 'master-pom.xml', 'pom-default.xml'
-        }
-    }
-}
-
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
-
-bintray {
-    user = project.bintrayUsername
-    key = project.bintrayApiKey
-    publications = ['mavenPom']
-    pkg {
-        repo = 'griffon'
-        userOrg = 'griffon'
-        name = project.name
-        desc = 'Master POM for Griffon application projects'
-        licenses = ['Apache-2.0']
-        labels = ['griffon']
-        websiteUrl = 'http://griffon-framework.org'
-        issueTrackerUrl = 'https://github.com/griffon/griffon/issues'
-        vcsUrl = 'https://github.com/griffon/griffon.git'
-        publicDownloadNumbers = true
-    }
-}

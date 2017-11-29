@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-if (!publishJars.toBoolean()) return
-
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
 
 def pomConfig = {
     name project.name
@@ -109,26 +106,5 @@ jar {
     metaInf {
         from rootProject.file('.')
         include 'LICENSE'
-    }
-}
-
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
-
-bintray {
-    user = project.bintrayUsername
-    key = project.bintrayApiKey
-    publications = ['mavenCustom']
-    pkg {
-        repo = 'griffon'
-        userOrg = 'griffon'
-        name = project.name
-        desc = project.pomDescription
-        licenses = ['Apache-2.0']
-        labels = ['griffon']
-        websiteUrl = 'http://griffon-framework.org'
-        issueTrackerUrl = 'https://github.com/griffon/griffon/issues'
-        vcsUrl = 'https://github.com/griffon/griffon.git'
-        publicDownloadNumbers = true
     }
 }

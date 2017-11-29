@@ -15,11 +15,13 @@
  */
 
 apply plugin: 'groovy'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.gradle.plugin-publish'
 apply from: rootProject.file('gradle/coverage.gradle')
 
 dependencies {
     compile gradleApi()
+
     testCompile("org.spockframework:spock-core:$spockVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
