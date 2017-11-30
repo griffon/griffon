@@ -15,11 +15,9 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
-import griffon.core.ExceptionHandler;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 
@@ -30,13 +28,6 @@ import java.lang.reflect.InvocationTargetException;
  * @since 2.0.0
  */
 public class PivotUIThreadManager extends AbstractUIThreadManager {
-    private final ExceptionHandler exceptionHandler;
-
-    @Inject
-    public PivotUIThreadManager(@Nonnull ExceptionHandler exceptionHandler) {
-        this.exceptionHandler = exceptionHandler;
-    }
-
     public boolean isUIThread() {
         return EventQueue.isDispatchThread();
     }
@@ -54,9 +45,9 @@ public class PivotUIThreadManager extends AbstractUIThreadManager {
             try {
                 EventQueue.invokeAndWait(runnable);
             } catch (InterruptedException e) {
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
+                getExceptionHandler().uncaughtException(Thread.currentThread(), e);
             } catch (InvocationTargetException e) {
-                exceptionHandler.uncaughtException(Thread.currentThread(), e.getTargetException());
+                getExceptionHandler().uncaughtException(Thread.currentThread(), e.getTargetException());
             }
         }
     }

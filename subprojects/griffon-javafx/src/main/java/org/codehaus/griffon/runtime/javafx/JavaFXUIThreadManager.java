@@ -15,12 +15,10 @@
  */
 package org.codehaus.griffon.runtime.javafx;
 
-import griffon.core.ExceptionHandler;
 import javafx.application.Platform;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -30,9 +28,6 @@ import static java.util.Objects.requireNonNull;
  * @author Dean Iverson
  */
 public class JavaFXUIThreadManager extends AbstractUIThreadManager {
-    @Inject
-    private ExceptionHandler exceptionHandler;
-
     /**
      * True if the current thread is the UI thread.
      */
@@ -56,7 +51,7 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
                 try {
                     runnable.run();
                 } catch (Throwable throwable) {
-                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                    getExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
                 }
             }, null);
 
@@ -64,7 +59,7 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
             try {
                 task.get();
             } catch (InterruptedException | ExecutionException e) {
-                exceptionHandler.uncaughtException(Thread.currentThread(), e);
+                getExceptionHandler().uncaughtException(Thread.currentThread(), e);
             }
         }
     }
