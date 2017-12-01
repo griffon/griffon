@@ -1,4 +1,6 @@
 /*
+ * SPDX-License-Identifier: Apache-2.0
+ *
  * Copyright 2008-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package griffon.util
 
 import spock.lang.Shared
