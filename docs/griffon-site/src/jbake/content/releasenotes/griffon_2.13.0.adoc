@@ -115,6 +115,33 @@ Griffon 2.9.0 introduced a new set of Binding producers (`FilteringBindings`, `M
 produce single value Bindings out of observable collections by applying specific Stream operations. The new `ObservableStream`
 type lets you combine any number of stream operations using an observable collection as source.
 
+==== JavaFX: Groovy & Kotlin Extensions
+
+All static binding extensions can be used directly on target types via language extensions on Groovy and Kotlin. The following
+Java snippet
+
+[source,java]
+----
+StringProperty property = new SimpleStringProperty();
+StringProperty uiProperty = UIThreadAwareBindings.uiThreadAwareStringProperty(property);
+----
+
+Can be rewritten in Groovy as
+
+[source,groovy]
+----
+StringProperty property = new SimpleStringProperty()
+StringProperty uiProperty = property.uiThreadAware()
+----
+
+Or in Kotlin as
+
+[source,kotlin]
+----
+val property = SimpleStringProperty()
+val uiProperty = property.uiThreadAware()
+----
+
 === Buildtime
 
 ==== Gradle Wrapper
