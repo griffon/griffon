@@ -151,7 +151,7 @@ evaluated and the results of the evaluation. Make sure you paste the following c
 .griffon-app/models/console/ConsoleModel.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/griffon-app/models/console/ConsoleModel.groovy[lines=16..-1]
+include::{console-swing-groovy}/griffon-app/models/console/ConsoleModel.groovy[lines=18..-1]
 ----
 <1> Holds the script's text
 <2> Holds the result of the script's execution
@@ -191,7 +191,7 @@ then store the result back into the model. Make sure you paste the following cod
 .griffon-app/controllers/console/ConsoleController.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleController.groovy[lines=16..-1]
+include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleController.groovy[lines=18..-1]
 ----
 <1> MVC member injected by `{link_mvc_group_manager}`
 <2> Injected by JSR 330
@@ -221,19 +221,19 @@ These are the required class definitions:
 .src/main/groovy/console/Evaluator.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/src/main/groovy/console/Evaluator.groovy[lines=16..-1]
+include::{console-swing-groovy}/src/main/groovy/console/Evaluator.groovy[lines=18..-1]
 ----
 
 .src/main/groovy/console/GroovyShellEvaluator.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/src/main/groovy/console/GroovyShellEvaluator.groovy[lines=16..-1]
+include::{console-swing-groovy}/src/main/groovy/console/GroovyShellEvaluator.groovy[lines=18..-1]
 ----
 
 .src/main/groovy/console/ApplicationModule.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/src/main/groovy/console/ApplicationModule.groovy[lines=16..-1]
+include::{console-swing-groovy}/src/main/groovy/console/ApplicationModule.groovy[lines=18..-1]
 ----
 <1> Binding definition
 <2> Overriding an existing binding
@@ -255,7 +255,7 @@ The implementation of our custom `SwingWindowDisplayHandler` is quite trivial, a
 .src/main/groovy/console/CenteringWindowDisplayHandler.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/src/main/groovy/console/CenteringWindowDisplayHandler.groovy[lines=16..-1]
+include::{console-swing-groovy}/src/main/groovy/console/CenteringWindowDisplayHandler.groovy[lines=18..-1]
 ----
 
 This handler is only concerned with centering the window on the screen before showing it.
@@ -269,7 +269,7 @@ into `griffon-app/views/console/ConsoleView.groovy`.
 .griffon-app/views/console/ConsoleView.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/griffon-app/views/console/ConsoleView.groovy[lines=16..-1]
+include::{console-swing-groovy}/griffon-app/views/console/ConsoleView.groovy[lines=18..-1]
 ----
 <1> MVC member injected by `{link_mvc_group_manager}`
 <2> Bind enabled state from model
@@ -312,7 +312,7 @@ other hand requires a bit more of effort, but not much, as shown by `ConsoleCont
 .src/test/groovy/console/ConsoleControllerTest.groovy
 [source,groovy,linenums,options="nowrap"]
 ----
-include::{console-swing-groovy}/src/test/groovy/console/ConsoleControllerTest.groovy[lines=16..-1]
+include::{console-swing-groovy}/src/test/groovy/console/ConsoleControllerTest.groovy[lines=18..-1]
 ----
 <1> Indicate class under test
 <2> Injected by `GriffonUnitRule` given [conum,data-value=1]_1_

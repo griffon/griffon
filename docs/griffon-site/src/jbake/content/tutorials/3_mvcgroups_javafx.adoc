@@ -42,6 +42,7 @@ execute the following command on a console prompt, paying attention to the selec
 icon:bolt[] Use the `griffon-javafx-java` template
 
 [source]
+[subs="attributes"]
 ----
 $ lazybones create griffon-javafx-java editor
 Creating project from template griffon-javafx-java (latest) in 'editor'
@@ -75,7 +76,7 @@ We'll create a simple observable POJO that represents a `Document`.
 [source,java,options="nowrap"]
 .src/main/java/editor/Document.java
 ----
-include::{editor-javafx-java}/src/main/java/editor/Document.java[lines=16..-1]
+include::{editor-javafx-java}/src/main/java/editor/Document.java[lines=18..-1]
 ----
 
 The _title_ and _contents_ properties should be self explanatory. We'll use the _dirty_ property to keep track of
@@ -89,7 +90,7 @@ to do so we'll use a presentation model for the `Document` class, aptly named `D
 [source,java,options="nowrap"]
 .src/main/java/editor/DocumentModel.java
 ----
-include::{editor-javafx-java}/src/main/java/editor/DocumentModel.java[lines=16..-1]
+include::{editor-javafx-java}/src/main/java/editor/DocumentModel.java[lines=18..-1]
 ----
 
 The `DocumentModel` class extends from `Document` just as a convenience, it inherits all properties from `Document` in
@@ -101,7 +102,7 @@ see how the previous presentation model is put to good use.
 [source,java,options="nowrap"]
 .griffon-app/models/editor/ContainerModel.java
 ----
-include::{editor-javafx-java}/griffon-app/models/editor/ContainerModel.java[lines=16..-1]
+include::{editor-javafx-java}/griffon-app/models/editor/ContainerModel.java[lines=18..-1]
 ----
 
 This model keeps track of two items:
@@ -119,7 +120,7 @@ icon:bolt[] Let's move to the View. Open up `ContainerView.java` and paste the f
 [source,java,options="nowrap"]
 .griffon-app/views/editor/ContainerView.java
 ----
-include::{editor-javafx-java}/griffon-app/views/editor/ContainerView.java[lines=16..-1]
+include::{editor-javafx-java}/griffon-app/views/editor/ContainerView.java[lines=18..-1]
 ----
 
 Here we find a `Scene` whose contents come from an FXML file. The file name is determined using a naming convention, in
@@ -147,7 +148,7 @@ icon:bolt[] There is no mnemonic support in JavaFX.
 [source,java,options="nowrap"]
 .griffon-app/i18n/messages.properties
 ----
-include::{editor-javafx-java}/griffon-app/i18n/messages.properties[lines=17..-1]
+include::{editor-javafx-java}/griffon-app/i18n/messages.properties[lines=19..-1]
 ----
 
 We're almost done with the `container` MVC group, what remains to be done is update the `ContainerController`.
@@ -237,7 +238,7 @@ about this new MVC group, this is done by editing `Config.java`
 [source,java,options="nowrap"]
 .griffon-app/conf/Config.java
 ----
-include::{editor-javafx-java}/griffon-app/conf/Config.java[lines=16..-1]
+include::{editor-javafx-java}/griffon-app/conf/Config.java[lines=18..-1]
 ----
 
 Great, we have the basics for this new MVC group ready. Now let's make it work.
@@ -253,7 +254,7 @@ edit.
 [source,java,options="nowrap"]
 .griffon-app/models/editor/EditorModel.java
 ----
-include::{editor-javafx-java}/griffon-app/models/editor/EditorModel.java[lines=16..-1]
+include::{editor-javafx-java}/griffon-app/models/editor/EditorModel.java[lines=18..-1]
 ----
 
 Just a basic observable model with a single _document_ property. Things get interesting once we move to the View,
@@ -268,7 +269,7 @@ icon:bolt[] The `EditorView` relies on FXML to create the nodes.
 [source,java,options="nowrap"]
 .griffon-app/views/editor/EditorView.java
 ----
-include::{editor-javafx-java}/griffon-app/views/editor/EditorView.java[lines=16..-1]
+include::{editor-javafx-java}/griffon-app/views/editor/EditorView.java[lines=18..-1]
 ----
 
 And the corresponding FXML file for this View
@@ -297,7 +298,7 @@ closing the tab.
 [source,java,options="nowrap"]
 .griffon-app/controllers/editor/EditorController.java
 ----
-include::{editor-javafx-java}/griffon-app/controllers/editor/EditorController.java[lines=16..-1]
+include::{editor-javafx-java}/griffon-app/controllers/editor/EditorController.java[lines=18..-1]
 ----
 
 Invoking the `closeFile()` action triggers the destruction of this MVC group, which in turns calls the
@@ -349,7 +350,7 @@ We're ready to make the final adjustments to this application, by adding the mis
 [source,java,options="nowrap"]
 .griffon-app/controllers/editor/ContainerController.java
 ----
-include::{editor-javafx-java}/griffon-app/controllers/editor/ContainerController.java[lines=16..-1]
+include::{editor-javafx-java}/griffon-app/controllers/editor/ContainerController.java[lines=18..-1]
 ----
 
 Here we see another interesting feature of the Griffon runtime. Every instance of an MVC group is tracked by the

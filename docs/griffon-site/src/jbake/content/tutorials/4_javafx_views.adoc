@@ -39,6 +39,7 @@ create a brand new Griffon 2 application. Assuming you've got SDKMAN, Lazybones 
 execute the following command on a console prompt, paying attention to the selections we've made
 
 [source]
+[subs="attributes"]
 ----
 $ lazybones create griffon-javafx-java app
 Creating project from template griffon-javafx-java (latest) in 'app'
@@ -121,7 +122,7 @@ Finally edit `AppView.java`; place the following content on it
 [source,java,options="nowrap"]
 .griffon-app/views/org/example/AppView.java
 ----
-include::{javafx-app}/griffon-app/views/org/example/AppView.java[]
+include::{javafx-app}/griffon-app/views/org/example/AppView.java[lines=16..-1]
 ----
 
 The main view creates a `TabPane` that will hold each one of the tabs. It also creates 4 MVCGroups during its
@@ -184,13 +185,13 @@ resources described in that section; so the application should have the followin
 .griffon-app/models/org/example/SampleModel.java
 [source,java,options="nowrap"]
 ----
-include::{javafx-app}/griffon-app/models/org/example/SampleModel.java[]
+include::{javafx-app}/griffon-app/models/org/example/SampleModel.java[lines=16..-1]
 ----
 
 .griffon-app/controllers/org/example/SampleController.java
 [source,java,options="nowrap"]
 ----
-include::{javafx-app}/griffon-app/controllers/org/example/SampleController.java[]
+include::{javafx-app}/griffon-app/controllers/org/example/SampleController.java[lines=16..-1]
 ----
 
 You can manually create `SampleService.java` or use Lazybones again
@@ -207,13 +208,13 @@ Created new artifact src/test/java/org/example/SampleServiceTest.java
 .griffon-app/services/org/example/SampleService.java
 [source,java,options="nowrap"]
 ----
-include::{javafx-app}/griffon-app/services/org/example/SampleService.java[]
+include::{javafx-app}/griffon-app/services/org/example/SampleService.java[lines=16..-1]
 ----
 
 .griffon-app/i18n/messages.properties
 [source,java]
 ----
-include::{javafx-app}/griffon-app/i18n/messages.properties[]
+include::{javafx-app}/griffon-app/i18n/messages.properties[lines=17..-1]
 ----
 
 The final piece is to update the View. We'll make direct use of the JavaFX API. Of course the code will look a bit
@@ -223,7 +224,7 @@ not forced to build the UI using FXML only.
 .griffon-app/views/org/example/Tab1View.java
 [source,java,options="nowrap"]
 ----
-include::{javafx-app}/griffon-app/views/org/example/Tab1View.java[]
+include::{javafx-app}/griffon-app/views/org/example/Tab1View.java[lines=16..-1]
 ----
 
 Of particular note, apart from the standard JavaFX API usage is the configuration of the button's properties using a
@@ -261,7 +262,7 @@ node by using this naming convention. The `Tab2View.java` file defines the secon
 .griffon-app/views/org/example/Tab2View.java
 [source,java,options="nowrap"]
 ----
-include::{javafx-app}/griffon-app/views/org/example/Tab2View.java[]
+include::{javafx-app}/griffon-app/views/org/example/Tab2View.java[lines=16..-1]
 ----
 
 The code is much simpler as we rely on the FXML file to define the UI; this file only needs to be concerned to finish
@@ -281,7 +282,7 @@ any problems, as opposed to other popular JVM languages. This is also the reason
 .griffon-app/views/org/example/Tab3View.groovy
 [source,groovy,options="nowrap"]
 ----
-include::{javafx-app}/griffon-app/views/org/example/Tab3View.groovy[]
+include::{javafx-app}/griffon-app/views/org/example/Tab3View.groovy[lines=16..-1]
 ----
 
 GroovyFX provides a builder class that can be used to instantiate nodes using the DSL capabilities delivered by
@@ -313,7 +314,7 @@ thus i18n resources can not be resolved properly. We'll rely on the Groovy view 
 .griffon-app/views/org/example/Tab4View.groovy
 [source,groovy,options="nowrap"]
 ----
-include::{javafx-app}/griffon-app/views/org/example/Tab4View.groovy[]
+include::{javafx-app}/griffon-app/views/org/example/Tab4View.groovy[lines=16..-1]
 ----
 
 Notice that all widgets with a proper `id` attribute can be accessed directly inside the block associated with the

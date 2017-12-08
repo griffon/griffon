@@ -36,6 +36,7 @@ create a brand new Griffon 2 application. Assuming you've got SDKMAN, Lazybones 
 execute the following command on a console prompt, paying attention to the selections we've made
 
 [source]
+[subs="attributes"]
 ----
 $ lazybones create griffon-swing-java editor
 Creating project from template griffon-swing-java (latest) in 'editor'
@@ -69,7 +70,7 @@ We'll create a simple observable POJO that represents a `Document`.
 [source,java,options="nowrap"]
 .src/main/java/editor/Document.java
 ----
-include::{editor-swing-java}/src/main/java/editor/Document.java[lines=16..-1]
+include::{editor-swing-java}/src/main/java/editor/Document.java[lines=18..-1]
 ----
 
 The _title_ and _contents_ properties should be self explanatory. We'll use the _dirty_ property to keep track of
@@ -83,7 +84,7 @@ to do so we'll use a presentation model for the `Document` class, aptly named `D
 [source,java,options="nowrap"]
 .src/main/java/editor/DocumentModel.java
 ----
-include::{editor-swing-java}/src/main/java/editor/DocumentModel.java[lines=16..-1]
+include::{editor-swing-java}/src/main/java/editor/DocumentModel.java[lines=18..-1]
 ----
 
 The `DocumentModel` class extends from `Document` just as a convenience, it inherits all properties from `Document` in
@@ -95,7 +96,7 @@ see how the previous presentation model is put to good use.
 [source,java,options="nowrap"]
 .griffon-app/models/editor/ContainerModel.java
 ----
-include::{editor-swing-java}/griffon-app/models/editor/ContainerModel.java[lines=16..-1]
+include::{editor-swing-java}/griffon-app/models/editor/ContainerModel.java[lines=18..-1]
 ----
 
 This model keeps track of two items:
@@ -113,7 +114,7 @@ Let's move to the View. Open up `ContainerView.java` and paste the following int
 [source,java,options="nowrap"]
 .griffon-app/views/editor/ContainerView.java
 ----
-include::{editor-swing-java}/griffon-app/views/editor/ContainerView.java[lines=16..-1]
+include::{editor-swing-java}/griffon-app/views/editor/ContainerView.java[lines=18..-1]
 ----
 
 Here we find a `Window` object containing a `JMenuBar` and a tab container (a `JTabbedPane`) named _tabGroup_.
@@ -129,7 +130,7 @@ properties. Paste the following into `messages.properties`.
 [source,java,options="nowrap"]
 .griffon-app/i18n/messages.properties
 ----
-include::{editor-swing-java}/griffon-app/i18n/messages.properties[lines=17..-1]
+include::{editor-swing-java}/griffon-app/i18n/messages.properties[lines=19..-1]
 ----
 
 We're almost done with the `container` MVC group, what remains to be done is update the `ContainerController`.
@@ -166,8 +167,9 @@ public class ContainerController extends AbstractGriffonController {
 }
 ----
 
-We've got 4 actions (`open`, `save`, `close` and `quit`) and nothing more for the time being. You can run the application
-once again to verify that the code compiles and runs.
+We've got 4 actions (`open`, `save`, `close` and `quit`) and nothing more for the time being. Notice that `ContainerModel`
+makes a reference to `EditorModel` which does not exist yet; your IDE may mark this type with an error. Will fix this problem
+right away in the next section.
 
 icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>
 
@@ -219,7 +221,7 @@ about this new MVC group, this is done by editing `Config.java`
 [source,java,options="nowrap"]
 .griffon-app/conf/Config.java
 ----
-include::{editor-swing-java}/griffon-app/conf/Config.java[lines=16..-1]
+include::{editor-swing-java}/griffon-app/conf/Config.java[lines=18..-1]
 ----
 
 Great, we have the basics for this new MVC group ready. Now let's make it work.
@@ -235,7 +237,7 @@ edit.
 [source,java,options="nowrap"]
 .griffon-app/models/editor/EditorModel.java
 ----
-include::{editor-swing-java}/griffon-app/models/editor/EditorModel.java[lines=16..-1]
+include::{editor-swing-java}/griffon-app/models/editor/EditorModel.java[lines=18..-1]
 ----
 
 Just a basic observable model with a single _document_ property. Things get interesting once we move to the View,
@@ -248,7 +250,7 @@ field in `ContainerView`. Let's look at the `EditorView`, shall we?
 [source,java,options="nowrap"]
 .griffon-app/views/editor/EditorView.java
 ----
-include::{editor-swing-java}/griffon-app/views/editor/EditorView.java[lines=16..-1]
+include::{editor-swing-java}/griffon-app/views/editor/EditorView.java[lines=18..-1]
 ----
 
 Besides the convoluted binding on the ``textArea``'s text property (unfortunately text is not a bound property) the other
@@ -269,7 +271,7 @@ closing the tab.
 [source,java,options="nowrap"]
 .griffon-app/controllers/editor/EditorController.java
 ----
-include::{editor-swing-java}/griffon-app/controllers/editor/EditorController.java[lines=16..-1]
+include::{editor-swing-java}/griffon-app/controllers/editor/EditorController.java[lines=18..-1]
 ----
 
 Invoking the `closeFile()` action triggers the destruction of this MVC group, which in turns calls the
@@ -280,7 +282,11 @@ Don't forget to add the following dependency to `build.gradle`!
 
 [source,groovy]
 ----
-compile 'commons-io:commons-io:2.5'
+// find the existing `dependencies` block
+dependencies {
+    // add this dependency
+    compile 'commons-io:commons-io:2.6'
+}
 ----
 
 icon:arrow-up[link="#_tutorial_2_toc"] <<_tutorial_2_toc,Top>>
@@ -321,7 +327,7 @@ We're ready to make the final adjustments to this application, by adding the mis
 [source,java,options="nowrap"]
 .griffon-app/controllers/editor/ContainerController.java
 ----
-include::{editor-swing-java}/griffon-app/controllers/editor/ContainerController.java[lines=16..-1]
+include::{editor-swing-java}/griffon-app/controllers/editor/ContainerController.java[lines=18..-1]
 ----
 
 Here we see another interesting feature of the Griffon runtime. Every instance of an MVC group is tracked by the
