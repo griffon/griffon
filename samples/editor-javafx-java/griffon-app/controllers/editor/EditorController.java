@@ -40,10 +40,10 @@ public class EditorController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         model.setDocument((Document) args.get("document"));
-        runOutsideUI(() -> {
+        executeOutsideUI(() -> {
             try {
                 final String content = readFileToString(model.getDocument().getFile());
-                runInsideUIAsync(() -> model.getDocument().setContents(content));
+                executeInsideUIAsync(() -> model.getDocument().setContents(content));
             } catch (IOException e) {
                 getLog().warn("Can't open file", e);
             }
@@ -54,7 +54,7 @@ public class EditorController extends AbstractGriffonController {
     public void saveFile() {
         try {
             writeStringToFile(model.getDocument().getFile(), view.getEditor().getText());
-            runInsideUIAsync(() -> model.getDocument().setContents(view.getEditor().getText()));
+            executeInsideUIAsync(() -> model.getDocument().setContents(view.getEditor().getText()));
         } catch (IOException e) {
             getLog().warn("Can't save file", e);
         }

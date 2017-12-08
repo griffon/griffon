@@ -222,7 +222,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         final String name = windowName;
         final int index = windowIndex;
 
-        getApplication().getUIThreadManager().runInsideUIAsync(() -> {
+        getApplication().getUIThreadManager().executeInsideUIAsync(() -> {
             LOG.debug("Showing window with name: '{}' at index {} {}", name, index, internalFrame);
             //noinspection ConstantConditions
             resolveSwingWindowDisplayHandler().show(name, internalFrame);
@@ -260,7 +260,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         final String name = windowName;
         final int index = windowIndex;
 
-        getApplication().getUIThreadManager().runInsideUIAsync(() -> {
+        getApplication().getUIThreadManager().executeInsideUIAsync(() -> {
             LOG.debug("Hiding window with name: '{}' at index {} {}", name, index, internalFrame);
             //noinspection ConstantConditions
             resolveSwingWindowDisplayHandler().hide(name, internalFrame);

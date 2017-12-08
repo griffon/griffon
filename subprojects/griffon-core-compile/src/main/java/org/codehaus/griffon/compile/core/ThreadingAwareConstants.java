@@ -33,11 +33,11 @@ public interface ThreadingAwareConstants extends BaseConstants {
     String UITHREAD_MANAGER_PROPERTY = "uiThreadManager";
 
     String METHOD_IS_UITHREAD = "isUIThread";
-    String METHOD_RUN_INSIDE_UI_ASYNC = "runInsideUIAsync";
-    String METHOD_RUN_INSIDE_UI_SYNC = "runInsideUISync";
-    String METHOD_RUN_OUTSIDE_UI = "runOutsideUI";
+    String METHOD_RUN_INSIDE_UI_ASYNC = "executeInsideUIAsync";
+    String METHOD_RUN_INSIDE_UI_SYNC = "executeInsideUISync";
+    String METHOD_RUN_OUTSIDE_UI = "executeOutsideUI";
     String METHOD_RUN_OUTSIDE_UI_ASYNC = "runOutsideUIAsync";
-    String METHOD_RUN_FUTURE = "runFuture";
+    String METHOD_RUN_FUTURE = "executeFuture";
 
     String JAVA_UTIL_CONCURRENT_FUTURE = "java.util.concurrent.Future";
     String JAVA_UTIL_CONCURRENT_CALLABLE = "java.util.concurrent.Callable";

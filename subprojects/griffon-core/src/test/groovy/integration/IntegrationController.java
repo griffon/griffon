@@ -43,7 +43,7 @@ public class IntegrationController extends AbstractGriffonController {
 
     public void sayHello() {
         final String result = sampleService.sayHello(model.getInput());
-        runInsideUIAsync(() -> model.setOutput(result));
+        executeInsideUIAsync(() -> model.setOutput(result));
     }
 
     public void throwException() {

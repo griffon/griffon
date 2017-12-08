@@ -23,14 +23,15 @@ import griffon.core.resources.ResourceResolver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyEditor;
+import javax.application.converter.Converter;
+import javax.application.converter.ConverterRegistry;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.function.Function;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -42,9 +43,20 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
     protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
+    protected static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
     protected static final String ERROR_RESOURCE_NULL = "Argument 'resource' must not be null";
 
     protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];
+
+    private final ConverterRegistry converterRegistry;
+
+    protected AbstractResourceResolver(@Nonnull ConverterRegistry converterRegistry) {
+        this.converterRegistry = requireNonNull(converterRegistry, "Argument 'converterRegistry' must not be null");
+    }
+
+    protected final ConverterRegistry getConverterRegistry() {
+        return converterRegistry;
+    }
 
     @Nonnull
     @Override
@@ -72,7 +84,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         requireNonNull(locale, ERROR_LOCALE_NULL);
         Object resource = resolveResourceValue(key, locale);
         Object result = evalResourceWithArguments(resource, args);
-        if (result != null) return result;
+        if (result != null) { return result; }
         throw new NoSuchResourceException(key, locale);
     }
 
@@ -112,7 +124,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         try {
             return resolveResource(key, args, locale);
         } catch (NoSuchResourceException nsre) {
-            return null == defaultValue ? key : defaultValue;
+            return defaultValue;
         }
     }
 
@@ -142,7 +154,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         requireNonNull(locale, ERROR_LOCALE_NULL);
         Object resource = resolveResourceValue(key, locale);
         Object result = evalResourceWithArguments(resource, args);
-        if (result != null) return result;
+        if (result != null) { return result; }
         throw new NoSuchResourceException(key, locale);
     }
 
@@ -158,7 +170,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         try {
             return resolveResource(key, args, locale);
         } catch (NoSuchResourceException nsre) {
-            return null == defaultValue ? key : defaultValue;
+            return defaultValue;
         }
     }
 
@@ -291,7 +303,7 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     public String formatResource(@Nonnull String resource, @Nonnull Object[] args) {
         requireNonNull(resource, ERROR_RESOURCE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
-        if (args.length == 0) return resource;
+        if (args.length == 0) { return resource; }
         return MessageFormat.format(resource, args);
     }
 
@@ -316,8 +328,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nullable
     protected Object evalResourceWithArguments(@Nonnull Object resource, @Nonnull Object[] args) {
         if (resource instanceof CallableWithArgs) {
-            CallableWithArgs<?> callable = (CallableWithArgs<?>) resource;
-            return callable.call(args);
+            return ((CallableWithArgs<?>) resource).call(args);
+        } else if (resource instanceof Function) {
+            return ((Function<Object[], ?>) resource).apply(args);
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
@@ -327,8 +340,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nullable
     protected Object evalResourceWithArguments(@Nonnull Object resource, @Nonnull Map<String, Object> args) {
         if (resource instanceof CallableWithArgs) {
-            CallableWithArgs<?> callable = (CallableWithArgs<?>) resource;
-            return callable.call(args);
+            return ((CallableWithArgs<?>) resource).call(args);
+        } else if (resource instanceof Function) {
+            return ((Function<Map<String, Object>, ?>) resource).apply(args);
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
@@ -343,15 +357,18 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         return args.toArray(new Object[args.size()]);
     }
 
-    @SuppressWarnings("unchecked")
+    @Nullable
     protected <T> T convertValue(@Nullable Object value, @Nonnull Class<T> type) {
+        requireNonNull(type, ERROR_TYPE_NULL);
+
         if (value != null) {
-            if (type.isAssignableFrom(value.getClass())) {
+            if (value.getClass().isAssignableFrom(type)) {
                 return (T) value;
             } else {
-                PropertyEditor editor = findEditor(type);
-                editor.setValue(value);
-                return (T) editor.getValue();
+                Converter<T> converter = converterRegistry.findConverter(type);
+                if (null != converter) {
+                    return converter.fromObject(value);
+                }
             }
         }
         return null;

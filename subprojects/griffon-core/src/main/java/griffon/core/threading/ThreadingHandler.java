@@ -20,59 +20,42 @@ package griffon.core.threading;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /**
- * Base contract for classes that can perform tasks in different threads following
- * the conventions set by the application.
- *
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface ThreadingHandler {
-    /**
-     * True if the current thread is the UI thread.
-     */
-    boolean isUIThread();
+public interface ThreadingHandler extends javax.application.threading.ThreadingHandler {
+    @Override
+    void executeInsideUIAsync(@Nonnull Runnable runnable);
 
-    /**
-     * Executes a code block asynchronously on the UI thread.
-     */
-    void runInsideUIAsync(@Nonnull Runnable runnable);
+    @Override
+    void executeInsideUISync(@Nonnull Runnable runnable);
 
-    /**
-     * Executes a code block synchronously on the UI thread.
-     */
-    void runInsideUISync(@Nonnull Runnable runnable);
+    @Override
+    void executeOutsideUI(@Nonnull Runnable runnable);
 
-    /**
-     * Executes a code block outside of the UI thread.
-     */
-    void runOutsideUI(@Nonnull Runnable runnable);
+    @Override
+    void executeOutsideUIAsync(@Nonnull Runnable runnable);
 
-    /**
-     * Executes a code block on a background thread, always.
-     * @since 2.11.0
-     */
-    void runOutsideUIAsync(@Nonnull Runnable runnable);
-
-    /**
-     * Executes a code block as a Future on an ExecutorService.
-     */
-    @Nonnull
-    <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable);
-
-    /**
-     * Executes a code block as a Future on a default ExecutorService.
-     */
-    @Nonnull
-    <R> Future<R> runFuture(@Nonnull Callable<R> callable);
-
-    /**
-     * Executes a code block synchronously on the UI thread.
-     * @since 2.2.0
-     */
     @Nullable
-    <R> R runInsideUISync(@Nonnull Callable<R> callable);
+    @Override
+    <R> R executeInsideUISync(@Nonnull Callable<R> callable);
+
+    @Nonnull
+    @Override
+    <R> CompletionStage<R> executeOutsideUIAsync(@Nonnull Callable<R> callable);
+
+    @Nonnull
+    @Override
+    <R> CompletionStage<R> executeInsideUIAsync(@Nonnull Callable<R> callable);
+
+    @Nonnull
+    <R> Future<R> executeFuture(@Nonnull Callable<R> callable);
+
+    @Nonnull
+    <R> Future<R> executeFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable);
 }

@@ -32,13 +32,13 @@ public class DefaultUIThreadManager extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUIAsync(@Nonnull Runnable runnable) {
+    public void executeInsideUIAsync(@Nonnull Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         runnable.run();
     }
 
     @Override
-    public void runInsideUISync(@Nonnull Runnable runnable) {
+    public void executeInsideUISync(@Nonnull Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         runnable.run();
     }

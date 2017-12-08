@@ -42,6 +42,7 @@ import org.junit.Test
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
+import javax.application.converter.ConverterRegistry
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
@@ -269,6 +270,10 @@ class DefaultResourceResolverTests {
     }
 
     static final class CustomResourceResolver extends AbstractResourceResolver {
+        protected CustomResourceResolver(@Nonnull ConverterRegistry converterRegistry) {
+            super(converterRegistry)
+        }
+
         @Nonnull
         @Override
         protected Object doResolveResourceValue(

@@ -23,6 +23,6 @@ import javax.annotation.Nonnull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public interface ResourceInjector {
+public interface ResourceInjector extends javax.application.resources.ResourceInjector {
     void injectResources(@Nonnull Object instance);
 }

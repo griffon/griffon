@@ -44,7 +44,7 @@ public class SwingGriffonApplication extends AbstractGriffonApplication {
         // wait for EDT to empty out.... somehow
         final boolean[] empty = {false};
         while (true) {
-            getUIThreadManager().runInsideUISync(() -> {
+            getUIThreadManager().executeInsideUISync(() -> {
                 empty[0] = Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() == null;
             });
             if (empty[0]) { break; }

@@ -21,6 +21,7 @@ import griffon.core.resources.NoSuchResourceException;
 import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.annotation.Nonnull;
+import javax.application.converter.ConverterRegistry;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -38,7 +39,8 @@ public class DefaultResourceResolver extends AbstractResourceResolver {
     private final Map<Locale, ResourceBundle> bundles = new ConcurrentHashMap<>();
     private final CompositeResourceBundleBuilder compositeResourceBundleBuilder;
 
-    public DefaultResourceResolver(@Nonnull CompositeResourceBundleBuilder builder, @Nonnull String basename) {
+    public DefaultResourceResolver(@Nonnull ConverterRegistry converterRegistry, @Nonnull CompositeResourceBundleBuilder builder, @Nonnull String basename) {
+        super(converterRegistry);
         this.compositeResourceBundleBuilder = requireNonNull(builder, "Argument 'builder' must not be null");
         this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }

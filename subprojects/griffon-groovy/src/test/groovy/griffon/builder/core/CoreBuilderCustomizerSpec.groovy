@@ -42,7 +42,7 @@ class CoreBuilderCustomizerSpec extends Specification {
         methodName in builder.explicitMethods.keySet()
 
         where:
-        methodName << ['runOutsideUI', 'runOutsideUIAsync', 'runInsideUISync', 'runInsideUIAsync', 'runFuture', 'isUIThread']
+        methodName << ['executeOutsideUI', 'runOutsideUIAsync', 'executeInsideUISync', 'executeInsideUIAsync', 'executeFuture', 'isUIThread']
     }
 
     void "Root node should be implicitly identified"() {

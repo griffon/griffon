@@ -73,7 +73,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
         toolkitAction.setOnAction(actionEvent -> actionManager.invokeAction(controller, actionMetadata.getActionName(), actionEvent));
 
-        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
+        addPropertyChangeListener(evt -> uiThreadManager.executeInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     protected JavaFXAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {

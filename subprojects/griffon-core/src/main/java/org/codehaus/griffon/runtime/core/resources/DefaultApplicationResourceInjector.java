@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
-import griffon.core.resources.ResourceResolver;
-
 import javax.annotation.Nonnull;
+import javax.application.converter.ConverterRegistry;
+import javax.application.resources.ResourceResolver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -29,7 +29,7 @@ import javax.inject.Named;
  */
 public class DefaultApplicationResourceInjector extends DefaultResourceInjector {
     @Inject
-    public DefaultApplicationResourceInjector(@Nonnull @Named("applicationResourceResolver") ResourceResolver resourceResolver) {
-        super(resourceResolver);
+    public DefaultApplicationResourceInjector(@Nonnull ConverterRegistry converterRegistry, @Nonnull @Named("applicationResourceResolver") ResourceResolver resourceResolver) {
+        super(converterRegistry, resourceResolver);
     }
 }

@@ -57,12 +57,12 @@ import java.lang.annotation.Target;
  *
  * class Sample {
  *     void doSomethingOutside(String arg) {
- *         UIThreadManager.instance.runOutsideUI {
+ *         UIThreadManager.instance.executeOutsideUI {
  *             println "Outside $arg"
  *         }
  *     }
  *     void doSomethingInside(String arg) {
- *         UIThreadManager.instance.runInsideUISync {
+ *         UIThreadManager.instance.executeInsideUISync {
  *             println "Inside $arg"
  *         }
  *     }
@@ -99,7 +99,7 @@ public @interface Threading {
          */
         SKIP,
         /**
-         * Inject runOutsideUI wrapper
+         * Inject executeOutsideUI wrapper
          */
         OUTSIDE_UITHREAD,
         /**
@@ -107,11 +107,11 @@ public @interface Threading {
          */
         OUTSIDE_UITHREAD_ASYNC,
         /**
-         * Inject runInsideUISync wrapper
+         * Inject executeInsideUISync wrapper
          */
         INSIDE_UITHREAD_SYNC,
         /**
-         * Inject runInsideUIAsync wrapper
+         * Inject executeInsideUIAsync wrapper
          */
         INSIDE_UITHREAD_ASYNC
     }

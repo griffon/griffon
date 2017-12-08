@@ -40,7 +40,7 @@ public class LanternaGriffonControllerAction extends AbstractAction {
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
-        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
+        addPropertyChangeListener(evt -> uiThreadManager.executeInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     @Nonnull

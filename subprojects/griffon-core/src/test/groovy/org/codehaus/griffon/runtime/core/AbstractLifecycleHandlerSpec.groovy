@@ -57,7 +57,7 @@ class AbstractLifecycleHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        invoked = lifecycleHandler.runInsideUISync({
+        invoked = lifecycleHandler.executeInsideUISync({
             true
         } as Callable)
 
@@ -70,7 +70,7 @@ class AbstractLifecycleHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        lifecycleHandler.runInsideUISync {
+        lifecycleHandler.executeInsideUISync {
             invoked = true
         }
 
@@ -83,7 +83,7 @@ class AbstractLifecycleHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        lifecycleHandler.runInsideUIAsync {
+        lifecycleHandler.executeInsideUIAsync {
             invoked = true
         }
 
@@ -96,7 +96,7 @@ class AbstractLifecycleHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        lifecycleHandler.runOutsideUI() {
+        lifecycleHandler.executeOutsideUI() {
             invoked = true
         }
 
@@ -109,7 +109,7 @@ class AbstractLifecycleHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = lifecycleHandler.runFuture {
+        Future future = lifecycleHandler.executeFuture {
             invoked = true
         }
         future.get()
@@ -123,9 +123,9 @@ class AbstractLifecycleHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = lifecycleHandler.runFuture(Executors.newFixedThreadPool(1)) {
+        Future future = lifecycleHandler.executeFuture(Executors.newFixedThreadPool(1), {
             invoked = true
-        }
+        })
         future.get()
 
         then:

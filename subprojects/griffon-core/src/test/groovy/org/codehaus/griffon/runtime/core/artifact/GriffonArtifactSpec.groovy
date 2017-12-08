@@ -389,7 +389,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        resolveMVCHandler().runInsideUISync {
+        resolveMVCHandler().executeInsideUISync {
             invoked = true
         }
 
@@ -402,7 +402,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        resolveMVCHandler().runInsideUIAsync {
+        resolveMVCHandler().executeInsideUIAsync {
             invoked = true
         }
 
@@ -415,7 +415,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        resolveMVCHandler().runOutsideUI() {
+        resolveMVCHandler().executeOutsideUI() {
             invoked = true
         }
 
@@ -428,7 +428,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = resolveMVCHandler().runFuture {
+        Future future = resolveMVCHandler().executeFuture {
             invoked = true
         }
         future.get()
@@ -442,9 +442,9 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = resolveMVCHandler().runFuture(Executors.newFixedThreadPool(1)) {
+        Future future = resolveMVCHandler().executeFuture(Executors.newFixedThreadPool(1), {
             invoked = true
-        }
+        })
         future.get()
 
         then:

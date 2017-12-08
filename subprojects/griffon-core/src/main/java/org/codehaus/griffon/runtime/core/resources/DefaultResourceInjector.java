@@ -17,11 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
-import griffon.core.resources.NoSuchResourceException;
-import griffon.core.resources.ResourceResolver;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.application.converter.ConverterRegistry;
+import javax.application.resources.NoSuchResourceException;
+import javax.application.resources.ResourceResolver;
 import javax.inject.Inject;
 import java.util.Locale;
 
@@ -35,11 +34,12 @@ public class DefaultResourceInjector extends AbstractResourceInjector {
     private final ResourceResolver resourceResolver;
 
     @Inject
-    public DefaultResourceInjector(@Nonnull ResourceResolver resourceResolver) {
+    public DefaultResourceInjector(@Nonnull ConverterRegistry converterRegistry, @Nonnull ResourceResolver resourceResolver) {
+        super(converterRegistry);
         this.resourceResolver = requireNonNull(resourceResolver, "Argument 'resourceResolver' must not be null");
     }
 
-    @Nullable
+    @Nonnull
     protected Object resolveResource(@Nonnull String key, @Nonnull String[] args) {
         try {
             return resourceResolver.resolveResource(key, args, Locale.getDefault());
@@ -48,8 +48,8 @@ public class DefaultResourceInjector extends AbstractResourceInjector {
         }
     }
 
-    @Nullable
-    protected Object resolveResource(@Nonnull String key, @Nonnull String[] args, @Nonnull String defaultValue) {
+    @Nonnull
+    protected Object resolveResource(@Nonnull String key, @Nonnull String[] args, String defaultValue) {
         return resourceResolver.resolveResource(key, args, Locale.getDefault(), defaultValue);
     }
 }

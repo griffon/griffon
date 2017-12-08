@@ -37,13 +37,13 @@ public class SwingUIThreadManager extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUIAsync(@Nonnull Runnable runnable) {
+    public void executeInsideUIAsync(@Nonnull Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         SwingUtilities.invokeLater(runnable);
     }
 
     @Override
-    public void runInsideUISync(@Nonnull Runnable runnable) {
+    public void executeInsideUISync(@Nonnull Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         if (isUIThread()) {
             runnable.run();

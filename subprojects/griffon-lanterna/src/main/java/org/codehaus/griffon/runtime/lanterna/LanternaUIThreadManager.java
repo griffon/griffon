@@ -42,12 +42,12 @@ public class LanternaUIThreadManager extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUIAsync(@Nonnull Runnable runnable) {
-        runInsideUISync(runnable);
+    public void executeInsideUIAsync(@Nonnull Runnable runnable) {
+        executeInsideUISync(runnable);
     }
 
     @Override
-    public void runInsideUISync(@Nonnull final Runnable runnable) {
+    public void executeInsideUISync(@Nonnull final Runnable runnable) {
         if (isUIThread()) {
             runnable.run();
         } else {

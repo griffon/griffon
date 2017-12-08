@@ -28,11 +28,8 @@ import static java.util.Objects.requireNonNull;
  * @author Alexander Klein
  * @since 2.0.0
  */
-public class NoSuchResourceException extends RuntimeException {
-    private static final long serialVersionUID = -8111520682896523405L;
-
-    private final String key;
-    private final Locale locale;
+public class NoSuchResourceException extends javax.application.resources.NoSuchResourceException {
+    private static final long serialVersionUID = 4267807949546274547L;
 
     /**
      * Create a new exception.
@@ -71,28 +68,6 @@ public class NoSuchResourceException extends RuntimeException {
      * @param cause  throwable that caused this exception
      */
     public NoSuchResourceException(@Nonnull String key, @Nonnull Locale locale, @Nonnull Throwable cause) {
-        super("No resource found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.", cause);
-        this.key = key;
-        this.locale = locale;
-    }
-
-    /**
-     * Get the key without a valid value
-     *
-     * @return The key
-     */
-    @Nonnull
-    public String getKey() {
-        return key;
-    }
-
-    /**
-     * Get the locale without a valid value
-     *
-     * @return The locale
-     */
-    @Nonnull
-    public Locale getLocale() {
-        return locale;
+        super(key, locale, cause);
     }
 }

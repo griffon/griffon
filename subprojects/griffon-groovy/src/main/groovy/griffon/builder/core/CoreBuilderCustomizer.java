@@ -57,11 +57,11 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
     @PostConstruct
     private void setup() {
         Map<String, Closure> methods = new LinkedHashMap<>();
-        methods.put("runInsideUISync", new MethodClosure(uiThreadManager, "runInsideUISync"));
-        methods.put("runInsideUIAsync", new MethodClosure(uiThreadManager, "runInsideUIAsync"));
-        methods.put("runOutsideUI", new MethodClosure(uiThreadManager, "runOutsideUI"));
+        methods.put("executeInsideUISync", new MethodClosure(uiThreadManager, "executeInsideUISync"));
+        methods.put("executeInsideUIAsync", new MethodClosure(uiThreadManager, "executeInsideUIAsync"));
+        methods.put("executeOutsideUI", new MethodClosure(uiThreadManager, "executeOutsideUI"));
         methods.put("runOutsideUIAsync", new MethodClosure(uiThreadManager, "runOutsideUIAsync"));
-        methods.put("runFuture", new MethodClosure(uiThreadManager, "runFuture"));
+        methods.put("executeFuture", new MethodClosure(uiThreadManager, "executeFuture"));
         methods.put("isUIThread", new MethodClosure(uiThreadManager, "isUIThread"));
         setMethods(methods);
     }

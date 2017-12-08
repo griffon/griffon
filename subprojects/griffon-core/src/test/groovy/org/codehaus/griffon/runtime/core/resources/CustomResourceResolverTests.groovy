@@ -30,6 +30,7 @@ import org.junit.Rule
 import org.junit.Test
 
 import javax.annotation.Nonnull
+import javax.application.converter.ConverterRegistry
 import javax.inject.Singleton
 
 class CustomResourceResolverTests {
@@ -213,6 +214,10 @@ class CustomResourceResolverTests {
 
     static class CustomResourceResolver extends AbstractResourceResolver {
         private ResourceBundle bundle = new MapResourceBundle()
+
+        protected CustomResourceResolver(@Nonnull ConverterRegistry converterRegistry) {
+            super(converterRegistry)
+        }
 
         @Nonnull
         @Override

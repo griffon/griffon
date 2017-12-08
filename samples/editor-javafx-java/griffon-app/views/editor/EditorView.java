@@ -61,6 +61,6 @@ public class EditorView extends AbstractJavaFXGriffonView {
 
     @Override
     public void mvcGroupDestroy() {
-        runInsideUISync(() -> parentView.getTabGroup().getTabs().remove(tab));
+        executeInsideUISync(() -> parentView.getTabGroup().getTabs().remove(tab));
     }
 }

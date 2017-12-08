@@ -201,7 +201,7 @@ public class GriffonClassUtils {
             }
         }
         // Special case due to the usage of varargs
-        //THREADING_METHODS.add(new MethodDescriptor("runFuture", new Class<?>[]{Object[].class}));
+        //THREADING_METHODS.add(new MethodDescriptor("executeFuture", new Class<?>[]{Object[].class}));
 
         for (Method method : EventPublisher.class.getMethods()) {
             MethodDescriptor md = MethodDescriptor.forMethod(method, true);

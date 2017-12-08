@@ -21,11 +21,13 @@ import integration.SimpleModel
 import integration.TestGriffonApplication
 import org.codehaus.griffon.runtime.core.PropertyChangeListenerWitness
 import org.codehaus.griffon.runtime.core.VetoableChangeListenerWitness
+import org.junit.Ignore
 import org.junit.Test
 
 import java.beans.PropertyChangeListener
 import java.beans.VetoableChangeListener
 
+@Ignore
 class GriffonModelTest {
     @Test
     void modelAsObservable() {

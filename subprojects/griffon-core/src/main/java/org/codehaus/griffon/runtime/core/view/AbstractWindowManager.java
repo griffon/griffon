@@ -232,7 +232,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
         final String name = windowName;
         final int index = windowIndex;
 
-        application.getUIThreadManager().runInsideUIAsync(() -> {
+        application.getUIThreadManager().executeInsideUIAsync(() -> {
             LOG.debug("Showing window with name: '{}' at index {} {}", name, index, window);
             //noinspection ConstantConditions
             resolveWindowDisplayHandler().show(name, window);
@@ -272,7 +272,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
         final String name = windowName;
         final int index = windowIndex;
 
-        application.getUIThreadManager().runInsideUIAsync(() -> {
+        application.getUIThreadManager().executeInsideUIAsync(() -> {
             LOG.debug("Hiding window with name: '{}' at index {} {}", name, index, window);
             //noinspection ConstantConditions
             resolveWindowDisplayHandler().hide(name, window);

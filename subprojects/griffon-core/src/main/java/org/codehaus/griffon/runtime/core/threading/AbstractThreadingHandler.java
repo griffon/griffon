@@ -22,8 +22,8 @@ import griffon.core.threading.UIThreadManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -36,46 +36,64 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public abstract class AbstractThreadingHandler implements ThreadingHandler {
-    private UIThreadManager uiThreadManager;
+    private final UIThreadManager uiThreadManager;
 
-    @Inject
-    public void setUIThreadManager(@Nonnull UIThreadManager uiThreadManager) {
+    protected AbstractThreadingHandler(@Nonnull UIThreadManager uiThreadManager) {
         this.uiThreadManager = requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
     }
 
+    @Override
     public boolean isUIThread() {
         return uiThreadManager.isUIThread();
     }
 
-    public void runInsideUIAsync(@Nonnull Runnable runnable) {
-        uiThreadManager.runInsideUIAsync(runnable);
+    @Override
+    public void executeInsideUIAsync(@Nonnull Runnable runnable) {
+        uiThreadManager.executeInsideUIAsync(runnable);
     }
 
-    public void runInsideUISync(@Nonnull Runnable runnable) {
-        uiThreadManager.runInsideUISync(runnable);
+    @Override
+    public void executeInsideUISync(@Nonnull Runnable runnable) {
+        uiThreadManager.executeInsideUISync(runnable);
     }
 
-    public void runOutsideUI(@Nonnull Runnable runnable) {
-        uiThreadManager.runOutsideUI(runnable);
+    @Override
+    public void executeOutsideUI(@Nonnull Runnable runnable) {
+        uiThreadManager.executeOutsideUI(runnable);
     }
 
-    public void runOutsideUIAsync(@Nonnull Runnable runnable) {
-        uiThreadManager.runOutsideUIAsync(runnable);
+    @Override
+    public void executeOutsideUIAsync(@Nonnull Runnable runnable) {
+        uiThreadManager.executeOutsideUIAsync(runnable);
     }
 
     @Nonnull
-    public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
-        return uiThreadManager.runFuture(executorService, callable);
+    @Override
+    public <R> Future<R> executeFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
+        return uiThreadManager.executeFuture(executorService, callable);
     }
 
     @Nonnull
-    public <R> Future<R> runFuture(@Nonnull Callable<R> callable) {
-        return uiThreadManager.runFuture(callable);
+    @Override
+    public <R> Future<R> executeFuture(@Nonnull Callable<R> callable) {
+        return uiThreadManager.executeFuture(callable);
     }
 
     @Nullable
     @Override
-    public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
-        return uiThreadManager.runInsideUISync(callable);
+    public <R> R executeInsideUISync(@Nonnull Callable<R> callable) {
+        return uiThreadManager.executeInsideUISync(callable);
+    }
+
+    @Nonnull
+    @Override
+    public <R> CompletionStage<R> executeOutsideUIAsync(@Nonnull Callable<R> callable) {
+        return uiThreadManager.executeOutsideUIAsync(callable);
+    }
+
+    @Nonnull
+    @Override
+    public <R> CompletionStage<R> executeInsideUIAsync(@Nonnull Callable<R> callable) {
+        return uiThreadManager.executeInsideUIAsync(callable);
     }
 }

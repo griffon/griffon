@@ -19,11 +19,15 @@ package griffon.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Contains utility methods for converting between different name types,
@@ -34,6 +38,11 @@ import java.util.Locale;
 public class GriffonNameUtils {
     private static final String PROPERTY_SET_PREFIX = "set";
     private static final String PROPERTY_GET_PREFIX = "get";
+
+    private static final Pattern GETTER_PATTERN_1 = Pattern.compile("^get[A-Z][\\w]*$");
+    private static final Pattern GETTER_PATTERN_2 = Pattern.compile("^is[A-Z][\\w]*$");
+    private static final Pattern SETTER_PATTERN = Pattern.compile("^set[A-Z][\\w]*$");
+    private static final String ERROR_METHOD_NULL = "Argument 'method' must not be null";
 
     private static final String[] KEYWORDS = new String[]{
         "abstract",
@@ -270,6 +279,26 @@ public class GriffonNameUtils {
      */
     public static String getPropertyName(Class<?> clazz) {
         return getPropertyNameRepresentation(clazz);
+    }
+
+    /**
+     * Returns the property name representation of the given {@code Method}
+     *
+     * @param method The method to inspect
+     *
+     * @return The property name representation
+     *
+     * @since 3.0.0
+     */
+    public static String getPropertyName(Method method) {
+        requireNonNull(method, ERROR_METHOD_NULL);
+        String name = method.getName();
+        if (GETTER_PATTERN_1.matcher(name).matches() || SETTER_PATTERN.matcher(name).matches()) {
+            return uncapitalize(name.substring(3));
+        } else if (GETTER_PATTERN_2.matcher(name).matches()) {
+            return uncapitalize(name.substring(2));
+        }
+        return name;
     }
 
     /**

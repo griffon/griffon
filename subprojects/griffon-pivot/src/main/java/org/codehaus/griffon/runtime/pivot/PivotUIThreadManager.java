@@ -35,12 +35,12 @@ public class PivotUIThreadManager extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUIAsync(@Nonnull Runnable runnable) {
+    public void executeInsideUIAsync(@Nonnull Runnable runnable) {
         EventQueue.invokeLater(runnable);
     }
 
     @Override
-    public void runInsideUISync(@Nonnull final Runnable runnable) {
+    public void executeInsideUISync(@Nonnull final Runnable runnable) {
         if (isUIThread()) {
             runnable.run();
         } else {

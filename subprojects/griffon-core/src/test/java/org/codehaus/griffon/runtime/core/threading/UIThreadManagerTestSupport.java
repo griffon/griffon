@@ -26,12 +26,12 @@ public class UIThreadManagerTestSupport extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUIAsync(@Nonnull Runnable runnable) {
+    public void executeInsideUIAsync(@Nonnull Runnable runnable) {
         runnable.run();
     }
 
     @Override
-    public void runInsideUISync(@Nonnull Runnable runnable) {
+    public void executeInsideUISync(@Nonnull Runnable runnable) {
         runnable.run();
     }
 }

@@ -357,16 +357,16 @@ public abstract class AbstractActionManager implements ActionManager {
 
         switch (policy) {
             case OUTSIDE_UITHREAD:
-                getUiThreadManager().runOutsideUI(runnable);
+                getUiThreadManager().executeOutsideUI(runnable);
                 break;
             case OUTSIDE_UITHREAD_ASYNC:
-                getUiThreadManager().runOutsideUIAsync(runnable);
+                getUiThreadManager().executeOutsideUIAsync(runnable);
                 break;
             case INSIDE_UITHREAD_SYNC:
-                getUiThreadManager().runInsideUISync(runnable);
+                getUiThreadManager().executeInsideUISync(runnable);
                 break;
             case INSIDE_UITHREAD_ASYNC:
-                getUiThreadManager().runInsideUIAsync(runnable);
+                getUiThreadManager().executeInsideUIAsync(runnable);
                 break;
             case SKIP:
             default:

@@ -66,7 +66,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
 
-        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
+        addPropertyChangeListener(evt -> uiThreadManager.executeInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     @Nonnull

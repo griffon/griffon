@@ -21,6 +21,7 @@ import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
 
 import javax.annotation.Nonnull;
+import javax.application.converter.ConverterRegistry;
 import java.util.Collection;
 import java.util.Locale;
 
@@ -35,11 +36,12 @@ import static java.util.Objects.requireNonNull;
 public class CompositeResourceResolver extends AbstractResourceResolver {
     private final ResourceResolver[] resourceResolvers;
 
-    public CompositeResourceResolver(@Nonnull Collection<ResourceResolver> resourceResolvers) {
-        this(toResourceResolverArray(resourceResolvers));
+    public CompositeResourceResolver(@Nonnull ConverterRegistry converterRegistry, @Nonnull Collection<ResourceResolver> resourceResolvers) {
+        this(converterRegistry, toResourceResolverArray(resourceResolvers));
     }
 
-    public CompositeResourceResolver(@Nonnull ResourceResolver[] resourceResolvers) {
+    public CompositeResourceResolver(@Nonnull ConverterRegistry converterRegistry, @Nonnull ResourceResolver[] resourceResolvers) {
+        super(converterRegistry);
         this.resourceResolvers = requireNonNull(resourceResolvers, "Argument 'resourceResolvers' must not be null");
     }
 

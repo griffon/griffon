@@ -299,7 +299,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void initializeArtifactMember(@Nonnull final MVCGroup group, @Nonnull String type, @Nonnull final GriffonArtifact member, @Nonnull final Map<String, Object> args) {
         if (member instanceof GriffonView) {
-            getApplication().getUIThreadManager().runInsideUISync(() -> {
+            getApplication().getUIThreadManager().executeInsideUISync(() -> {
                 try {
                     GriffonView view = (GriffonView) member;
                     view.initUI();
@@ -657,7 +657,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             }
 
             if (artifact instanceof GriffonView) {
-                getApplication().getUIThreadManager().runInsideUISync(() -> {
+                getApplication().getUIThreadManager().executeInsideUISync(() -> {
                     try {
                         artifact.mvcGroupDestroy();
                     } catch (RuntimeException e) {

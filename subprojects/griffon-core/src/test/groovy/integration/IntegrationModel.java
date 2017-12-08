@@ -28,7 +28,8 @@ public class IntegrationModel extends AbstractGriffonModel {
     }
 
     public void setInput(String input) {
-        firePropertyChange("input", this.input, this.input = input);
+        // firePropertyChange("input", this.input, this.input = input);
+        this.input = input;
     }
 
     public String getOutput() {
@@ -36,6 +37,7 @@ public class IntegrationModel extends AbstractGriffonModel {
     }
 
     public void setOutput(String output) {
-        firePropertyChange("output", this.output, this.output = output);
+        // firePropertyChange("output", this.output, this.output = output);
+        this.output = output;
     }
 }
