@@ -154,8 +154,9 @@ subprojects { subproj ->
                 }
 
                 testCompile "javax.application:jsr377-tck:$jsr377TckVersion"
-                testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
+                testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
                 testCompile "org.awaitility:awaitility:$awaitilityVersion"
+                testCompile "org.assertj:assertj-core:$assertjVersion"
                 testCompile("org.jukito:jukito:$jukitoVersion") {
                     exclude group: 'com.google.inject', module: 'guice'
                     exclude group: 'org.mockito', module: 'mockito-core'

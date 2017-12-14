@@ -28,6 +28,7 @@ import griffon.core.resources.ResourceResolver
 import griffon.util.AbstractMapResourceBundle
 import org.junit.Rule
 import org.junit.Test
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
 
 import javax.annotation.Nonnull
 import javax.application.converter.ConverterRegistry
@@ -143,14 +144,14 @@ class CustomResourceResolverTests {
         assert defaultMessage == resourceResolver.resolveResource('bogus', [:], Locale.default, defaultMessage)
         assert defaultMessage == resourceResolver.resolveResource('bogus', [] as Object[], Locale.default, defaultMessage)
 
-        assert 'bogus' == resourceResolver.resolveResource('bogus', (String) null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [], (String) null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [:], (String) null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [] as Object[], (String) null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', Locale.default, null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [], Locale.default, null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [:], Locale.default, null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [] as Object[], Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', (String) null)
+        assert null == resourceResolver.resolveResource('bogus', [], (String) null)
+        assert null == resourceResolver.resolveResource('bogus', [:], (String) null)
+        assert null == resourceResolver.resolveResource('bogus', [] as Object[], (String) null)
+        assert null == resourceResolver.resolveResource('bogus', Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', [], Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', [:], Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', [] as Object[], Locale.default, null)
     }
 
     @Test
@@ -191,6 +192,7 @@ class CustomResourceResolverTests {
         protected void configure() {
             install(new GuiceBerryModule())
             bind(ResourceResolver).to(CustomResourceResolver).in(Singleton)
+            bind(ConverterRegistry).to(DefaultConverterRegistry).in(Singleton)
         }
     }
 
@@ -215,6 +217,7 @@ class CustomResourceResolverTests {
     static class CustomResourceResolver extends AbstractResourceResolver {
         private ResourceBundle bundle = new MapResourceBundle()
 
+        @javax.inject.Inject
         protected CustomResourceResolver(@Nonnull ConverterRegistry converterRegistry) {
             super(converterRegistry)
         }

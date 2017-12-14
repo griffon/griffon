@@ -22,8 +22,6 @@ import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.CallableWithArgs
-import griffon.core.editors.IntegerPropertyEditor
-import griffon.core.editors.PropertyEditorResolver
 import griffon.core.injection.Injector
 import griffon.core.resources.NoSuchResourceException
 import griffon.core.resources.ResourceHandler
@@ -39,10 +37,13 @@ import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
+import org.kordamp.jsr377.converter.IntegerConverter
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
 import javax.application.converter.ConverterRegistry
+import javax.application.resources.ResourceResolverTest
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
@@ -52,20 +53,139 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class DefaultResourceResolverTests {
+class DefaultResourceResolverTests extends ResourceResolverTest {
+    private static final String KEY_PROVERB_MAP = 'key.proverb.map'
+    private static final List TWO_ARGS_LIST = ['apple', 'doctor']
+    private static final Map TWO_ARGS_MAP = [fruit: 'apple', occupation: 'doctor']
+    private static final String PROVERB_FORMAT_MAP = 'An {:fruit} a day keeps the {:occupation} away'
+
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private ResourceResolver resourceResolver
+    @Inject private ConverterRegistry converterRegistry
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
     @Before
     void setup() {
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Integer, IntegerConverter)
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
+        super.setup()
     }
 
+    @Override
+    protected javax.application.resources.ResourceResolver resolveResourceResolver() {
+        return resourceResolver
+    }
+
+    @Test
+    void verify_resolveResource_withArguments_withLocale_additionalArgumentTypes() {
+        // given:
+        def resourceResolver = resolveResourceResolver();
+
+        // expect:
+        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB_MAP))
+            .isEqualTo(PROVERB_FORMAT_MAP)
+        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB, TWO_ARGS_LIST))
+            .isEqualTo(PROVERB_TEXT)
+        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB, TWO_ARGS_LIST, Locale.default))
+            .isEqualTo(PROVERB_TEXT)
+        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB_MAP, TWO_ARGS_MAP))
+            .isEqualTo(PROVERB_TEXT)
+        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB_MAP, TWO_ARGS_MAP, Locale.default))
+            .isEqualTo(PROVERB_TEXT)
+    }
+
+    @Test
+    void verify_resolveResource_withArguments_withLocale_withDefaultValue_additionalArguments() {
+        // given:
+        def resourceResolver = resolveResourceResolver()
+
+        // expect:
+        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_LIST, DEFAULT_VALUE))
+            .isEqualTo(DEFAULT_VALUE)
+        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_LIST, Locale.default, DEFAULT_VALUE))
+            .isEqualTo(DEFAULT_VALUE)
+        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_MAP, DEFAULT_VALUE))
+            .isEqualTo(DEFAULT_VALUE)
+        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_MAP, Locale.default, DEFAULT_VALUE))
+            .isEqualTo(DEFAULT_VALUE)
+    }
+
+    @Test
+    void verify_resolveResourceConverted_withArguments_withLocale_additionalArguments() {
+        // given:
+        def resourceResolver = resolveResourceResolver()
+
+        // expect:
+        int value = 42
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_LIST, Integer))
+            .isEqualTo(value)
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_LIST, Locale.default, Integer))
+            .isEqualTo(value)
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_MAP, Integer))
+            .isEqualTo(value)
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_MAP, Locale.default, Integer))
+            .isEqualTo(value)
+    }
+
+    @Test
+    void verify_resolveResourceConverted_withArguments_withLocale_withDefaultValue_additionalArguments() {
+        // given:
+        def resourceResolver = resolveResourceResolver()
+
+        // expect:
+        int defaultValue = 21
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, defaultValue, Integer))
+            .isEqualTo(defaultValue)
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Locale.default, defaultValue, Integer))
+            .isEqualTo(defaultValue)
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, defaultValue, Integer))
+            .isEqualTo(defaultValue)
+        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Locale.default, defaultValue, Integer))
+            .isEqualTo(defaultValue)
+    }
+
+    @Test
+    void verify_resolveResource_withUnknownKey_withArguments_withLocale_additionalArguments() {
+        // given:
+        def resourceResolver = resolveResourceResolver()
+
+        // expect:
+        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_LIST) })
+            .isInstanceOf(NoSuchResourceException)
+        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_LIST, Locale.default) })
+            .isInstanceOf(NoSuchResourceException)
+        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_MAP) })
+            .isInstanceOf(NoSuchResourceException)
+        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_MAP, Locale.default) })
+            .isInstanceOf(NoSuchResourceException)
+    }
+
+    @Test
+    void verify_resolveResourceConverted_withUnknownKey_withArguments_withLocale_additionalArguments() {
+        // given:
+        def resourceResolver = resolveResourceResolver()
+
+        // expect:
+        t.assertThatThrownBy({ resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Integer) })
+            .isInstanceOf(NoSuchResourceException)
+        t.assertThatThrownBy({
+            resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Locale.default, Integer)
+        })
+            .isInstanceOf(NoSuchResourceException)
+        t.assertThatThrownBy({ resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Integer) })
+            .isInstanceOf(NoSuchResourceException)
+        t.assertThatThrownBy({
+            resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Locale.default, Integer)
+        })
+            .isInstanceOf(NoSuchResourceException)
+    }
+
+    /*
     @Test
     void resolveAllFormatsByProperties() {
         //assert resourceResolver.basename == 'org.codehaus.griffon.runtime.core.resources.props'
@@ -177,14 +297,14 @@ class DefaultResourceResolverTests {
         assert defaultValue == resourceResolver.resolveResource('bogus', [:], Locale.default, defaultValue)
         assert defaultValue == resourceResolver.resolveResource('bogus', [] as Object[], Locale.default, defaultValue)
 
-        assert 'bogus' == resourceResolver.resolveResource('bogus', (Object) null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [], (Object) null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [:], (Object) null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [] as Object[], null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', Locale.default, null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [], Locale.default, null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [:], Locale.default, null)
-        assert 'bogus' == resourceResolver.resolveResource('bogus', [] as Object[], Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', (Object) null)
+        assert null == resourceResolver.resolveResource('bogus', [], (Object) null)
+        assert null == resourceResolver.resolveResource('bogus', [:], (Object) null)
+        assert null == resourceResolver.resolveResource('bogus', [] as Object[], null)
+        assert null == resourceResolver.resolveResource('bogus', Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', [], Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', [:], Locale.default, null)
+        assert null == resourceResolver.resolveResource('bogus', [] as Object[], Locale.default, null)
     }
 
     @Test
@@ -234,7 +354,7 @@ class DefaultResourceResolverTests {
 
     @Test
     void resolveResourceFromCustomResourceResolver() {
-        ResourceResolver resourceResolver = new CustomResourceResolver()
+        def resourceResolver = new CustomResourceResolver(converterRegistry)
 
         assert 'rainbows' == resourceResolver.resolveResource('magic')
         shouldFail(NoSuchResourceException) {
@@ -250,6 +370,7 @@ class DefaultResourceResolverTests {
             resourceResolver.resolveResource('bomb', [:], Locale.default)
         }
     }
+    */
 
     static final class TestModule extends AbstractModule {
         @Override
@@ -266,10 +387,12 @@ class DefaultResourceResolverTests {
             bind(Instantiator).to(DefaultInstantiator).in(Singleton)
             bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
             bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
+            bind(ConverterRegistry).to(DefaultConverterRegistry).in(Singleton)
         }
     }
 
     static final class CustomResourceResolver extends AbstractResourceResolver {
+        @Inject
         protected CustomResourceResolver(@Nonnull ConverterRegistry converterRegistry) {
             super(converterRegistry)
         }
@@ -277,8 +400,7 @@ class DefaultResourceResolverTests {
         @Nonnull
         @Override
         protected Object doResolveResourceValue(
-            @Nonnull String key,
-            @Nonnull Locale locale) throws NoSuchResourceException {
+            @Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException {
             if (key == 'bomb') return null
             return new CallableWithArgs<String>() {
                 @Override

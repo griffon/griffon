@@ -40,6 +40,7 @@ import java.util.Map;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -60,10 +61,11 @@ public abstract class AbstractResourceInjector implements ResourceInjector {
 
     private final ConverterRegistry converterRegistry;
 
-    protected AbstractResourceInjector(ConverterRegistry converterRegistry) {
+    protected AbstractResourceInjector(@Nonnull ConverterRegistry converterRegistry) {
         this.converterRegistry = requireNonNull(converterRegistry, "Argument 'converterRegistry' must not be null");
     }
 
+    @Nonnull
     protected final ConverterRegistry getConverterRegistry() {
         return converterRegistry;
     }
@@ -100,6 +102,7 @@ public abstract class AbstractResourceInjector implements ResourceInjector {
             String key = annotation.value();
             String[] args = annotation.args();
             String defaultValue = annotation.defaultValue();
+            defaultValue = InjectedResource.NO_VALUE.equals(defaultValue) ? null : defaultValue;
             String format = annotation.format();
             if (isBlank(key)) { key = fqName; }
 
@@ -131,17 +134,18 @@ public abstract class AbstractResourceInjector implements ResourceInjector {
             injected = true;
         }
 
-        for (Field field : klass.getFields()) {
+        for (Field field : fieldsOf(klass)) {
             if (field.isSynthetic() || names.contains(field.getName())) {
                 continue;
             }
-            final javax.application.resources.InjectedResource annotation = field.getAnnotation(javax.application.resources.InjectedResource.class);
+            final InjectedResource annotation = field.getAnnotation(InjectedResource.class);
             if (null == annotation) { continue; }
 
             String fqName = field.getDeclaringClass().getName().replace('$', '.') + "." + field.getName();
             String key = annotation.value();
             String[] args = annotation.args();
             String defaultValue = annotation.defaultValue();
+            defaultValue = InjectedResource.NO_VALUE.equals(defaultValue) ? null : defaultValue;
             String format = annotation.format();
             if (isBlank(key)) { key = fqName; }
 
@@ -171,6 +175,19 @@ public abstract class AbstractResourceInjector implements ResourceInjector {
             injected = true;
         }
         return injected;
+    }
+
+    @Nonnull
+    protected Iterable<Field> fieldsOf(@Nonnull Class<?> klass) {
+        List<Field> fields = new ArrayList<>();
+
+        Class<?> c = klass;
+        while (c != null) {
+            fields.addAll(asList(c.getDeclaredFields()));
+            c = c.getSuperclass();
+        }
+
+        return fields;
     }
 
     @Nonnull

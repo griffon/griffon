@@ -29,7 +29,7 @@ class NoSuchMessageExceptionSpec extends Specification {
 
         where:
         args                         | exception
-        [null]                       | IllegalArgumentException
+        [null]                       | NullPointerException
         ['key', (Locale) null, null] | NullPointerException
     }
 

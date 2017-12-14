@@ -43,19 +43,19 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
 
     @Nonnull
     @Override
-    Object resolveResource(@Nonnull String key) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key) throws NoSuchResourceException;
 
     @Nonnull
     @Override
-    Object resolveResource(@Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException;
 
     @Nonnull
     @Override
-    Object resolveResource(@Nonnull String key, @Nonnull Object[] args) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args) throws NoSuchResourceException;
 
     @Nonnull
     @Override
-    Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale) throws NoSuchResourceException;
 
     /**
      * Try to resolve the resource.
@@ -69,7 +69,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @throws NoSuchResourceException if no resource is found
      */
     @Nonnull
-    Object resolveResource(@Nonnull String key, @Nonnull List<?> args) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args) throws NoSuchResourceException;
 
     /**
      * Try to resolve the resource.
@@ -84,23 +84,23 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @throws NoSuchResourceException if no resource is found
      */
     @Nonnull
-    Object resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale) throws NoSuchResourceException;
 
     @Nullable
     @Override
-    Object resolveResource(@Nonnull String key, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nullable T defaultValue);
 
     @Nullable
     @Override
-    Object resolveResource(@Nonnull String key, @Nonnull Locale locale, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nonnull Locale locale, @Nullable T defaultValue);
 
     @Nullable
     @Override
-    Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nullable T defaultValue);
 
     @Nullable
     @Override
-    Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable T defaultValue);
 
     /**
      * Try to resolve the resource. Return default resource if no resource was found.
@@ -113,7 +113,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @return The resolved resource at the given key for the default locale
      */
     @Nullable
-    Object resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nullable T defaultValue);
 
     /**
      * Try to resolve the resource. Return default resource if no resource was found.
@@ -127,7 +127,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @return The resolved resource at the given key for the given locale
      */
     @Nullable
-    Object resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nullable T defaultValue);
 
     /**
      * Try to resolve the resource.
@@ -141,7 +141,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @throws NoSuchResourceException if no resource is found
      */
     @Nonnull
-    Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args) throws NoSuchResourceException;
 
     /**
      * Try to resolve the resource.
@@ -156,7 +156,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @throws NoSuchResourceException if no resource is found
      */
     @Nonnull
-    Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale) throws NoSuchResourceException;
+    <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale) throws NoSuchResourceException;
 
     /**
      * Try to resolve the resource. Return default resource if no resource was found.
@@ -169,7 +169,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @return The resolved resource at the given key for the default locale
      */
     @Nullable
-    Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nullable T defaultValue);
 
     /**
      * Try to resolve the resource. Return default resource if no resource was found.
@@ -183,7 +183,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
      * @return The resolved resource at the given key for the given locale
      */
     @Nullable
-    Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable Object defaultValue);
+    <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable T defaultValue);
 
     @Nonnull
     @Override

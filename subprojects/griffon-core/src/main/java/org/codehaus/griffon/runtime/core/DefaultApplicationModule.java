@@ -92,7 +92,9 @@ import org.codehaus.griffon.runtime.util.DefaultInstantiator;
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
 import org.codehaus.griffon.runtime.util.XmlResourceBundleLoader;
+import org.kordamp.jsr377.converter.DefaultConverterRegistry;
 
+import javax.application.converter.ConverterRegistry;
 import javax.inject.Named;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -202,6 +204,10 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(MessageSourceDecoratorFactory.class)
             .to(DefaultMessageSourceDecoratorFactory.class);
+
+        bind(ConverterRegistry.class)
+            .to(DefaultConverterRegistry.class)
+            .asSingleton();
 
         bind(ResourceResolver.class)
             .withClassifier(named("applicationResourceResolver"))

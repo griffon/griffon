@@ -1,5 +1,6 @@
 package griffon.util;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import static griffon.util.GriffonClassUtils.isGetterMethod;
 import static griffon.util.GriffonClassUtils.isSetterMethod;
 import static griffon.util.GriffonNameUtils.getPropertyName;
-import static java.util.Collections.unmodifiableMap;
+import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
@@ -17,16 +19,34 @@ import static java.util.Collections.unmodifiableMap;
 public class PropertyDescriptorResolver {
     private static final Map<Class<?>, Map<String, PropertyDescriptor>> DESCRIPTORS = new ConcurrentHashMap<>();
 
-    public static Map<String, PropertyDescriptor> findDescriptors(Class<?> klass) {
+    @Nonnull
+    public static Map<String, PropertyDescriptor> findDescriptors(@Nonnull Class<?> klass) {
         return DESCRIPTORS.computeIfAbsent(klass, PropertyDescriptorResolver::fetchPropertyMetadata);
     }
 
-    public static PropertyDescriptor findDescriptorFor(Class<?> klass, String propertyName) {
+    @Nonnull
+    public static PropertyDescriptor findDescriptorFor(@Nonnull Class<?> klass, @Nonnull String propertyName) {
+        requireNonNull(klass, "Argument 'class' must no be null");
+        requireNonBlank(propertyName, "Argument 'propertyName' must no be null");
         Map<String, PropertyDescriptor> metadata = DESCRIPTORS.computeIfAbsent(klass, PropertyDescriptorResolver::fetchPropertyMetadata);
         return metadata.get(propertyName);
     }
 
-    private static Map<String, PropertyDescriptor> fetchPropertyMetadata(Class<?> klass) {
+    @Nonnull
+    private static Map<String, PropertyDescriptor> fetchPropertyMetadata(@Nonnull Class<?> klass) {
+        Map<String, PropertyDescriptor> metadata = new HashMap<>();
+
+        Class<?> c = klass;
+        while (c != null) {
+            metadata.putAll(doFetchPropertyMetadata(c));
+            c = c.getSuperclass();
+        }
+
+        return metadata;
+    }
+
+    @Nonnull
+    private static Map<String, PropertyDescriptor> doFetchPropertyMetadata(@Nonnull Class<?> klass) {
         Map<String, PropertyDescriptor> metadata = new HashMap<>();
 
         Map<String, PropertyDescriptorBuilder> builders = new HashMap<>();
@@ -56,7 +76,7 @@ public class PropertyDescriptorResolver {
             metadata.put(builder.getName(), builder.build());
         }
 
-        return unmodifiableMap(metadata);
+        return metadata;
     }
 
     private static class PropertyDescriptorBuilder {

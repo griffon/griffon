@@ -21,12 +21,8 @@ import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
-import griffon.core.editors.IntegerPropertyEditor
-import griffon.core.editors.PropertyEditorResolver
-import griffon.core.editors.StringPropertyEditor
 import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
-import griffon.core.resources.ResourceInjector
 import griffon.core.resources.ResourceResolver
 import griffon.util.AnnotationUtils
 import griffon.util.CompositeResourceBundleBuilder
@@ -36,12 +32,15 @@ import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
-import org.junit.AfterClass
+import org.junit.After
 import org.junit.Before
-import org.junit.BeforeClass
 import org.junit.Rule
-import org.junit.Test
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
+import org.kordamp.jsr377.converter.IntegerConverter
+import org.kordamp.jsr377.converter.StringConverter
 
+import javax.application.converter.ConverterRegistry
+import javax.application.resources.ResourceInjectorTest
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
@@ -51,48 +50,33 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class DefaultResourceInjectorTests {
+class DefaultResourceInjectorTests extends ResourceInjectorTest {
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
+    @Inject private ConverterRegistry converterRegistry
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
+    @Override
+    protected javax.application.resources.ResourceInjector resolveResourcesInjector() {
+        ResourceResolver resourceResolver = new DefaultResourceResolver(converterRegistry, bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.injector')
+        new DefaultResourceInjector(converterRegistry, resourceResolver)
+    }
+
     @Before
-    void setupMethod() {
+    void setup() {
+        converterRegistry.clear()
+        converterRegistry.registerConverter(String, StringConverter)
+        converterRegistry.registerConverter(Integer, IntegerConverter)
+        converterRegistry.registerConverter(Integer.TYPE, IntegerConverter)
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
     }
 
-    @BeforeClass
-    static void setupClass() {
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(String, StringPropertyEditor)
-        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
-        PropertyEditorResolver.registerEditor(int.class, IntegerPropertyEditor)
-    }
-
-    @AfterClass
-    static void cleanup() {
-        PropertyEditorResolver.clear()
-    }
-
-    @Test
-    void resolveAllFormatsByProperties() {
-        ResourceResolver resourceResolver = new DefaultResourceResolver(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.injector')
-        ResourceInjector resourcesInjector = new DefaultResourceInjector(resourceResolver)
-        Bean bean = new Bean()
-        resourcesInjector.injectResources(bean)
-
-        assert bean.@privateField == 'privateField'
-        assert bean.@fieldBySetter == 'fieldBySetter'
-        assert bean.@privateIntField == 42
-        assert bean.@intFieldBySetter == 21
-        assert bean.@fieldWithKey == 'no_args'
-        assert bean.@fieldWithKeyAndArgs == 'with_args 1 2'
-        assert bean.@fieldWithKeyNoArgsWithDefault == 'DEFAULT_NO_ARGS'
-        assert bean.@fieldWithKeyWithArgsWithDefault == 'DEFAULT_WITH_ARGS'
-        assert !bean.@notFound
+    @After
+    void cleanup() {
+        converterRegistry.clear()
     }
 
     static final class TestModule extends AbstractModule {
@@ -104,6 +88,7 @@ class DefaultResourceInjectorTests {
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)
             bind(Instantiator).to(DefaultInstantiator).in(Singleton)
             bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
+            bind(ConverterRegistry).to(DefaultConverterRegistry).in(Singleton)
             bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
         }
     }

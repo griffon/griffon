@@ -190,6 +190,7 @@ class CustomMessageSourceTests {
             }
         }
 
+        @Nonnull
         @Override
         ResourceBundle asResourceBundle() {
             return bundle

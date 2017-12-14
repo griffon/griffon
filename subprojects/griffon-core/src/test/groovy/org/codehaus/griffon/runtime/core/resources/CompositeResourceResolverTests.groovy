@@ -35,7 +35,9 @@ import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
 
+import javax.application.converter.ConverterRegistry
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
@@ -50,6 +52,7 @@ class CompositeResourceResolverTests {
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
+    @Inject private ConverterRegistry converterRegistry
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
@@ -60,9 +63,9 @@ class CompositeResourceResolverTests {
 
     @Test
     void resolveAllFormatsByProperties() {
-        ResourceResolver resourceResolver1 = new DefaultResourceResolver(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.props')
-        ResourceResolver resourceResolver2 = new DefaultResourceResolver(bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.props2')
-        ResourceResolver compositeResourceResolver = new CompositeResourceResolver([resourceResolver1, resourceResolver2])
+        ResourceResolver resourceResolver1 = new DefaultResourceResolver(converterRegistry, bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.props')
+        ResourceResolver resourceResolver2 = new DefaultResourceResolver(converterRegistry, bundleBuilder, 'org.codehaus.griffon.runtime.core.resources.props2')
+        ResourceResolver compositeResourceResolver = new CompositeResourceResolver(converterRegistry, [resourceResolver1, resourceResolver2])
 
         String quote = compositeResourceResolver.resolveResource('healthy.proverb.index', ['apple', 'doctor'])
         assert quote == 'An apple a day keeps the doctor away'
@@ -119,6 +122,7 @@ class CompositeResourceResolverTests {
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)
             bind(Instantiator).to(DefaultInstantiator).in(Singleton)
             bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
+            bind(ConverterRegistry).to(DefaultConverterRegistry).in(Singleton)
             bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
         }
     }

@@ -20,18 +20,12 @@ package griffon.core.i18n;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Alexander Klein
  * @since 2.0.0
  */
-public class NoSuchMessageException extends RuntimeException {
-    private static final long serialVersionUID = 9098095569037988099L;
-
-    private final String key;
-    private final Locale locale;
+public class NoSuchMessageException extends javax.application.i18n.NoSuchMessageException {
+    private static final long serialVersionUID = -7528419469022645775L;
 
     /**
      * Create a new exception.
@@ -40,7 +34,7 @@ public class NoSuchMessageException extends RuntimeException {
      * @param locale locale that was used to search for the code within
      */
     public NoSuchMessageException(@Nonnull String key, @Nonnull Locale locale) {
-        this(key, locale, null);
+        super(key, locale);
     }
 
     /**
@@ -49,7 +43,7 @@ public class NoSuchMessageException extends RuntimeException {
      * @param key key that could not be resolved for given locale
      */
     public NoSuchMessageException(@Nonnull String key) {
-        this(key, Locale.getDefault());
+        super(key);
     }
 
     /**
@@ -59,7 +53,7 @@ public class NoSuchMessageException extends RuntimeException {
      * @param cause throwable that caused this exception
      */
     public NoSuchMessageException(@Nonnull String key, @Nonnull Throwable cause) {
-        this(key, Locale.getDefault(), cause);
+        super(key, cause);
     }
 
     /**
@@ -70,28 +64,6 @@ public class NoSuchMessageException extends RuntimeException {
      * @param cause  throwable that caused this exception
      */
     public NoSuchMessageException(@Nonnull String key, @Nonnull Locale locale, @Nonnull Throwable cause) {
-        super("No message found under key '" + requireNonBlank(key, "key") + "' for locale '" + requireNonNull(locale, "locale") + "'.", cause);
-        this.key = key;
-        this.locale = locale;
-    }
-
-    /**
-     * Get the key without a valid value
-     *
-     * @return The key
-     */
-    @Nonnull
-    public String getKey() {
-        return key;
-    }
-
-    /**
-     * Get the locale without a valid value
-     *
-     * @return The locale
-     */
-    @Nonnull
-    public Locale getLocale() {
-        return locale;
+        super(key, locale, cause);
     }
 }

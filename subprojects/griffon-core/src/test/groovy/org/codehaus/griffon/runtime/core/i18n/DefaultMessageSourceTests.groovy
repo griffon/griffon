@@ -41,6 +41,7 @@ import org.junit.Test
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
+import javax.application.i18n.MessageSourceTest
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
@@ -50,7 +51,12 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class DefaultMessageSourceTests {
+class DefaultMessageSourceTests extends MessageSourceTest{
+    private static final String KEY_PROVERB_MAP = 'key.proverb.map'
+    private static final List TWO_ARGS_LIST = ['apple', 'doctor']
+    private static final Map TWO_ARGS_MAP = [fruit: 'apple', occupation: 'doctor']
+    private static final String PROVERB_FORMAT_MAP = 'An {:fruit} a day keeps the {:occupation} away'
+
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
@@ -62,8 +68,15 @@ class DefaultMessageSourceTests {
     @Before
     void setup() {
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
+        super.setup()
     }
 
+    @Override
+    protected javax.application.i18n.MessageSource resolveMessageSource() {
+        return messageSource
+    }
+
+    /*
     @Test
     void testGetAllMessagesByProperties() {
         // assert messageSource.basename == 'org.codehaus.griffon.runtime.core.i18n.props'
@@ -210,6 +223,7 @@ class DefaultMessageSourceTests {
             messageSource.getMessage('bomb', [:], Locale.default)
         }
     }
+    */
 
     static final class TestModule extends AbstractModule {
         @Override
@@ -244,6 +258,7 @@ class DefaultMessageSourceTests {
             }
         }
 
+        @Nonnull
         @Override
         ResourceBundle asResourceBundle() {
             return null
