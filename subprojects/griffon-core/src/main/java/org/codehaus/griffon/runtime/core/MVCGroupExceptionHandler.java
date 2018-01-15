@@ -30,17 +30,37 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public final class MVCGroupExceptionHandler implements RunnableWithArgs {
+    private static final String UNCAUGHT_MVC_GROUP_CONFIGURATION_EXCEPTION = "UncaughtMVCGroupConfigurationException";
+    private static final String UNCAUGHT_MVC_GROUP_INSTANTIATION_EXCEPTION = "UncaughtMVCGroupInstantiationException";
+    private static MVCGroupExceptionHandler instance;
+
     private final GriffonApplication application;
 
     private MVCGroupExceptionHandler(@Nonnull GriffonApplication application) {
         this.application = requireNonNull(application, "Argument 'application' must not be null");
 
-        application.getEventRouter().addEventListener("UncaughtMVCGroupConfigurationException", this);
-        application.getEventRouter().addEventListener("UncaughtMVCGroupInstantiationException", this);
+        application.getEventRouter().addEventListener(UNCAUGHT_MVC_GROUP_CONFIGURATION_EXCEPTION, this);
+        application.getEventRouter().addEventListener(UNCAUGHT_MVC_GROUP_INSTANTIATION_EXCEPTION, this);
+    }
+
+    private void unregister(@Nonnull GriffonApplication application) {
+        if (this.application == application) {
+            application.getEventRouter().removeEventListener(UNCAUGHT_MVC_GROUP_CONFIGURATION_EXCEPTION, this);
+            application.getEventRouter().removeEventListener(UNCAUGHT_MVC_GROUP_INSTANTIATION_EXCEPTION, this);
+        }
     }
 
     public static void registerWith(@Nonnull GriffonApplication application) {
-        new MVCGroupExceptionHandler(application);
+        if (null != instance) {
+            instance.unregister(application);
+        }
+        instance = new MVCGroupExceptionHandler(application);
+    }
+
+    public static void unregisterFrom(@Nonnull GriffonApplication application) {
+        if (null != instance) {
+            instance.unregister(application);
+        }
     }
 
     public void run(@Nullable Object... args) {

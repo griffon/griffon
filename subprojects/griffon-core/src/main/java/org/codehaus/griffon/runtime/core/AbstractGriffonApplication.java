@@ -72,13 +72,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     private static final Class<?>[] CTOR_ARGS = new Class<?>[]{String[].class};
     protected final Object[] lock = new Object[0];
-    private final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
-    private final String[] startupArgs;
-    private final Object shutdownLock = new Object();
-    private final Logger log;
-    private Locale locale = Locale.getDefault();
-    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
-    private Injector<?> injector;
+    protected final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
+    protected final String[] startupArgs;
+    protected final Object shutdownLock = new Object();
+    protected final Logger log;
+    protected Locale locale = Locale.getDefault();
+    protected ApplicationPhase phase = ApplicationPhase.INITIALIZE;
+    protected Injector<?> injector;
 
     public AbstractGriffonApplication() {
         this(EMPTY_ARGS);

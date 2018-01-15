@@ -69,16 +69,16 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGriffonApplet extends JApplet implements GriffonApplication {
     public static final String[] EMPTY_ARGS = new String[0];
-    private static final long serialVersionUID = -3489610863053527695L;
+    private static final long serialVersionUID = 7135108266670598484L;
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     protected final transient Object[] lock = new Object[0];
-    private final transient List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
-    private final String[] startupArgs;
-    private final transient Object shutdownLock = new Object();
-    private final transient Logger log;
-    private Locale appLocale = Locale.getDefault();
-    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
-    private transient Injector<?> injector;
+    protected final transient List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
+    protected final String[] startupArgs;
+    protected final transient Object shutdownLock = new Object();
+    protected final transient Logger log;
+    protected Locale appLocale = Locale.getDefault();
+    protected ApplicationPhase phase = ApplicationPhase.INITIALIZE;
+    protected transient Injector<?> injector;
 
     public AbstractGriffonApplet() {
         this(EMPTY_ARGS);

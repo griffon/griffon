@@ -77,13 +77,13 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     protected final Object[] lock = new Object[0];
     protected final PropertyChangeSupport pcs;
-    private final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
-    private final Object shutdownLock = new Object();
-    private final Logger log;
-    private Locale locale = Locale.getDefault();
-    private ApplicationPhase phase = ApplicationPhase.INITIALIZE;
-    private String[] startupArgs;
-    private Injector<?> injector;
+    protected final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
+    protected final Object shutdownLock = new Object();
+    protected final Logger log;
+    protected Locale locale = Locale.getDefault();
+    protected ApplicationPhase phase = ApplicationPhase.INITIALIZE;
+    protected String[] startupArgs;
+    protected Injector<?> injector;
 
     public AbstractJavaFXGriffonApplication() {
         this(EMPTY_ARGS);
