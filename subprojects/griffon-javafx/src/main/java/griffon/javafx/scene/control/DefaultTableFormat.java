@@ -104,7 +104,7 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
         }
     }
 
-    private final Column[] columns;
+    protected final Column[] columns;
     private final Map<Class<?>, Map<String, Method>> observableMetadata = new LinkedHashMap<>();
 
     public DefaultTableFormat(@Nonnull String... names) {

@@ -36,9 +36,9 @@ import static java.util.Objects.requireNonNull;
 public class DefaultTableViewModel<E> implements TableViewModel<E> {
     private static final String ERROR_TABLE_VIEW_NULL = "Argument 'tableView' must not be null";
 
-    private final ObservableList<E> source;
-    private final TableViewFormat<E> format;
-    private final List<TableColumn<E, Object>> columns = new ArrayList<>();
+    protected final ObservableList<E> source;
+    protected final TableViewFormat<E> format;
+    protected final List<TableColumn<E, Object>> columns = new ArrayList<>();
 
     public DefaultTableViewModel(@Nonnull ObservableList<E> source, @Nonnull TableViewFormat<E> format) {
         this.source = requireNonNull(source, "Argument 'source' must not be null");
@@ -47,7 +47,7 @@ public class DefaultTableViewModel<E> implements TableViewModel<E> {
     }
 
     @SuppressWarnings("unchecked")
-    private void computeColumns() {
+    protected void computeColumns() {
         for (int i = 0; i < format.getColumnCount(); i++) {
             final String columnName = format.getColumnName(i);
             TableColumn column = new TableColumn(columnName);
@@ -87,7 +87,10 @@ public class DefaultTableViewModel<E> implements TableViewModel<E> {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.setItems(source);
         tableView.getColumns().addAll(columns);
+        resizeColumns();
+    }
 
+    protected void resizeColumns() {
         int proportionalSize = 100 / columns.size();
         for (int i = 0; i < columns.size(); i++) {
             Double size = format.getColumnSize(i);
