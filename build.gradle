@@ -28,7 +28,6 @@ buildscript {
     dependencies {
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-        classpath 'io.spring.gradle:spring-bintray-plugin:0.9.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
         classpath 'org.ajoberstar:gradle-git:1.7.2'
         classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
@@ -314,7 +313,7 @@ subprojects { subproj ->
         resolutionStrategy.failOnVersionConflict()
     }
 }
-
+/*
 evaluationDependsOnChildren()
 
 task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
@@ -380,3 +379,4 @@ task binaryReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
 task sourceReport(type: org.kordamp.gradle.stats.AggregateStatsReportTask) {
     projects = project.subprojects.grep { it.name.startsWith('griffon') }.name
 }
+*/

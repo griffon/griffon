@@ -16,22 +16,22 @@
  * limitations under the License.
  */
 
-apply plugin: 'io.spring.bintray'
+apply plugin: 'com.jfrog.bintray'
 
 bintray {
-    bintrayUser = project.bintrayUsername
-    bintrayKey = project.bintrayApiKey
-    ossrhUser = project.mavenUsername
-    ossrhPassword = project.mavenPassword
-
-    publication = 'mavenCustom'
-    org = 'griffon'
-    repo = 'griffon'
-    packageName = project.name
-    packageDescription = project.pomDescription
-    labels = ['griffon']
-    licenses = ['Apache-2.0']
-    websiteUrl = 'http://griffon-framework.org'
-    issueTrackerUrl = 'https://github.com/griffon/griffon/issues'
-    vcsUrl = 'https://github.com/griffon/griffon.git'
+    user = project.bintrayUsername
+    key = project.bintrayApiKey
+    publications = ['mavenCustom']
+    pkg {
+        repo = 'griffon'
+        userOrg = 'griffon'
+        name = project.name
+        desc = project.pomDescription
+        licenses = ['Apache-2.0']
+        labels = ['griffon']
+        websiteUrl = 'http://griffon-framework.org'
+        issueTrackerUrl = 'https://github.com/griffon/griffon/issues'
+        vcsUrl = 'https://github.com/griffon/griffon.git'
+        publicDownloadNumbers = true
+    }
 }
