@@ -313,7 +313,7 @@ subprojects { subproj ->
         resolutionStrategy.failOnVersionConflict()
     }
 }
-/*
+
 evaluationDependsOnChildren()
 
 task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
@@ -379,4 +379,3 @@ task binaryReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
 task sourceReport(type: org.kordamp.gradle.stats.AggregateStatsReportTask) {
     projects = project.subprojects.grep { it.name.startsWith('griffon') }.name
 }
-*/
