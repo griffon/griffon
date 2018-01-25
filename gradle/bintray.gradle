@@ -29,9 +29,19 @@ bintray {
         desc = project.pomDescription
         licenses = ['Apache-2.0']
         labels = ['griffon']
-        websiteUrl = 'http://griffon-framework.org'
-        issueTrackerUrl = 'https://github.com/griffon/griffon/issues'
-        vcsUrl = 'https://github.com/griffon/griffon.git'
+        websiteUrl = project.project_website_url
+        issueTrackerUrl = project.project_issues_url
+        vcsUrl = project.project_vcs_url
         publicDownloadNumbers = true
+        githubRepo = 'griffon/griffon'
+        version {
+            name = project.version
+            vcsTag = "griffon-${project.version}"
+            mavenCentralSync {
+                sync = true
+                user = project.mavenUsername
+                password = project.mavenPassword
+            }
+        }
     }
 }
