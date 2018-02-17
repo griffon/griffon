@@ -21,7 +21,7 @@ class ${project_class_name}IntegrationTest {
         verifyThat('#clickLabel', hasText('0'))
 
         // when:
-        testfx.clickOn('#clickActionTarget')
+        testfx.clickOn('#click')
 
         // then:
         verifyThat('#clickLabel', hasText('1'))
