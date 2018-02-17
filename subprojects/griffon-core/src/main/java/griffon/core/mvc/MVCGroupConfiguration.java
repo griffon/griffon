@@ -39,7 +39,7 @@ public interface MVCGroupConfiguration {
     /**
      * Returns a Map with the names of all members keyed by type.
      *
-     * @return a Map of all configured members as defined by the application's configuration or and addon contribution.
+     * @return a Map of all configured members as defined by the application's configuration or addon contribution.
      */
     @Nonnull
     Map<String, String> getMembers();
