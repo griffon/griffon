@@ -15,7 +15,16 @@ The following dependencies have been upgraded
 
 === Runtime
 
-=== Buildtime
+==== Unregister MVCGroupExceptionHandler
+
+Previous versions would register an instance of `MVCGroupExceptionHandler` during bootstrap which would throw an exception
+when an `MVCGroup` failed to be instantiated, which is the expected behavior. However this behvior could not be skipped or
+overridden as the instance could not be unregistered. this release fixes this oversight.
+
+==== Open TableFormat/TableViewModel for extension
+
+Defualt implementations for `TableFormat` and `TableViewModel` allow all of its methods to be overridden by subclasses,
+their fields are also visible to subclasses.
 
 === Compatibility
 
