@@ -54,6 +54,7 @@ class SampleView : AbstractJavaFXGriffonView() {
     private fun _init(): Scene {
         val scene: Scene = Scene(Group())
         scene.fill = Color.WHITE
+        scene.stylesheets.add("bootstrapfx.css")
 
         val node = loadFromFXML()
         model.inputProperty().bindBidirectional(input.textProperty())

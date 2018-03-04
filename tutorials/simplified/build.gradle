@@ -18,8 +18,8 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'com.github.ben-manes.versions' version '0.15.0'
-    id 'com.github.hierynomus.license' version '0.11.0'
+    id 'com.github.ben-manes.versions' version '0.17.0'
+    id 'com.github.hierynomus.license' version '0.14.0'
 }
 
 apply from: 'gradle/javafx-plugin.gradle'
@@ -48,12 +48,15 @@ repositories {
 dependencies {
     compile "org.codehaus.griffon:griffon-javafx:${griffonVersion}"
     compile "org.codehaus.griffon:griffon-guice:${griffonVersion}"
+    compile 'org.kordamp.ikonli:ikonli-javafx:2.1.1'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:2.1.1'
+    compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.2'
 
     runtime 'org.slf4j:slf4j-simple:1.7.25'
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffonVersion}"
-    testCompile 'pl.pragmatists:JUnitParams:1.1.0'
-    testCompile 'org.mockito:mockito-core:2.8.47'
+    testCompile 'pl.pragmatists:JUnitParams:1.1.1'
+    testCompile 'org.mockito:mockito-core:2.15.0'
 }
 // end::dependencies[]
 

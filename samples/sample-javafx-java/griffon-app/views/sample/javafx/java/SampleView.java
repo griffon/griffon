@@ -60,6 +60,7 @@ public class SampleView extends AbstractJavaFXGriffonView {
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
+        scene.getStylesheets().add("bootstrapfx.css");
 
         Node node = loadFromFXML();
         model.inputProperty().bindBidirectional(input.textProperty());

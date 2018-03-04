@@ -57,6 +57,7 @@ public class Tab1View extends AbstractJavaFXGriffonView {
 
         Button button = new Button();
         button.setPrefWidth(200.0);
+        button.getStyleClass().addAll("btn", "btn-primary");
         JavaFXUtils.configure(button, (JavaFXAction) actionFor(controller, "sayHello").getToolkitAction());
 
         Label output = new Label();

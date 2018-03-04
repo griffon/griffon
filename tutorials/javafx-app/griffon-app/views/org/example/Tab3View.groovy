@@ -46,6 +46,7 @@ class Tab3View {
                 textField(leftAnchor: 172, topAnchor: 11, prefWidth: 200,
                     text: bind(uiInput))
                 button(leftAnchor: 172, topAnchor: 45, prefWidth: 200,
+                    styleClass: ['btn', 'btn-primary'],
                     sayHelloAction)
                 label(leftAnchor: 14, topAnchor: 80, prefWidth: 200,
                     text: bind(uiOutput))
