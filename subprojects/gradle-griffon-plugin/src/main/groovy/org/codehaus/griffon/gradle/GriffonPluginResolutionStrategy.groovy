@@ -36,8 +36,8 @@ class GriffonPluginResolutionStrategy {
         'testCompileOnly',
         'testCompile',
         'runtime',
-        'apt',
-        'testApt'
+        'annotationProcessor',
+        'testAnnotationProcessor'
     ]
 
     private static final Map<String, List<String>> DEPENDENCY_MAP = [:]
@@ -144,9 +144,9 @@ class GriffonPluginResolutionStrategy {
             if (artifactId.endsWith('-compile')) {
                 projectDependencyMap.get('compileOnly', []) << dependencyCoordinates
                 projectDependencyMap.get('testCompileOnly', []) << dependencyCoordinates
-                ['apt', 'testApt'].each { conf ->
+                ['annotationProcessor', 'testAnnotationProcessor'].each { conf ->
                     if (!project.configurations.findByName(conf)) {
-                        project.logger.info("Configuration '{}' does not exist. Apply the 'gradle-apt-plugin' and try again", conf)
+                        project.logger.info("Configuration '{}' does not exist. Apply the 'gradle-apt-plugin' version 0.14 or greater and try again", conf)
                         return
                     }
                     projectDependencyMap.get(conf, []) << dependencyCoordinates

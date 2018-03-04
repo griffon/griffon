@@ -267,9 +267,9 @@ class GriffonPlugin implements Plugin<Project> {
                         project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, conf)
                         project.dependencies.add(conf, dependencyCoordinates)
                     }
-                    ['apt', 'testApt'].each { conf ->
+                    ['annotationProcessor', 'testAnnotationProcessor'].each { conf ->
                         if (!project.configurations.findByName(conf)) {
-                            project.logger.info("Configuration '{}' does not exist. Apply the 'gradle-apt-plugin' and try again", conf)
+                            project.logger.info("Configuration '{}' does not exist. Apply the 'gradle-apt-plugin' version 0.14 or greater and try again", conf)
                             return
                         }
                         project.logger.info("Adding {} to '{}' configuration", dependencyCoordinates, conf)

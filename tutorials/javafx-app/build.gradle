@@ -24,24 +24,22 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.14.0'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.14.1'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
         classpath 'com.github.cr0:gradle-macappbundle-plugin:3.1.0'
-        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.0'
+        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:1.2.1'
+        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:1.2.5'
         classpath 'net.nemerosa:versioning:2.6.1'
-        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.13'
     }
 }
 
 apply plugin: 'groovy'
 apply plugin: 'org.codehaus.griffon.griffon'
 apply plugin: 'net.nemerosa.versioning'
-apply plugin: 'net.ltgt.apt'
 
 Date buildTimeAndDate = new Date()
 ext {
@@ -93,12 +91,12 @@ jfx {
 
 dependencies {
     compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
-    compile 'org.kordamp.ikonli:ikonli-javafx:1.9.0'
-    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:1.9.0'
+    compile 'org.kordamp.ikonli:ikonli-javafx:2.1.1'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:2.1.1'
 
     runtime 'org.slf4j:slf4j-simple:1.7.25'
 
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.12'
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.13'
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
 }
 
