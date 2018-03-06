@@ -28,7 +28,7 @@ class GriffonPluginWithAppliedEclipsePluginSpecification extends AbstractPluginS
             apply plugin: 'org.codehaus.griffon.griffon'
             apply plugin: 'eclipse'
             project.griffon {
-                version = '2.14.0'
+                version = '2.15.0-SNAPSHOT'
             }
         }
     }
