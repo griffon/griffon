@@ -155,7 +155,7 @@ class NestedJavaConfig extends AbstractMapResourceBundle {
                     .e("model", "sample.SampleModel")
                     .e("view", "sample.SampleView")
                     .e("controller", "sample.SampleController"))
-            );
+            )
     }
 }
 
@@ -168,6 +168,6 @@ class FlatJavaConfig extends AbstractMapResourceBundle {
             .e("application.autoShutdown", true)
             .e("mvcGroups.sample.model", "sample.SampleModel")
             .e("mvcGroups.sample.view", "sample.SampleView")
-            .e("mvcGroups.sample.controller", "sample.SampleController");
+            .e("mvcGroups.sample.controller", "sample.SampleController")
     }
 }

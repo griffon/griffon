@@ -46,7 +46,7 @@ public class SwingAction extends AbstractAction {
     /**
      * Creates a new action.
      *
-     * @param callable
+     * @param callable the body of the action
      *
      * @deprecated use the {@code RunnableWithArgs} constructor instead.
      */

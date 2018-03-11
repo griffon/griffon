@@ -25,7 +25,7 @@ import static griffon.builder.javafx.factory.ActionFactory.extractActionParams
 
 class ControlFactory extends groovyx.javafx.factory.ControlFactory {
     ControlFactory(Class beanClass) {
-        super(beanClass);
+        super(beanClass)
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {

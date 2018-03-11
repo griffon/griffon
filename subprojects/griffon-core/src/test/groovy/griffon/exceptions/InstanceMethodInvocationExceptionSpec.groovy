@@ -50,7 +50,7 @@ class InstanceMethodInvocationExceptionSpec extends Specification {
     }
 
     private static class TheClass {
-        public void theMethod(String arg0, Integer arg1) {
+        void theMethod(String arg0, Integer arg1) {
         }
     }
 }

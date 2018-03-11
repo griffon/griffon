@@ -433,7 +433,7 @@ public class AnnotationUtils {
 
     @Nonnull
     public static <T> Map<String, T> sortByDependencies(@Nonnull Collection<T> instances, @Nonnull String suffix, @Nonnull String type) {
-        return sortByDependencies(instances, suffix, type, Collections.<String>emptyList());
+        return sortByDependencies(instances, suffix, type, Collections.emptyList());
     }
 
     @Nonnull

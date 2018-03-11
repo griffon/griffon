@@ -49,8 +49,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static griffon.util.GriffonClassUtils.convertToTypeArray;
 import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
@@ -175,19 +175,19 @@ public abstract class AbstractEventRouter implements EventRouter {
     @Override
     public void publishEvent(@Nonnull Event event) {
         requireNonNull(event, ERROR_EVENT_NULL);
-        publishEvent(event.getClass().getSimpleName(), asList(event));
+        publishEvent(event.getClass().getSimpleName(), singletonList(event));
     }
 
     @Override
     public void publishEventOutsideUI(@Nonnull Event event) {
         requireNonNull(event, ERROR_EVENT_NULL);
-        publishEventOutsideUI(event.getClass().getSimpleName(), asList(event));
+        publishEventOutsideUI(event.getClass().getSimpleName(), singletonList(event));
     }
 
     @Override
     public void publishEventAsync(@Nonnull Event event) {
         requireNonNull(event, ERROR_EVENT_NULL);
-        publishEventAsync(event.getClass().getSimpleName(), asList(event));
+        publishEventAsync(event.getClass().getSimpleName(), singletonList(event));
     }
 
     @Override
@@ -265,16 +265,10 @@ public abstract class AbstractEventRouter implements EventRouter {
         boolean added = false;
         for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {
             eventName = eventName.substring(2); // cut off "on" from the name
-            List<Object> instances = instanceListeners.get(eventName);
-            if (instances == null) {
-                instances = new ArrayList<>();
-                instanceListeners.put(eventName, instances);
-            }
-            synchronized (instances) {
-                if (!instances.contains(listener)) {
-                    added = true;
-                    instances.add(listener);
-                }
+            List<Object> instances = instanceListeners.computeIfAbsent(eventName, (k) -> new ArrayList<>());
+            if (!instances.contains(listener)) {
+                added = true;
+                instances.add(listener);
             }
         }
 

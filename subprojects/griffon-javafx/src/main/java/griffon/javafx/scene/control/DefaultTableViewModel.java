@@ -103,7 +103,7 @@ public class DefaultTableViewModel<E> implements TableViewModel<E> {
     @Override
     public void detachFrom(@Nonnull TableView<E> tableView) {
         requireNonNull(tableView, ERROR_TABLE_VIEW_NULL);
-        tableView.setItems(FXCollections.<E>emptyObservableList());
+        tableView.setItems(FXCollections.emptyObservableList());
         tableView.getColumns().removeAll(columns);
     }
 }

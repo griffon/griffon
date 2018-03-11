@@ -456,6 +456,8 @@ public class PivotBuilderCustomizer extends AbstractBuilderCustomizer {
         setFactories(factories);
 
         Closure c1 = new Closure(this) {
+            private static final long serialVersionUID = -4842025938657659150L;
+
             @Override
             public Object call(Object... args) {
                 return handleIdAttribute(args);

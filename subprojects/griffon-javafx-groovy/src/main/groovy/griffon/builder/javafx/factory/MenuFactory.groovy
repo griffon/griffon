@@ -35,7 +35,7 @@ import static griffon.builder.javafx.factory.ActionFactory.extractActionParams
  */
 class MenuFactory extends AbstractNodeFactory {
     MenuFactory(Class beanClass) {
-        super(beanClass);
+        super(beanClass)
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
@@ -58,7 +58,7 @@ class MenuFactory extends AbstractNodeFactory {
                 case MenuButton:
                 case SplitMenuButton:
                     menu.text = value.toString()
-                    break;
+                    break
             }
 
         }
@@ -67,11 +67,11 @@ class MenuFactory extends AbstractNodeFactory {
 
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
         if (parent instanceof MenuBar && child instanceof Menu) {
-            parent.menus.add(child);
+            parent.menus.add(child)
         } else if (child instanceof MenuItem) {
-            parent.items.add(child);
+            parent.items.add(child)
         } else {
-            super.setChild(builder, parent, child);
+            super.setChild(builder, parent, child)
         }
     }
 }

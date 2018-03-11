@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.getShortName;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * Catches and sanitizes all uncaught exceptions.
@@ -91,8 +91,8 @@ public class GriffonExceptionHandler implements ExceptionHandler {
             printStacktrace(throwable);
             logError("Uncaught Exception.", throwable);
             if (application != null) {
-                application.getEventRouter().publishEvent("Uncaught" + getShortName(throwable.getClass()), asList(throwable));
-                application.getEventRouter().publishEvent(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), asList(throwable));
+                application.getEventRouter().publishEvent("Uncaught" + getShortName(throwable.getClass()), singletonList(throwable));
+                application.getEventRouter().publishEvent(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), singletonList(throwable));
             }
         } catch (Throwable t) {
             sanitize(t);

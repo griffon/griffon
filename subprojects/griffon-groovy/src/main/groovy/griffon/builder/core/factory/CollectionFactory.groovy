@@ -22,14 +22,14 @@ package griffon.builder.core.factory
  */
 class CollectionFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        FactoryBuilderSupport.checkValueIsNull(value, name);
+        FactoryBuilderSupport.checkValueIsNull(value, name)
         if (attributes.isEmpty()) {
-            return new ArrayList();
+            return new ArrayList()
         } else {
-            def item = attributes.entrySet().iterator().next();
+            def item = attributes.entrySet().iterator().next()
             throw new MissingPropertyException(
                 "The builder element '$name' is a collections element and accepts no attributes",
-                item.key as String, item.value as Class);
+                item.key as String, item.value as Class)
         }
     }
 

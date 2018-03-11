@@ -54,7 +54,7 @@ import java.util.Map;
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.AnnotationUtils.sortByDependencies;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -115,7 +115,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     protected void doInitialize() {
         initializeEventHandler();
 
-        event(ApplicationEvent.BOOTSTRAP_START, asList(application));
+        event(ApplicationEvent.BOOTSTRAP_START, singletonList(application));
 
         initializePropertyEditors();
         initializeResourcesInjector();
@@ -127,7 +127,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         initializeActionManager();
         initializeArtifactManager();
 
-        event(ApplicationEvent.BOOTSTRAP_END, asList(application));
+        event(ApplicationEvent.BOOTSTRAP_END, singletonList(application));
     }
 
     protected void initializeEventHandler() {

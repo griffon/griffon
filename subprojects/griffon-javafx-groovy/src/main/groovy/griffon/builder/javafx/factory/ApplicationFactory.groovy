@@ -61,7 +61,7 @@ class ApplicationFactory extends StageFactory {
 
         def style = attributes.remove("style")
         if (style == null) {
-            style = StageStyle.DECORATED;
+            style = StageStyle.DECORATED
         }
         if (style instanceof String) {
             style = StageStyle.valueOf(style.toUpperCase())
@@ -80,7 +80,7 @@ class ApplicationFactory extends StageFactory {
                 node.sizeToScene()
             }
             if (builder.context.centerOnScreen) {
-                node.centerOnScreen();
+                node.centerOnScreen()
             }
         }
     }

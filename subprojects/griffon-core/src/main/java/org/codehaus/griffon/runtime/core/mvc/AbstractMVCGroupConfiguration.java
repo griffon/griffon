@@ -79,13 +79,13 @@ public abstract class AbstractMVCGroupConfiguration implements MVCGroupConfigura
     @Nonnull
     @Override
     public MVCGroup create() {
-        return create(null, Collections.<String, Object>emptyMap());
+        return create(null, Collections.emptyMap());
     }
 
     @Nonnull
     @Override
     public MVCGroup create(@Nullable String mvcId) {
-        return create(mvcId, Collections.<String, Object>emptyMap());
+        return create(mvcId, Collections.emptyMap());
     }
 
     @Nonnull

@@ -35,17 +35,17 @@ import java.awt.Window
  */
 @SuppressWarnings("rawtypes")
 class ApplicationFactory extends AbstractFactory {
-    static final String DELEGATE_PROPERTY_DEFAULT_BUTTON = "_delegateProperty:defaultButton";
-    static final String DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON = "defaultButton";
+    static final String DELEGATE_PROPERTY_DEFAULT_BUTTON = "_delegateProperty:defaultButton"
+    static final String DEFAULT_DELEGATE_PROPERTY_DEFAULT_BUTTON = "defaultButton"
 
-    static final String DELEGATE_PROPERTY_CANCEL_BUTTON = "_delegateProperty:cancelButton";
-    static final String DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON = "cancelButton";
+    static final String DELEGATE_PROPERTY_CANCEL_BUTTON = "_delegateProperty:cancelButton"
+    static final String DEFAULT_DELEGATE_PROPERTY_CANCEL_BUTTON = "cancelButton"
 
     static boolean swingXPresent
     static Class<?> jxStatusBarClass
     static {
         try {
-            ClassLoader cl = getClass().getClassLoader();
+            ClassLoader cl = getClass().getClassLoader()
             if (cl) {
                 jxStatusBarClass = cl.loadClass('org.jdesktop.swingx.JXStatusBar')
             } else {
@@ -101,7 +101,7 @@ class ApplicationFactory extends AbstractFactory {
             builder.addAttributeDelegate { myBuilder, node, myAttributes ->
                 if ((node instanceof JButton) && (builder.containingWindows[-1] == window)) {
                     // in Java 6 use descending iterator
-                    ListIterator li = builder.contexts.listIterator();
+                    ListIterator li = builder.contexts.listIterator()
                     Map context
                     while (li.hasNext()) context = li.next()
                     while (context && context[FactoryBuilderSupport.CURRENT_NODE] != window) {
@@ -120,11 +120,11 @@ class ApplicationFactory extends AbstractFactory {
 
     boolean onHandleNodeAttributes(FactoryBuilderSupport builder, Object node, Map attributes) {
         for (Map.Entry entry : (Set<Map.Entry>) attributes.entrySet()) {
-            String property = entry.getKey().toString();
-            Object value = entry.getValue();
+            String property = entry.getKey().toString()
+            Object value = entry.getValue()
             // be forgiving on attributes, so an applet can set an icon without punishment, etc
             try {
-                InvokerHelper.setProperty(node, property, value);
+                InvokerHelper.setProperty(node, property, value)
             } catch (MissingPropertyException mpe) {
                 if (mpe.property != property) throw mpe
             }
@@ -179,7 +179,7 @@ class ApplicationFactory extends AbstractFactory {
 
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
         if (!(child instanceof Component) || (child instanceof Window)) {
-            return;
+            return
         }
         if (child instanceof JMenuBar) {
             parent.JMenuBar = child

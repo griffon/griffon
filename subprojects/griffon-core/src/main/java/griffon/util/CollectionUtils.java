@@ -467,6 +467,7 @@ public final class CollectionUtils {
     }
 
     private static class MapToPropertiesAdapter extends Properties {
+        private static final long serialVersionUID = -5465075555013344300L;
         private final transient Map<String, Object> map;
 
         private MapToPropertiesAdapter(@Nonnull Map<String, Object> map) {

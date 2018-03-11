@@ -55,7 +55,7 @@ public abstract class AbstractResourceHandler implements ResourceHandler {
             // ignore
         }
 
-        return resources != null ? toList(resources) : Collections.<URL>emptyList();
+        return resources != null ? toList(resources) : Collections.emptyList();
     }
 
     private static <T> List<T> toList(Enumeration<T> self) {

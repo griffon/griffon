@@ -26,7 +26,7 @@ import griffon.core.GriffonApplication;
 import javax.annotation.Nonnull;
 
 import static griffon.util.GriffonNameUtils.capitalize;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 /**
  * Handles Linux integration.
@@ -52,8 +52,8 @@ public class DefaultMacOSXPlatformHandler extends DefaultPlatformHandler {
         boolean skipQuit = application.getConfiguration().getAsBoolean("osx.noquit", false);
 
         GriffonMacOSXSupport handler = new GriffonMacOSXSupport(application, skipQuit);
-        if (!skipAbout) MRJApplicationUtils.registerAboutHandler(handler);
-        if (!skipPrefs) MRJApplicationUtils.registerPrefsHandler(handler);
+        if (!skipAbout) { MRJApplicationUtils.registerAboutHandler(handler); }
+        if (!skipPrefs) { MRJApplicationUtils.registerPrefsHandler(handler); }
         MRJApplicationUtils.registerQuitHandler(handler);
     }
 
@@ -68,18 +68,18 @@ public class DefaultMacOSXPlatformHandler extends DefaultPlatformHandler {
 
         @Override
         public void handleAbout() {
-            application.getEventRouter().publishEvent("OSXAbout", asList(application));
+            application.getEventRouter().publishEvent("OSXAbout", singletonList(application));
         }
 
         @Override
         public void handlePrefs() throws IllegalStateException {
-            application.getEventRouter().publishEvent("OSXPrefs", asList(application));
+            application.getEventRouter().publishEvent("OSXPrefs", singletonList(application));
         }
 
         @Override
         public void handleQuit() {
             if (noquit) {
-                application.getEventRouter().publishEvent("OSXQuit", asList(application));
+                application.getEventRouter().publishEvent("OSXQuit", singletonList(application));
             } else {
                 application.shutdown();
             }

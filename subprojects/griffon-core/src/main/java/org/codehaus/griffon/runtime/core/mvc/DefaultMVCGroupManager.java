@@ -73,6 +73,7 @@ import static griffon.util.GriffonClassUtils.setPropertyOrFieldValueNoException;
 import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -177,7 +178,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
 
         if (fireEvents) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.CREATE_MVC_GROUP.getName(), asList(group));
+            getApplication().getEventRouter().publishEvent(ApplicationEvent.CREATE_MVC_GROUP.getName(), singletonList(group));
         }
 
         return group;
@@ -627,7 +628,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         group.destroy();
 
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LIFECYCLE)) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_MVC_GROUP.getName(), asList(group));
+            getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_MVC_GROUP.getName(), singletonList(group));
         }
     }
 

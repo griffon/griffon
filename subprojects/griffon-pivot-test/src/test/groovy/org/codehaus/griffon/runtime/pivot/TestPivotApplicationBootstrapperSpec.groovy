@@ -41,7 +41,7 @@ class TestPivotApplicationBootstrapperSpec extends Specification {
         application.injector.getInstance(Display) == display
     }
 
-    public Display createDisplay() {
+    Display createDisplay() {
         Display display = null
         SwingUtilities.invokeAndWait {
             display = new Display(Stub(ApplicationContext.DisplayHost))

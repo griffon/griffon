@@ -40,6 +40,7 @@ import static griffon.util.CollectionUtils.reverse;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -154,7 +155,7 @@ public abstract class AbstractAddonManager implements AddonManager {
     }
 
     protected void event(@Nonnull ApplicationEvent evt) {
-        event(evt, asList(getApplication()));
+        event(evt, singletonList(getApplication()));
     }
 
     protected void event(@Nonnull ApplicationEvent evt, @Nonnull List<?> args) {

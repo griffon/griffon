@@ -3352,7 +3352,7 @@ public class GriffonClassUtils {
         reverseAbbreviationMap.put(abbreviation, primitive);
     }
 
-    /**
+    /*
      * Feed abbreviation maps
      */
     static {

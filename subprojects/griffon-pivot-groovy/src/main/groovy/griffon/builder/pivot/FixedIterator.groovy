@@ -23,7 +23,7 @@ package griffon.builder.pivot
 final class FixedIterator implements Iterator {
     private final iterable
     private final boolean mutable
-    private int index = 0;
+    private int index = 0
 
     FixedIterator(iterable, boolean mutable = false) {
         this.iterable = iterable

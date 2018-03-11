@@ -22,13 +22,13 @@ import griffon.core.injection.Module;
 import griffon.core.test.TestModuleOverrides;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class AnnotatedModuleOverridesMethodTestcase {
     @TestModuleOverrides
     public List<Module> modulesProvider() {
-        return Arrays.<Module>asList(new AbstractModule() {
+        return Collections.<Module>singletonList(new AbstractModule() {
             @Override
             protected void doConfigure() {
                 bind(ApplicationClassLoader.class)

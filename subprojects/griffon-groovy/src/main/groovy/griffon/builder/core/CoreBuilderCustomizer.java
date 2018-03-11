@@ -29,12 +29,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static griffon.util.TypeUtils.castToBoolean;
+import static java.util.Collections.singletonList;
 
 /**
  * @author Andres Almiray
@@ -69,19 +69,19 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
     @Nonnull
     @Override
     public List<Closure> getAttributeDelegates() {
-        return Arrays.<Closure>asList(new MethodClosure(this, "rootAttributeDelegate"));
+        return singletonList(new MethodClosure(this, "rootAttributeDelegate"));
     }
 
     @Nonnull
     @Override
     public List<Closure> getPreInstantiateDelegates() {
-        return Arrays.<Closure>asList(new MethodClosure(this, "rootNodePreInstantiateDelegate"));
+        return singletonList(new MethodClosure(this, "rootNodePreInstantiateDelegate"));
     }
 
     @Nonnull
     @Override
     public List<Closure> getPostNodeCompletionDelegates() {
-        return Arrays.<Closure>asList(new MethodClosure(this, "rootNodePostNodeCompletionDelegate"));
+        return singletonList(new MethodClosure(this, "rootNodePostNodeCompletionDelegate"));
     }
 
     protected void rootAttributeDelegate(FactoryBuilderSupport builder, Object node, Map attributes) {

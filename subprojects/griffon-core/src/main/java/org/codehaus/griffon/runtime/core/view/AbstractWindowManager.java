@@ -50,7 +50,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
     protected static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     protected static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
     private static final Logger LOG = LoggerFactory.getLogger(AbstractWindowManager.class);
-    private final Map<String, W> windows = Collections.<String, W>synchronizedMap(new LinkedHashMap<String, W>());
+    private final Map<String, W> windows = Collections.synchronizedMap(new LinkedHashMap<String, W>());
 
     private final GriffonApplication application;
     private final WindowDisplayHandler<W> windowDisplayHandler;

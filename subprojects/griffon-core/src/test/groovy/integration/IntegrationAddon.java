@@ -23,9 +23,10 @@ import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
 import javax.annotation.Nonnull;
 import javax.inject.Named;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Collections.singletonList;
 
 @Named("integration")
 public class IntegrationAddon extends AbstractGriffonAddon implements Invokable {
@@ -58,6 +59,6 @@ public class IntegrationAddon extends AbstractGriffonAddon implements Invokable 
     @Nonnull
     @Override
     public List<String> getStartupGroups() {
-        return Arrays.asList("sample");
+        return singletonList("sample");
     }
 }

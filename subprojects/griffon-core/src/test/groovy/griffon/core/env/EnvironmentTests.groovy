@@ -19,7 +19,7 @@ package griffon.core.env
 
 import org.codehaus.griffon.runtime.core.env.EnvironmentProvider
 
-public class EnvironmentTests extends GroovyTestCase {
+class EnvironmentTests extends GroovyTestCase {
     protected void tearDown() {
         System.setProperty(Environment.KEY, '')
     }

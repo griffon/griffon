@@ -339,7 +339,7 @@ public final class TypeUtils {
             if (k1 == k2 || (k1 != null && k1.equals(k2))) {
                 Object v1 = ((Map.Entry) left).getValue();
                 Object v2 = ((Map.Entry) right).getValue();
-                if (v1 == v2 || (v1 != null && equals(v1, v2))) { return true; }
+                return v1 == v2 || (v1 != null && equals(v1, v2));
             }
             return false;
         }
@@ -589,9 +589,7 @@ public final class TypeUtils {
     private static boolean isValidCharacterString(Object value) {
         if (value instanceof String) {
             String s = (String) value;
-            if (s.length() == 1) {
-                return true;
-            }
+            return s.length() == 1;
         }
         return false;
     }
@@ -609,21 +607,21 @@ public final class TypeUtils {
         if (left instanceof Comparable) {
             if (left instanceof Number) {
                 if (isValidCharacterString(right)) {
-                    return compareTo((Number) left, (Character) castToChar(right));
+                    return compareTo((Number) left, castToChar(right));
                 }
                 if (right instanceof Character || right instanceof Number) {
                     return compareTo((Number) left, castToNumber(right));
                 }
             } else if (left instanceof Character) {
                 if (isValidCharacterString(right)) {
-                    return compareTo((Character) left, (Character) castToChar(right));
+                    return compareTo((Character) left, castToChar(right));
                 }
                 if (right instanceof Number) {
                     return compareTo((Character) left, (Number) right);
                 }
             } else if (right instanceof Number) {
                 if (isValidCharacterString(left)) {
-                    return compareTo((Character) castToChar(left), (Number) right);
+                    return compareTo(castToChar(left), (Number) right);
                 }
             } else if (left instanceof String && right instanceof Character) {
                 return ((String) left).compareTo(right.toString());

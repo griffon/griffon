@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.util.GriffonClassUtils.setPropertiesNoException;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.apache.pivot.wtk.ApplicationContext.queueCallback;
 import static org.apache.pivot.wtk.ApplicationContext.scheduleCallback;
 import static org.apache.pivot.wtk.ApplicationContext.scheduleRecurringCallback;
@@ -94,11 +94,11 @@ public abstract class AbstractPivotGriffonApplication extends AbstractGriffonApp
     }
 
     public void suspend() {
-        event("AppSuspend", asList(this));
+        event("AppSuspend", singletonList(this));
     }
 
     public void resume() {
-        event("AppResume", asList(this));
+        event("AppResume", singletonList(this));
     }
 
     public void schedule(long delay, Runnable callback) {

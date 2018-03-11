@@ -62,7 +62,7 @@ class ConfigReader {
                 .e("userHome", System.getProperty("user.home"))
                 .e("appName", metadata.getApplicationName())
                 .e("appVersion", metadata.getApplicationVersion())
-                .e("griffonVersion", GriffonEnvironment.getGriffonVersion()));
+                .e("griffonVersion", GriffonEnvironment.getGriffonVersion()))
             configReader.registerConditionalBlock("environments", environment.getName())
             configReader.registerConditionalBlock("projects", metadata.getApplicationName())
             configReader.registerConditionalBlock("platforms", GriffonApplicationUtils.getPlatform())

@@ -40,7 +40,7 @@ class DefaultTableViewModelTest {
             new DefaultTableFormat.Column('name', 0.2d),
             new DefaultTableFormat.Column('amount', 0.1d),
             new DefaultTableFormat.Column('timestamp')
-        );
+        )
         ObservableList<Measurement> measurements = FXCollections.observableArrayList()
         measurements.add(nextMeasurement())
         measurements.add(nextMeasurement())
@@ -71,15 +71,15 @@ class DefaultTableViewModelTest {
         assert !tableView.items.size()
     }
 
-    public Measurement nextMeasurement() {
-        return new Measurement('Sample-' + nextIdentifier(), nextAmount());
+    Measurement nextMeasurement() {
+        return new Measurement('Sample-' + nextIdentifier(), nextAmount())
     }
 
     private int nextIdentifier() {
-        return identifier++;
+        return identifier++
     }
 
     private int nextAmount() {
-        return 10 + random.nextInt(80);
+        return 10 + random.nextInt(80)
     }
 }

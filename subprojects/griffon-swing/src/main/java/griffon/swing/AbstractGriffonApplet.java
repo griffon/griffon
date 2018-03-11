@@ -58,7 +58,7 @@ import java.util.concurrent.CountDownLatch;
 
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -105,9 +105,9 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     @Override
     public void stop() {
-        event(ApplicationEvent.STOP_START, asList(this));
+        event(ApplicationEvent.STOP_START, singletonList(this));
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.STOP);
-        event(ApplicationEvent.STOP_END, asList(this));
+        event(ApplicationEvent.STOP_END, singletonList(this));
     }
 
     @Override
@@ -151,7 +151,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     @Override
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
         requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);
-        if (!shutdownHandlers.contains(handler)) shutdownHandlers.add(handler);
+        if (!shutdownHandlers.contains(handler)) { shutdownHandlers.add(handler); }
     }
 
     @Override
@@ -292,15 +292,15 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     @Override
     public void ready() {
-        if (getPhase() != ApplicationPhase.STARTUP) return;
+        if (getPhase() != ApplicationPhase.STARTUP) { return; }
 
         showStartingWindow();
 
         setPhase(ApplicationPhase.READY);
-        event(ApplicationEvent.READY_START, asList(this));
+        event(ApplicationEvent.READY_START, singletonList(this));
 
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.READY);
-        event(ApplicationEvent.READY_END, asList(this));
+        event(ApplicationEvent.READY_END, singletonList(this));
         setPhase(ApplicationPhase.MAIN);
     }
 
@@ -313,11 +313,11 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
     @Override
     public boolean canShutdown() {
-        event(ApplicationEvent.SHUTDOWN_REQUESTED, asList(this));
+        event(ApplicationEvent.SHUTDOWN_REQUESTED, singletonList(this));
         synchronized (shutdownLock) {
             for (ShutdownHandler handler : shutdownHandlers) {
                 if (!handler.canShutdown(this)) {
-                    event(ApplicationEvent.SHUTDOWN_ABORTED, asList(this));
+                    event(ApplicationEvent.SHUTDOWN_ABORTED, singletonList(this));
                     if (log.isDebugEnabled()) {
                         try {
                             log.debug("Shutdown aborted by " + handler);
@@ -336,9 +336,9 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     public boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
-        if (getPhase() == ApplicationPhase.SHUTDOWN) return false;
+        if (getPhase() == ApplicationPhase.SHUTDOWN) { return false; }
 
-        if (!canShutdown()) return false;
+        if (!canShutdown()) { return false; }
         log.info("Shutdown is in process");
 
         // signal that shutdown is in process
@@ -357,7 +357,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
                     latch.countDown();
                 }
             });
-            event(ApplicationEvent.SHUTDOWN_START, asList(this));
+            event(ApplicationEvent.SHUTDOWN_START, singletonList(this));
             try {
                 latch.await();
             } catch (InterruptedException e) {
@@ -394,10 +394,10 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
     @SuppressWarnings("unchecked")
     @Override
     public void startup() {
-        if (getPhase() != ApplicationPhase.INITIALIZE) return;
+        if (getPhase() != ApplicationPhase.INITIALIZE) { return; }
 
         setPhase(ApplicationPhase.STARTUP);
-        event(ApplicationEvent.STARTUP_START, asList(this));
+        event(ApplicationEvent.STARTUP_START, singletonList(this));
 
         Object startupGroups = getConfiguration().get("application.startupGroups", null);
         if (startupGroups instanceof List) {
@@ -438,7 +438,7 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
 
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.STARTUP);
 
-        event(ApplicationEvent.STARTUP_END, asList(this));
+        event(ApplicationEvent.STARTUP_END, singletonList(this));
     }
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {

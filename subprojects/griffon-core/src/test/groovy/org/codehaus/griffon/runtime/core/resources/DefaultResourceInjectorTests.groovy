@@ -65,7 +65,7 @@ class DefaultResourceInjectorTests {
     }
 
     @BeforeClass
-    public static void setupClass() {
+    static void setupClass() {
         PropertyEditorResolver.clear()
         PropertyEditorResolver.registerEditor(String, StringPropertyEditor)
         PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
@@ -73,7 +73,7 @@ class DefaultResourceInjectorTests {
     }
 
     @AfterClass
-    public static void cleanup() {
+    static void cleanup() {
         PropertyEditorResolver.clear()
     }
 

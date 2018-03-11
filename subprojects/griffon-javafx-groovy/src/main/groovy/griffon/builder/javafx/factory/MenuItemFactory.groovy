@@ -75,7 +75,7 @@ class MenuItemFactory extends AbstractNodeFactory {
                 break
             case MenuItem:
                 mi = super.newInstance(builder, name, value, attributes)
-                mi.items.add(value);
+                mi.items.add(value)
                 break
             case Node:
                 mi = super.newInstance(builder, name, null, attributes)
@@ -115,16 +115,16 @@ class MenuItemFactory extends AbstractNodeFactory {
 
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
         if (parent instanceof Menu && child instanceof MenuItem) {
-            parent.items.add(child);
+            parent.items.add(child)
         } else if (child instanceof Node) {
             if (parent instanceof CustomMenuItem)
                 parent.content = child
             else
-                parent.graphic = child;
+                parent.graphic = child
         } else if (child instanceof NodeBuilder) {
-            parent.graphic = child.build();
+            parent.graphic = child.build()
         } else {
-            super.setChild(builder, parent, child);
+            super.setChild(builder, parent, child)
         }
     }
 }

@@ -144,7 +144,7 @@ public abstract class AbstractActionManager implements ActionManager {
         if (actions.isEmpty()) {
             LOG.trace("No actions defined for controller {}", controller);
         }
-        return Collections.<String, Action>unmodifiableMap(actions);
+        return Collections.unmodifiableMap(actions);
     }
 
     @Nullable
