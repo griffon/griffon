@@ -85,14 +85,11 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         Throwable t = null;
         final CountDownLatch latch = new CountDownLatch(1);
-        final Runnable worker = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    runnable.run();
-                } finally {
-                    latch.countDown();
-                }
+        final Runnable worker = () -> {
+            try {
+                runnable.run();
+            } finally {
+                latch.countDown();
             }
         };
         try {
@@ -126,16 +123,13 @@ public class GriffonPivotFuncRule extends GriffonPivotRule {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         final Throwable[] ts = new Throwable[1];
         final CountDownLatch latch = new CountDownLatch(1);
-        final Runnable worker = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    runnable.run();
-                } catch (Throwable t) {
-                    ts[0] = t;
-                } finally {
-                    latch.countDown();
-                }
+        final Runnable worker = () -> {
+            try {
+                runnable.run();
+            } catch (Throwable t) {
+                ts[0] = t;
+            } finally {
+                latch.countDown();
             }
         };
 

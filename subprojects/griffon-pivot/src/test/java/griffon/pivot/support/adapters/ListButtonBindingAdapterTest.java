@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ListButtonBindingAdapterTest {
-    private ListButtonBindingAdapter adapter = new ListButtonBindingAdapter();
+    private final ListButtonBindingAdapter adapter = new ListButtonBindingAdapter();
 
     @Test
     public void testListDataKeyChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getListDataKeyChanged());
@@ -49,11 +47,9 @@ public class ListButtonBindingAdapterTest {
     @Test
     public void testListDataBindTypeChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getListDataBindTypeChanged());
@@ -68,11 +64,9 @@ public class ListButtonBindingAdapterTest {
     @Test
     public void testListDataBindMappingChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getListDataBindMappingChanged());
@@ -87,11 +81,9 @@ public class ListButtonBindingAdapterTest {
     @Test
     public void testSelectedItemKeyChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedItemKeyChanged());
@@ -106,11 +98,9 @@ public class ListButtonBindingAdapterTest {
     @Test
     public void testSelectedItemBindTypeChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedItemBindTypeChanged());
@@ -125,11 +115,9 @@ public class ListButtonBindingAdapterTest {
     @Test
     public void testSelectedItemBindMappingChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedItemBindMappingChanged());

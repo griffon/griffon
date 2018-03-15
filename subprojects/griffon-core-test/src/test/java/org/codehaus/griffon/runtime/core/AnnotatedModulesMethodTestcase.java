@@ -28,7 +28,7 @@ import java.util.List;
 public class AnnotatedModulesMethodTestcase {
     @TestModules
     public List<Module> modulesProvider() {
-        return Collections.<Module>singletonList(new AbstractModule() {
+        return Collections.singletonList(new AbstractModule() {
             @Override
             protected void doConfigure() {
                 bind(ApplicationClassLoader.class)

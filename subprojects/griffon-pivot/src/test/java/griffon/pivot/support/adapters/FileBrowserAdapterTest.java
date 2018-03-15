@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class FileBrowserAdapterTest {
-    private FileBrowserAdapter adapter = new FileBrowserAdapter();
+    private final FileBrowserAdapter adapter = new FileBrowserAdapter();
 
     @Test
     public void testRootDirectoryChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getRootDirectoryChanged());
@@ -49,11 +47,9 @@ public class FileBrowserAdapterTest {
     @Test
     public void testSelectedFileAdded() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedFileAdded());
@@ -68,11 +64,9 @@ public class FileBrowserAdapterTest {
     @Test
     public void testSelectedFileRemoved() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedFileRemoved());
@@ -87,11 +81,9 @@ public class FileBrowserAdapterTest {
     @Test
     public void testSelectedFilesChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedFilesChanged());
@@ -106,11 +98,9 @@ public class FileBrowserAdapterTest {
     @Test
     public void testMultiSelectChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getMultiSelectChanged());
@@ -125,11 +115,9 @@ public class FileBrowserAdapterTest {
     @Test
     public void testDisabledFileFilterChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getDisabledFileFilterChanged());

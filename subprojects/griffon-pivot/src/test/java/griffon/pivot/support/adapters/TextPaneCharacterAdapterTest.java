@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TextPaneCharacterAdapterTest {
-    private TextPaneCharacterAdapter adapter = new TextPaneCharacterAdapter();
+    private final TextPaneCharacterAdapter adapter = new TextPaneCharacterAdapter();
 
     @Test
     public void testCharactersInserted() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getCharactersInserted());
@@ -49,11 +47,9 @@ public class TextPaneCharacterAdapterTest {
     @Test
     public void testCharactersRemoved() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getCharactersRemoved());

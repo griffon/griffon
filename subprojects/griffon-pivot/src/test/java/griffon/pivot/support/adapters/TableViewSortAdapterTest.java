@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TableViewSortAdapterTest {
-    private TableViewSortAdapter adapter = new TableViewSortAdapter();
+    private final TableViewSortAdapter adapter = new TableViewSortAdapter();
 
     @Test
     public void testSortChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSortChanged());
@@ -49,11 +47,9 @@ public class TableViewSortAdapterTest {
     @Test
     public void testSortAdded() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSortAdded());
@@ -68,11 +64,9 @@ public class TableViewSortAdapterTest {
     @Test
     public void testSortUpdated() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSortUpdated());
@@ -87,11 +81,9 @@ public class TableViewSortAdapterTest {
     @Test
     public void testSortRemoved() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSortRemoved());

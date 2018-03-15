@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SuggestionPopupSelectionAdapterTest {
-    private SuggestionPopupSelectionAdapter adapter = new SuggestionPopupSelectionAdapter();
+    private final SuggestionPopupSelectionAdapter adapter = new SuggestionPopupSelectionAdapter();
 
     @Test
     public void testSelectedIndexChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedIndexChanged());
@@ -49,11 +47,9 @@ public class SuggestionPopupSelectionAdapterTest {
     @Test
     public void testSelectedSuggestionChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedSuggestionChanged());

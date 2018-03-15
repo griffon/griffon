@@ -29,8 +29,8 @@ import spock.lang.Unroll
 import java.util.function.Supplier
 import java.util.function.ToDoubleFunction
 
-import static java.lang.Double.MIN_VALUE
 import static java.lang.Double.MAX_VALUE
+import static java.lang.Double.MIN_VALUE
 import static java.lang.Double.parseDouble
 import static javafx.collections.FXCollections.observableArrayList
 import static javafx.collections.FXCollections.observableHashMap

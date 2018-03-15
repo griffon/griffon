@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+
 import java.text.SimpleDateFormat
 
 buildscript {
@@ -111,7 +114,6 @@ tasks.withType(GroovyCompile) {
     targetCompatibility = project.targetCompatibility
 }
 
-import com.github.jengelman.gradle.plugins.shadow.transformers.*
 shadowJar {
     transform(ServiceFileTransformer)
     transform(ServiceFileTransformer) {

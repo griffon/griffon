@@ -27,7 +27,6 @@ import griffon.core.injection.InjectorFactory;
 import griffon.core.injection.Key;
 import griffon.core.injection.Module;
 import griffon.util.GriffonClassUtils;
-import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,20 +112,12 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
 
     protected void createArtifactsModule(@Nonnull List<Module> modules) {
         final List<Class<?>> classes = new ArrayList<>();
-        load(getClass().getClassLoader(), GRIFFON_PATH, new ServiceLoaderUtils.PathFilter() {
-            @Override
-            public boolean accept(@Nonnull String path) {
-                return !path.endsWith(PROPERTIES);
-            }
-        }, new ServiceLoaderUtils.ResourceProcessor() {
-            @Override
-            public void process(@Nonnull ClassLoader classLoader, @Nonnull String line) {
-                line = line.trim();
-                try {
-                    classes.add(classLoader.loadClass(line));
-                } catch (ClassNotFoundException e) {
-                    LOG.warn("'" + line + "' could not be resolved as a Class");
-                }
+        load(getClass().getClassLoader(), GRIFFON_PATH, path -> !path.endsWith(PROPERTIES), (classLoader, line) -> {
+            line = line.trim();
+            try {
+                classes.add(classLoader.loadClass(line));
+            } catch (ClassNotFoundException e) {
+                LOG.warn("'" + line + "' could not be resolved as a Class");
             }
         });
 

@@ -17,7 +17,6 @@
  */
 package griffon.javafx
 
-import griffon.javafx.beans.binding.MappingBindings
 import groovy.transform.Canonical
 import javafx.beans.binding.Binding
 import javafx.beans.binding.ObjectBinding

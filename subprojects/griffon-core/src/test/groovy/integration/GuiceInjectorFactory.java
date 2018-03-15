@@ -81,24 +81,15 @@ public class GuiceInjectorFactory implements InjectorFactory {
     }
 
     private GuiceInjector createModules(@Nonnull final GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable<Binding<?>> bindings) {
-        final InjectionListener<GriffonArtifact> injectionListener = new InjectionListener<GriffonArtifact>() {
-            @Override
-            public void afterInjection(GriffonArtifact injectee) {
-                application.getEventRouter().publishEvent(
-                    ApplicationEvent.NEW_INSTANCE.getName(),
-                    asList(injectee.getClass(), injectee)
-                );
-            }
-        };
+        final InjectionListener<GriffonArtifact> injectionListener = injectee -> application.getEventRouter().publishEvent(
+            ApplicationEvent.NEW_INSTANCE.getName(),
+            asList(injectee.getClass(), injectee)
+        );
 
-        final InjectionListener<Object> postConstructorInjectorListener = new InjectionListener<Object>() {
-            @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-            @Override
-            public void afterInjection(Object injectee) {
-                resolveContextualInjections(injectee, application);
-                resolveConfigurationInjections(injectee, application);
-                invokeAnnotatedMethod(injectee, PostConstruct.class);
-            }
+        final InjectionListener<Object> postConstructorInjectorListener = injectee -> {
+            resolveContextualInjections(injectee, application);
+            resolveConfigurationInjections(injectee, application);
+            invokeAnnotatedMethod(injectee, PostConstruct.class);
         };
 
         Module injectorModule = new AbstractModule() {

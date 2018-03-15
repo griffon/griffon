@@ -48,10 +48,10 @@ import static org.awaitility.Awaitility.await;
  * @since 2.3.0
  */
 public class GriffonTestFXRule extends TestFX implements MethodRule {
-    protected String windowName;
-    protected Duration timeout;
-    protected String[] startupArgs;
-    protected Class<? extends TestJavaFXGriffonApplication> applicationClass;
+    protected final String windowName;
+    protected final Duration timeout;
+    protected final String[] startupArgs;
+    protected final Class<? extends TestJavaFXGriffonApplication> applicationClass;
     protected JavaFXGriffonApplication application;
 
     public GriffonTestFXRule(@Nonnull String windowName) {
@@ -117,11 +117,11 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
         getTestContext().setWindowName(windowName);
     }
 
-    protected void before(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws Throwable {
+    protected void before(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) {
 
     }
 
-    protected void after(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) throws TimeoutException {
+    protected void after(@Nonnull JavaFXGriffonApplication application, @Nonnull Object target) {
         if (application != null) {
             application.shutdown();
             try {

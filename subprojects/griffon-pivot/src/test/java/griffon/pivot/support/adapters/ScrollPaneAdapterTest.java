@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ScrollPaneAdapterTest {
-    private ScrollPaneAdapter adapter = new ScrollPaneAdapter();
+    private final ScrollPaneAdapter adapter = new ScrollPaneAdapter();
 
     @Test
     public void testCornerChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getCornerChanged());
@@ -49,11 +47,9 @@ public class ScrollPaneAdapterTest {
     @Test
     public void testVerticalScrollBarPolicyChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getVerticalScrollBarPolicyChanged());
@@ -68,11 +64,9 @@ public class ScrollPaneAdapterTest {
     @Test
     public void testRowHeaderChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getRowHeaderChanged());
@@ -87,11 +81,9 @@ public class ScrollPaneAdapterTest {
     @Test
     public void testHorizontalScrollBarPolicyChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getHorizontalScrollBarPolicyChanged());
@@ -106,11 +98,9 @@ public class ScrollPaneAdapterTest {
     @Test
     public void testColumnHeaderChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getColumnHeaderChanged());

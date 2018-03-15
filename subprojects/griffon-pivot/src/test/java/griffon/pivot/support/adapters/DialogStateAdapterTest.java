@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class DialogStateAdapterTest {
-    private DialogStateAdapter adapter = new DialogStateAdapter();
+    private final DialogStateAdapter adapter = new DialogStateAdapter();
 
     @Test
     public void testPreviewDialogClose() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<org.apache.pivot.util.Vote> callable = new CallableWithArgs<org.apache.pivot.util.Vote>() {
-            public org.apache.pivot.util.Vote call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<org.apache.pivot.util.Vote> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getPreviewDialogClose());
@@ -49,11 +47,9 @@ public class DialogStateAdapterTest {
     @Test
     public void testDialogCloseVetoed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getDialogCloseVetoed());
@@ -68,11 +64,9 @@ public class DialogStateAdapterTest {
     @Test
     public void testDialogClosed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getDialogClosed());

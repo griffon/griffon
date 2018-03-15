@@ -34,8 +34,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 
-import static org.awaitility.Awaitility.await;
 import static java.util.Arrays.asList;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

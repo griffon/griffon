@@ -43,11 +43,6 @@ public class DesktopPivotGriffonApplication extends AbstractPivotGriffonApplicat
     }
 
     private static void doRun(final String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                DesktopApplicationContext.main(DesktopPivotGriffonApplication.class, args);
-            }
-        });
+        SwingUtilities.invokeLater(() -> DesktopApplicationContext.main(DesktopPivotGriffonApplication.class, args));
     }
 }

@@ -26,7 +26,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static java.util.Objects.requireNonNull;
 
@@ -41,25 +40,12 @@ public class LanternaGriffonControllerAction extends AbstractAction {
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
-        addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent evt) {
-                uiThreadManager.runInsideUIAsync(new Runnable() {
-                    public void run() {
-                        handlePropertyChange(evt);
-                    }
-                });
-            }
-        });
+        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     @Nonnull
     protected LanternaAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        return new LanternaAction(new Runnable() {
-            @Override
-            public void run() {
-                actionManager.invokeAction(controller, actionName);
-            }
-        });
+        return new LanternaAction((Runnable) () -> actionManager.invokeAction(controller, actionName));
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {

@@ -21,8 +21,8 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import java.util.Map;
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 @ArtifactProviderFor(GriffonController.class)
 public class AppController extends AbstractGriffonController {

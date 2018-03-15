@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SuggestionPopupStateAdapterTest {
-    private SuggestionPopupStateAdapter adapter = new SuggestionPopupStateAdapter();
+    private final SuggestionPopupStateAdapter adapter = new SuggestionPopupStateAdapter();
 
     @Test
     public void testPreviewSuggestionPopupClose() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<org.apache.pivot.util.Vote> callable = new CallableWithArgs<org.apache.pivot.util.Vote>() {
-            public org.apache.pivot.util.Vote call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<org.apache.pivot.util.Vote> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getPreviewSuggestionPopupClose());
@@ -49,11 +47,9 @@ public class SuggestionPopupStateAdapterTest {
     @Test
     public void testSuggestionPopupCloseVetoed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSuggestionPopupCloseVetoed());
@@ -68,11 +64,9 @@ public class SuggestionPopupStateAdapterTest {
     @Test
     public void testSuggestionPopupClosed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSuggestionPopupClosed());

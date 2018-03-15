@@ -29,6 +29,6 @@ public class ResetableIntegerPropertyTest extends AbstractResetablePropertyTestC
     @Override
     @Nonnull
     protected Number getNewValue() {
-        return Integer.valueOf(21);
+        return 21;
     }
 }

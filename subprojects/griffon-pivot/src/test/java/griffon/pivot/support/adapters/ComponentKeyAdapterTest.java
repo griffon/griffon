@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ComponentKeyAdapterTest {
-    private ComponentKeyAdapter adapter = new ComponentKeyAdapter();
+    private final ComponentKeyAdapter adapter = new ComponentKeyAdapter();
 
     @Test
     public void testKeyTyped() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Boolean> callable = new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return false;
-            }
+        CallableWithArgs<Boolean> callable = args -> {
+            invoked[0] = true;
+            return false;
         };
 
         assertNull(adapter.getKeyTyped());
@@ -45,11 +43,9 @@ public class ComponentKeyAdapterTest {
         adapter.keyTyped(null, '0');
         assertTrue(invoked[0]);
 
-        adapter.setKeyTyped(new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return true;
-            }
+        adapter.setKeyTyped(args -> {
+            invoked[0] = true;
+            return true;
         });
         adapter.keyTyped(null, '0');
         assertTrue(invoked[0]);
@@ -58,11 +54,9 @@ public class ComponentKeyAdapterTest {
     @Test
     public void testKeyPressed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Boolean> callable = new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return false;
-            }
+        CallableWithArgs<Boolean> callable = args -> {
+            invoked[0] = true;
+            return false;
         };
 
         assertNull(adapter.getKeyPressed());
@@ -73,11 +67,9 @@ public class ComponentKeyAdapterTest {
         adapter.keyPressed(null, 0, null);
         assertTrue(invoked[0]);
 
-        adapter.setKeyPressed(new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return true;
-            }
+        adapter.setKeyPressed(args -> {
+            invoked[0] = true;
+            return true;
         });
         adapter.keyPressed(null, 0, null);
         assertTrue(invoked[0]);
@@ -86,11 +78,9 @@ public class ComponentKeyAdapterTest {
     @Test
     public void testKeyReleased() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Boolean> callable = new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return false;
-            }
+        CallableWithArgs<Boolean> callable = args -> {
+            invoked[0] = true;
+            return false;
         };
 
         assertNull(adapter.getKeyReleased());
@@ -101,11 +91,9 @@ public class ComponentKeyAdapterTest {
         adapter.keyReleased(null, 0, null);
         assertTrue(invoked[0]);
 
-        adapter.setKeyReleased(new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return true;
-            }
+        adapter.setKeyReleased(args -> {
+            invoked[0] = true;
+            return true;
         });
         adapter.keyReleased(null, 0, null);
         assertTrue(invoked[0]);

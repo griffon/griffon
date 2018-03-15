@@ -40,7 +40,7 @@ public class SourceUnitCollector extends CompilationUnit.SourceUnitOperation {
     private static final String ERROR_SOURCE_NULL = "Argument 'source' must not be null";
     private static final String ERROR_CLASS_NODE_NULL = "Argument 'classNode' must not be null";
 
-    private static SourceUnitCollector instance;
+    private static final SourceUnitCollector instance;
 
     static {
         instance = new SourceUnitCollector();

@@ -41,7 +41,7 @@ public class SwingAction extends AbstractAction {
     private static final long serialVersionUID = 4493562556110760713L;
     private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
     private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
-    private transient RunnableWithArgs runnable;
+    private final transient RunnableWithArgs runnable;
 
     /**
      * Creates a new action.
@@ -53,12 +53,7 @@ public class SwingAction extends AbstractAction {
     @Deprecated
     public SwingAction(@Nonnull final CallableWithArgs<?> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
-        this.runnable = new RunnableWithArgs() {
-            @Override
-            public void run(@Nullable Object... args) {
-                callable.call(args);
-            }
-        };
+        this.runnable = callable::call;
     }
 
     public SwingAction(@Nonnull RunnableWithArgs runnable) {
@@ -187,12 +182,7 @@ public class SwingAction extends AbstractAction {
         @Deprecated
         public ActionBuilder withRunnable(@Nullable final CallableWithArgs<?> callable) {
             requireNonNull(callable, ERROR_CALLABLE_NULL);
-            this.runnable = new RunnableWithArgs() {
-                @Override
-                public void run(@Nullable Object... args) {
-                    callable.call(args);
-                }
-            };
+            this.runnable = callable::call;
             return this;
         }
 
@@ -212,7 +202,7 @@ public class SwingAction extends AbstractAction {
         @Nonnull
         public ActionBuilder withSelected(boolean selected) {
             this.selected = selected;
-            this.enabledSet = true;
+            this.selectedSet = true;
             return this;
         }
 

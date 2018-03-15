@@ -19,7 +19,6 @@ package griffon.javafx.scene.layout
 
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
-import javafx.scene.Node
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonBar
@@ -34,7 +33,6 @@ import org.testfx.service.support.WaitUntilSupport
 
 import java.util.concurrent.Callable
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.base.NodeMatchers.isVisible

@@ -40,14 +40,14 @@ import spock.lang.Unroll
 
 import javax.inject.Singleton
 
-import static org.example.calculator.CalculatorPM.COMMAND_DIV
-import static org.example.calculator.CalculatorPM.COMMAND_MUL
-import static org.example.calculator.CalculatorPM.COMMAND_SUB
-import static org.example.calculator.CalculatorPM.COMMAND_SUM
 import static org.example.calculator.CalculatorPM.ATTR_ERROR
 import static org.example.calculator.CalculatorPM.ATTR_OP1
 import static org.example.calculator.CalculatorPM.ATTR_OP2
 import static org.example.calculator.CalculatorPM.ATTR_RESULT
+import static org.example.calculator.CalculatorPM.COMMAND_DIV
+import static org.example.calculator.CalculatorPM.COMMAND_MUL
+import static org.example.calculator.CalculatorPM.COMMAND_SUB
+import static org.example.calculator.CalculatorPM.COMMAND_SUM
 import static org.example.calculator.CalculatorPM.PM_CALCULATION
 
 @Stepwise

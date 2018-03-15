@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class AccordionSelectionAdapterTest {
-    private AccordionSelectionAdapter adapter = new AccordionSelectionAdapter();
+    private final AccordionSelectionAdapter adapter = new AccordionSelectionAdapter();
 
     @Test
     public void testPreviewSelectedIndexChange() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<org.apache.pivot.util.Vote> callable = new CallableWithArgs<org.apache.pivot.util.Vote>() {
-            public org.apache.pivot.util.Vote call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<org.apache.pivot.util.Vote> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getPreviewSelectedIndexChange());
@@ -49,11 +47,9 @@ public class AccordionSelectionAdapterTest {
     @Test
     public void testSelectedIndexChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedIndexChanged());
@@ -68,11 +64,9 @@ public class AccordionSelectionAdapterTest {
     @Test
     public void testSelectedIndexChangeVetoed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedIndexChangeVetoed());

@@ -135,8 +135,8 @@ public class MappingObservableListTest {
     }
 
     public static class ObservablePerson implements ElementObservableList.ObservableValueContainer {
-        private StringProperty name = new SimpleStringProperty(this, "name");
-        private StringProperty lastname = new SimpleStringProperty(this, "lastname");
+        private final StringProperty name = new SimpleStringProperty(this, "name");
+        private final StringProperty lastname = new SimpleStringProperty(this, "lastname");
 
 
         public ObservablePerson(String name, String lastname) {

@@ -20,7 +20,6 @@ package org.codehaus.griffon.runtime.core.configuration;
 import griffon.core.ApplicationEvent;
 import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
-import griffon.core.RunnableWithArgs;
 import griffon.core.configuration.ConfigurationManager;
 import griffon.core.configuration.Configured;
 import griffon.core.editors.ExtendedPropertyEditor;
@@ -64,12 +63,9 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     private void initialize() {
         requireNonNull(application, "Argument 'application' cannot ne null");
 
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {
-            @Override
-            public void run(@Nullable Object... args) {
-                Object instance = args[1];
-                injectConfiguration(instance);
-            }
+        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
+            Object instance = args[1];
+            injectConfiguration(instance);
         });
     }
 

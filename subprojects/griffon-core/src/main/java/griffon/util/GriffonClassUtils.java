@@ -2797,9 +2797,7 @@ public class GriffonClassUtils {
      */
     @Nullable
     public static PropertyDescriptor getPropertyDescriptor(@Nonnull Class<?> clazz,
-                                                           @Nonnull String name)
-        throws IllegalAccessException, InvocationTargetException,
-        NoSuchMethodException {
+                                                           @Nonnull String name) {
         requireNonNull(clazz, ERROR_CLAZZ_NULL);
         requireNonBlank(name, ERROR_NAME_BLANK);
 
@@ -3271,20 +3269,17 @@ public class GriffonClassUtils {
         }
 
         for (final Method method : methods) {
-            AccessController.doPrivileged(new PrivilegedAction<Object>() {
-                @Override
-                public Object run() {
-                    boolean wasAccessible = method.isAccessible();
-                    try {
-                        method.setAccessible(true);
-                        return method.invoke(instance);
-                    } catch (IllegalAccessException | IllegalArgumentException e) {
-                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e);
-                    } catch (InvocationTargetException e) {
-                        throw new InstanceMethodInvocationException(instance, method.getName(), null, e.getTargetException());
-                    } finally {
-                        method.setAccessible(wasAccessible);
-                    }
+            AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                boolean wasAccessible = method.isAccessible();
+                try {
+                    method.setAccessible(true);
+                    return method.invoke(instance);
+                } catch (IllegalAccessException | IllegalArgumentException e) {
+                    throw new InstanceMethodInvocationException(instance, method.getName(), null, e);
+                } catch (InvocationTargetException e) {
+                    throw new InstanceMethodInvocationException(instance, method.getName(), null, e.getTargetException());
+                } finally {
+                    method.setAccessible(wasAccessible);
                 }
             });
         }

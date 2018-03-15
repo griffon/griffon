@@ -85,7 +85,7 @@ public class ClassResourceBundleLoader extends AbstractResourceBundleLoader {
     }
 
     @Nonnull
-    protected ResourceBundle newInstance(Class<?> klass) throws IllegalAccessException, InstantiationException {
+    protected ResourceBundle newInstance(Class<?> klass) {
         return instantiator.instantiate((Class<? extends ResourceBundle>) klass);
     }
 }

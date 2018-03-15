@@ -29,6 +29,6 @@ public class ResetableDoublePropertyTest extends AbstractResetablePropertyTestCa
     @Override
     @Nonnull
     protected Number getNewValue() {
-        return Double.valueOf(21d);
+        return 21d;
     }
 }

@@ -32,8 +32,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -63,7 +61,7 @@ public class ContainerView extends AbstractSwingGriffonView {
     @Override
     public void initUI() {
         JFrame window = (JFrame) getApplication()
-            .createApplicationContainer(Collections.<String, Object>emptyMap());
+            .createApplicationContainer(Collections.emptyMap());
         window.setName("mainWindow");
         window.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         window.setSize(480, 320);
@@ -97,17 +95,14 @@ public class ContainerView extends AbstractSwingGriffonView {
 
         window.getContentPane().setLayout(new BorderLayout());
         tabGroup = new JTabbedPane();
-        tabGroup.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
-                int selectedIndex = tabbedPane.getSelectedIndex();
-                if (selectedIndex < 0) {
-                    model.setMvcIdentifier(null);
-                } else {
-                    JComponent tab = (JComponent) tabbedPane.getComponentAt(selectedIndex);
-                    model.setMvcIdentifier((String) tab.getClientProperty(ContainerModel.MVC_IDENTIFIER));
-                }
+        tabGroup.addChangeListener(e -> {
+            JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex < 0) {
+                model.setMvcIdentifier(null);
+            } else {
+                JComponent tab = (JComponent) tabbedPane.getComponentAt(selectedIndex);
+                model.setMvcIdentifier((String) tab.getClientProperty(ContainerModel.MVC_IDENTIFIER));
             }
         });
         window.getContentPane().add(tabGroup, BorderLayout.CENTER);

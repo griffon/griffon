@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static griffon.util.GriffonNameUtils.getNaturalName;
 import static griffon.util.GriffonNameUtils.isNotBlank;
@@ -52,12 +50,7 @@ public class LanternaActionManager extends AbstractActionManager {
 
     @Override
     protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
-        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                configureAction((LanternaGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
-            }
-        });
+        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, evt -> configureAction((LanternaGriffonControllerAction) action, controller, normalizeNamed, keyPrefix));
         configureAction((LanternaGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
     }
 

@@ -22,8 +22,6 @@ import com.googlecode.lanterna.gui.component.Button;
 import griffon.exceptions.GriffonException;
 import griffon.lanterna.support.LanternaAction;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
@@ -53,11 +51,7 @@ public class MutableButton extends Button {
             field.setAccessible(true);
             lanternaAction = (LanternaAction) field.get(this);
 
-            lanternaAction.addPropertyChangeListener(LanternaAction.NAME, new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent event) {
-                    setText(event.getNewValue().toString());
-                }
-            });
+            lanternaAction.addPropertyChangeListener(LanternaAction.NAME, event -> setText(event.getNewValue().toString()));
             if (isNotBlank(lanternaAction.getName())) {
                 setText(lanternaAction.getName());
             }

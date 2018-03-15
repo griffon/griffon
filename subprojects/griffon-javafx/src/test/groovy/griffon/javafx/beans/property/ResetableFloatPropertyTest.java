@@ -29,6 +29,6 @@ public class ResetableFloatPropertyTest extends AbstractResetablePropertyTestCas
     @Override
     @Nonnull
     protected Number getNewValue() {
-        return Float.valueOf(21f);
+        return 21f;
     }
 }

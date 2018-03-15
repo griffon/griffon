@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class MenuItemSelectionAdapterTest {
-    private MenuItemSelectionAdapter adapter = new MenuItemSelectionAdapter();
+    private final MenuItemSelectionAdapter adapter = new MenuItemSelectionAdapter();
 
     @Test
     public void testItemSelected() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getItemSelected());

@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ComponentDecoratorAdapterTest {
-    private ComponentDecoratorAdapter adapter = new ComponentDecoratorAdapter();
+    private final ComponentDecoratorAdapter adapter = new ComponentDecoratorAdapter();
 
     @Test
     public void testDecoratorInserted() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getDecoratorInserted());
@@ -49,11 +47,9 @@ public class ComponentDecoratorAdapterTest {
     @Test
     public void testDecoratorUpdated() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getDecoratorUpdated());
@@ -68,11 +64,9 @@ public class ComponentDecoratorAdapterTest {
     @Test
     public void testDecoratorsRemoved() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getDecoratorsRemoved());

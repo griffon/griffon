@@ -33,7 +33,6 @@ import org.testfx.service.support.WaitUntilSupport
 
 import java.util.concurrent.Callable
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.base.NodeMatchers.isVisible

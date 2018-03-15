@@ -29,6 +29,6 @@ public class ResetableLongPropertyTest extends AbstractResetablePropertyTestCase
     @Override
     @Nonnull
     protected Number getNewValue() {
-        return Long.valueOf(21L);
+        return 21L;
     }
 }

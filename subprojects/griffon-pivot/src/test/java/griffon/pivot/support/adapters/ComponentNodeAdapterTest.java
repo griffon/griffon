@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ComponentNodeAdapterTest {
-    private ComponentNodeAdapter adapter = new ComponentNodeAdapter();
+    private final ComponentNodeAdapter adapter = new ComponentNodeAdapter();
 
     @Test
     public void testComponentChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getComponentChanged());

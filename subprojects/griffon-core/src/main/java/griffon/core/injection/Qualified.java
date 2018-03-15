@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public final class Qualified<T> {
-    private Annotation qualifier;
+    private final Annotation qualifier;
     private final T instance;
 
     public Qualified(@Nonnull T instance, @Nullable Annotation qualifier) {

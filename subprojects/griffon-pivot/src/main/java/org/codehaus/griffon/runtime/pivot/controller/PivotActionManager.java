@@ -31,8 +31,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
@@ -61,12 +59,7 @@ public class PivotActionManager extends AbstractActionManager {
 
     @Override
     protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
-        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
-            }
-        });
+        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, evt -> configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix));
         configureAction((PivotGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
     }
 

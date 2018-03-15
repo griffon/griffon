@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class WindowActionMappingAdapterTest {
-    private WindowActionMappingAdapter adapter = new WindowActionMappingAdapter();
+    private final WindowActionMappingAdapter adapter = new WindowActionMappingAdapter();
 
     @Test
     public void testActionChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getActionChanged());
@@ -49,11 +47,9 @@ public class WindowActionMappingAdapterTest {
     @Test
     public void testKeyStrokeChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getKeyStrokeChanged());
@@ -68,11 +64,9 @@ public class WindowActionMappingAdapterTest {
     @Test
     public void testActionMappingsRemoved() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getActionMappingsRemoved());
@@ -87,11 +81,9 @@ public class WindowActionMappingAdapterTest {
     @Test
     public void testActionMappingAdded() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getActionMappingAdded());

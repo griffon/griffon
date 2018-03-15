@@ -17,7 +17,6 @@
  */
 package griffon.javafx
 
-import griffon.javafx.beans.binding.UIThreadAwareBindings
 import javafx.application.Platform
 import javafx.beans.InvalidationListener
 import javafx.beans.binding.Bindings

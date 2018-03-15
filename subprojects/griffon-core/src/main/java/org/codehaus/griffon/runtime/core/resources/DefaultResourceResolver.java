@@ -58,11 +58,6 @@ public class DefaultResourceResolver extends AbstractResourceResolver {
     @Nonnull
     protected ResourceBundle getBundle(@Nonnull Locale locale) {
         requireNonNull(locale, ERROR_LOCALE_NULL);
-        ResourceBundle rb = bundles.get(locale);
-        if (null == rb) {
-            rb = compositeResourceBundleBuilder.create(basename, locale);
-            bundles.put(locale, rb);
-        }
-        return rb;
+        return bundles.computeIfAbsent(locale, l -> compositeResourceBundleBuilder.create(basename, l));
     }
 }

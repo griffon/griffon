@@ -22,7 +22,7 @@ import org.fest.swing.fixture.FrameFixture
 import org.junit.Rule
 import spock.lang.Specification
 
-public class SampleIntegrationSpec extends Specification {
+class SampleIntegrationSpec extends Specification {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
         System.setProperty('griffon.swing.edt.violations.check', 'true')

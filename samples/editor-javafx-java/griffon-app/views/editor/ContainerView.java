@@ -65,7 +65,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     @Override
     public void initUI() {
         Stage stage = (Stage) getApplication()
-            .createApplicationContainer(Collections.<String, Object>emptyMap());
+            .createApplicationContainer(Collections.emptyMap());
         stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         stage.setWidth(480);
         stage.setHeight(320);
@@ -86,9 +86,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
         ((Group) scene.getRoot()).getChildren().addAll(node);
         connectActions(node, controller);
 
-        tabGroup.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            model.setMvcIdentifier(newTab != null ? newTab.getId() : null);
-        });
+        tabGroup.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> model.setMvcIdentifier(n != null ? n.getId() : null));
 
         Action saveAction = actionFor(controller, "save");
         model.getDocumentModel().addPropertyChangeListener("dirty", (e) -> saveAction.setEnabled((Boolean) e.getNewValue()));

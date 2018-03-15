@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ComponentTooltipAdapterTest {
-    private ComponentTooltipAdapter adapter = new ComponentTooltipAdapter();
+    private final ComponentTooltipAdapter adapter = new ComponentTooltipAdapter();
 
     @Test
     public void testTooltipTriggered() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTooltipTriggered());

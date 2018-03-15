@@ -20,7 +20,7 @@ package sample.pivot.java;
 import griffon.pivot.DesktopPivotGriffonApplication;
 
 public class Launcher {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         DesktopPivotGriffonApplication.run(args);
     }
 }

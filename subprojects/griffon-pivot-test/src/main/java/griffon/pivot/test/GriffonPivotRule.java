@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class GriffonPivotRule implements MethodRule {
-    private String[] startupArgs;
+    private final String[] startupArgs;
 
     public GriffonPivotRule() {
         this(DefaultGriffonApplication.EMPTY_ARGS);
@@ -61,12 +61,7 @@ public class GriffonPivotRule implements MethodRule {
             @Override
             public void evaluate() throws Throwable {
                 TestDesktopPivotApplication.init(target);
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        DesktopApplicationContext.main(TestDesktopPivotApplication.class, startupArgs);
-                    }
-                });
+                SwingUtilities.invokeAndWait(() -> DesktopApplicationContext.main(TestDesktopPivotApplication.class, startupArgs));
                 TestDesktopPivotApplication.getLatch().await();
                 GriffonApplication application = TestDesktopPivotApplication.getApplication();
                 application.getInjector().injectMembers(target);

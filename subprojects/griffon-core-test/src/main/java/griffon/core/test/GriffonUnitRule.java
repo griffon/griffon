@@ -40,9 +40,9 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class GriffonUnitRule implements MethodRule {
-    private String[] startupArgs;
-    private Class<? extends GriffonApplication> applicationClass;
-    private Class<? extends ApplicationBootstrapper> applicationBootstrapper;
+    private final String[] startupArgs;
+    private final Class<? extends GriffonApplication> applicationClass;
+    private final Class<? extends ApplicationBootstrapper> applicationBootstrapper;
 
     public GriffonUnitRule() {
         this(DefaultGriffonApplication.EMPTY_ARGS, DefaultGriffonApplication.class, TestApplicationBootstrapper.class);
@@ -97,7 +97,7 @@ public class GriffonUnitRule implements MethodRule {
         };
     }
 
-    protected void before(@Nonnull GriffonApplication application, @Nonnull Object target) throws Throwable {
+    protected void before(@Nonnull GriffonApplication application, @Nonnull Object target) {
 
     }
 

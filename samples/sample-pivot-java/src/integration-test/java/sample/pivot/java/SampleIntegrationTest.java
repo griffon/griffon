@@ -46,15 +46,12 @@ public class SampleIntegrationTest {
 
     @Test
     public void typeNameAndClickButton() {
-        pivot.runInsideUISync(new Runnable() {
-            @Override
-            public void run() {
-                // given:
-                pivot.find("inputField", TextInput.class).setText("Griffon");
+        pivot.runInsideUISync(() -> {
+            // given:
+            pivot.find("inputField", TextInput.class).setText("Griffon");
 
-                // when:
-                pivot.find("sayHelloButton", PushButton.class).press();
-            }
+            // when:
+            pivot.find("sayHelloButton", PushButton.class).press();
         });
 
         SampleModel model = (SampleModel) mvcGroupManager.getModels().get("sample");
@@ -65,25 +62,17 @@ public class SampleIntegrationTest {
                 notNullValue());
 
         // then:
-        pivot.runInsideUISync(new Runnable() {
-            @Override
-            public void run() {
-                assertEquals("Hello Griffon", pivot.find("outputField", TextInput.class).getText());
-            }
-        });
+        pivot.runInsideUISync(() -> assertEquals("Hello Griffon", pivot.find("outputField", TextInput.class).getText()));
     }
 
     @Test
     public void doNotTypeNameAndClickButton() {
-        pivot.runInsideUISync(new Runnable() {
-            @Override
-            public void run() {
-                // given:
-                pivot.find("inputField", TextInput.class).setText("");
+        pivot.runInsideUISync(() -> {
+            // given:
+            pivot.find("inputField", TextInput.class).setText("");
 
-                // when:
-                pivot.find("sayHelloButton", PushButton.class).press();
-            }
+            // when:
+            pivot.find("sayHelloButton", PushButton.class).press();
         });
 
         SampleModel model = (SampleModel) mvcGroupManager.getModels().get("sample");
@@ -94,11 +83,6 @@ public class SampleIntegrationTest {
                 notNullValue());
 
         // then:
-        pivot.runInsideUISync(new Runnable() {
-            @Override
-            public void run() {
-                assertEquals("Howdy stranger!", pivot.find("outputField", TextInput.class).getText());
-            }
-        });
+        pivot.runInsideUISync(() -> assertEquals("Howdy stranger!", pivot.find("outputField", TextInput.class).getText()));
     }
 }

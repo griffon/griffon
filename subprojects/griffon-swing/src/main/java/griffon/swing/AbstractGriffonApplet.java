@@ -24,7 +24,6 @@ import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.GriffonApplication;
-import griffon.core.RunnableWithArgs;
 import griffon.core.ShutdownHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
@@ -351,11 +350,8 @@ public abstract class AbstractGriffonApplet extends JApplet implements GriffonAp
         log.debug("Shutdown stage 1: notify all event listeners");
         if (getEventRouter().isEventPublishingEnabled()) {
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
-            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), new RunnableWithArgs() {
-                @Override
-                public void run(@Nullable Object... args) {
-                    latch.countDown();
-                }
+            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), args -> {
+                latch.countDown();
             });
             event(ApplicationEvent.SHUTDOWN_START, singletonList(this));
             try {

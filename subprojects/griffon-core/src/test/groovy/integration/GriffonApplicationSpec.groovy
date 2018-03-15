@@ -38,7 +38,6 @@ import griffon.core.env.Lifecycle
 import griffon.core.mvc.MVCFunction
 import griffon.core.mvc.MVCGroup
 import griffon.exceptions.InstanceNotFoundException
-import griffon.exceptions.NewInstanceException
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
 import spock.lang.Shared
 import spock.lang.Specification

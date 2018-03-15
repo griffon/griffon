@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class AccordionAttributeAdapterTest {
-    private AccordionAttributeAdapter adapter = new AccordionAttributeAdapter();
+    private final AccordionAttributeAdapter adapter = new AccordionAttributeAdapter();
 
     @Test
     public void testHeaderDataChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getHeaderDataChanged());
@@ -49,11 +47,9 @@ public class AccordionAttributeAdapterTest {
     @Test
     public void testTooltipTextChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTooltipTextChanged());

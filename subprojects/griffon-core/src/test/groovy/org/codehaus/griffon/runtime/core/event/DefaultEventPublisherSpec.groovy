@@ -730,7 +730,7 @@ class DefaultEventPublisherSpec extends Specification {
 
         !eventHandler.args
         eventHandler.called == 0
-        eventPublisher.eventPublishingEnabled == false
+        !eventPublisher.eventPublishingEnabled
     }
 
     def 'Query existing listeners by event name'() {

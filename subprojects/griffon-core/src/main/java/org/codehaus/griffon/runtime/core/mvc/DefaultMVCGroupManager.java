@@ -299,17 +299,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void initializeArtifactMember(@Nonnull final MVCGroup group, @Nonnull String type, @Nonnull final GriffonArtifact member, @Nonnull final Map<String, Object> args) {
         if (member instanceof GriffonView) {
-            getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        GriffonView view = (GriffonView) member;
-                        view.initUI();
-                    } catch (RuntimeException e) {
-                        throw (RuntimeException) sanitize(new GriffonViewInitializationException(group.getMvcType(), group.getMvcId(), member.getClass().getName(), e));
-                    }
-                    ((GriffonMvcArtifact) member).mvcGroupInit(args);
+            getApplication().getUIThreadManager().runInsideUISync(() -> {
+                try {
+                    GriffonView view = (GriffonView) member;
+                    view.initUI();
+                } catch (RuntimeException e) {
+                    throw (RuntimeException) sanitize(new GriffonViewInitializationException(group.getMvcType(), group.getMvcId(), member.getClass().getName(), e));
                 }
+                ((GriffonMvcArtifact) member).mvcGroupInit(args);
             });
         } else if (member instanceof GriffonMvcArtifact) {
             ((GriffonMvcArtifact) member).mvcGroupInit(args);
@@ -660,14 +657,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             }
 
             if (artifact instanceof GriffonView) {
-                getApplication().getUIThreadManager().runInsideUISync(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            artifact.mvcGroupDestroy();
-                        } catch (RuntimeException e) {
-                            throw (RuntimeException) sanitize(e);
-                        }
+                getApplication().getUIThreadManager().runInsideUISync(() -> {
+                    try {
+                        artifact.mvcGroupDestroy();
+                    } catch (RuntimeException e) {
+                        throw (RuntimeException) sanitize(e);
                     }
                 });
             } else {

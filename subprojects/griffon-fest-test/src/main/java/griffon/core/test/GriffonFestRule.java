@@ -55,7 +55,7 @@ public class GriffonFestRule extends GriffonUnitRule {
 
     @Override
     @SuppressWarnings("ConstantConditions")
-    protected void before(@Nonnull GriffonApplication application, @Nonnull Object target) throws Throwable {
+    protected void before(@Nonnull GriffonApplication application, @Nonnull Object target) {
         Robot robot = robotWithNewAwtHierarchy();
 
         application.startup();

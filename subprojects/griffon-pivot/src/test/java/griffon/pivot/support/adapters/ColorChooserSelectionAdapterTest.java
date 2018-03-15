@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ColorChooserSelectionAdapterTest {
-    private ColorChooserSelectionAdapter adapter = new ColorChooserSelectionAdapter();
+    private final ColorChooserSelectionAdapter adapter = new ColorChooserSelectionAdapter();
 
     @Test
     public void testSelectedColorChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedColorChanged());

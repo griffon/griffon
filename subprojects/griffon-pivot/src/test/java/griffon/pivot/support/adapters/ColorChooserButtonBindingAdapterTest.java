@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ColorChooserButtonBindingAdapterTest {
-    private ColorChooserButtonBindingAdapter adapter = new ColorChooserButtonBindingAdapter();
+    private final ColorChooserButtonBindingAdapter adapter = new ColorChooserButtonBindingAdapter();
 
     @Test
     public void testSelectedColorBindTypeChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedColorBindTypeChanged());
@@ -49,11 +47,9 @@ public class ColorChooserButtonBindingAdapterTest {
     @Test
     public void testSelectedColorKeyChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedColorKeyChanged());
@@ -68,11 +64,9 @@ public class ColorChooserButtonBindingAdapterTest {
     @Test
     public void testSelectedColorBindMappingChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedColorBindMappingChanged());

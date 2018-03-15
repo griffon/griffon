@@ -27,7 +27,7 @@ import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.control.LabeledMatchers.hasText
 
 @RunWith(FunctionalJavaFXRunner)
-public class SampleFunctionalTest {
+class SampleFunctionalTest {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
     }

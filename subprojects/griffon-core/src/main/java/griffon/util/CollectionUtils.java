@@ -514,7 +514,7 @@ public final class CollectionUtils {
         @Override
         public synchronized Enumeration<Object> keys() {
             return new Enumeration<Object>() {
-                private Iterator<String> keys = new ArrayList<>(map.keySet()).iterator();
+                private final Iterator<String> keys = new ArrayList<>(map.keySet()).iterator();
 
                 @Override
                 public boolean hasMoreElements() {
@@ -531,7 +531,7 @@ public final class CollectionUtils {
         @Override
         public synchronized Enumeration<Object> elements() {
             return new Enumeration<Object>() {
-                private Iterator<Object> values = new ArrayList<>(map.values()).iterator();
+                private final Iterator<Object> values = new ArrayList<>(map.values()).iterator();
 
                 @Override
                 public boolean hasMoreElements() {

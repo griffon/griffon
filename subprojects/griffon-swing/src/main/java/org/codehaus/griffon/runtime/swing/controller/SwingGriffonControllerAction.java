@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.runtime.swing.controller;
 
-import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
@@ -33,7 +32,6 @@ import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyEditor;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
@@ -68,23 +66,13 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
 
-        addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(final PropertyChangeEvent evt) {
-                uiThreadManager.runInsideUIAsync(new Runnable() {
-                    public void run() {
-                        handlePropertyChange(evt);
-                    }
-                });
-            }
-        });
+        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     @Nonnull
     protected SwingAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        return new SwingAction(new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                actionManager.invokeAction(controller, actionName, args);
-            }
+        return new SwingAction(args -> {
+            actionManager.invokeAction(controller, actionName, args);
         });
     }
 

@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TextInputContentAdapterTest {
-    private TextInputContentAdapter adapter = new TextInputContentAdapter();
+    private final TextInputContentAdapter adapter = new TextInputContentAdapter();
 
     @Test
     public void testTextChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTextChanged());
@@ -49,11 +47,9 @@ public class TextInputContentAdapterTest {
     @Test
     public void testPreviewInsertText() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<org.apache.pivot.util.Vote> callable = new CallableWithArgs<org.apache.pivot.util.Vote>() {
-            public org.apache.pivot.util.Vote call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<org.apache.pivot.util.Vote> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getPreviewInsertText());
@@ -68,11 +64,9 @@ public class TextInputContentAdapterTest {
     @Test
     public void testTextInserted() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTextInserted());
@@ -87,11 +81,9 @@ public class TextInputContentAdapterTest {
     @Test
     public void testInsertTextVetoed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getInsertTextVetoed());
@@ -106,11 +98,9 @@ public class TextInputContentAdapterTest {
     @Test
     public void testPreviewRemoveText() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<org.apache.pivot.util.Vote> callable = new CallableWithArgs<org.apache.pivot.util.Vote>() {
-            public org.apache.pivot.util.Vote call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<org.apache.pivot.util.Vote> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getPreviewRemoveText());
@@ -125,11 +115,9 @@ public class TextInputContentAdapterTest {
     @Test
     public void testTextRemoved() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTextRemoved());
@@ -144,11 +132,9 @@ public class TextInputContentAdapterTest {
     @Test
     public void testRemoveTextVetoed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getRemoveTextVetoed());

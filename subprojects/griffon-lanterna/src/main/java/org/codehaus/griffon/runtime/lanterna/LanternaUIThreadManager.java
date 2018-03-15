@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.gui.Action;
 import com.googlecode.lanterna.gui.GUIScreen;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
@@ -52,11 +51,7 @@ public class LanternaUIThreadManager extends AbstractUIThreadManager {
         if (isUIThread()) {
             runnable.run();
         } else {
-            screen.runInEventThread(new Action() {
-                public void doAction() {
-                    runnable.run();
-                }
-            });
+            screen.runInEventThread(() -> runnable.run());
         }
     }
 }

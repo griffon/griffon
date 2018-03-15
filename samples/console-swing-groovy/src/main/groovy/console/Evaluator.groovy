@@ -17,6 +17,6 @@
  */
 package console
 
-public interface Evaluator {
+interface Evaluator {
     Object evaluate(String input)
 }

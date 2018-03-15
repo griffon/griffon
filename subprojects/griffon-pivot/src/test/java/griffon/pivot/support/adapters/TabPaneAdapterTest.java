@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TabPaneAdapterTest {
-    private TabPaneAdapter adapter = new TabPaneAdapter();
+    private final TabPaneAdapter adapter = new TabPaneAdapter();
 
     @Test
     public void testTabInserted() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTabInserted());
@@ -49,11 +47,9 @@ public class TabPaneAdapterTest {
     @Test
     public void testPreviewRemoveTabs() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<org.apache.pivot.util.Vote> callable = new CallableWithArgs<org.apache.pivot.util.Vote>() {
-            public org.apache.pivot.util.Vote call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<org.apache.pivot.util.Vote> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getPreviewRemoveTabs());
@@ -68,11 +64,9 @@ public class TabPaneAdapterTest {
     @Test
     public void testRemoveTabsVetoed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getRemoveTabsVetoed());
@@ -87,11 +81,9 @@ public class TabPaneAdapterTest {
     @Test
     public void testTabsRemoved() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTabsRemoved());
@@ -106,11 +98,9 @@ public class TabPaneAdapterTest {
     @Test
     public void testTabDataRendererChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTabDataRendererChanged());
@@ -125,11 +115,9 @@ public class TabPaneAdapterTest {
     @Test
     public void testCloseableChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getCloseableChanged());
@@ -144,11 +132,9 @@ public class TabPaneAdapterTest {
     @Test
     public void testCollapsibleChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getCollapsibleChanged());
@@ -163,11 +149,9 @@ public class TabPaneAdapterTest {
     @Test
     public void testCornerChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getCornerChanged());

@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class CalendarBindingAdapterTest {
-    private CalendarBindingAdapter adapter = new CalendarBindingAdapter();
+    private final CalendarBindingAdapter adapter = new CalendarBindingAdapter();
 
     @Test
     public void testSelectedDateKeyChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedDateKeyChanged());
@@ -49,11 +47,9 @@ public class CalendarBindingAdapterTest {
     @Test
     public void testSelectedDateBindTypeChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedDateBindTypeChanged());
@@ -68,11 +64,9 @@ public class CalendarBindingAdapterTest {
     @Test
     public void testSelectedDateBindMappingChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedDateBindMappingChanged());

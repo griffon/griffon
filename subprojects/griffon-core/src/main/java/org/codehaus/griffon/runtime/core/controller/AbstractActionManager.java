@@ -218,72 +218,69 @@ public abstract class AbstractActionManager implements ActionManager {
         requireNonNull(action, ERROR_ACTION_NULL);
         final GriffonController controller = action.getController();
         final String actionName = action.getActionName();
-        Runnable runnable = new Runnable() {
-            @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-            public void run() {
-                Object result = null;
-                Object[] updatedArgs = args;
-                List<ActionHandler> copy = new ArrayList<>(handlers);
-                List<ActionHandler> invokedHandlers = new ArrayList<>();
+        Runnable runnable = () -> {
+            Object result = null;
+            Object[] updatedArgs = args;
+            List<ActionHandler> copy = new ArrayList<>(handlers);
+            List<ActionHandler> invokedHandlers = new ArrayList<>();
 
-                final String qualifiedActionName = action.getFullyQualifiedName();
-                ActionExecutionStatus status = ActionExecutionStatus.OK;
+            final String qualifiedActionName = action.getFullyQualifiedName();
+            ActionExecutionStatus status = ActionExecutionStatus.OK;
 
+            try {
+                LOG.trace("Resolving contextual arguments for " + qualifiedActionName);
+                updatedArgs = injectFromContext(action, updatedArgs);
+            } catch (IllegalStateException ise) {
+                LOG.debug("Execution of " + qualifiedActionName + " was aborted", ise);
+                throw ise;
+            }
+
+            if (LOG.isDebugEnabled()) {
+                int size = copy.size();
+                LOG.debug("Executing " + size + " handler" + (size != 1 ? "s" : "") + " for " + qualifiedActionName);
+            }
+
+            for (ActionHandler handler : copy) {
+                invokedHandlers.add(handler);
                 try {
-                    LOG.trace("Resolving contextual arguments for " + qualifiedActionName);
-                    updatedArgs = injectFromContext(action, updatedArgs);
-                } catch (IllegalStateException ise) {
-                    LOG.debug("Execution of " + qualifiedActionName + " was aborted", ise);
-                    throw ise;
+                    LOG.trace("Calling {}.before() on {}", handler, qualifiedActionName);
+                    updatedArgs = handler.before(action, updatedArgs);
+                } catch (AbortActionExecution aae) {
+                    status = ActionExecutionStatus.ABORTED;
+                    LOG.debug("Execution of {} was aborted by {}", qualifiedActionName, handler);
+                    break;
                 }
+            }
 
-                if (LOG.isDebugEnabled()) {
-                    int size = copy.size();
-                    LOG.debug("Executing " + size + " handler" + (size != 1 ? "s" : "") + " for " + qualifiedActionName);
+            LOG.trace("Status before execution of {} is {}", qualifiedActionName, status);
+            RuntimeException exception = null;
+            boolean exceptionWasHandled = false;
+            if (status == ActionExecutionStatus.OK) {
+                try {
+                    result = doInvokeAction(controller, actionName, updatedArgs);
+                } catch (RuntimeException e) {
+                    status = ActionExecutionStatus.EXCEPTION;
+                    exception = (RuntimeException) sanitize(e);
+                    LOG.warn("An exception occurred when executing {}", qualifiedActionName, exception);
                 }
+                LOG.trace("Status after execution of {} is {}", qualifiedActionName, status);
 
-                for (ActionHandler handler : copy) {
-                    invokedHandlers.add(handler);
-                    try {
-                        LOG.trace("Calling {}.before() on {}", handler, qualifiedActionName);
-                        updatedArgs = handler.before(action, updatedArgs);
-                    } catch (AbortActionExecution aae) {
-                        status = ActionExecutionStatus.ABORTED;
-                        LOG.debug("Execution of {} was aborted by {}", qualifiedActionName, handler);
-                        break;
+                if (exception != null) {
+                    for (ActionHandler handler : reverse(invokedHandlers)) {
+                        LOG.trace("Calling {}.exception() on {}", handler, qualifiedActionName);
+                        exceptionWasHandled = handler.exception(exception, action, updatedArgs);
                     }
                 }
+            }
 
-                LOG.trace("Status before execution of {} is {}", qualifiedActionName, status);
-                RuntimeException exception = null;
-                boolean exceptionWasHandled = false;
-                if (status == ActionExecutionStatus.OK) {
-                    try {
-                        result = doInvokeAction(controller, actionName, updatedArgs);
-                    } catch (RuntimeException e) {
-                        status = ActionExecutionStatus.EXCEPTION;
-                        exception = (RuntimeException) sanitize(e);
-                        LOG.warn("An exception occurred when executing {}", qualifiedActionName, exception);
-                    }
-                    LOG.trace("Status after execution of {} is {}", qualifiedActionName, status);
+            for (ActionHandler handler : reverse(invokedHandlers)) {
+                LOG.trace("Calling {}.after() on {}", handler, qualifiedActionName);
+                result = handler.after(status, action, updatedArgs, result);
+            }
 
-                    if (exception != null) {
-                        for (ActionHandler handler : reverse(invokedHandlers)) {
-                            LOG.trace("Calling {}.exception() on {}", handler, qualifiedActionName);
-                            exceptionWasHandled = handler.exception(exception, action, updatedArgs);
-                        }
-                    }
-                }
-
-                for (ActionHandler handler : reverse(invokedHandlers)) {
-                    LOG.trace("Calling {}.after() on {}", handler, qualifiedActionName);
-                    result = handler.after(status, action, updatedArgs, result);
-                }
-
-                if (exception != null && !exceptionWasHandled) {
-                    // throw it again
-                    throw exception;
-                }
+            if (exception != null && !exceptionWasHandled) {
+                // throw it again
+                throw exception;
             }
         };
         invokeAction(controller, actionName, runnable);

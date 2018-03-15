@@ -29,7 +29,6 @@ import org.junit.runners.model.Statement;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
@@ -55,7 +54,7 @@ public class FunctionalJavaFXRunner extends BlockJUnit4ClassRunner {
         }
 
         @Override
-        public void testFailure(Failure failure) throws Exception {
+        public void testFailure(Failure failure) {
             testfx.setFailures(true);
         }
     }
@@ -63,7 +62,7 @@ public class FunctionalJavaFXRunner extends BlockJUnit4ClassRunner {
     @Override
     protected List<FrameworkMethod> computeTestMethods() {
         List<FrameworkMethod> methods = new ArrayList<>(super.computeTestMethods());
-        Collections.sort(methods, comparing(FrameworkMethod::getName));
+        methods.sort(comparing(FrameworkMethod::getName));
         return unmodifiableList(methods);
     }
 
@@ -103,7 +102,7 @@ public class FunctionalJavaFXRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-    private void resolveTestFXClassRule(FrameworkMethod child) throws NoSuchFieldException, IllegalAccessException {
+    private void resolveTestFXClassRule(FrameworkMethod child) throws IllegalAccessException {
         if (testFXClassRule == null) {
             for (Field field : child.getDeclaringClass().getFields()) {
                 if (GriffonTestFXClassRule.class.isAssignableFrom(field.getType())) {

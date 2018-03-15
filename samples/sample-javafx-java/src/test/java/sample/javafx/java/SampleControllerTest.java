@@ -55,7 +55,7 @@ public class SampleControllerTest {
         controller.invokeAction("sayHello");
 
         await().atMost(2, SECONDS)
-            .until(() -> model.getOutput(), notNullValue());
+            .until(model::getOutput, notNullValue());
         assertEquals("Howdy stranger!", model.getOutput());
     }
 
@@ -68,7 +68,7 @@ public class SampleControllerTest {
         controller.invokeAction("sayHello");
 
         await().atMost(2, SECONDS)
-            .until(() -> model.getOutput(), notNullValue());
+            .until(model::getOutput, notNullValue());
         assertEquals("Hello Griffon", model.getOutput());
     }
 }

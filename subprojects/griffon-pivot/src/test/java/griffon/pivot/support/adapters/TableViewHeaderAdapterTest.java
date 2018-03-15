@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TableViewHeaderAdapterTest {
-    private TableViewHeaderAdapter adapter = new TableViewHeaderAdapter();
+    private final TableViewHeaderAdapter adapter = new TableViewHeaderAdapter();
 
     @Test
     public void testTableViewChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTableViewChanged());
@@ -49,11 +47,9 @@ public class TableViewHeaderAdapterTest {
     @Test
     public void testSortModeChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSortModeChanged());

@@ -59,23 +59,16 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
             final String artifactType = e.getKey();
             ArtifactHandler<?> artifactHandler = e.getValue();
             Class<?> klass = artifactHandler.getClass().getAnnotation(Typed.class).value();
-            ServiceLoaderUtils.load(applicationClassLoader.get(), "META-INF/griffon/", klass, new ServiceLoaderUtils.LineProcessor() {
-                @Override
-                public void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line) {
-                    List<Class<? extends GriffonArtifact>> list = artifacts.get(artifactType);
-                    if (list == null) {
-                        list = new ArrayList<>();
-                        artifacts.put(artifactType, list);
-                    }
+            ServiceLoaderUtils.load(applicationClassLoader.get(), "META-INF/griffon/", klass, (classLoader, type, line) -> {
+                List<Class<? extends GriffonArtifact>> list = artifacts.computeIfAbsent(artifactType, k -> new ArrayList<>());
 
-                    try {
-                        String className = line.trim();
-                        Class<? extends GriffonArtifact> clazz = (Class<? extends GriffonArtifact>) applicationClassLoader.get().loadClass(className);
-                        // if (Modifier.isAbstract(clazz.getModifiers())) return;
-                        list.add(clazz);
-                    } catch (ClassNotFoundException e) {
-                        throw new IllegalArgumentException(e);
-                    }
+                try {
+                    String className = line.trim();
+                    Class<? extends GriffonArtifact> clazz = (Class<? extends GriffonArtifact>) applicationClassLoader.get().loadClass(className);
+                    // if (Modifier.isAbstract(clazz.getModifiers())) return;
+                    list.add(clazz);
+                } catch (ClassNotFoundException e1) {
+                    throw new IllegalArgumentException(e1);
                 }
             });
         }

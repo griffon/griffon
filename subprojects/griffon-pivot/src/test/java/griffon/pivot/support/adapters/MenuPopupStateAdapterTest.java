@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class MenuPopupStateAdapterTest {
-    private MenuPopupStateAdapter adapter = new MenuPopupStateAdapter();
+    private final MenuPopupStateAdapter adapter = new MenuPopupStateAdapter();
 
     @Test
     public void testPreviewMenuPopupClose() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<org.apache.pivot.util.Vote> callable = new CallableWithArgs<org.apache.pivot.util.Vote>() {
-            public org.apache.pivot.util.Vote call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<org.apache.pivot.util.Vote> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getPreviewMenuPopupClose());
@@ -49,11 +47,9 @@ public class MenuPopupStateAdapterTest {
     @Test
     public void testMenuPopupClosed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getMenuPopupClosed());
@@ -68,11 +64,9 @@ public class MenuPopupStateAdapterTest {
     @Test
     public void testMenuPopupCloseVetoed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getMenuPopupCloseVetoed());

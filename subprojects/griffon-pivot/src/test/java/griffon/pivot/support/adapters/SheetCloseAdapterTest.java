@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SheetCloseAdapterTest {
-    private SheetCloseAdapter adapter = new SheetCloseAdapter();
+    private final SheetCloseAdapter adapter = new SheetCloseAdapter();
 
     @Test
     public void testSheetClosed() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSheetClosed());

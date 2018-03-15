@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ComponentMouseButtonAdapterTest {
-    private ComponentMouseButtonAdapter adapter = new ComponentMouseButtonAdapter();
+    private final ComponentMouseButtonAdapter adapter = new ComponentMouseButtonAdapter();
 
     @Test
     public void testMouseClick() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Boolean> callable = new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return false;
-            }
+        CallableWithArgs<Boolean> callable = args -> {
+            invoked[0] = true;
+            return false;
         };
 
         assertNull(adapter.getMouseClick());
@@ -45,11 +43,9 @@ public class ComponentMouseButtonAdapterTest {
         adapter.mouseClick(null, null, 0, 0, 0);
         assertTrue(invoked[0]);
 
-        adapter.setMouseClick(new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return true;
-            }
+        adapter.setMouseClick(args -> {
+            invoked[0] = true;
+            return true;
         });
         adapter.mouseClick(null, null, 0, 0, 0);
         assertTrue(invoked[0]);
@@ -58,11 +54,9 @@ public class ComponentMouseButtonAdapterTest {
     @Test
     public void testMouseDown() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Boolean> callable = new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return false;
-            }
+        CallableWithArgs<Boolean> callable = args -> {
+            invoked[0] = true;
+            return false;
         };
 
         assertNull(adapter.getMouseDown());
@@ -73,11 +67,9 @@ public class ComponentMouseButtonAdapterTest {
         adapter.mouseDown(null, null, 0, 0);
         assertTrue(invoked[0]);
 
-        adapter.setMouseDown(new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return true;
-            }
+        adapter.setMouseDown(args -> {
+            invoked[0] = true;
+            return true;
         });
         adapter.mouseDown(null, null, 0, 0);
         assertTrue(invoked[0]);
@@ -86,11 +78,9 @@ public class ComponentMouseButtonAdapterTest {
     @Test
     public void testMouseUp() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Boolean> callable = new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return false;
-            }
+        CallableWithArgs<Boolean> callable = args -> {
+            invoked[0] = true;
+            return false;
         };
 
         assertNull(adapter.getMouseUp());
@@ -101,11 +91,9 @@ public class ComponentMouseButtonAdapterTest {
         adapter.mouseUp(null, null, 0, 0);
         assertTrue(invoked[0]);
 
-        adapter.setMouseUp(new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return true;
-            }
+        adapter.setMouseUp(args -> {
+            invoked[0] = true;
+            return true;
         });
         adapter.mouseUp(null, null, 0, 0);
         assertTrue(invoked[0]);

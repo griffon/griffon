@@ -36,13 +36,10 @@ public class DefaultObservableContext extends DefaultContext implements Observab
     private static final String ERROR_LISTENER_NULL = "Argument 'listener' must not be null";
     private final List<ContextEventListener> listeners = new CopyOnWriteArrayList<>();
 
-    private final ContextEventListener parentListener = new ContextEventListener() {
-        @Override
-        public void contextChanged(@Nonnull ContextEvent event) {
-            String key = event.getKey();
-            if (!hasKey(key)) {
-                fireContextEvent(event.getType(), key, event.getOldValue(), event.getNewValue());
-            }
+    private final ContextEventListener parentListener = event -> {
+        String key = event.getKey();
+        if (!hasKey(key)) {
+            fireContextEvent(event.getType(), key, event.getOldValue(), event.getNewValue());
         }
     };
 

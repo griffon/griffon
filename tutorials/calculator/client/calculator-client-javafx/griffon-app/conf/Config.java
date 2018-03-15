@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import griffon.util.AbstractMapResourceBundle;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static griffon.util.CollectionUtils.map;
+import static java.util.Arrays.asList;
 
 public class Config extends AbstractMapResourceBundle {
     @Override

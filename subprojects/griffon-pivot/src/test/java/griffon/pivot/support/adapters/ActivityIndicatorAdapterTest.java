@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ActivityIndicatorAdapterTest {
-    private ActivityIndicatorAdapter adapter = new ActivityIndicatorAdapter();
+    private final ActivityIndicatorAdapter adapter = new ActivityIndicatorAdapter();
 
     @Test
     public void testActiveChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getActiveChanged());

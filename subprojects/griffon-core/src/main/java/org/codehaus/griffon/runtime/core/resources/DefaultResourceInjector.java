@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultResourceInjector extends AbstractResourceInjector {
-    private ResourceResolver resourceResolver;
+    private final ResourceResolver resourceResolver;
 
     @Inject
     public DefaultResourceInjector(@Nonnull ResourceResolver resourceResolver) {

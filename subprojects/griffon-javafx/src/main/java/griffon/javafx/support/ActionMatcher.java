@@ -45,26 +45,23 @@ public interface ActionMatcher {
      * <Button fx:id="copyActionTarget"/>
      * </pre>
      */
-    ActionMatcher DEFAULT = new ActionMatcher() {
-        @Override
-        public void match(@Nonnull Object node, @Nonnull String actionName, @Nonnull JavaFXAction action) {
-            Collection<Object> controls = findElements(node, arg -> {
-                if (arg instanceof Node) {
-                    return actionName.equals(getGriffonActionId((Node) arg));
-                } else if (arg instanceof MenuItem) {
-                    return actionName.equals(getGriffonActionId((MenuItem) arg));
-                }
-                return false;
-            });
-
-            for (Object control : controls) {
-                configureControl(control, action);
+    ActionMatcher DEFAULT = (node, actionName, action) -> {
+        Collection<Object> controls = findElements(node, arg -> {
+            if (arg instanceof Node) {
+                return actionName.equals(getGriffonActionId((Node) arg));
+            } else if (arg instanceof MenuItem) {
+                return actionName.equals(getGriffonActionId((MenuItem) arg));
             }
+            return false;
+        });
 
-            Object control = findElement(node, actionName + "ActionTarget");
-            if (control != null && !controls.contains(control)) {
-                configureControl(control, action);
-            }
+        for (Object control : controls) {
+            configureControl(control, action);
+        }
+
+        Object control = findElement(node, actionName + "ActionTarget");
+        if (control != null && !controls.contains(control)) {
+            configureControl(control, action);
         }
     };
 

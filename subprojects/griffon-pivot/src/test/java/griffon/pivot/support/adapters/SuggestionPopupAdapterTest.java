@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SuggestionPopupAdapterTest {
-    private SuggestionPopupAdapter adapter = new SuggestionPopupAdapter();
+    private final SuggestionPopupAdapter adapter = new SuggestionPopupAdapter();
 
     @Test
     public void testListSizeChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getListSizeChanged());
@@ -49,11 +47,9 @@ public class SuggestionPopupAdapterTest {
     @Test
     public void testSuggestionDataChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSuggestionDataChanged());
@@ -68,11 +64,9 @@ public class SuggestionPopupAdapterTest {
     @Test
     public void testSuggestionRendererChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSuggestionRendererChanged());

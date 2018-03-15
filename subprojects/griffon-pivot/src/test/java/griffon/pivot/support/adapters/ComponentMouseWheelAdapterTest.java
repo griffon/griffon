@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ComponentMouseWheelAdapterTest {
-    private ComponentMouseWheelAdapter adapter = new ComponentMouseWheelAdapter();
+    private final ComponentMouseWheelAdapter adapter = new ComponentMouseWheelAdapter();
 
     @Test
     public void testMouseWheel() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Boolean> callable = new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return false;
-            }
+        CallableWithArgs<Boolean> callable = args -> {
+            invoked[0] = true;
+            return false;
         };
 
         assertNull(adapter.getMouseWheel());
@@ -45,11 +43,9 @@ public class ComponentMouseWheelAdapterTest {
         adapter.mouseWheel(null, null, 0, 0, 0, 0);
         assertTrue(invoked[0]);
 
-        adapter.setMouseWheel(new CallableWithArgs<Boolean>() {
-            public Boolean call(Object... args) {
-                invoked[0] = true;
-                return true;
-            }
+        adapter.setMouseWheel(args -> {
+            invoked[0] = true;
+            return true;
         });
         adapter.mouseWheel(null, null, 0, 0, 0, 0);
         assertTrue(invoked[0]);

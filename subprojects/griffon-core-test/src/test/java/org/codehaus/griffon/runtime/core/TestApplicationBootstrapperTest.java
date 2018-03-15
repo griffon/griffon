@@ -446,7 +446,7 @@ public class TestApplicationBootstrapperTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void assertInstanceBinding(InstanceBinding<Atom> binding, List<BindingTypes> bindingTypes) throws Exception {
+    private void assertInstanceBinding(InstanceBinding<Atom> binding, List<BindingTypes> bindingTypes) {
         if (binding.getClassifier() == null) {
             // Boron ?
             Atom atom = binding.getInstance();
@@ -462,7 +462,7 @@ public class TestApplicationBootstrapperTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void assertProviderBinding(ProviderBinding<Atom> binding, List<BindingTypes> bindingTypes, boolean singleton) throws Exception {
+    private void assertProviderBinding(ProviderBinding<Atom> binding, List<BindingTypes> bindingTypes, boolean singleton) {
         if (singleton) {
             assertTrue(binding.isSingleton());
         }

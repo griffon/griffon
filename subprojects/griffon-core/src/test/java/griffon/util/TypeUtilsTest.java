@@ -387,7 +387,7 @@ public class TypeUtilsTest {
 
     @Test
     public void castToChar() {
-        assertEquals('A', TypeUtils.castToChar(Character.valueOf('A')));
+        assertEquals('A', TypeUtils.castToChar('A'));
         assertEquals('A', TypeUtils.castToChar("AB"));
         assertEquals('A', TypeUtils.castToChar("AB", 'B'));
         assertEquals('B', TypeUtils.castToChar(null, 'B'));

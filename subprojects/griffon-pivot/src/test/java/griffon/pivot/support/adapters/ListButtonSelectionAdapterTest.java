@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class ListButtonSelectionAdapterTest {
-    private ListButtonSelectionAdapter adapter = new ListButtonSelectionAdapter();
+    private final ListButtonSelectionAdapter adapter = new ListButtonSelectionAdapter();
 
     @Test
     public void testSelectedIndexChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedIndexChanged());
@@ -49,11 +47,9 @@ public class ListButtonSelectionAdapterTest {
     @Test
     public void testSelectedItemChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getSelectedItemChanged());

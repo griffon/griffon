@@ -23,7 +23,7 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
 import static griffon.util.GriffonNameUtils.isBlank;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService.class)
@@ -33,7 +33,7 @@ public class SampleService extends AbstractGriffonService {
         if (isBlank(input)) {
             return messageSource.getMessage("greeting.default");
         } else {
-            return messageSource.getMessage("greeting.parameterized", asList(input));
+            return messageSource.getMessage("greeting.parameterized", singletonList(input));
         }
     }
 }

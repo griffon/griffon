@@ -23,7 +23,6 @@ import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
-import griffon.core.RunnableWithArgs;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
@@ -143,24 +142,20 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     }
 
     protected void initializePropertyEditors() {
-        ServiceLoaderUtils.load(applicationClassLoader().get(), "META-INF/editors/", PropertyEditor.class, new ServiceLoaderUtils.LineProcessor() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line) {
-                try {
-                    String[] parts = line.trim().split("=");
-                    Class<?> targetType = loadClass(parts[0].trim(), classLoader);
-                    Class<? extends PropertyEditor> editorClass = (Class<? extends PropertyEditor>) loadClass(parts[1].trim(), classLoader);
+        ServiceLoaderUtils.load(applicationClassLoader().get(), "META-INF/editors/", PropertyEditor.class, (classLoader, type, line) -> {
+            try {
+                String[] parts = line.trim().split("=");
+                Class<?> targetType = loadClass(parts[0].trim(), classLoader);
+                Class<? extends PropertyEditor> editorClass = (Class<? extends PropertyEditor>) loadClass(parts[1].trim(), classLoader);
 
-                    // Editor must have a no-args constructor
-                    // CCE means the class can not be used
-                    editorClass.newInstance();
-                    PropertyEditorResolver.registerEditor(targetType, editorClass);
-                    LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
-                } catch (Exception e) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Could not load " + type.getName() + " with " + line, sanitize(e));
-                    }
+                // Editor must have a no-args constructor
+                // CCE means the class can not be used
+                editorClass.newInstance();
+                PropertyEditorResolver.registerEditor(targetType, editorClass);
+                LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
+            } catch (Exception e) {
+                if (LOG.isWarnEnabled()) {
+                    LOG.warn("Could not load " + type.getName() + " with " + line, sanitize(e));
                 }
             }
         });
@@ -184,10 +179,8 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     protected void initializeResourcesInjector() {
         final ResourceInjector injector = application.getResourceInjector();
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                injector.injectResources(args[1]);
-            }
+        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
+            injector.injectResources(args[1]);
         });
     }
 
@@ -244,12 +237,10 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
             return;
         }
 
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), new RunnableWithArgs() {
-            public void run(@Nullable Object... args) {
-                Class<?> klass = (Class) args[0];
-                if (GriffonController.class.isAssignableFrom(klass)) {
-                    application.getActionManager().createActions((GriffonController) args[1]);
-                }
+        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
+            Class<?> klass = (Class) args[0];
+            if (GriffonController.class.isAssignableFrom(klass)) {
+                application.getActionManager().createActions((GriffonController) args[1]);
             }
         });
 

@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
 import static griffon.util.GriffonNameUtils.getNaturalName;
@@ -65,12 +63,7 @@ public class SwingActionManager extends AbstractActionManager {
 
     @Override
     protected void doConfigureAction(@Nonnull final Action action, @Nonnull final GriffonController controller, @Nonnull final String normalizeNamed, @Nonnull final String keyPrefix) {
-        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                configureAction((SwingGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
-            }
-        });
+        controller.getApplication().addPropertyChangeListener(GriffonApplication.PROPERTY_LOCALE, evt -> configureAction((SwingGriffonControllerAction) action, controller, normalizeNamed, keyPrefix));
         configureAction((SwingGriffonControllerAction) action, controller, normalizeNamed, keyPrefix);
     }
 

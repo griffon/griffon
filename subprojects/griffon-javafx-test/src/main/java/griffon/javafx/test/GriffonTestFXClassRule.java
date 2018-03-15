@@ -50,10 +50,10 @@ import static org.awaitility.Awaitility.await;
  * @since 2.3.0
  */
 public class GriffonTestFXClassRule extends TestFX implements TestRule {
-    protected String windowName;
-    protected Duration timeout;
-    protected String[] startupArgs;
-    protected Class<? extends TestJavaFXGriffonApplication> applicationClass;
+    protected final String windowName;
+    protected final Duration timeout;
+    protected final String[] startupArgs;
+    protected final Class<? extends TestJavaFXGriffonApplication> applicationClass;
     protected JavaFXGriffonApplication application;
     private boolean failures = false;
 

@@ -109,55 +109,50 @@ public class ClassPropertyFetcher {
     }
 
     private void init() {
-        FieldCallback fieldCallback = new FieldCallback() {
-            public void doWith(Field field) {
-                if (field.isSynthetic())
-                    return;
-                final int modifiers = field.getModifiers();
-                if (!Modifier.isPublic(modifiers))
-                    return;
+        FieldCallback fieldCallback = field -> {
+            if (field.isSynthetic())
+                return;
+            final int modifiers = field.getModifiers();
+            if (!Modifier.isPublic(modifiers))
+                return;
 
-                final String name = field.getName();
-                if (name.indexOf('$') == -1) {
-                    boolean staticField = Modifier.isStatic(modifiers);
-                    if (staticField) {
-                        staticFetchers.put(name, new FieldReaderFetcher(field,
-                            staticField));
-                    } else {
-                        instanceFetchers.put(name, new FieldReaderFetcher(
-                            field, staticField));
-                    }
+            final String name = field.getName();
+            if (name.indexOf('$') == -1) {
+                boolean staticField = Modifier.isStatic(modifiers);
+                if (staticField) {
+                    staticFetchers.put(name, new FieldReaderFetcher(field,
+                        staticField));
+                } else {
+                    instanceFetchers.put(name, new FieldReaderFetcher(
+                        field, staticField));
                 }
             }
         };
 
-        MethodCallback methodCallback = new MethodCallback() {
-            public void doWith(Method method) throws IllegalArgumentException,
-                IllegalAccessException {
-                if (method.isSynthetic())
-                    return;
-                if (!Modifier.isPublic(method.getModifiers()))
-                    return;
-                if (Modifier.isStatic(method.getModifiers())
-                    && method.getReturnType() != Void.class) {
-                    if (method.getParameterTypes().length == 0) {
-                        String name = method.getName();
-                        if (name.indexOf('$') == -1) {
-                            if (name.length() > 3 && name.startsWith("get")
-                                && Character.isUpperCase(name.charAt(3))) {
-                                name = name.substring(3);
-                            } else if (name.length() > 2
-                                && name.startsWith("is")
-                                && Character.isUpperCase(name.charAt(2))
-                                && (method.getReturnType() == Boolean.class || method
-                                .getReturnType() == boolean.class)) {
-                                name = name.substring(2);
-                            }
-                            PropertyFetcher fetcher = new GetterPropertyFetcher(
-                                method, true);
-                            staticFetchers.put(name, fetcher);
-                            staticFetchers.put(GriffonNameUtils.uncapitalize(name), fetcher);
+        MethodCallback methodCallback = method -> {
+            if (method.isSynthetic())
+                return;
+            if (!Modifier.isPublic(method.getModifiers()))
+                return;
+            if (Modifier.isStatic(method.getModifiers())
+                && method.getReturnType() != Void.class) {
+                if (method.getParameterTypes().length == 0) {
+                    String name = method.getName();
+                    if (name.indexOf('$') == -1) {
+                        if (name.length() > 3 && name.startsWith("get")
+                            && Character.isUpperCase(name.charAt(3))) {
+                            name = name.substring(3);
+                        } else if (name.length() > 2
+                            && name.startsWith("is")
+                            && Character.isUpperCase(name.charAt(2))
+                            && (method.getReturnType() == Boolean.class || method
+                            .getReturnType() == boolean.class)) {
+                            name = name.substring(2);
                         }
+                        PropertyFetcher fetcher = new GetterPropertyFetcher(
+                            method, true);
+                        staticFetchers.put(name, fetcher);
+                        staticFetchers.put(GriffonNameUtils.uncapitalize(name), fetcher);
                     }
                 }
             }

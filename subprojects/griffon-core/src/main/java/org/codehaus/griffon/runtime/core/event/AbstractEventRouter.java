@@ -102,13 +102,11 @@ public abstract class AbstractEventRouter implements EventRouter {
 
     protected void runInsideExecutorService(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
-        executorService.submit(new Runnable() {
-            public void run() {
-                try {
-                    runnable.run();
-                } catch (Throwable throwable) {
-                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
-                }
+        executorService.submit(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable throwable) {
+                exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
             }
         });
     }
@@ -358,11 +356,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.get(capitalize(eventName));
-            if (list == null) {
-                list = new ArrayList<>();
-                functionalListeners.put(capitalize(eventName), list);
-            }
+            List<Object> list = functionalListeners.computeIfAbsent(capitalize(eventName), k -> new ArrayList<>());
             if (list.contains(listener)) { return; }
             LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
             list.add(listener);
@@ -374,11 +368,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
         requireNonNull(listener, ERROR_LISTENER_NULL);
         synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.get(capitalize(eventName));
-            if (list == null) {
-                list = new ArrayList<>();
-                functionalListeners.put(capitalize(eventName), list);
-            }
+            List<Object> list = functionalListeners.computeIfAbsent(capitalize(eventName), k -> new ArrayList<>());
             if (list.contains(listener)) { return; }
             LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
             list.add(listener);
@@ -448,32 +438,30 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonNull(event, ERROR_EVENT_NULL);
         requireNonNull(params, ERROR_PARAMS_NULL);
         requireNonBlank(mode, ERROR_MODE_BLANK);
-        return new Runnable() {
-            public void run() {
-                String eventName = capitalize(event);
-                LOG.debug("Triggering event '{}' {}", eventName, mode);
-                String eventHandler = "on" + eventName;
-                // defensive copying to avoid CME during event dispatching
-                List<Object> listenersCopy = new ArrayList<>();
-                List<Object> instances = instanceListeners.get(eventName);
-                if (instances != null) {
-                    listenersCopy.addAll(instances);
+        return () -> {
+            String eventName = capitalize(event);
+            LOG.debug("Triggering event '{}' {}", eventName, mode);
+            String eventHandler = "on" + eventName;
+            // defensive copying to avoid CME during event dispatching
+            List<Object> listenersCopy = new ArrayList<>();
+            List<Object> instances = instanceListeners.get(eventName);
+            if (instances != null) {
+                listenersCopy.addAll(instances);
+            }
+            synchronized (functionalListeners) {
+                List<?> list = functionalListeners.get(eventName);
+                if (list != null) {
+                    listenersCopy.addAll(list);
                 }
-                synchronized (functionalListeners) {
-                    List<?> list = functionalListeners.get(eventName);
-                    if (list != null) {
-                        listenersCopy.addAll(list);
-                    }
-                }
+            }
 
-                for (Object listener : listenersCopy) {
-                    if (listener instanceof RunnableWithArgs) {
-                        fireEvent((RunnableWithArgs) listener, params);
-                    } else if (listener instanceof CallableWithArgs) {
-                        fireEvent((CallableWithArgs<?>) listener, params);
-                    } else {
-                        fireEvent(listener, eventHandler, params);
-                    }
+            for (Object listener : listenersCopy) {
+                if (listener instanceof RunnableWithArgs) {
+                    fireEvent((RunnableWithArgs) listener, params);
+                } else if (listener instanceof CallableWithArgs) {
+                    fireEvent((CallableWithArgs<?>) listener, params);
+                } else {
+                    fireEvent(listener, eventHandler, params);
                 }
             }
         };
@@ -556,11 +544,7 @@ public abstract class AbstractEventRouter implements EventRouter {
                 MethodDescriptor descriptor = MethodDescriptor.forMethod(method);
                 if (GriffonClassUtils.isEventHandler(descriptor)) {
                     String methodName = method.getName();
-                    List<MethodInfo> descriptors = methodMetadata.get(methodName);
-                    if (descriptors == null) {
-                        descriptors = new ArrayList<>();
-                        methodMetadata.put(methodName, descriptors);
-                    }
+                    List<MethodInfo> descriptors = methodMetadata.computeIfAbsent(methodName, k -> new ArrayList<>());
                     descriptors.add(new MethodInfo(descriptor, method));
                 }
             }

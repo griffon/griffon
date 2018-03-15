@@ -25,16 +25,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class TabPaneAttributeAdapterTest {
-    private TabPaneAttributeAdapter adapter = new TabPaneAttributeAdapter();
+    private final TabPaneAttributeAdapter adapter = new TabPaneAttributeAdapter();
 
     @Test
     public void testTabDataChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTabDataChanged());
@@ -49,11 +47,9 @@ public class TabPaneAttributeAdapterTest {
     @Test
     public void testTooltipTextChanged() {
         final boolean[] invoked = new boolean[1];
-        CallableWithArgs<Void> callable = new CallableWithArgs<Void>() {
-            public Void call(Object... args) {
-                invoked[0] = true;
-                return null;
-            } 
+        CallableWithArgs<Void> callable = args -> {
+            invoked[0] = true;
+            return null;
         };
 
         assertNull(adapter.getTooltipTextChanged());

@@ -23,7 +23,7 @@ import griffon.util.CollectionUtils;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public class Config extends AbstractMapResourceBundle {
     @Override
@@ -31,7 +31,7 @@ public class Config extends AbstractMapResourceBundle {
         CollectionUtils.map(entries)
             .e("application", CollectionUtils.map()
                 .e("title", "JavaFX + Java")
-                .e("startupGroups", asList("sample"))
+                .e("startupGroups", singletonList("sample"))
                 .e("autoShutdown", true)
             )
             .e("mvcGroups", CollectionUtils.map()

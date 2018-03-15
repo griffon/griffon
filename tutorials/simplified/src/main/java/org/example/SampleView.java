@@ -26,8 +26,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import java.util.Collections;
 import javax.annotation.Nonnull;
+import java.util.Collections;
 
 public class SampleView extends AbstractJavaFXGriffonView {
     private SampleController controller;

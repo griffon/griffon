@@ -34,7 +34,7 @@ import static griffon.util.GriffonNameUtils.requireNonBlank;
  * @since 2.10.0
  */
 public class PropertiesResourceBundle extends ResourceBundle {
-    private Map<String, Object> storage;
+    private final Map<String, Object> storage;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public PropertiesResourceBundle(@Nonnull Properties properties) {

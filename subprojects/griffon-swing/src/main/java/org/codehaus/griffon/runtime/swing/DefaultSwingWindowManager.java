@@ -220,14 +220,12 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         final String name = windowName;
         final int index = windowIndex;
 
-        getApplication().getUIThreadManager().runInsideUIAsync(new Runnable() {
-            public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Showing window with name: '" + name + "' at index " + index + " " + internalFrame);
-                }
-                //noinspection ConstantConditions
-                resolveSwingWindowDisplayHandler().show(name, internalFrame);
+        getApplication().getUIThreadManager().runInsideUIAsync(() -> {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Showing window with name: '" + name + "' at index " + index + " " + internalFrame);
             }
+            //noinspection ConstantConditions
+            resolveSwingWindowDisplayHandler().show(name, internalFrame);
         });
     }
 
@@ -261,14 +259,12 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         final String name = windowName;
         final int index = windowIndex;
 
-        getApplication().getUIThreadManager().runInsideUIAsync(new Runnable() {
-            public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Hiding window with name: '" + name + "' at index " + index + " " + internalFrame);
-                }
-                //noinspection ConstantConditions
-                resolveSwingWindowDisplayHandler().hide(name, internalFrame);
+        getApplication().getUIThreadManager().runInsideUIAsync(() -> {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Hiding window with name: '" + name + "' at index " + index + " " + internalFrame);
             }
+            //noinspection ConstantConditions
+            resolveSwingWindowDisplayHandler().hide(name, internalFrame);
         });
     }
 

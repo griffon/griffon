@@ -138,7 +138,7 @@ public class Bindings {
         protected final Class<T> source;
         protected final boolean singleton;
         protected Annotation classifier;
-        protected Class<? extends Annotation> classifierType;
+        protected final Class<? extends Annotation> classifierType;
 
         protected AbstractBindingImpl(@Nonnull Class<T> source, @Nonnull Annotation classifier, boolean singleton) {
             this.source = source;
