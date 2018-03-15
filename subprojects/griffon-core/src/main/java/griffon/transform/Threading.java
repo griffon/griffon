@@ -93,7 +93,7 @@ public @interface Threading {
      * @see Threading
      * @since 2.0.0
      */
-    public enum Policy {
+    enum Policy {
         /**
          * Skip threading injection
          */

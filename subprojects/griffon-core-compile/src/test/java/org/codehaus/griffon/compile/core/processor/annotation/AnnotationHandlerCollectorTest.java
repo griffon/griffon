@@ -30,7 +30,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class AnnotationHandlerCollectorTest extends NoOutputTestBase {
-    private TestInitializer initializer;
     private TestLogger logger;
     private AnnotationHandlerCollector collector;
 
@@ -40,7 +39,7 @@ public class AnnotationHandlerCollectorTest extends NoOutputTestBase {
         map.put("annotation1", "type1=provider1\n");
         map.put("annotation2", "type1=provider1\ntype2=provider2\n");
         map.put("annotation3", "type1=provider1\ntype3=provider3\n");
-        initializer = new TestInitializer(map);
+        TestInitializer initializer = new TestInitializer(map);
         logger = new TestLogger();
         collector = new AnnotationHandlerCollector(initializer, logger);
     }

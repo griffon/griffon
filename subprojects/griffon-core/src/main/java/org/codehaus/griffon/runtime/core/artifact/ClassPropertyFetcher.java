@@ -303,15 +303,15 @@ public class ClassPropertyFetcher {
         return null;
     }
 
-    public static interface ReferenceInstanceCallback {
-        public Object getReferenceInstance();
+    public interface ReferenceInstanceCallback {
+        Object getReferenceInstance();
     }
 
-    static interface PropertyFetcher {
-        public Object get(ReferenceInstanceCallback callback)
+    interface PropertyFetcher {
+        Object get(ReferenceInstanceCallback callback)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 
-        public Class<?> getPropertyType(String name);
+        Class<?> getPropertyType(String name);
     }
 
     static class GetterPropertyFetcher implements PropertyFetcher {
@@ -380,11 +380,11 @@ public class ClassPropertyFetcher {
         }
     }
 
-    static interface FieldCallback {
+    interface FieldCallback {
         void doWith(Field field) throws IllegalArgumentException, IllegalAccessException;
     }
 
-    static interface MethodCallback {
+    interface MethodCallback {
         void doWith(Method method) throws IllegalArgumentException, IllegalAccessException;
     }
 }

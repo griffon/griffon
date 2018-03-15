@@ -84,17 +84,14 @@ public final class TestJavaFileObject extends SimpleJavaFileObject {
     }
 
     private static CharSequence readFile(String prefix, FileType type, String name) throws IOException {
-        BufferedReader reader = new BufferedReader(
-            new InputStreamReader(TestJavaFileObject.class.getClassLoader().getResourceAsStream(
-                prefix + "/" + type.getLocation() + "/" + name + ".java")));
         StringBuilder result = new StringBuilder();
-        try {
+        try (BufferedReader reader = new BufferedReader(
+            new InputStreamReader(TestJavaFileObject.class.getClassLoader().getResourceAsStream(
+                prefix + "/" + type.getLocation() + "/" + name + ".java")))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 result.append(line).append("\n");
             }
-        } finally {
-            reader.close();
         }
         return result;
     }

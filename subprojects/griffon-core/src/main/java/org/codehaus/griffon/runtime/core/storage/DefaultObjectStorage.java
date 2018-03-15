@@ -49,9 +49,7 @@ public class DefaultObjectStorage<T> implements ObjectStorage<T> {
     @Nonnull
     @Override
     public Collection<T> getValues() {
-        Set<T> values = new LinkedHashSet<>();
-        values.addAll(instances.values());
-        return unmodifiableSet(values);
+        return unmodifiableSet(new LinkedHashSet<>(instances.values()));
     }
 
     @Nullable

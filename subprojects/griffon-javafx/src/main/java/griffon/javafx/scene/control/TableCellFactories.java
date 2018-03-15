@@ -59,6 +59,7 @@ public class TableCellFactories {
         return new EditableTableCellFactory<E, T>(checkboxTableCellFactory());
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
@@ -75,6 +76,7 @@ public class TableCellFactories {
         };
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
@@ -153,11 +155,13 @@ public class TableCellFactories {
         };
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(items));
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(converter, items));
@@ -183,6 +187,7 @@ public class TableCellFactories {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(converter, enumType));
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
@@ -199,6 +204,7 @@ public class TableCellFactories {
         };
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
@@ -277,11 +283,13 @@ public class TableCellFactories {
         };
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(items));
     }
 
+    @SafeVarargs
     @Nonnull
     public static <E, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(converter, items));

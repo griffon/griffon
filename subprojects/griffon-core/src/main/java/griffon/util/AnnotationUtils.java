@@ -445,8 +445,7 @@ public class AnnotationUtils {
 
         Map<String, T> instancesByName = mapInstancesByName(instances, suffix, type);
 
-        Map<String, T> map = new LinkedHashMap<>();
-        map.putAll(instancesByName);
+        Map<String, T> map = new LinkedHashMap<>(instancesByName);
 
         if (!order.isEmpty()) {
             Map<String, T> tmp1 = new LinkedHashMap<>(instancesByName);

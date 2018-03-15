@@ -26,5 +26,5 @@ import griffon.core.threading.ThreadingHandler;
  * @since 2.0.0
  */
 public interface LifecycleHandler extends ThreadingHandler {
-    public void execute();
+    void execute();
 }

@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TypeCollectorTest extends NoOutputTestBase {
-    private TestInitializer initializer;
     private TestLogger logger;
     private TypeCollector collector;
 
@@ -41,7 +40,7 @@ public class TypeCollectorTest extends NoOutputTestBase {
         map.put("type1", "provider1\n");
         map.put("type2", "provider1\nprovider2\n");
         map.put("type3", "provider1\nprovider3\n");
-        initializer = new TestInitializer(map);
+        TestInitializer initializer = new TestInitializer(map);
         logger = new TestLogger();
         collector = new TypeCollector(initializer, logger);
     }

@@ -87,9 +87,7 @@ class InstanceTracker {
     }
 
     public void releaseAll() {
-        List<Object> instances = new ArrayList<>();
-
-        instances.addAll(instanceToKeyMap.keySet());
+        List<Object> instances = new ArrayList<>(instanceToKeyMap.keySet());
         instanceToKeyMap.clear();
 
         Collections.reverse(instances);

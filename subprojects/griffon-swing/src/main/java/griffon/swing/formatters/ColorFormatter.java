@@ -206,7 +206,7 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
     }
 
-    private static interface ColorFormatterDelegate {
+    private interface ColorFormatterDelegate {
         @Nonnull
         String getPattern();
 

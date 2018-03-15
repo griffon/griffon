@@ -88,8 +88,7 @@ public class ColorPropertyEditor extends AbstractPropertyEditor {
             return;
         }
 
-        List<Object> values = new ArrayList<>();
-        values.addAll(list);
+        List<Object> values = new ArrayList<>(list);
         switch (list.size()) {
             case 3:
                 values.add(1d);

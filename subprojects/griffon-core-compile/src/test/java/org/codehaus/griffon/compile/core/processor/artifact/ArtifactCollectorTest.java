@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ArtifactCollectorTest extends NoOutputTestBase {
-    private TestInitializer initializer;
     private TestLogger logger;
     private ArtifactCollector collector;
 
@@ -41,7 +40,7 @@ public class ArtifactCollectorTest extends NoOutputTestBase {
         map.put("griffon.core.artifact.GriffonModel", "provider1\n");
         map.put("griffon.core.artifact.GriffonView", "provider1\nprovider2\n");
         map.put("griffon.core.artifact.GriffonController", "provider1\nprovider3\n");
-        initializer = new TestInitializer(map);
+        TestInitializer initializer = new TestInitializer(map);
         logger = new TestLogger();
         collector = new ArtifactCollector(initializer, logger);
     }

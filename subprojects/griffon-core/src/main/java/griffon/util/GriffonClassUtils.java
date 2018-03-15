@@ -2280,10 +2280,10 @@ public class GriffonClassUtils {
 
         if (name.startsWith(PROPERTY_GET_PREFIX)) {
             name = name.substring(3);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) { return true; }
+            return name.length() > 0 && Character.isUpperCase(name.charAt(0));
         } else if (name.startsWith(PROPERTY_IS_PREFIX)) {
             name = name.substring(2);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) { return true; }
+            return name.length() > 0 && Character.isUpperCase(name.charAt(0));
         }
         return false;
     }
@@ -2347,7 +2347,7 @@ public class GriffonClassUtils {
         if (name.startsWith(PROPERTY_SET_PREFIX)) {
             if (args.length != 1) { return false; }
             name = name.substring(3);
-            if (name.length() > 0 && Character.isUpperCase(name.charAt(0))) { return true; }
+            return name.length() > 0 && Character.isUpperCase(name.charAt(0));
         }
 
         return false;
@@ -2896,11 +2896,7 @@ public class GriffonClassUtils {
             } else {
                 return false;
             }
-        } catch (IllegalAccessException e) {
-            return false;
-        } catch (InvocationTargetException e) {
-            return false;
-        } catch (NoSuchMethodException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             return false;
         }
     }
@@ -2949,11 +2945,7 @@ public class GriffonClassUtils {
             } else {
                 return false;
             }
-        } catch (IllegalAccessException e) {
-            return false;
-        } catch (InvocationTargetException e) {
-            return false;
-        } catch (NoSuchMethodException e) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             return false;
         }
     }

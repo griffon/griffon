@@ -30,7 +30,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class PropertyEditorCollectorTest extends NoOutputTestBase {
-    private TestInitializer initializer;
     private TestLogger logger;
     private PropertyEditorCollector collector;
 
@@ -40,7 +39,7 @@ public class PropertyEditorCollectorTest extends NoOutputTestBase {
         map.put("editor1", "type1=provider1\n");
         map.put("editor2", "type1=provider1\ntype2=provider2\n");
         map.put("editor3", "type1=provider1\ntype3=provider3\n");
-        initializer = new TestInitializer(map);
+        TestInitializer initializer = new TestInitializer(map);
         logger = new TestLogger();
         collector = new PropertyEditorCollector(initializer, logger);
     }
