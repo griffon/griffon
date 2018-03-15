@@ -17,8 +17,6 @@
  */
 package griffon.core.editors;
 
-import griffon.metadata.PropertyEditorFor;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -29,7 +27,6 @@ import java.util.Date;
  * @author Andres Almiray
  * @since 2.4.0
  */
-@PropertyEditorFor(Calendar.class)
 public class ExtendedCalendarPropertyEditor extends CalendarPropertyEditor {
     @Override
     protected void setValueInternal(Object value) {

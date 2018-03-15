@@ -18,60 +18,48 @@
 package griffon.core.editors;
 
 import griffon.core.formatters.Formatter;
-import griffon.core.formatters.LocalTimeFormatter;
-import griffon.metadata.PropertyEditorFor;
+import griffon.core.formatters.LocalDateFormatter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static griffon.util.GriffonNameUtils.isBlank;
+import static java.time.LocalDate.ofEpochDay;
 
 /**
  * @author Andres Almiray
  * @since 2.4.0
  */
-@PropertyEditorFor(LocalTime.class)
-public class LocalTimePropertyEditor extends AbstractPropertyEditor {
+public class LocalDatePropertyEditor extends AbstractPropertyEditor {
     @Override
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
         } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
-        } else if (value instanceof LocalTime) {
+        } else if (value instanceof LocalDate) {
             super.setValueInternal(value);
         } else if (value instanceof LocalDateTime) {
-            super.setValueInternal(((LocalDateTime) value).toLocalTime());
+            super.setValueInternal(((LocalDateTime) value).toLocalDate());
         } else if (value instanceof Date) {
-            handleAsDate((Date) value);
+            super.setValueInternal(ofEpochDay(((Date) value).getTime()));
         } else if (value instanceof Calendar) {
-            handleAsCalendar((Calendar) value);
+            super.setValueInternal(ofEpochDay(((Calendar) value).getTime().getTime()));
         } else if (value instanceof Number) {
-            handleAsDate(new Date(((Number) value).longValue()));
+            super.setValueInternal(ofEpochDay(((Number) value).longValue()));
         } else if (value instanceof List) {
             handleAsList((List) value);
+        } else if (value instanceof Map) {
+            handleAsMap((Map) value);
         } else {
-            throw illegalValue(value, LocalTime.class);
+            throw illegalValue(value, LocalDate.class);
         }
-    }
-
-    protected void handleAsDate(Date date) {
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        handleAsCalendar(c);
-    }
-
-    protected void handleAsCalendar(Calendar value) {
-        int h = value.get(Calendar.HOUR);
-        int i = value.get(Calendar.MINUTE);
-        int s = value.get(Calendar.SECOND);
-        int n = value.get(Calendar.MILLISECOND) * 1000;
-        super.setValueInternal(LocalTime.of(h, i, s, n));
     }
 
     protected void handleAsString(String str) {
@@ -81,15 +69,15 @@ public class LocalTimePropertyEditor extends AbstractPropertyEditor {
         }
 
         try {
-            super.setValueInternal(LocalTime.parse(str));
+            super.setValueInternal(LocalDate.parse(str));
         } catch (DateTimeParseException dtpe) {
-            throw illegalValue(str, LocalTime.class, dtpe);
+            throw illegalValue(str, LocalDate.class, dtpe);
         }
     }
 
     @Override
-    protected Formatter<LocalTime> resolveFormatter() {
-        return isBlank(getFormat()) ? null : new LocalTimeFormatter(getFormat());
+    protected Formatter<LocalDate> resolveFormatter() {
+        return isBlank(getFormat()) ? null : new LocalDateFormatter(getFormat());
     }
 
     protected void handleAsList(List<?> list) {
@@ -100,15 +88,8 @@ public class LocalTimePropertyEditor extends AbstractPropertyEditor {
 
         List<Object> values = new ArrayList<>();
         values.addAll(list);
-        switch (values.size()) {
-            case 4:
-                // ok
-                break;
-            case 3:
-                values.add(0);
-                break;
-            default:
-                throw illegalValue(list, LocalTime.class);
+        if (values.size() != 3) {
+            throw illegalValue(list, LocalDate.class);
         }
 
         for (int i = 0, valuesSize = values.size(); i < valuesSize; i++) {
@@ -118,28 +99,52 @@ public class LocalTimePropertyEditor extends AbstractPropertyEditor {
             } else if (val instanceof CharSequence) {
                 values.set(i, parse(String.valueOf(val)));
             } else {
-                throw illegalValue(list, LocalTime.class);
+                throw illegalValue(list, LocalDate.class);
             }
         }
         super.setValueInternal(
-            LocalTime.of(
+            LocalDate.of(
                 (Integer) values.get(0),
                 (Integer) values.get(1),
-                (Integer) values.get(2),
-                (Integer) values.get(3)
+                (Integer) values.get(2)
             )
         );
+    }
+
+    protected void handleAsMap(Map<?, ?> map) {
+        if (map.isEmpty()) {
+            super.setValueInternal(null);
+            return;
+        }
+
+        int y = getMapValue(map, "year", 1970);
+        int m = getMapValue(map, "month", 1);
+        int d = getMapValue(map, "day", 1);
+        super.setValueInternal(LocalDate.of(y, m, d));
     }
 
     protected int parse(String val) {
         try {
             return Integer.parseInt(val.trim());
         } catch (NumberFormatException e) {
-            throw illegalValue(val, LocalTime.class, e);
+            throw illegalValue(val, LocalDate.class, e);
         }
     }
 
     protected int parse(Number val) {
         return val.intValue();
+    }
+
+    protected int getMapValue(Map<?, ?> map, String key, int defaultValue) {
+        Object val = map.get(key);
+        if (null == val) { val = map.get(String.valueOf(key.charAt(0))); }
+        if (null == val) {
+            return defaultValue;
+        } else if (val instanceof CharSequence) {
+            return parse(String.valueOf(val));
+        } else if (val instanceof Number) {
+            return parse((Number) val);
+        }
+        throw illegalValue(map, LocalDate.class);
     }
 }

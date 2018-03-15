@@ -17,8 +17,6 @@
  */
 package griffon.core.editors;
 
-import griffon.metadata.PropertyEditorFor;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -27,7 +25,6 @@ import java.util.Date;
  * @author Andres Almiray
  * @since 2.4.0
  */
-@PropertyEditorFor(Date.class)
 public class ExtendedDatePropertyEditor extends DatePropertyEditor {
     @Override
     protected void setValueInternal(Object value) {

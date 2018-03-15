@@ -19,7 +19,6 @@ package griffon.core.editors;
 
 import griffon.core.formatters.Formatter;
 import griffon.core.formatters.LocalDateTimeFormatter;
-import griffon.metadata.PropertyEditorFor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,7 +35,6 @@ import static griffon.util.GriffonNameUtils.isBlank;
  * @author Andres Almiray
  * @since 2.4.0
  */
-@PropertyEditorFor(LocalDateTime.class)
 public class LocalDateTimePropertyEditor extends AbstractPropertyEditor {
     @Override
     protected void setValueInternal(Object value) {

@@ -183,9 +183,6 @@ class GriffonPlugin implements Plugin<Project> {
                 appendDependency('core')
                 appendDependency('core-compile')
                 appendDependency('core-test')
-                if (JavaVersion.current().isJava8Compatible()) {
-                    appendDependency('core-java8')
-                }
 
                 validateToolkit(project, extension)
                 if (extension.applicationProject) {
