@@ -251,18 +251,18 @@ subprojects { subproj ->
                 options.windowTitle = "$subproj.pomDescription $version"
                 options.docTitle    = "$subproj.pomDescription $version"
                 options.footer      = rootProject.javadocFooter
-                options.links       = ['http://www.slf4j.org/apidocs/',
-                                       'http://junit.org/junit4/javadoc/latest/',
-                                       'http://aalmiray.github.io/jsr-305/apidocs/',
-                                       'http://javax-inject.github.io/javax-inject/api/',
-                                       'http://docs.oracle.com/javase/8/docs/api/',
-                                       'http://docs.oracle.com/javase/8/javafx/api/',
-                                       'http://google.github.io/guice/api-docs/4.1/javadoc/',
-                                       'http://mabe02.github.io/lanterna/apidocs/2.1/',
-                                       'http://pivot.apache.org/2.0.4/docs/api/',
-                                       'http://docs.groovy-lang.org/latest/html/api/',
-                                       'http://aalmiray.github.io/jipsy/apidocs/',
-                                       'http://aalmiray.github.io/gipsy/apidocs/']
+                options.links 'https://www.slf4j.org/apidocs/'
+                options.links 'https://junit.org/junit4/javadoc/latest/'
+                options.links 'https://aalmiray.github.io/jsr-305/apidocs/'
+                options.links 'https://javax-inject.github.io/javax-inject/api/'
+                options.links 'https://docs.oracle.com/javase/8/docs/api/'
+                options.links 'https://docs.oracle.com/javase/8/javafx/api/'
+                options.links 'https://google.github.io/guice/api-docs/4.1/javadoc/'
+                options.links 'https://mabe02.github.io/lanterna/apidocs/2.1/'
+                options.links 'https://pivot.apache.org/2.0.5/docs/api/'
+                options.links 'http://docs.groovy-lang.org/latest/html/api/'
+                options.links 'https://aalmiray.github.io/jipsy/apidocs/'
+                options.links 'https://aalmiray.github.io/gipsy/apidocs/'
 
                 doLast { task ->
                     copy {
