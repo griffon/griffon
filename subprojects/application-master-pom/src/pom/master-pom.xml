@@ -76,6 +76,7 @@
         <plugin.javafx.version>8.8.3</plugin.javafx.version>
         <plugin.jacoco.version>0.7.9</plugin.jacoco.version>
         <plugin.jdepend.version>2.0</plugin.jdepend.version>
+        <plugin.jar.version>3.1.0</plugin.jar.version>
         <plugin.jxr.version>2.5</plugin.jxr.version>
         <plugin.osxappbundle.version>1.0.1</plugin.osxappbundle.version>
         <plugin.processor.version>3.3.2</plugin.processor.version>
@@ -339,6 +340,21 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${plugin.jar.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifestEntries>
+                                <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
+                                <Build-Timestamp>${git.build.time}</Build-Timestamp>
+                                <Build-Revision>${git.commit.id}</Build-Revision>
+                                <Build-OS>${os.name} ${os.arch} ${os.version}</Build-OS>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
                 </plugin>
                 <!-- tag::plugin_surefire[] -->
                 <plugin>
