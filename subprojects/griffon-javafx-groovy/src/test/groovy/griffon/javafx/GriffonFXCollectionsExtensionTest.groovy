@@ -73,7 +73,7 @@ class GriffonFXCollectionsExtensionTest {
     }
 
     @Test
-    @Ignore("java.lang.VerifyError when invoking Function.identity() with Groovy 2.4.14")
+    //@Ignore("java.lang.VerifyError when invoking Function.identity() with Groovy 2.4.15")
     void testOperationsWithObservable() {
         // given:
         ObservableList<Integer> source = observableArrayList()
