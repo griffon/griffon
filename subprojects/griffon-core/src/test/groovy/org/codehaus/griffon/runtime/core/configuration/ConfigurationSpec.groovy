@@ -41,6 +41,10 @@ class ConfigurationSpec extends Specification {
     @Inject
     private Configuration configuration
 
+    def cleanup() {
+        PropertyEditorResolver.clear()
+    }
+
     def 'Calling configuration.get(#key, #defaultValue) returns #expectedValue'() {
         expect:
         expectedValue == configuration.get(key, defaultValue)
@@ -79,9 +83,6 @@ class ConfigurationSpec extends Specification {
         then:
         value == expectedValue
 
-        cleanup:
-        PropertyEditorResolver.clear()
-
         where:
         key              || expectedValue
         'key.int.null'   || null
@@ -99,9 +100,6 @@ class ConfigurationSpec extends Specification {
 
         then:
         value == expectedValue
-
-        cleanup:
-        PropertyEditorResolver.clear()
 
         where:
         key               || expectedValue

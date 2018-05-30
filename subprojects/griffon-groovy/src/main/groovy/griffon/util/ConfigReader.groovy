@@ -192,13 +192,13 @@ class ConfigReader {
         GroovySystem.metaClassRegistry.removeMetaClass(script.class)
         def mc = script.class.metaClass
         def prefix = ""
-        LinkedList stack = new LinkedList()
+        Stack<Map<String, Object>> stack = new Stack<>()
         stack << [config: config, scope: [:]]
         def pushStack = { co ->
-            stack << [config: co, scope: stack.last.scope.clone()]
+            stack << [config: co, scope: stack.peek().scope.clone()]
         }
         def assignName = { name, co ->
-            def current = stack.last
+            def current = stack.peek()
             /*
             def cfg = current.config
             if (cfg instanceof ConfigObject) {
@@ -218,7 +218,7 @@ class ConfigReader {
             current.scope[name] = co
         }
         mc.getProperty = { String name ->
-            def current = stack.last
+            def current = stack.peek()
             def result
             if (current.config.get(name)) {
                 result = current.config.get(name)
@@ -247,7 +247,7 @@ class ConfigReader {
                     } finally {
                         currentConditionalBlock.pop()
                         for (entry in conditionalBlocks.pop().entrySet()) {
-                            def c = stack.last.config
+                            def c = stack.peek().config
                             (c != config ? c : overrides).merge(entry.value)
                         }
                     }
@@ -268,8 +268,8 @@ class ConfigReader {
                     }
                 } else {
                     def co
-                    if (stack.last.config.get(name) instanceof ConfigObject) {
-                        co = stack.last.config.get(name)
+                    if (stack.peek().config.get(name) instanceof ConfigObject) {
+                        co = stack.peek().config.get(name)
                     } else {
                         co = new ConfigObject()
                     }

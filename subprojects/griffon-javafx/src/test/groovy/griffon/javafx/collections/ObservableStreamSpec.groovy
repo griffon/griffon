@@ -246,7 +246,7 @@ class ObservableStreamSpec extends Specification {
         result.get() == 4
 
         when:
-        LongProperty m = new SimpleLongProperty<>(1l)
+        LongProperty m = new SimpleLongProperty(1l)
         result = stream.limit(m)
             .map({ g -> g.name })
             .filter({ n -> n.endsWith('y') })
@@ -284,7 +284,7 @@ class ObservableStreamSpec extends Specification {
         result.get() == 11
 
         when:
-        LongProperty m = new SimpleLongProperty<>(1l)
+        LongProperty m = new SimpleLongProperty(1l)
         result = stream.skip(m)
             .map({ g -> g.name })
             .filter({ n -> n.endsWith('y') })
