@@ -38,7 +38,9 @@ import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
 
+import javax.application.converter.ConverterRegistry
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
@@ -87,6 +89,7 @@ class DefaultGroovyAwareMessageSourceTest {
                 .in(Singleton)
             bind(Instantiator).to(DefaultInstantiator).in(Singleton)
             bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
+            bind(ConverterRegistry).to(DefaultConverterRegistry).in(Singleton)
             bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
         }
     }

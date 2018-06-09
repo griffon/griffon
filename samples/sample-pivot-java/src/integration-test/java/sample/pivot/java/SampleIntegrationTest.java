@@ -46,7 +46,7 @@ public class SampleIntegrationTest {
 
     @Test
     public void typeNameAndClickButton() {
-        pivot.runInsideUISync(() -> {
+        pivot.executeInsideUISync(() -> {
             // given:
             pivot.find("inputField", TextInput.class).setText("Griffon");
 
@@ -62,12 +62,12 @@ public class SampleIntegrationTest {
                 notNullValue());
 
         // then:
-        pivot.runInsideUISync(() -> assertEquals("Hello Griffon", pivot.find("outputField", TextInput.class).getText()));
+        pivot.executeInsideUISync(() -> assertEquals("Hello Griffon", pivot.find("outputField", TextInput.class).getText()));
     }
 
     @Test
     public void doNotTypeNameAndClickButton() {
-        pivot.runInsideUISync(() -> {
+        pivot.executeInsideUISync(() -> {
             // given:
             pivot.find("inputField", TextInput.class).setText("");
 
@@ -83,6 +83,6 @@ public class SampleIntegrationTest {
                 notNullValue());
 
         // then:
-        pivot.runInsideUISync(() -> assertEquals("Howdy stranger!", pivot.find("outputField", TextInput.class).getText()));
+        pivot.executeInsideUISync(() -> assertEquals("Howdy stranger!", pivot.find("outputField", TextInput.class).getText()));
     }
 }

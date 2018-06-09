@@ -22,8 +22,6 @@ import griffon.core.formatters.Formatter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,10 +36,6 @@ public class DatePropertyEditor extends AbstractPropertyEditor {
     protected void setValueInternal(Object value) {
         if (null == value) {
             super.setValueInternal(null);
-        } else if (value instanceof LocalDate) {
-            handleAsLocalDate((LocalDate) value);
-        } else if (value instanceof LocalDateTime) {
-            handleAsLocalDate(((LocalDateTime) value).toLocalDate());
         } else if (value instanceof CharSequence) {
             handleAsString(String.valueOf(value));
         } else if (value instanceof Date) {
@@ -73,10 +67,6 @@ public class DatePropertyEditor extends AbstractPropertyEditor {
         } catch (ParseException e) {
             throw illegalValue(str, Date.class, e);
         }
-    }
-
-    protected void handleAsLocalDate(LocalDate value) {
-        super.setValueInternal(new Date(value.toEpochDay()));
     }
 
     @Override

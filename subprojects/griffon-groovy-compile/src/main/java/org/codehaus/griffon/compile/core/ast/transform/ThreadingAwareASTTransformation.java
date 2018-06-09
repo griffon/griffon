@@ -47,6 +47,7 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation i
     private static final Logger LOG = LoggerFactory.getLogger(ThreadingAwareASTTransformation.class);
     private static final ClassNode UITHREAD_MANAGER_CNODE = makeClassSafe(UIThreadManager.class);
     private static final ClassNode THREADING_HANDLER_CNODE = makeClassSafe(ThreadingHandler.class);
+    private static final ClassNode JSR377_THREADING_HANDLER_CNODE = makeClassSafe(javax.application.threading.ThreadingHandler.class);
     private static final ClassNode THREADING_AWARE_CNODE = makeClassSafe(ThreadingAware.class);
 
     /**
@@ -90,6 +91,7 @@ public class ThreadingAwareASTTransformation extends AbstractASTTransformation i
     public static void apply(ClassNode declaringClass) {
         injectInterface(declaringClass, THREADING_HANDLER_CNODE);
         Expression uiThreadManager = injectedField(declaringClass, UITHREAD_MANAGER_CNODE, "this$" + UITHREAD_MANAGER_PROPERTY, null);
+        addDelegateMethods(declaringClass, JSR377_THREADING_HANDLER_CNODE, uiThreadManager);
         addDelegateMethods(declaringClass, THREADING_HANDLER_CNODE, uiThreadManager);
     }
 }

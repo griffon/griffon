@@ -36,7 +36,7 @@ class SampleController {
     @ControllerAction
     void sayHello() {                                                      //<3>
         String result = sampleService.sayHello(builder.input.text)
-        runInsideUIAsync {                                                 //<4>
+        executeInsideUIAsync {                                                 //<4>
             builder.output.text = result
         }
     }

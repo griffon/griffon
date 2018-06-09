@@ -103,7 +103,7 @@ public @interface Threading {
          */
         OUTSIDE_UITHREAD,
         /**
-         * Inject runOutsideUIAsync wrapper
+         * Inject executeOutsideUIAsync wrapper
          */
         OUTSIDE_UITHREAD_ASYNC,
         /**

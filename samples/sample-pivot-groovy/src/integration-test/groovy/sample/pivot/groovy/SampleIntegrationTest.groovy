@@ -38,7 +38,7 @@ class SampleIntegrationTest {
 
     @Test
     void typeNameAndClickButton() {
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             // given:
             pivot.find('input', TextInput).text = 'Griffon'
 
@@ -49,14 +49,14 @@ class SampleIntegrationTest {
         await().atMost(5, SECONDS)
 
         // then:
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             assert 'Hello Griffon' == pivot.find('output', TextInput).text
         }
     }
 
     @Test
     void doNotTypeNameAndClickButton() {
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             // given:
             pivot.find('input', TextInput).text = ''
 
@@ -67,7 +67,7 @@ class SampleIntegrationTest {
         await().atMost(5, SECONDS)
 
         // then:
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             assert 'Howdy stranger!' == pivot.find('output', TextInput).text
         }
     }

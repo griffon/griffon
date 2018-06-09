@@ -19,10 +19,10 @@ package editor;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class EditorModel extends AbstractGriffonModel {
+public class EditorModel extends AbstractSwingGriffonModel {
     private Document document;
 
     public Document getDocument() {

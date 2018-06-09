@@ -20,9 +20,6 @@ package griffon.core.resources;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Objects.requireNonNull;
-
 /**
  * @author Andres Almiray
  * @author Alexander Klein

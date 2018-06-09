@@ -147,7 +147,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private Button createButtonWithContextMenu() {
-        runInsideUISync {
+        executeInsideUISync {
             Button button = new Button()
             button.contextMenu = createContextMenu()
             button
@@ -155,7 +155,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private Button createButtonWithTooltip() {
-        runInsideUISync {
+        executeInsideUISync {
             Button button = new Button()
             Tooltip tooltip = new Tooltip()
             tooltip.id = 'buttonId'
@@ -165,7 +165,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private Button createButtonWithContextMenuTags() {
-        runInsideUISync {
+        executeInsideUISync {
             Button button = new Button()
             button.contextMenu = createContextMenuWithTags()
             button
@@ -173,7 +173,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private Button createButtonWithTooltipTags() {
-        runInsideUISync {
+        executeInsideUISync {
             Button button = new Button()
             Tooltip tooltip = new Tooltip()
             tooltip.properties.tag = 'tag1'
@@ -183,7 +183,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private BorderPane createBorderPane() {
-        runInsideUISync {
+        executeInsideUISync {
             BorderPane pane = new BorderPane()
             pane.children << createButton()
             pane
@@ -191,7 +191,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ContextMenu createContextMenu() {
-        runInsideUISync {
+        executeInsideUISync {
             ContextMenu contextMenu = new ContextMenu()
             Menu primary = new Menu('Primary')
             Menu secondary = new Menu('Secondary')
@@ -205,7 +205,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private MenuBar createMenuBar() {
-        runInsideUISync {
+        executeInsideUISync {
             MenuBar menuBar = new MenuBar()
             Menu primary = new Menu('Primary')
             Menu secondary = new Menu('Secondary')
@@ -219,7 +219,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ButtonBar createButtonBar() {
-        runInsideUISync {
+        executeInsideUISync {
             ButtonBar buttonBar = new ButtonBar()
             buttonBar.buttons << new Button('Primary')
             buttonBar.buttons << new Button('Secondary')
@@ -229,7 +229,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private TabPane createTabPane() {
-        runInsideUISync {
+        executeInsideUISync {
             TabPane tabPane = new TabPane()
             tabPane.tabs << new Tab('Tab #1')
             Tab tab = new Tab('Tab #2')
@@ -240,7 +240,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private TitledPane createTitledPane() {
-        runInsideUISync {
+        executeInsideUISync {
             TitledPane pane = new TitledPane()
             pane.content = createBorderPane()
             pane
@@ -248,7 +248,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private SplitPane createSplitPane() {
-        runInsideUISync {
+        executeInsideUISync {
             SplitPane pane = new SplitPane()
             pane.items << new Pane()
             pane.items << createBorderPane()
@@ -257,7 +257,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ScrollPane createScrollPane() {
-        runInsideUISync {
+        executeInsideUISync {
             ScrollPane pane = new ScrollPane()
             pane.content = createBorderPane()
             pane
@@ -265,7 +265,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private Accordion createAccordion() {
-        runInsideUISync {
+        executeInsideUISync {
             Accordion accordion = new Accordion()
             accordion.panes << createTitledPane()
             accordion
@@ -273,7 +273,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ToolBar createToolBar() {
-        runInsideUISync {
+        executeInsideUISync {
             ToolBar toolBar = new ToolBar()
             toolBar.items << createButton()
             toolBar
@@ -287,7 +287,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private BorderPane createBorderPaneWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             BorderPane pane = new BorderPane()
             pane.children << createButton()
             pane.children << createButtonWithTag('tag1')
@@ -297,7 +297,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ContextMenu createContextMenuWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             ContextMenu contextMenu = new ContextMenu()
             Menu primary = new Menu('Primary')
             Menu secondary = new Menu('Secondary')
@@ -315,7 +315,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private MenuBar createMenuBarWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             MenuBar menuBar = new MenuBar()
             Menu primary = new Menu('Primary')
             Menu secondary = new Menu('Secondary')
@@ -333,7 +333,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ButtonBar createButtonBarWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             ButtonBar buttonBar = new ButtonBar()
             buttonBar.buttons << createButton()
             buttonBar.buttons << createButtonWithTag('tag1')
@@ -343,7 +343,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private TabPane createTabPaneWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             TabPane tabPane = new TabPane()
             tabPane.tabs << new Tab('Tab #1')
             Tab tab = new Tab('Tab #2')
@@ -354,7 +354,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private TitledPane createTitledPaneWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             TitledPane pane = new TitledPane()
             pane.content = createBorderPaneWithTags()
             pane
@@ -362,7 +362,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private SplitPane createSplitPaneWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             SplitPane pane = new SplitPane()
             pane.items << new Pane()
             pane.items << createBorderPaneWithTags()
@@ -371,7 +371,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ScrollPane createScrollPaneWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             ScrollPane pane = new ScrollPane()
             pane.content = createBorderPaneWithTags()
             pane
@@ -379,7 +379,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private Accordion createAccordionWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             Accordion accordion = new Accordion()
             accordion.panes << createTitledPaneWithTags()
             accordion
@@ -387,7 +387,7 @@ class JavaFXUtilsSpec extends Specification {
     }
 
     private ToolBar createToolBarWithTags() {
-        runInsideUISync {
+        executeInsideUISync {
             ToolBar toolBar = new ToolBar()
             toolBar.items << createButtonWithTag('tag1')
             toolBar.items << createButtonWithTag('tag2')
@@ -401,7 +401,7 @@ class JavaFXUtilsSpec extends Specification {
         button
     }
 
-    private static <T> T runInsideUISync(Callable<T> callable) {
+    private static <T> T executeInsideUISync(Callable<T> callable) {
         if (Platform.isFxApplicationThread()) {
             return callable.call()
         }

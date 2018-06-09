@@ -36,6 +36,6 @@ class SampleController {
     @ControllerAction
     void sayHello() {                                                      //<3>
         String result = sampleService.sayHello(model.input)
-        runInsideUIAsync { model.output = result }                         //<4>
+        executeInsideUIAsync { model.output = result }                         //<4>
     }
 }

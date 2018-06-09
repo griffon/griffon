@@ -202,7 +202,7 @@ class ConstantsSpec extends Specification implements BaseConstants {
         'public void executeInsideUIAsync(@javax.annotation.Nonnull java.lang.Runnable arg0)',
         'public void executeInsideUISync(@javax.annotation.Nonnull java.lang.Runnable arg0)',
         'public void executeOutsideUI(@javax.annotation.Nonnull java.lang.Runnable arg0)',
-        'public void runOutsideUIAsync(@javax.annotation.Nonnull java.lang.Runnable arg0)',
+        'public void executeOutsideUIAsync(@javax.annotation.Nonnull java.lang.Runnable arg0)',
         '@javax.annotation.Nonnull public <R> java.util.concurrent.Future<R> executeFuture(@javax.annotation.Nonnull java.util.concurrent.ExecutorService arg0, @javax.annotation.Nonnull java.util.concurrent.Callable<R> arg1)',
         '@javax.annotation.Nonnull public <R> java.util.concurrent.Future<R> executeFuture(@javax.annotation.Nonnull java.util.concurrent.Callable<R> arg0)',
         '@javax.annotation.Nullable public <R> R executeInsideUISync(@javax.annotation.Nonnull java.util.concurrent.Callable<R> arg0)'

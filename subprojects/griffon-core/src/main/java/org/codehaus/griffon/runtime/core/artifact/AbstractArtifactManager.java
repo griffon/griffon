@@ -120,7 +120,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
 
         if (GriffonView.class.isAssignableFrom(clazz)) {
-            return uiThreadManager.runInsideUISync(() -> (A) injectorProvider.get().getInstance(clazz));
+            return uiThreadManager.executeInsideUISync(() -> (A) injectorProvider.get().getInstance(clazz));
         }
 
         return (A) injectorProvider.get().getInstance(clazz);

@@ -19,19 +19,21 @@ package editor;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private static final String MVC_IDENTIFIER = "mvcIdentifier";
     private final DocumentModel documentModel = new DocumentModel();
-    private String mvcIdentifier;
+    private StringProperty mvcIdentifier = new SimpleStringProperty(this, MVC_IDENTIFIER);
 
     public ContainerModel() {
-        addPropertyChangeListener(MVC_IDENTIFIER, (e) -> {
+        mvcIdentifier.addListener((value, oldValue, newValue) -> {
             Document document = null;
-            if (e.getNewValue() != null) {
-                EditorModel model = getApplication().getMvcGroupManager().getModel(mvcIdentifier, EditorModel.class);
+            if (newValue != null) {
+                EditorModel model = getApplication().getMvcGroupManager().getModel(getMvcIdentifier(), EditorModel.class);
                 document = model.getDocument();
             } else {
                 document = new Document();
@@ -40,12 +42,16 @@ public class ContainerModel extends AbstractGriffonModel {
         });
     }
 
-    public String getMvcIdentifier() {
+    public StringProperty mvcIdentifierProperty() {
         return mvcIdentifier;
     }
 
+    public String getMvcIdentifier() {
+        return mvcIdentifier.get();
+    }
+
     public void setMvcIdentifier(String mvcIdentifier) {
-        firePropertyChange(MVC_IDENTIFIER, this.mvcIdentifier, this.mvcIdentifier = mvcIdentifier);
+        this.mvcIdentifier.set(mvcIdentifier);
     }
 
     public DocumentModel getDocumentModel() {

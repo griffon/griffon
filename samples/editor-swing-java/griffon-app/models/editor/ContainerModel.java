@@ -19,10 +19,10 @@ package editor;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class ContainerModel extends AbstractGriffonModel {
+public class ContainerModel extends AbstractSwingGriffonModel {
     public static final String MVC_IDENTIFIER = "mvcIdentifier";
     private final DocumentModel documentModel = new DocumentModel();
     private String mvcIdentifier;

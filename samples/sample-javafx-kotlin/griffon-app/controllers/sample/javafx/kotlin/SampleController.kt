@@ -34,6 +34,6 @@ class SampleController : AbstractGriffonController() {
     @ControllerAction
     fun sayHello() {
         val result = sampleService.sayHello(model.input)
-        runInsideUIAsync { model.output = result }
+        executeInsideUIAsync { model.output = result }
     }
 }

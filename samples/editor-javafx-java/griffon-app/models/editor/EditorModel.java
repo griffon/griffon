@@ -19,17 +19,23 @@ package editor;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class EditorModel extends AbstractGriffonModel {
-    private Document document;
+    private ObjectProperty<Document> document = new SimpleObjectProperty<>(this,"document");
 
     public Document getDocument() {
+        return document.get();
+    }
+
+    public ObjectProperty<Document> documentProperty() {
         return document;
     }
 
     public void setDocument(Document document) {
-        firePropertyChange("document", this.document, this.document = document);
+        this.document.set(document);
     }
 }

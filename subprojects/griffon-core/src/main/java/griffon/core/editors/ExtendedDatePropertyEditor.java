@@ -15,33 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.swing;
+package griffon.core.editors;
 
-import griffon.swing.support.SwingUtils;
-
-import javax.annotation.Nonnull;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
- * Simple implementation of {@code GriffonApplication} that runs in applet mode.
- *
- * @author Danno Ferrin
  * @author Andres Almiray
- * @since 0.1
+ * @since 2.4.0
  */
-public class SwingGriffonApplet extends AbstractGriffonApplet {
-    private static final long serialVersionUID = -992561285851621751L;
-
-    private boolean appletContainerDispensed = false;
-
-    @Nonnull
+public class ExtendedDatePropertyEditor extends DatePropertyEditor {
     @Override
-    public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
-        if (appletContainerDispensed) {
-            return SwingUtils.createApplicationFrame(this, attributes);
+    protected void setValueInternal(Object value) {
+        if (value instanceof LocalDate) {
+            handleAsLocalDate((LocalDate) value);
+        } else if (value instanceof LocalDateTime) {
+            handleAsLocalDate(((LocalDateTime) value).toLocalDate());
         } else {
-            appletContainerDispensed = true;
-            return this;
+            super.setValueInternal(value);
         }
+    }
+
+    protected void handleAsLocalDate(LocalDate value) {
+        super.setValueInternal(new Date(value.toEpochDay()));
     }
 }

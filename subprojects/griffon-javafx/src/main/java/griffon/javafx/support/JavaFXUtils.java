@@ -598,7 +598,7 @@ public final class JavaFXUtils {
     }
 
     private static void updateLabeled(@Nonnull final Labeled node, @Nonnull final GriffonApplication application) {
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
             String defaultValue = getI18nDefaultValue(node);
@@ -614,7 +614,7 @@ public final class JavaFXUtils {
     }
 
     private static void updateLabeled(@Nonnull final Tab node, @Nonnull final GriffonApplication application) {
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
             String defaultValue = getI18nDefaultValue(node);
@@ -630,7 +630,7 @@ public final class JavaFXUtils {
     }
 
     private static void updateLabeled(@Nonnull final MenuItem node, @Nonnull final GriffonApplication application) {
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
             String defaultValue = getI18nDefaultValue(node);
@@ -646,7 +646,7 @@ public final class JavaFXUtils {
     }
 
     private static void updateLabeled(@Nonnull final TableColumn<?, ?> node, @Nonnull final GriffonApplication application) {
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
             String defaultValue = getI18nDefaultValue(node);
@@ -662,7 +662,7 @@ public final class JavaFXUtils {
     }
 
     private static void updateLabeled(@Nonnull final Axis<?> node, @Nonnull final GriffonApplication application) {
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             String key = getI18nKey(node);
             String args = getI18nArgs(node);
             String defaultValue = getI18nDefaultValue(node);
@@ -802,7 +802,7 @@ public final class JavaFXUtils {
         };
     }
 
-    private static void runInsideUIThread(@Nonnull Runnable runnable) {
+    private static void executeInsideUIThread(@Nonnull Runnable runnable) {
         if (Platform.isFxApplicationThread()) {
             runnable.run();
         } else {
@@ -827,22 +827,22 @@ public final class JavaFXUtils {
     public static void configure(@Nonnull final ToggleButton control, @Nonnull final JavaFXAction action) {
         configure((ButtonBase) control, action);
 
-        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
-        runInsideUIThread(() -> control.setSelected(action.isSelected()));
+        action.selectedProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setSelected(n)));
+        executeInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(@Nonnull final CheckBox control, @Nonnull final JavaFXAction action) {
         configure((ButtonBase) control, action);
 
-        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
-        runInsideUIThread(() -> control.setSelected(action.isSelected()));
+        action.selectedProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setSelected(n)));
+        executeInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(@Nonnull final RadioButton control, @Nonnull final JavaFXAction action) {
         configure((ButtonBase) control, action);
 
-        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
-        runInsideUIThread(() -> control.setSelected(action.isSelected()));
+        action.selectedProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setSelected(n)));
+        executeInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(@Nonnull final ButtonBase control, @Nonnull final JavaFXAction action) {
@@ -852,8 +852,8 @@ public final class JavaFXUtils {
         action.onActionProperty().addListener((v, o, n) -> control.setOnAction(n));
         control.setOnAction(action.getOnAction());
 
-        action.nameProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setText(n)));
-        runInsideUIThread(() -> control.setText(action.getName()));
+        action.nameProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setText(n)));
+        executeInsideUIThread(() -> control.setText(action.getName()));
 
         action.descriptionProperty().addListener((v, o, n) -> setTooltip(control, n));
         setTooltip(control, action.getDescription());
@@ -873,11 +873,11 @@ public final class JavaFXUtils {
             setGraphic(control, action.getGraphic());
         }
 
-        action.enabledProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setDisable(!n)));
-        runInsideUIThread(() -> control.setDisable(!action.isEnabled()));
+        action.enabledProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setDisable(!n)));
+        executeInsideUIThread(() -> control.setDisable(!action.isEnabled()));
 
-        action.visibleProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setVisible(n)));
-        runInsideUIThread(() -> control.setVisible(action.isVisible()));
+        action.visibleProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setVisible(n)));
+        executeInsideUIThread(() -> control.setVisible(action.isVisible()));
 
         action.styleClassProperty().addListener((v, o, n) -> {
             setStyleClass(control, o, true);
@@ -901,15 +901,15 @@ public final class JavaFXUtils {
     public static void configure(@Nonnull final CheckMenuItem control, @Nonnull final JavaFXAction action) {
         configure((MenuItem) control, action);
 
-        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
-        runInsideUIThread(() -> control.setSelected(action.isSelected()));
+        action.selectedProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setSelected(n)));
+        executeInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(@Nonnull final RadioMenuItem control, @Nonnull final JavaFXAction action) {
         configure((MenuItem) control, action);
 
-        action.selectedProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setSelected(n)));
-        runInsideUIThread(() -> control.setSelected(action.isSelected()));
+        action.selectedProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setSelected(n)));
+        executeInsideUIThread(() -> control.setSelected(action.isSelected()));
     }
 
     public static void configure(@Nonnull final MenuItem control, @Nonnull final JavaFXAction action) {
@@ -919,8 +919,8 @@ public final class JavaFXUtils {
         action.onActionProperty().addListener((v, o, n) -> control.setOnAction(n));
         control.setOnAction(action.getOnAction());
 
-        action.nameProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setText(n)));
-        runInsideUIThread(() -> control.setText(action.getName()));
+        action.nameProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setText(n)));
+        executeInsideUIThread(() -> control.setText(action.getName()));
 
         action.iconProperty().addListener((v, o, n) -> setIcon(control, n));
         if (isNotBlank(action.getIcon())) {
@@ -937,14 +937,14 @@ public final class JavaFXUtils {
             setGraphic(control, action.getGraphic());
         }
 
-        action.enabledProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setDisable(!n)));
-        runInsideUIThread(() -> control.setDisable(!action.getEnabled()));
+        action.enabledProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setDisable(!n)));
+        executeInsideUIThread(() -> control.setDisable(!action.getEnabled()));
 
-        action.acceleratorProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setAccelerator(n)));
-        runInsideUIThread(() -> control.setAccelerator(action.getAccelerator()));
+        action.acceleratorProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setAccelerator(n)));
+        executeInsideUIThread(() -> control.setAccelerator(action.getAccelerator()));
 
-        action.visibleProperty().addListener((v, o, n) -> runInsideUIThread(() -> control.setVisible(n)));
-        runInsideUIThread(() -> control.setVisible(action.isVisible()));
+        action.visibleProperty().addListener((v, o, n) -> executeInsideUIThread(() -> control.setVisible(n)));
+        executeInsideUIThread(() -> control.setVisible(action.isVisible()));
 
         action.styleClassProperty().addListener((v, o, n) -> {
             setStyleClass(control, o, true);
@@ -1053,7 +1053,7 @@ public final class JavaFXUtils {
     }
 
     private static void applyStyleClass(String styleClass, ObservableList<String> styleClasses, boolean remove) {
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             String[] strings = styleClass.split("[,\\ ]");
             if (remove) {
                 styleClasses.removeAll(strings);
@@ -1069,7 +1069,7 @@ public final class JavaFXUtils {
     }
 
     public static void setTooltip(@Nonnull Control control, @Nullable String text) {
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             if (isBlank(text)) {
                 return;
             }
@@ -1090,7 +1090,7 @@ public final class JavaFXUtils {
 
         Node graphicNode = resolveIcon(iconUrl);
         if (graphicNode != null) {
-            runInsideUIThread(() -> control.graphicProperty().set(graphicNode));
+            executeInsideUIThread(() -> control.graphicProperty().set(graphicNode));
         }
     }
 
@@ -1100,14 +1100,14 @@ public final class JavaFXUtils {
 
         Node graphicNode = resolveIcon(iconUrl);
         if (graphicNode != null) {
-            runInsideUIThread(() -> control.graphicProperty().set(graphicNode));
+            executeInsideUIThread(() -> control.graphicProperty().set(graphicNode));
         }
     }
 
     public static void setGraphic(@Nonnull Labeled control, @Nullable Image graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             if (graphic != null) {
                 Node graphicNode = new ImageView(graphic);
                 control.graphicProperty().set(graphicNode);
@@ -1120,7 +1120,7 @@ public final class JavaFXUtils {
     public static void setGraphic(@Nonnull MenuItem control, @Nullable Image graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             if (graphic != null) {
                 Node graphicNode = new ImageView(graphic);
                 control.graphicProperty().set(graphicNode);
@@ -1133,7 +1133,7 @@ public final class JavaFXUtils {
     public static void setGraphic(@Nonnull Labeled control, @Nullable Node graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             if (graphic != null) {
                 control.graphicProperty().set(graphic);
             } else {
@@ -1145,7 +1145,7 @@ public final class JavaFXUtils {
     public static void setGraphic(@Nonnull MenuItem control, @Nullable Node graphic) {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
-        runInsideUIThread(() -> {
+        executeInsideUIThread(() -> {
             if (graphic != null) {
                 control.graphicProperty().set(graphic);
             } else {

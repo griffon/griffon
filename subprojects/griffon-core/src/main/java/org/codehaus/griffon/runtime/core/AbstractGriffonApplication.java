@@ -321,7 +321,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         if (getEventRouter().isEventPublishingEnabled()) {
             final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
             getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), args -> latch.countDown());
-            event(ApplicationEvent.SHUTDOWN_START, asList(this));
+            event(ApplicationEvent.SHUTDOWN_START, singletonList(this));
             try {
                 latch.await();
             } catch (InterruptedException e) {

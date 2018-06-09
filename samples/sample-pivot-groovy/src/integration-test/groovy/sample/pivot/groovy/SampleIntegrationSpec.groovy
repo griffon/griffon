@@ -37,7 +37,7 @@ class SampleIntegrationSpec extends Specification {
     public final GriffonPivotFuncRule pivot = new GriffonPivotFuncRule()
 
     void 'Get default message if no input is given'() {
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             // given:
             pivot.find('input', TextInput).text = 'Griffon'
 
@@ -48,13 +48,13 @@ class SampleIntegrationSpec extends Specification {
         await().atMost(5, SECONDS)
 
         // then:
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             assert 'Hello Griffon' == pivot.find('output', TextInput).text
         }
     }
 
     void 'Get hello message if input is given'() {
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             // given:
             pivot.find('input', TextInput).text = ''
 
@@ -65,7 +65,7 @@ class SampleIntegrationSpec extends Specification {
         await().atMost(5, SECONDS)
 
         // then:
-        pivot.runInsideUISync {
+        pivot.executeInsideUISync {
             assert 'Howdy stranger!' == pivot.find('output', TextInput).text
         }
     }

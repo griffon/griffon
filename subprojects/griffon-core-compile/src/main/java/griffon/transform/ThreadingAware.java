@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * <li><code>public void executeInsideUIAsync(Runnable runnable)</code></li>
  * <li><code>public void executeInsideUISync(Runnable runnable)</code></li>
  * <li><code>public void executeOutsideUI(Runnable runnable)</code></li>
- * <li><code>public void runOutsideUIAsync(Runnable runnable)</code></li>
+ * <li><code>public void executeOutsideUIAsync(Runnable runnable)</code></li>
  * <li><code>public &lt;R&gt; Future&lt;R&gt; executeFuture(ExecutorService executorService, Callable&lt;R&gt; callable)</code></li>
  * <li><code>public &lt;R&gt; Future&lt;R&gt; executeFuture(Callable&lt;R&gt; callable)</code></li>
  * <li><code>public &lt;R&gt; R executeInsideUISync(Callable&lt;R&gt; callable)</code></li>

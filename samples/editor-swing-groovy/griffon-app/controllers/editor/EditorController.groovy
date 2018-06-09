@@ -33,11 +33,11 @@ class EditorController {
 
     void mvcGroupInit(Map<String, Object> args) {
         model.document = args.document
-        runOutsideUI {
+        executeOutsideUI {
             // load the file's text, outside the EDT
             String text = model.document.file.text
             // update the model inside the EDT
-            runInsideUIAsync { model.document.contents = text }
+            executeInsideUIAsync { model.document.contents = text }
         }
     }
 
@@ -46,7 +46,7 @@ class EditorController {
         // write text to file, outside the EDT
         model.document.file.text = builder.editor.text
         // update model.text, inside EDT
-        runInsideUIAsync { model.document.contents = builder.editor.text }
+        executeInsideUIAsync { model.document.contents = builder.editor.text }
     }
 
     @ControllerAction

@@ -33,11 +33,11 @@ public interface ThreadingAwareConstants extends BaseConstants {
     String UITHREAD_MANAGER_PROPERTY = "uiThreadManager";
 
     String METHOD_IS_UITHREAD = "isUIThread";
-    String METHOD_RUN_INSIDE_UI_ASYNC = "executeInsideUIAsync";
-    String METHOD_RUN_INSIDE_UI_SYNC = "executeInsideUISync";
-    String METHOD_RUN_OUTSIDE_UI = "executeOutsideUI";
-    String METHOD_RUN_OUTSIDE_UI_ASYNC = "runOutsideUIAsync";
-    String METHOD_RUN_FUTURE = "executeFuture";
+    String METHOD_EXECUTE_INSIDE_UI_ASYNC = "executeInsideUIAsync";
+    String METHOD_EXECUTE_INSIDE_UI_SYNC = "executeInsideUISync";
+    String METHOD_EXECUTE_OUTSIDE_UI = "executeOutsideUI";
+    String METHOD_EXECUTE_OUTSIDE_UI_ASYNC = "executeOutsideUIAsync";
+    String METHOD_EXECUTE_FUTURE = "executeFuture";
 
     String JAVA_UTIL_CONCURRENT_FUTURE = "java.util.concurrent.Future";
     String JAVA_UTIL_CONCURRENT_CALLABLE = "java.util.concurrent.Callable";
@@ -50,29 +50,29 @@ public interface ThreadingAwareConstants extends BaseConstants {
         ),
         method(
             type(VOID),
-            METHOD_RUN_INSIDE_UI_ASYNC,
+            METHOD_EXECUTE_INSIDE_UI_ASYNC,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))
         ),
         method(
             type(VOID),
-            METHOD_RUN_INSIDE_UI_SYNC,
+            METHOD_EXECUTE_INSIDE_UI_SYNC,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))
         ),
         method(
             type(VOID),
-            METHOD_RUN_OUTSIDE_UI,
+            METHOD_EXECUTE_OUTSIDE_UI,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))
         ),
         method(
             type(VOID),
-            METHOD_RUN_OUTSIDE_UI_ASYNC,
+            METHOD_EXECUTE_OUTSIDE_UI_ASYNC,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_RUNNABLE))
         ),
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(JAVA_UTIL_CONCURRENT_FUTURE, R),
             typeParams(R),
-            METHOD_RUN_FUTURE,
+            METHOD_EXECUTE_FUTURE,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_EXECUTOR_SERVICE),
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))
@@ -81,14 +81,14 @@ public interface ThreadingAwareConstants extends BaseConstants {
             annotations(JAVAX_ANNOTATION_NONNULL),
             type(JAVA_UTIL_CONCURRENT_FUTURE, R),
             typeParams(R),
-            METHOD_RUN_FUTURE,
+            METHOD_EXECUTE_FUTURE,
             args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))
         ),
         annotatedMethod(
             annotations(JAVAX_ANNOTATION_NULLABLE),
             type(R),
             typeParams(R),
-            METHOD_RUN_INSIDE_UI_SYNC,
+            METHOD_EXECUTE_INSIDE_UI_SYNC,
             args(
                 annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_CONCURRENT_CALLABLE, R))
         )

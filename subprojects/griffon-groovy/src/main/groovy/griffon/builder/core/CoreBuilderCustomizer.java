@@ -60,7 +60,7 @@ public class CoreBuilderCustomizer extends AbstractBuilderCustomizer {
         methods.put("executeInsideUISync", new MethodClosure(uiThreadManager, "executeInsideUISync"));
         methods.put("executeInsideUIAsync", new MethodClosure(uiThreadManager, "executeInsideUIAsync"));
         methods.put("executeOutsideUI", new MethodClosure(uiThreadManager, "executeOutsideUI"));
-        methods.put("runOutsideUIAsync", new MethodClosure(uiThreadManager, "runOutsideUIAsync"));
+        methods.put("executeOutsideUIAsync", new MethodClosure(uiThreadManager, "executeOutsideUIAsync"));
         methods.put("executeFuture", new MethodClosure(uiThreadManager, "executeFuture"));
         methods.put("isUIThread", new MethodClosure(uiThreadManager, "isUIThread"));
         setMethods(methods);
