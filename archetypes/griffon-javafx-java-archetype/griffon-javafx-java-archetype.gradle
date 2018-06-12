@@ -20,3 +20,9 @@ apply plugin: 'java'
 apply from: rootProject.file('gradle/publish.gradle')
 apply from: rootProject.file('gradle/bintray.gradle')
 apply from: rootProject.file('archetypes/shared-files/shared.gradle')
+
+bintray {
+    pkg {
+        repo = 'griffon-archetypes'
+    }
+}
