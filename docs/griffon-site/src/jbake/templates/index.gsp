@@ -12,8 +12,8 @@
         <div class="col-md-8">
 
     <p><a
-        href="http://griffon-framework.org/">Griffon</a> is desktop application development platform for the JVM.Inspired by <a
-        href="http://grails.org/">Grails</a>, Griffon leverages concepts like
+        href="http://griffon-framework.org/">Griffon</a> is desktop application development platform for the JVM.
+        Inspired by <a href="http://grails.org/">Grails</a>, Griffon leverages concepts like
         Convention over Configuration, modularity, and freedom of choice. The framework
         at its core is written 100% in Java allowing developers to write their own applications
         with only Java. Other programming languages such as Groovy and Kotlin may be used too, in
@@ -106,6 +106,47 @@ Available templates in griffon/griffon-lazybones-templates
 </div>
 <div class="paragraph">
 <p>You may use Maven as an alternate build tool</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint"><code>\$ mvn compile
+\$ mvn test
+\$ mvn -Prun</code></pre>
+</div>
+</div>
+<div class="paragraph">
+If you prefer to use <a href="http://maven.apache.org/">Maven</a> instead then you may bootstrap a project
+using any of the archetypes available from <a href="https://bintray.com/griffon/griffon-archetypes/">https://bintray.com/griffon/griffon-archetypes/</a>.
+Currently available templates are:
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint"><code>    griffon-javafx-groovy-archetype
+    griffon-javafx-java-archetype
+    griffon-lanterna-groovy-archetype
+    griffon-lanterna-java-archetype
+    griffon-pivot-groovy-archetype
+    griffon-pivot-java-archetype
+    griffon-swing-groovy-archetype
+    griffon-swing-java-archetype</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Select a starting archetype from the list and invoke the <code>archetype:generate</code> goal</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint"><code>\$ mvn archetype:generate
+    -DarchetypeGroupId=org.codehaus.griffon.maven
+    -DarchetypeArtifactId=griffon-javafx-java-archetype
+    -DarchetypeVersion=2.15.0
+    -DgroupId=org.example
+    -DartifactId=app
+    -Dversion=1.0.0-SNAPSHOT</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compile, run and test the project with any of these commands</p>
 </div>
 <div class="listingblock">
 <div class="content">
