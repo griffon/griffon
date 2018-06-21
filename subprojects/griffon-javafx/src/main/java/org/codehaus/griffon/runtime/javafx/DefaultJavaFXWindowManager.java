@@ -42,6 +42,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> implements JavaFXWindowManager {
     protected final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();
+    protected final OnCloseRequestHelper onCloseRequest = new OnCloseRequestHelper();
     protected final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();
     protected final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();
 
@@ -55,6 +56,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
     @Override
     protected void doAttach(@Nonnull Window window) {
         requireNonNull(window, ERROR_WINDOW_NULL);
+        window.setOnCloseRequest(onCloseRequest);
         window.setOnHiding(onWindowHiding);
         window.setOnShown(onWindowShown);
         window.setOnHidden(onWindowHidden);
@@ -63,6 +65,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
     @Override
     protected void doDetach(@Nonnull Window window) {
         requireNonNull(window, ERROR_WINDOW_NULL);
+        window.setOnCloseRequest(null);
         window.setOnHiding(null);
         window.setOnShown(null);
         window.setOnHidden(null);
@@ -74,32 +77,46 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
         return window.isShowing();
     }
 
-    public void handleClose(@Nonnull Window widget) {
+    public boolean handleClose(@Nonnull Window window) {
         if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {
-            return;
+            return false;
         }
 
         List<Window> visibleWindows = new ArrayList<>();
-        for (Window window : getWindows()) {
-            if (window.isShowing()) {
-                visibleWindows.add(window);
+        for (Window w : getWindows()) {
+            if (w.isShowing()) {
+                visibleWindows.add(w);
             }
         }
 
-        if (isAutoShutdown() && visibleWindows.size() <= 1 && visibleWindows.contains(widget) && !getApplication().shutdown()) {
-            show(widget);
+        if (isAutoShutdown() && visibleWindows.size() <= 1 && visibleWindows.contains(window) && !getApplication().shutdown()) {
+            show(window);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * WindowAdapter that invokes close() when the window is about to be closed.
+     *
+     * @author Andres Almiray
+     */
+    protected class OnCloseRequestHelper implements EventHandler<WindowEvent> {
+        public void handle(WindowEvent event) {
+            if (!handleClose((Window) event.getSource())) {
+                event.consume();
+            }
         }
     }
 
     /**
-     * WindowAdapter that invokes hide() when the window is about to be closed.
+     * WindowAdapter that invokes hide() when the window is about to be hidden.
      *
      * @author Andres Almiray
      */
     protected class OnWindowHidingHelper implements EventHandler<WindowEvent> {
         public void handle(WindowEvent event) {
             hide((Window) event.getSource());
-            handleClose((Window) event.getSource());
         }
     }
 
