@@ -41,9 +41,9 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> implements JavaFXWindowManager {
-    private final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();
-    private final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();
-    private final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();
+    protected final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();
+    protected final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();
+    protected final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();
 
     @Inject
     @Nonnull
@@ -96,7 +96,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
      *
      * @author Andres Almiray
      */
-    private class OnWindowHidingHelper implements EventHandler<WindowEvent> {
+    protected class OnWindowHidingHelper implements EventHandler<WindowEvent> {
         public void handle(WindowEvent event) {
             hide((Window) event.getSource());
             handleClose((Window) event.getSource());
@@ -108,7 +108,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
      *
      * @author Andres Almiray
      */
-    private class OnWindowShownHelper implements EventHandler<WindowEvent> {
+    protected class OnWindowShownHelper implements EventHandler<WindowEvent> {
         /**
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
@@ -123,7 +123,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
      *
      * @author Andres Almiray
      */
-    private class OnWindowHiddenHelper implements EventHandler<WindowEvent> {
+    protected class OnWindowHiddenHelper implements EventHandler<WindowEvent> {
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */

@@ -57,11 +57,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class DefaultSwingWindowManager extends AbstractWindowManager<Window> implements SwingWindowManager {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultSwingWindowManager.class);
-    private final WindowHelper windowHelper = new WindowHelper();
-    private final ComponentHelper componentHelper = new ComponentHelper();
-    private final InternalFrameHelper internalFrameHelper = new InternalFrameHelper();
-    private final Map<String, JInternalFrame> internalFrames = Collections.synchronizedMap(new LinkedHashMap<String, JInternalFrame>());
-    private boolean hideBeforeHandler = false;
+    protected final WindowHelper windowHelper = new WindowHelper();
+    protected final ComponentHelper componentHelper = new ComponentHelper();
+    protected final InternalFrameHelper internalFrameHelper = new InternalFrameHelper();
+    protected final Map<String, JInternalFrame> internalFrames = Collections.synchronizedMap(new LinkedHashMap<String, JInternalFrame>());
+    protected boolean hideBeforeHandler = false;
 
     @Inject
     @Nonnull
@@ -315,7 +315,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      *
      * @author Andres Almiray
      */
-    private class WindowHelper extends WindowAdapter {
+    protected class WindowHelper extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent event) {
             if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {
@@ -339,7 +339,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      *
      * @author Andres Almiray
      */
-    private class ComponentHelper extends ComponentAdapter {
+    protected class ComponentHelper extends ComponentAdapter {
         /**
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
@@ -365,7 +365,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
      *
      * @author Andres Almiray
      */
-    private class InternalFrameHelper extends InternalFrameAdapter {
+    protected class InternalFrameHelper extends InternalFrameAdapter {
         @Override
         public void internalFrameClosing(InternalFrameEvent event) {
             hide(event.getInternalFrame());

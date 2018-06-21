@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> implements LanternaWindowManager {
-    private final WindowHelper windowHelper = new WindowHelper();
+    protected final WindowHelper windowHelper = new WindowHelper();
 
     @Inject
     @Nonnull
@@ -80,7 +80,7 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
      *
      * @author Andres Almiray
      */
-    private class WindowHelper extends WindowAdapter {
+    protected class WindowHelper extends WindowAdapter {
         @Override
         public void onWindowClosed(@Nonnull Window window) {
             super.onWindowClosed(window);

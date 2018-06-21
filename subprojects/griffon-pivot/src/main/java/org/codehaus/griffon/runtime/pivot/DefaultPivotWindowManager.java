@@ -40,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultPivotWindowManager extends AbstractWindowManager<Window> implements PivotWindowManager {
-    private final WindowStateHelper windowStateHelper = new WindowStateHelper();
+    protected final WindowStateHelper windowStateHelper = new WindowStateHelper();
 
     @Inject
     @Nonnull
@@ -88,7 +88,7 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
      *
      * @author Andres Almiray
      */
-    private class WindowStateHelper extends WindowStateAdapter {
+    protected class WindowStateHelper extends WindowStateAdapter {
         @Override
         public Vote previewWindowOpen(Window arg0) {
             return Vote.APPROVE;
