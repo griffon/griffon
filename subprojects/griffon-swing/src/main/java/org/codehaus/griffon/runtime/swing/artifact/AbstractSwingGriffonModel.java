@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 3.0.0-SNAPSHOT
+ * @since 3.0.0
  */
 public abstract class AbstractSwingGriffonModel extends AbstractGriffonModel implements Observable {
     protected final PropertyChangeSupport pcs;
