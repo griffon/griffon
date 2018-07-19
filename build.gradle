@@ -294,6 +294,7 @@ subprojects { subproj ->
             def statsTask = subproj.tasks.findByName('stats')
             statsTask.formats = ['txt']
             statsTask.paths += [
+                mvc       : [name: 'MVCGroups',     path: 'griffon-app/mvcs'],
                 model     : [name: 'Models',        path: 'griffon-app/models'],
                 view      : [name: 'Views',         path: 'griffon-app/views'],
                 controller: [name: 'Controllers',   path: 'griffon-app/controllers'],

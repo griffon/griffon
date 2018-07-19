@@ -59,6 +59,7 @@ class GriffonPlugin implements Plugin<Project> {
             'griffon-app/conf',
             'griffon-app/controllers',
             'griffon-app/models',
+            'griffon-app/mvcs',
             'griffon-app/views',
             'griffon-app/services',
             'griffon-app/lifecycle'
@@ -212,6 +213,7 @@ class GriffonPlugin implements Plugin<Project> {
                 project.plugins.withId('org.kordamp.gradle.stats') { plugin ->
                     Task statsTask = project.tasks.findByName('stats')
                     statsTask.paths += [
+                        mvc       : [name: 'MVCGroups', path: 'griffon-app/mvcs'],
                         model     : [name: 'Models', path: 'griffon-app/models'],
                         view      : [name: 'Views', path: 'griffon-app/views'],
                         controller: [name: 'Controllers', path: 'griffon-app/controllers'],
