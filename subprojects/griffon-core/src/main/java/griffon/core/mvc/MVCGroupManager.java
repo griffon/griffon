@@ -97,6 +97,9 @@ public interface MVCGroupManager extends MVCHandler {
     MVCGroup findGroup(@Nonnull String mvcId);
 
     @Nullable
+    <MVC extends TypedMVCGroup> MVC findTypedGroup(@Nonnull String mvcId);
+
+    @Nullable
     MVCGroup getAt(@Nonnull String mvcId);
 
     /**

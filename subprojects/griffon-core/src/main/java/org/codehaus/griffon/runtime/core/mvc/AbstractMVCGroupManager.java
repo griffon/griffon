@@ -28,8 +28,8 @@ import griffon.core.mvc.MVCConsumer;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupConfigurationFactory;
-import griffon.core.mvc.MVCGroupFactory;
 import griffon.core.mvc.MVCGroupConsumer;
+import griffon.core.mvc.MVCGroupFactory;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.mvc.TypedMVCGroup;
 import griffon.core.mvc.TypedMVCGroupConsumer;
@@ -155,6 +155,16 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     }
 
     @Nullable
+    @Override
+    public <MVC extends TypedMVCGroup> MVC findTypedGroup(@Nonnull String mvcId) {
+        requireNonBlank(mvcId, ERROR_MVCID_BLANK);
+        synchronized (lock) {
+            LOG.debug("Searching group {}", mvcId);
+            return (MVC) groups.get(mvcId);
+        }
+    }
+
+    @Nullable
     public MVCGroup getAt(@Nonnull String mvcId) {
         return findGroup(mvcId);
     }
@@ -207,6 +217,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
         synchronized (lock) {
             LOG.debug("Removing group {}:{}", group.getMvcId(), group);
             groups.remove(group.getMvcId());
+            if (group instanceof TypedMVCGroup) {
+                groups.remove(((TypedMVCGroup) group).delegate());
+            }
         }
     }
 
@@ -660,7 +673,9 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     protected <MVC extends TypedMVCGroup> MVC typedMvcGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull MVCGroup mvcGroup) {
         try {
             Constructor<? extends MVC> constructor = mvcType.getDeclaredConstructor(MVCGroup.class);
-            return constructor.newInstance(mvcGroup);
+            MVC group = constructor.newInstance(mvcGroup);
+            addGroup(group);
+            return group;
         } catch (Exception e) {
             throw new MVCGroupInstantiationException("Unexpected error", mvcGroup.getMvcType(), mvcGroup.getMvcId(), e);
         }
