@@ -20,12 +20,22 @@ package griffon.javafx.beans.binding;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.BooleanExpression;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.DoubleExpression;
 import javafx.beans.binding.FloatBinding;
+import javafx.beans.binding.FloatExpression;
 import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.IntegerExpression;
+import javafx.beans.binding.ListExpression;
 import javafx.beans.binding.LongBinding;
+import javafx.beans.binding.LongExpression;
+import javafx.beans.binding.MapExpression;
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.binding.ObjectExpression;
+import javafx.beans.binding.SetExpression;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.FloatProperty;
@@ -35,6 +45,16 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyFloatProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyLongProperty;
+import javafx.beans.property.ReadOnlyMapProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlySetProperty;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -690,7 +710,7 @@ public final class UIThreadAwareBindings {
     }
 
     /**
-     * Creates an observable set property that notifies its seteners inside the UI thread.
+     * Creates an observable set property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable set property to wrap.
      *
@@ -909,5 +929,285 @@ public final class UIThreadAwareBindings {
     public static <T> ObjectBinding<T> uiThreadAwareObjectBinding(@Nonnull ObjectBinding<T> binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareObjectBinding<>(binding);
+    }
+
+    /**
+     * Creates an observable boolean property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable boolean property to wrap.
+     *
+     * @return an observable read-only boolean property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static ReadOnlyBooleanProperty uiThreadAwareReadOnlyBooleanProperty(@Nonnull ReadOnlyBooleanProperty observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyBooleanProperty(observable);
+    }
+
+    /**
+     * Creates an observable integer property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable integer property to wrap.
+     *
+     * @return an observable read-only integer property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static ReadOnlyIntegerProperty uiThreadAwareReadOnlyIntegerProperty(@Nonnull ReadOnlyIntegerProperty observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyIntegerProperty(observable);
+    }
+
+    /**
+     * Creates an observable long property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable long property to wrap.
+     *
+     * @return an observable read-only long property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static ReadOnlyLongProperty uiThreadAwareReadOnlyLongProperty(@Nonnull ReadOnlyLongProperty observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyLongProperty(observable);
+    }
+
+    /**
+     * Creates an observable float property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable float property to wrap.
+     *
+     * @return an observable read-only float property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static ReadOnlyFloatProperty uiThreadAwareReadOnlyFloatProperty(@Nonnull ReadOnlyFloatProperty observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyFloatProperty(observable);
+    }
+
+    /**
+     * Creates an observable double property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable double property to wrap.
+     *
+     * @return an observable read-only double property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static ReadOnlyDoubleProperty uiThreadAwareReadOnlyDoubleProperty(@Nonnull ReadOnlyDoubleProperty observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyDoubleProperty(observable);
+    }
+
+    /**
+     * Creates an observable string property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable string property to wrap.
+     *
+     * @return an observable read-only string property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static ReadOnlyStringProperty uiThreadAwareReadOnlyStringProperty(@Nonnull ReadOnlyStringProperty observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyStringProperty(observable);
+    }
+
+    /**
+     * Creates an observable object property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable object property to wrap.
+     *
+     * @return an observable read-only object property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <T> ReadOnlyObjectProperty<T> uiThreadAwareReadOnlyObjectProperty(@Nonnull final ReadOnlyObjectProperty<T> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyObjectProperty<>(observable);
+    }
+
+    /**
+     * Creates an observable list property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable list property to wrap.
+     *
+     * @return an observable read-only list property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <E> ReadOnlyListProperty<E> uiThreadAwareReadOnlyListProperty(@Nonnull ReadOnlyListProperty<E> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyListProperty<>(observable);
+    }
+
+    /**
+     * Creates an observable set property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable set property to wrap.
+     *
+     * @return an observable read-only set property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <E> ReadOnlySetProperty<E> uiThreadAwareReadOnlySetProperty(@Nonnull ReadOnlySetProperty<E> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlySetProperty<>(observable);
+    }
+
+    /**
+     * Creates an observable map property that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable map property to wrap.
+     *
+     * @return an observable read-only map property.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <K, V> ReadOnlyMapProperty<K, V> uiThreadAwareReadOnlyMapProperty(@Nonnull ReadOnlyMapProperty<K, V> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyMapProperty<>(observable);
+    }
+
+    /**
+     * Creates an observable boolean expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable boolean expression to wrap.
+     *
+     * @return an observable  boolean expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static BooleanExpression uiThreadAwareBooleanExpression(@Nonnull BooleanExpression observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareBooleanExpression(observable);
+    }
+
+    /**
+     * Creates an observable integer expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable integer expression to wrap.
+     *
+     * @return an observable  integer expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static IntegerExpression uiThreadAwareIntegerExpression(@Nonnull IntegerExpression observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareIntegerExpression(observable);
+    }
+
+    /**
+     * Creates an observable long expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable long expression to wrap.
+     *
+     * @return an observable  long expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static LongExpression uiThreadAwareLongExpression(@Nonnull LongExpression observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareLongExpression(observable);
+    }
+
+    /**
+     * Creates an observable float expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable float expression to wrap.
+     *
+     * @return an observable  float expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static FloatExpression uiThreadAwareFloatExpression(@Nonnull FloatExpression observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareFloatExpression(observable);
+    }
+
+    /**
+     * Creates an observable double expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable double expression to wrap.
+     *
+     * @return an observable  double expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static DoubleExpression uiThreadAwareDoubleExpression(@Nonnull DoubleExpression observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareDoubleExpression(observable);
+    }
+
+    /**
+     * Creates an observable string expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable string expression to wrap.
+     *
+     * @return an observable  string expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static StringExpression uiThreadAwareStringExpression(@Nonnull StringExpression observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareStringExpression(observable);
+    }
+
+    /**
+     * Creates an observable object expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable object expression to wrap.
+     *
+     * @return an observable  object expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <T> ObjectExpression<T> uiThreadAwareObjectExpression(@Nonnull final ObjectExpression<T> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareObjectExpression<>(observable);
+    }
+
+    /**
+     * Creates an observable list expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable list expression to wrap.
+     *
+     * @return an observable  list expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <E> ListExpression<E> uiThreadAwareListExpression(@Nonnull ListExpression<E> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareListExpression<>(observable);
+    }
+
+    /**
+     * Creates an observable set expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable set expression to wrap.
+     *
+     * @return an observable  set expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <E> SetExpression<E> uiThreadAwareSetExpression(@Nonnull SetExpression<E> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareSetExpression<>(observable);
+    }
+
+    /**
+     * Creates an observable map expression that notifies its listeners inside the UI thread.
+     *
+     * @param observable the observable map expression to wrap.
+     *
+     * @return an observable  map expression.
+     * @since 3.0.0
+     */
+    @Nonnull
+    public static <K, V> MapExpression<K, V> uiThreadAwareMapExpression(@Nonnull MapExpression<K, V> observable) {
+        requireNonNull(observable, ERROR_OBSERVABLE_NULL);
+        return observable instanceof UIThreadAware ? observable : new UIThreadAwareMapExpression<>(observable);
     }
 }

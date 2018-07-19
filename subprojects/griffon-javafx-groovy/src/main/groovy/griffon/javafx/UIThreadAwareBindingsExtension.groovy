@@ -22,12 +22,22 @@ import groovy.transform.CompileStatic
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
 import javafx.beans.binding.BooleanBinding
+import javafx.beans.binding.BooleanExpression
 import javafx.beans.binding.DoubleBinding
+import javafx.beans.binding.DoubleExpression
 import javafx.beans.binding.FloatBinding
+import javafx.beans.binding.FloatExpression
 import javafx.beans.binding.IntegerBinding
+import javafx.beans.binding.IntegerExpression
+import javafx.beans.binding.ListExpression
 import javafx.beans.binding.LongBinding
+import javafx.beans.binding.LongExpression
+import javafx.beans.binding.MapExpression
 import javafx.beans.binding.ObjectBinding
+import javafx.beans.binding.ObjectExpression
+import javafx.beans.binding.SetExpression
 import javafx.beans.binding.StringBinding
+import javafx.beans.binding.StringExpression
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.FloatProperty
@@ -37,6 +47,16 @@ import javafx.beans.property.LongProperty
 import javafx.beans.property.MapProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.Property
+import javafx.beans.property.ReadOnlyBooleanProperty
+import javafx.beans.property.ReadOnlyDoubleProperty
+import javafx.beans.property.ReadOnlyFloatProperty
+import javafx.beans.property.ReadOnlyIntegerProperty
+import javafx.beans.property.ReadOnlyListProperty
+import javafx.beans.property.ReadOnlyLongProperty
+import javafx.beans.property.ReadOnlyMapProperty
+import javafx.beans.property.ReadOnlyObjectProperty
+import javafx.beans.property.ReadOnlySetProperty
+import javafx.beans.property.ReadOnlyStringProperty
 import javafx.beans.property.SetProperty
 import javafx.beans.property.StringProperty
 import javafx.beans.value.ChangeListener
@@ -386,5 +406,105 @@ final class UIThreadAwareBindingsExtension {
     @Nonnull
     static <T> ObjectBinding<T> uiThreadAware(@Nonnull ObjectBinding<T> observable) {
         UIThreadAwareBindings.uiThreadAwareObjectBinding(observable)
+    }
+
+    @Nonnull
+    static ReadOnlyBooleanProperty uiThreadAware(@Nonnull ReadOnlyBooleanProperty observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyBooleanProperty(observable)
+    }
+
+    @Nonnull
+    static ReadOnlyIntegerProperty uiThreadAware(@Nonnull ReadOnlyIntegerProperty observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyIntegerProperty(observable)
+    }
+
+    @Nonnull
+    static ReadOnlyLongProperty uiThreadAware(@Nonnull ReadOnlyLongProperty observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyLongProperty(observable)
+    }
+
+    @Nonnull
+    static ReadOnlyFloatProperty uiThreadAware(@Nonnull ReadOnlyFloatProperty observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyFloatProperty(observable)
+    }
+
+    @Nonnull
+    static ReadOnlyDoubleProperty uiThreadAware(@Nonnull ReadOnlyDoubleProperty observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyDoubleProperty(observable)
+    }
+
+    @Nonnull
+    static ReadOnlyStringProperty uiThreadAware(@Nonnull ReadOnlyStringProperty observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyStringProperty(observable)
+    }
+
+    @Nonnull
+    static <T> ReadOnlyObjectProperty<T> uiThreadAware(@Nonnull ReadOnlyObjectProperty<T> observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyObjectProperty(observable)
+    }
+
+    @Nonnull
+    static <E> ReadOnlyListProperty<E> uiThreadAware(@Nonnull ReadOnlyListProperty<E> observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyListProperty(observable)
+    }
+
+    @Nonnull
+    static <E> ReadOnlySetProperty<E> uiThreadAware(@Nonnull ReadOnlySetProperty<E> observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlySetProperty(observable)
+    }
+
+    @Nonnull
+    static <K, V> ReadOnlyMapProperty<K, V> uiThreadAware(@Nonnull ReadOnlyMapProperty<K, V> observable) {
+        UIThreadAwareBindings.uiThreadAwareReadOnlyMapProperty(observable)
+    }
+
+    @Nonnull
+    static BooleanExpression uiThreadAware(@Nonnull BooleanExpression observable) {
+        UIThreadAwareBindings.uiThreadAwareBooleanExpression(observable)
+    }
+
+    @Nonnull
+    static IntegerExpression uiThreadAware(@Nonnull IntegerExpression observable) {
+        UIThreadAwareBindings.uiThreadAwareIntegerExpression(observable)
+    }
+
+    @Nonnull
+    static LongExpression uiThreadAware(@Nonnull LongExpression observable) {
+        UIThreadAwareBindings.uiThreadAwareLongExpression(observable)
+    }
+
+    @Nonnull
+    static FloatExpression uiThreadAware(@Nonnull FloatExpression observable) {
+        UIThreadAwareBindings.uiThreadAwareFloatExpression(observable)
+    }
+
+    @Nonnull
+    static DoubleExpression uiThreadAware(@Nonnull DoubleExpression observable) {
+        UIThreadAwareBindings.uiThreadAwareDoubleExpression(observable)
+    }
+
+    @Nonnull
+    static StringExpression uiThreadAware(@Nonnull StringExpression observable) {
+        UIThreadAwareBindings.uiThreadAwareStringExpression(observable)
+    }
+
+    @Nonnull
+    static <T> ObjectExpression<T> uiThreadAware(@Nonnull ObjectExpression<T> observable) {
+        UIThreadAwareBindings.uiThreadAwareObjectExpression(observable)
+    }
+
+    @Nonnull
+    static <E> ListExpression<E> uiThreadAware(@Nonnull ListExpression<E> observable) {
+        UIThreadAwareBindings.uiThreadAwareListExpression(observable)
+    }
+
+    @Nonnull
+    static <E> SetExpression<E> uiThreadAware(@Nonnull SetExpression<E> observable) {
+        UIThreadAwareBindings.uiThreadAwareSetExpression(observable)
+    }
+
+    @Nonnull
+    static <K, V> MapExpression<K, V> uiThreadAware(@Nonnull MapExpression<K, V> observable) {
+        UIThreadAwareBindings.uiThreadAwareMapExpression(observable)
     }
 }

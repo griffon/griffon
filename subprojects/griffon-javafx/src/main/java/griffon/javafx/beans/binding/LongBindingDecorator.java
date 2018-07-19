@@ -56,8 +56,18 @@ public class LongBindingDecorator extends LongBinding {
     }
 
     @Override
+    public boolean equals(Object o) {
+        return this == o || delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
     public String toString() {
-        return getDelegate().toString();
+        return getClass().getName() + ":" + delegate.toString();
     }
 
     @Override

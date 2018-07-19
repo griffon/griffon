@@ -19,11 +19,10 @@ package griffon.javafx.beans.binding;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableObjectValue;
-import javafx.collections.ObservableList;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -32,33 +31,18 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0
+ * @since 3.0.0
  */
-public class ObjectBindingDecorator<T> extends ObjectBinding<T> {
-    private final ObjectBinding<T> delegate;
+public class ReadOnlyObjectPropertyDecorator<T> extends ReadOnlyObjectProperty<T> {
+    private final ReadOnlyObjectProperty<T> delegate;
 
-    public ObjectBindingDecorator(@Nonnull ObjectBinding<T> delegate) {
+    public ReadOnlyObjectPropertyDecorator(@Nonnull ReadOnlyObjectProperty<T> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
     @Nonnull
-    protected final ObjectBinding<T> getDelegate() {
+    protected final ReadOnlyObjectProperty<T> getDelegate() {
         return delegate;
-    }
-
-    @Override
-    protected T computeValue() {
-        return delegate.get();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return this == o || delegate.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return delegate.hashCode();
     }
 
     @Override
@@ -68,81 +52,86 @@ public class ObjectBindingDecorator<T> extends ObjectBinding<T> {
 
     @Override
     public T getValue() {
-        return getDelegate().getValue();
+        return delegate.getValue();
     }
 
     @Override
-    public BooleanBinding isEqualTo(ObservableObjectValue other) {
-        return getDelegate().isEqualTo(other);
+    public BooleanBinding isEqualTo(ObservableObjectValue<?> other) {
+        return delegate.isEqualTo(other);
     }
 
     @Override
     public BooleanBinding isEqualTo(Object other) {
-        return getDelegate().isEqualTo(other);
+        return delegate.isEqualTo(other);
     }
 
     @Override
-    public BooleanBinding isNotEqualTo(ObservableObjectValue other) {
-        return getDelegate().isNotEqualTo(other);
+    public BooleanBinding isNotEqualTo(ObservableObjectValue<?> other) {
+        return delegate.isNotEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(Object other) {
-        return getDelegate().isNotEqualTo(other);
+        return delegate.isNotEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNull() {
-        return getDelegate().isNull();
+        return delegate.isNull();
     }
 
     @Override
     public BooleanBinding isNotNull() {
-        return getDelegate().isNotNull();
+        return delegate.isNotNull();
     }
 
     @Override
     public StringBinding asString() {
-        return getDelegate().asString();
+        return delegate.asString();
     }
 
     @Override
     public StringBinding asString(String format) {
-        return getDelegate().asString(format);
+        return delegate.asString(format);
     }
 
     @Override
     public StringBinding asString(Locale locale, String format) {
-        return getDelegate().asString(locale, format);
+        return delegate.asString(locale, format);
     }
 
     @Override
-    public void addListener(InvalidationListener listener) {
-        getDelegate().addListener(listener);
-    }
-
-    @Override
-    public void removeListener(InvalidationListener listener) {
-        getDelegate().removeListener(listener);
+    public T get() {
+        return delegate.get();
     }
 
     @Override
     public void addListener(ChangeListener<? super T> listener) {
-        getDelegate().addListener(listener);
+        delegate.addListener(listener);
     }
 
     @Override
     public void removeListener(ChangeListener<? super T> listener) {
-        getDelegate().removeListener(listener);
+        delegate.removeListener(listener);
     }
 
     @Override
-    public void dispose() {
-        getDelegate().dispose();
+    public void addListener(InvalidationListener listener) {
+        delegate.addListener(listener);
     }
 
     @Override
-    public ObservableList<?> getDependencies() {
-        return getDelegate().getDependencies();
+    public void removeListener(InvalidationListener listener) {
+        delegate.removeListener(listener);
+    }
+
+    @Override
+    public Object getBean() {
+        return delegate.getBean();
+    }
+
+    @Override
+    public String getName() {
+        return delegate.getName();
     }
 }

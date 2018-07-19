@@ -22,13 +22,13 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.FloatBinding;
 import javafx.beans.binding.IntegerBinding;
+import javafx.beans.binding.IntegerExpression;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.binding.ObjectExpression;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableNumberValue;
-import javafx.collections.ObservableList;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -37,23 +37,18 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0
+ * @since 3.0.0
  */
-public class IntegerBindingDecorator extends IntegerBinding {
-    private final IntegerBinding delegate;
+public class IntegerExpressionDecorator extends IntegerExpression {
+    private final IntegerExpression delegate;
 
-    public IntegerBindingDecorator(@Nonnull IntegerBinding delegate) {
+    public IntegerExpressionDecorator(@Nonnull IntegerExpression delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
     @Nonnull
-    protected final IntegerBinding getDelegate() {
+    protected final IntegerExpression getDelegate() {
         return delegate;
-    }
-
-    @Override
-    protected int computeValue() {
-        return delegate.get();
     }
 
     @Override
@@ -73,361 +68,356 @@ public class IntegerBindingDecorator extends IntegerBinding {
 
     @Override
     public int intValue() {
-        return getDelegate().intValue();
+        return delegate.intValue();
     }
 
     @Override
     public long longValue() {
-        return getDelegate().longValue();
+        return delegate.longValue();
     }
 
     @Override
     public float floatValue() {
-        return getDelegate().floatValue();
+        return delegate.floatValue();
     }
 
     @Override
     public double doubleValue() {
-        return getDelegate().doubleValue();
+        return delegate.doubleValue();
     }
 
     @Override
     public Integer getValue() {
-        return getDelegate().getValue();
+        return delegate.getValue();
     }
 
     @Override
     public IntegerBinding negate() {
-        return getDelegate().negate();
+        return delegate.negate();
     }
 
     @Override
     public DoubleBinding add(double other) {
-        return getDelegate().add(other);
+        return delegate.add(other);
     }
 
     @Override
     public FloatBinding add(float other) {
-        return getDelegate().add(other);
+        return delegate.add(other);
     }
 
     @Override
     public LongBinding add(long other) {
-        return getDelegate().add(other);
+        return delegate.add(other);
     }
 
     @Override
     public IntegerBinding add(int other) {
-        return getDelegate().add(other);
+        return delegate.add(other);
     }
 
     @Override
     public DoubleBinding subtract(double other) {
-        return getDelegate().subtract(other);
+        return delegate.subtract(other);
     }
 
     @Override
     public FloatBinding subtract(float other) {
-        return getDelegate().subtract(other);
+        return delegate.subtract(other);
     }
 
     @Override
     public LongBinding subtract(long other) {
-        return getDelegate().subtract(other);
+        return delegate.subtract(other);
     }
 
     @Override
     public IntegerBinding subtract(int other) {
-        return getDelegate().subtract(other);
+        return delegate.subtract(other);
     }
 
     @Override
     public DoubleBinding multiply(double other) {
-        return getDelegate().multiply(other);
+        return delegate.multiply(other);
     }
 
     @Override
     public FloatBinding multiply(float other) {
-        return getDelegate().multiply(other);
+        return delegate.multiply(other);
     }
 
     @Override
     public LongBinding multiply(long other) {
-        return getDelegate().multiply(other);
+        return delegate.multiply(other);
     }
 
     @Override
     public IntegerBinding multiply(int other) {
-        return getDelegate().multiply(other);
+        return delegate.multiply(other);
     }
 
     @Override
     public DoubleBinding divide(double other) {
-        return getDelegate().divide(other);
+        return delegate.divide(other);
     }
 
     @Override
     public FloatBinding divide(float other) {
-        return getDelegate().divide(other);
+        return delegate.divide(other);
     }
 
     @Override
     public LongBinding divide(long other) {
-        return getDelegate().divide(other);
+        return delegate.divide(other);
     }
 
     @Override
     public IntegerBinding divide(int other) {
-        return getDelegate().divide(other);
+        return delegate.divide(other);
     }
 
     @Override
     public ObjectExpression<Integer> asObject() {
-        return getDelegate().asObject();
+        return delegate.asObject();
     }
 
     @Override
     public NumberBinding add(ObservableNumberValue other) {
-        return getDelegate().add(other);
+        return delegate.add(other);
     }
 
     @Override
     public NumberBinding subtract(ObservableNumberValue other) {
-        return getDelegate().subtract(other);
+        return delegate.subtract(other);
     }
 
     @Override
     public NumberBinding multiply(ObservableNumberValue other) {
-        return getDelegate().multiply(other);
+        return delegate.multiply(other);
     }
 
     @Override
     public NumberBinding divide(ObservableNumberValue other) {
-        return getDelegate().divide(other);
+        return delegate.divide(other);
     }
 
     @Override
     public BooleanBinding isEqualTo(ObservableNumberValue other) {
-        return getDelegate().isEqualTo(other);
+        return delegate.isEqualTo(other);
     }
 
     @Override
     public BooleanBinding isEqualTo(ObservableNumberValue other, double epsilon) {
-        return getDelegate().isEqualTo(other, epsilon);
+        return delegate.isEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isEqualTo(double other, double epsilon) {
-        return getDelegate().isEqualTo(other, epsilon);
+        return delegate.isEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isEqualTo(float other, double epsilon) {
-        return getDelegate().isEqualTo(other, epsilon);
+        return delegate.isEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isEqualTo(long other) {
-        return getDelegate().isEqualTo(other);
+        return delegate.isEqualTo(other);
     }
 
     @Override
     public BooleanBinding isEqualTo(long other, double epsilon) {
-        return getDelegate().isEqualTo(other, epsilon);
+        return delegate.isEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isEqualTo(int other) {
-        return getDelegate().isEqualTo(other);
+        return delegate.isEqualTo(other);
     }
 
     @Override
     public BooleanBinding isEqualTo(int other, double epsilon) {
-        return getDelegate().isEqualTo(other, epsilon);
+        return delegate.isEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(ObservableNumberValue other) {
-        return getDelegate().isNotEqualTo(other);
+        return delegate.isNotEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(ObservableNumberValue other, double epsilon) {
-        return getDelegate().isNotEqualTo(other, epsilon);
+        return delegate.isNotEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(double other, double epsilon) {
-        return getDelegate().isNotEqualTo(other, epsilon);
+        return delegate.isNotEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(float other, double epsilon) {
-        return getDelegate().isNotEqualTo(other, epsilon);
+        return delegate.isNotEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(long other) {
-        return getDelegate().isNotEqualTo(other);
+        return delegate.isNotEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(long other, double epsilon) {
-        return getDelegate().isNotEqualTo(other, epsilon);
+        return delegate.isNotEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(int other) {
-        return getDelegate().isNotEqualTo(other);
+        return delegate.isNotEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(int other, double epsilon) {
-        return getDelegate().isNotEqualTo(other, epsilon);
+        return delegate.isNotEqualTo(other, epsilon);
     }
 
     @Override
     public BooleanBinding greaterThan(ObservableNumberValue other) {
-        return getDelegate().greaterThan(other);
+        return delegate.greaterThan(other);
     }
 
     @Override
     public BooleanBinding greaterThan(double other) {
-        return getDelegate().greaterThan(other);
+        return delegate.greaterThan(other);
     }
 
     @Override
     public BooleanBinding greaterThan(float other) {
-        return getDelegate().greaterThan(other);
+        return delegate.greaterThan(other);
     }
 
     @Override
     public BooleanBinding greaterThan(long other) {
-        return getDelegate().greaterThan(other);
+        return delegate.greaterThan(other);
     }
 
     @Override
     public BooleanBinding greaterThan(int other) {
-        return getDelegate().greaterThan(other);
+        return delegate.greaterThan(other);
     }
 
     @Override
     public BooleanBinding lessThan(ObservableNumberValue other) {
-        return getDelegate().lessThan(other);
+        return delegate.lessThan(other);
     }
 
     @Override
     public BooleanBinding lessThan(double other) {
-        return getDelegate().lessThan(other);
+        return delegate.lessThan(other);
     }
 
     @Override
     public BooleanBinding lessThan(float other) {
-        return getDelegate().lessThan(other);
+        return delegate.lessThan(other);
     }
 
     @Override
     public BooleanBinding lessThan(long other) {
-        return getDelegate().lessThan(other);
+        return delegate.lessThan(other);
     }
 
     @Override
     public BooleanBinding lessThan(int other) {
-        return getDelegate().lessThan(other);
+        return delegate.lessThan(other);
     }
 
     @Override
     public BooleanBinding greaterThanOrEqualTo(ObservableNumberValue other) {
-        return getDelegate().greaterThanOrEqualTo(other);
+        return delegate.greaterThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding greaterThanOrEqualTo(double other) {
-        return getDelegate().greaterThanOrEqualTo(other);
+        return delegate.greaterThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding greaterThanOrEqualTo(float other) {
-        return getDelegate().greaterThanOrEqualTo(other);
+        return delegate.greaterThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding greaterThanOrEqualTo(long other) {
-        return getDelegate().greaterThanOrEqualTo(other);
+        return delegate.greaterThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding greaterThanOrEqualTo(int other) {
-        return getDelegate().greaterThanOrEqualTo(other);
+        return delegate.greaterThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding lessThanOrEqualTo(ObservableNumberValue other) {
-        return getDelegate().lessThanOrEqualTo(other);
+        return delegate.lessThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding lessThanOrEqualTo(double other) {
-        return getDelegate().lessThanOrEqualTo(other);
+        return delegate.lessThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding lessThanOrEqualTo(float other) {
-        return getDelegate().lessThanOrEqualTo(other);
+        return delegate.lessThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding lessThanOrEqualTo(long other) {
-        return getDelegate().lessThanOrEqualTo(other);
+        return delegate.lessThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding lessThanOrEqualTo(int other) {
-        return getDelegate().lessThanOrEqualTo(other);
+        return delegate.lessThanOrEqualTo(other);
     }
 
     @Override
     public StringBinding asString() {
-        return getDelegate().asString();
+        return delegate.asString();
     }
 
     @Override
     public StringBinding asString(String format) {
-        return getDelegate().asString(format);
+        return delegate.asString(format);
     }
 
     @Override
     public StringBinding asString(Locale locale, String format) {
-        return getDelegate().asString(locale, format);
-    }
-
-    @Override
-    public void addListener(InvalidationListener listener) {
-        getDelegate().addListener(listener);
-    }
-
-    @Override
-    public void removeListener(InvalidationListener listener) {
-        getDelegate().removeListener(listener);
+        return delegate.asString(locale, format);
     }
 
     @Override
     public void addListener(ChangeListener<? super Number> listener) {
-        getDelegate().addListener(listener);
+        delegate.addListener(listener);
     }
 
     @Override
     public void removeListener(ChangeListener<? super Number> listener) {
-        getDelegate().removeListener(listener);
+        delegate.removeListener(listener);
     }
 
     @Override
-    public void dispose() {
-        getDelegate().dispose();
+    public void addListener(InvalidationListener listener) {
+        delegate.addListener(listener);
     }
 
     @Override
-    public ObservableList<?> getDependencies() {
-        return getDelegate().getDependencies();
+    public void removeListener(InvalidationListener listener) {
+        delegate.removeListener(listener);
+    }
+
+    @Override
+    public int get() {
+        return delegate.get();
     }
 }

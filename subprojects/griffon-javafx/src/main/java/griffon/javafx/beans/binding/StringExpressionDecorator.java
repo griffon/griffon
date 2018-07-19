@@ -20,11 +20,9 @@ package griffon.javafx.beans.binding;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableStringValue;
-import javafx.collections.ObservableList;
 
 import javax.annotation.Nonnull;
 
@@ -32,53 +30,18 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.13.0
+ * @since 3.0.0
  */
-public class StringBindingDecorator extends StringBinding {
-    private final StringBinding delegate;
+public class StringExpressionDecorator extends StringExpression {
+    private final StringExpression delegate;
 
-    public StringBindingDecorator(@Nonnull StringBinding delegate) {
+    public StringExpressionDecorator(@Nonnull StringExpression delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
     @Nonnull
-    protected final StringBinding getDelegate() {
+    protected final StringExpression getDelegate() {
         return delegate;
-    }
-
-    @Override
-    protected String computeValue() {
-        return delegate.get();
-    }
-
-    @Override
-    public void addListener(InvalidationListener listener) {
-        getDelegate().addListener(listener);
-    }
-
-    @Override
-    public void removeListener(InvalidationListener listener) {
-        getDelegate().removeListener(listener);
-    }
-
-    @Override
-    public void addListener(ChangeListener<? super String> listener) {
-        getDelegate().addListener(listener);
-    }
-
-    @Override
-    public void removeListener(ChangeListener<? super String> listener) {
-        getDelegate().removeListener(listener);
-    }
-
-    @Override
-    public void dispose() {
-        getDelegate().dispose();
-    }
-
-    @Override
-    public ObservableList<?> getDependencies() {
-        return getDelegate().getDependencies();
     }
 
     @Override
@@ -98,116 +61,141 @@ public class StringBindingDecorator extends StringBinding {
 
     @Override
     public String getValue() {
-        return getDelegate().getValue();
+        return delegate.getValue();
     }
 
     @Override
     public StringExpression concat(Object other) {
-        return getDelegate().concat(other);
+        return delegate.concat(other);
     }
 
     @Override
     public BooleanBinding isEqualTo(ObservableStringValue other) {
-        return getDelegate().isEqualTo(other);
+        return delegate.isEqualTo(other);
     }
 
     @Override
     public BooleanBinding isEqualTo(String other) {
-        return getDelegate().isEqualTo(other);
+        return delegate.isEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(ObservableStringValue other) {
-        return getDelegate().isNotEqualTo(other);
+        return delegate.isNotEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNotEqualTo(String other) {
-        return getDelegate().isNotEqualTo(other);
+        return delegate.isNotEqualTo(other);
     }
 
     @Override
     public BooleanBinding isEqualToIgnoreCase(ObservableStringValue other) {
-        return getDelegate().isEqualToIgnoreCase(other);
+        return delegate.isEqualToIgnoreCase(other);
     }
 
     @Override
     public BooleanBinding isEqualToIgnoreCase(String other) {
-        return getDelegate().isEqualToIgnoreCase(other);
+        return delegate.isEqualToIgnoreCase(other);
     }
 
     @Override
     public BooleanBinding isNotEqualToIgnoreCase(ObservableStringValue other) {
-        return getDelegate().isNotEqualToIgnoreCase(other);
+        return delegate.isNotEqualToIgnoreCase(other);
     }
 
     @Override
     public BooleanBinding isNotEqualToIgnoreCase(String other) {
-        return getDelegate().isNotEqualToIgnoreCase(other);
+        return delegate.isNotEqualToIgnoreCase(other);
     }
 
     @Override
     public BooleanBinding greaterThan(ObservableStringValue other) {
-        return getDelegate().greaterThan(other);
+        return delegate.greaterThan(other);
     }
 
     @Override
     public BooleanBinding greaterThan(String other) {
-        return getDelegate().greaterThan(other);
+        return delegate.greaterThan(other);
     }
 
     @Override
     public BooleanBinding lessThan(ObservableStringValue other) {
-        return getDelegate().lessThan(other);
+        return delegate.lessThan(other);
     }
 
     @Override
     public BooleanBinding lessThan(String other) {
-        return getDelegate().lessThan(other);
+        return delegate.lessThan(other);
     }
 
     @Override
     public BooleanBinding greaterThanOrEqualTo(ObservableStringValue other) {
-        return getDelegate().greaterThanOrEqualTo(other);
+        return delegate.greaterThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding greaterThanOrEqualTo(String other) {
-        return getDelegate().greaterThanOrEqualTo(other);
+        return delegate.greaterThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding lessThanOrEqualTo(ObservableStringValue other) {
-        return getDelegate().lessThanOrEqualTo(other);
+        return delegate.lessThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding lessThanOrEqualTo(String other) {
-        return getDelegate().lessThanOrEqualTo(other);
+        return delegate.lessThanOrEqualTo(other);
     }
 
     @Override
     public BooleanBinding isNull() {
-        return getDelegate().isNull();
+        return delegate.isNull();
     }
 
     @Override
     public BooleanBinding isNotNull() {
-        return getDelegate().isNotNull();
+        return delegate.isNotNull();
     }
 
     @Override
     public IntegerBinding length() {
-        return getDelegate().length();
+        return delegate.length();
     }
 
     @Override
     public BooleanBinding isEmpty() {
-        return getDelegate().isEmpty();
+        return delegate.isEmpty();
     }
 
     @Override
     public BooleanBinding isNotEmpty() {
-        return getDelegate().isNotEmpty();
+        return delegate.isNotEmpty();
+    }
+
+    @Override
+    public String get() {
+        return delegate.get();
+    }
+
+    @Override
+    public void addListener(ChangeListener<? super String> listener) {
+        delegate.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(ChangeListener<? super String> listener) {
+        delegate.removeListener(listener);
+    }
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+        delegate.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+        delegate.removeListener(listener);
     }
 }
