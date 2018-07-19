@@ -388,11 +388,6 @@ public final class GriffonApplicationUtils {
         return is64Bit;
     }
 
-    @Deprecated
-    public static boolean isJdk18() {
-        return isJdk8();
-    }
-
     public static boolean isJdk8() {
         return isJdk8;
     }
@@ -479,11 +474,6 @@ public final class GriffonApplicationUtils {
 
     public static boolean getIs64Bit() {
         return is64Bit;
-    }
-
-    @Deprecated
-    public static boolean getIsJdk18() {
-        return isJdk8;
     }
 
     public static boolean getIsJdk8() {
