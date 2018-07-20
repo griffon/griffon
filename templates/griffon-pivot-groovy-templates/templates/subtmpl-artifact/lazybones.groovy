@@ -16,7 +16,6 @@ if (tmplQualifiers) {
         it.endsWith('.groovy')
     }.collect { it.toLowerCase() - '.groovy' }.sort() - 'lazybones'
     println '\nThe following artifact templates are available\n'
-    templateNames << 'mvcgroup'
     templateNames.each { println "  $it" }
     println ' '
     while (!(artifactBaseName in templateNames)) {
@@ -65,6 +64,7 @@ processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath 
 
 if (artifactBaseName == 'mvcgroup') {
     String groupName = transformText(className, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)
+    processArtifact(className, 'MVCGroup', 'mvcgroup', 'griffon-app/mvcs')
     processArtifact(className, 'Model', 'model', 'griffon-app/models')
     processArtifact(className, 'View', 'view', 'griffon-app/views')
     processArtifact(className, 'Controller', 'controller', 'griffon-app/controllers')

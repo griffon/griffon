@@ -49,9 +49,6 @@ def renameFile = { File from, String path ->
     }
 }
 
-File mvcGroupFile = new File(mainSources, 'MVCGroup.java')
-renameFile(mvcGroupFile, mainSources.absolutePath + '/' + props.project_capitalized_name + mvcGroupFile.name)
-
 mainSources.eachFile { File file ->
     renameFile(file, mainSourcesPath.absolutePath + '/' + file.name)
 }
@@ -65,7 +62,7 @@ integrationTestSources.eachFile { File file ->
 renameFile(new File(binSources, 'run-app'), binSources.absolutePath + '/' + props.project_name)
 renameFile(new File(binSources, 'run-app.bat'), binSources.absolutePath + '/' + props.project_name + '.bat')
 
-['controllers', 'models', 'services', 'views'].each { String category ->
+['controllers', 'models', 'services', 'views', 'mvcs'].each { String category ->
     File artifactDir = new File(projectDir, "griffon-app/$category")
     artifactDir.eachFile { File file ->
         File artifactSourcesPath = new File(projectDir, "griffon-app/$category/$packagePath")

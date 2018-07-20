@@ -96,10 +96,10 @@ processArtifact = { artifactClass, artifactTemplate, artifactType, artifactPath 
 
 if (artifactBaseName == 'mvcgroup') {
     String groupName = transformText(className, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)
+    processArtifact(className, 'MVCGroup', 'mvcgroup', 'griffon-app/mvcs')
     processArtifact(className, 'Model', 'model', 'griffon-app/models')
     processArtifact(className, 'View', 'view', 'griffon-app/views')
     processArtifact(className, 'Controller', 'controller', 'griffon-app/controllers')
-    processArtifact(className + 'MVCGroup', 'MVCGroup', 'mvcgroup', 'src/main/java')
     processArtifact(className + 'Controller', 'Test', 'controller', 'src/test/java')
     processArtifact(className, 'IntegrationTest', 'view', 'src/integration-test/java')
     println "Do not forget to add the group '$groupName' to griffon-app/conf/Config.java"

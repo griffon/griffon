@@ -69,7 +69,7 @@ functionalTestSources.eachFile { File file ->
 renameFile(new File(binSources, 'run-app'), binSources.absolutePath + '/' + props.project_name)
 renameFile(new File(binSources, 'run-app.bat'), binSources.absolutePath + '/' + props.project_name + '.bat')
 
-['controllers', 'models', 'services', 'views'].each { String category ->
+['controllers', 'models', 'services', 'views', 'mvcs'].each { String category ->
     File artifactDir = new File(projectDir, "griffon-app/$category")
     artifactDir.eachFile { File file ->
         File artifactSourcesPath = new File(projectDir, "griffon-app/$category/$packagePath")
