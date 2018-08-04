@@ -19,11 +19,12 @@ package editor
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Observable
-import griffon.transform.PropertyListener
+import griffon.transform.beans.Observable
+import griffon.transform.beans.PropertyListener
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
 
 @ArtifactProviderFor(GriffonModel)
-class ContainerModel {
+class ContainerModel extends AbstractSwingGriffonModel {
     final DocumentModel documentModel = new DocumentModel()
 
     @Observable

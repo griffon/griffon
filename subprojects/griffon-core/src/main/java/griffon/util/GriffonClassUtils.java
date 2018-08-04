@@ -17,8 +17,6 @@
  */
 package griffon.util;
 
-import griffon.core.Observable;
-import griffon.core.Vetoable;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.event.EventPublisher;
@@ -210,17 +208,29 @@ public class GriffonClassUtils {
             }
         }
 
-        for (Method method : Observable.class.getMethods()) {
-            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
-            if (!OBSERVABLE_METHODS.contains(md)) {
-                OBSERVABLE_METHODS.add(md);
+
+        try {
+            Class<?> observableClass = GriffonClassUtils.class.getClassLoader().loadClass("griffon.beans.Observable");
+            for (Method method : observableClass.getMethods()) {
+                MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+                if (!OBSERVABLE_METHODS.contains(md)) {
+                    OBSERVABLE_METHODS.add(md);
+                }
             }
+        } catch (ClassNotFoundException cnfe) {
+            // ignore
         }
-        for (Method method : Vetoable.class.getMethods()) {
-            MethodDescriptor md = MethodDescriptor.forMethod(method, true);
-            if (!OBSERVABLE_METHODS.contains(md)) {
-                OBSERVABLE_METHODS.add(md);
+
+        try {
+            Class<?> vetoableClass = GriffonClassUtils.class.getClassLoader().loadClass("griffon.beans.Vetoable");
+            for (Method method : vetoableClass.getMethods()) {
+                MethodDescriptor md = MethodDescriptor.forMethod(method, true);
+                if (!OBSERVABLE_METHODS.contains(md)) {
+                    OBSERVABLE_METHODS.add(md);
+                }
             }
+        } catch (ClassNotFoundException cnfe) {
+            // ignore
         }
 
         for (Method method : ResourceHandler.class.getMethods()) {

@@ -28,7 +28,7 @@ class EventPublisherSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.EventPublisher
+            @griffon.transform.core.EventPublisher
             class Bean { }
             new Bean()
             ''')

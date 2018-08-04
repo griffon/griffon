@@ -26,8 +26,8 @@ class MapChangeListenerSpec extends Specification {
         given:
         String script = """import javafx.collections.FXCollections
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.MapChangeListener(value=snoop, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.MapChangeListener(value=snoop, weak=$weak)
             javafx.collections.ObservableMap map = FXCollections.observableHashMap()
 
             int count = 0
@@ -53,8 +53,8 @@ class MapChangeListenerSpec extends Specification {
         given:
         String script = """import javafx.collections.FXCollections
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.MapChangeListener(value={ c -> ++count }, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.MapChangeListener(value={ c -> ++count }, weak=$weak)
             javafx.collections.ObservableMap map = FXCollections.observableHashMap()
 
             int count = 0
@@ -79,8 +79,8 @@ class MapChangeListenerSpec extends Specification {
         given:
         String script = """import javafx.collections.FXCollections
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.MapChangeListener(value='snoop', weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.MapChangeListener(value='snoop', weak=$weak)
             javafx.collections.ObservableMap map = FXCollections.observableHashMap()
 
             int count = 0

@@ -29,7 +29,7 @@ class ResourceResolverAwareSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.ResourceResolverAware
+            @griffon.transform.core.ResourceResolverAware
             class Bean { }
             new Bean()
             ''')

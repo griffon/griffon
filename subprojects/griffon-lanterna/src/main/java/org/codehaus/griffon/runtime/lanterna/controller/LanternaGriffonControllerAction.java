@@ -20,12 +20,12 @@ package org.codehaus.griffon.runtime.lanterna.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
+import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.lanterna.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
-import java.beans.PropertyChangeEvent;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,7 +48,7 @@ public class LanternaGriffonControllerAction extends AbstractAction {
         return new LanternaAction((Runnable) () -> actionManager.invokeAction(controller, actionName));
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
         toolkitAction.setName(String.valueOf(evt.getNewValue()));
     }
 

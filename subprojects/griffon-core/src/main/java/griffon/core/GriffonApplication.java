@@ -26,6 +26,7 @@ import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
+import griffon.core.properties.PropertySource;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
@@ -45,7 +46,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 0.0.0
  */
-public interface GriffonApplication extends Observable {
+public interface GriffonApplication extends PropertySource {
     String PROPERTY_LOCALE = "locale";
     String PROPERTY_PHASE = "phase";
 

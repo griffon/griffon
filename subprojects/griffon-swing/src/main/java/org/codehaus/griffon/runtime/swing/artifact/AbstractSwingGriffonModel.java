@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.swing.artifact;
 
-import griffon.core.Observable;
+import griffon.beans.Vetoable;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 import javax.annotation.Nonnull;
@@ -25,6 +25,9 @@ import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
+import java.beans.VetoableChangeSupport;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -33,44 +36,94 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 3.0.0
  */
-public abstract class AbstractSwingGriffonModel extends AbstractGriffonModel implements Observable {
+public abstract class AbstractSwingGriffonModel extends AbstractGriffonModel implements Vetoable {
+    private static final String ERROR_EVENT_NULL = "Argument 'event' must not be null";
+    private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' must not be blank";
     protected final PropertyChangeSupport pcs;
+    protected final VetoableChangeSupport vcs;
 
     public AbstractSwingGriffonModel() {
         pcs = new PropertyChangeSupport(this);
+        vcs = new VetoableChangeSupport(this);
     }
 
+    @Override
+    public void addVetoableChangeListener(@Nullable VetoableChangeListener listener) {
+        vcs.addVetoableChangeListener(listener);
+    }
+
+    @Override
+    public void addVetoableChangeListener(@Nullable String propertyName, @Nullable VetoableChangeListener listener) {
+        vcs.addVetoableChangeListener(propertyName, listener);
+    }
+
+    @Override
+    public void removeVetoableChangeListener(@Nullable VetoableChangeListener listener) {
+        vcs.removeVetoableChangeListener(listener);
+    }
+
+    @Override
+    public void removeVetoableChangeListener(@Nullable String propertyName, @Nullable VetoableChangeListener listener) {
+        vcs.removeVetoableChangeListener(propertyName, listener);
+    }
+
+    @Nonnull
+    @Override
+    public VetoableChangeListener[] getVetoableChangeListeners() {
+        return vcs.getVetoableChangeListeners();
+    }
+
+    @Nonnull
+    @Override
+    public VetoableChangeListener[] getVetoableChangeListeners(@Nullable String propertyName) {
+        return vcs.getVetoableChangeListeners(propertyName);
+    }
+
+    @Override
     public void addPropertyChangeListener(@Nullable PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 
+    @Override
     public void addPropertyChangeListener(@Nullable String propertyName, @Nullable PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(propertyName, listener);
     }
 
+    @Override
     public void removePropertyChangeListener(@Nullable PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }
 
+    @Override
     public void removePropertyChangeListener(@Nullable String propertyName, @Nullable PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
     @Nonnull
+    @Override
     public PropertyChangeListener[] getPropertyChangeListeners() {
         return pcs.getPropertyChangeListeners();
     }
 
     @Nonnull
+    @Override
     public PropertyChangeListener[] getPropertyChangeListeners(@Nullable String propertyName) {
         return pcs.getPropertyChangeListeners(propertyName);
     }
 
     protected void firePropertyChange(@Nonnull PropertyChangeEvent event) {
-        pcs.firePropertyChange(requireNonNull(event, "Argument 'event' must not be null"));
+        pcs.firePropertyChange(requireNonNull(event, ERROR_EVENT_NULL));
     }
 
     protected void firePropertyChange(@Nonnull String propertyName, @Nullable Object oldValue, @Nullable Object newValue) {
-        pcs.firePropertyChange(requireNonBlank(propertyName, "Argument 'propertyName' must not be blank"), oldValue, newValue);
+        pcs.firePropertyChange(requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK), oldValue, newValue);
+    }
+
+    protected void fireVetoableChange(@Nonnull PropertyChangeEvent event) throws PropertyVetoException {
+        vcs.fireVetoableChange(requireNonNull(event, ERROR_EVENT_NULL));
+    }
+
+    protected void fireVetoableChange(@Nonnull String propertyName, @Nullable Object oldValue, @Nullable Object newValue) throws PropertyVetoException {
+        vcs.fireVetoableChange(requireNonBlank(propertyName, ERROR_PROPERTY_NAME_BLANK), oldValue, newValue);
     }
 }

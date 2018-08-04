@@ -26,8 +26,8 @@ class ChangeListenerSpec extends Specification {
         given:
         String script = """
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.ChangeListener(value=snoop, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.ChangeListener(value=snoop, weak=$weak)
             String name
 
             int count = 0
@@ -53,8 +53,8 @@ class ChangeListenerSpec extends Specification {
         given:
         String script = """
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.ChangeListener(value={ ob, ov, nv -> ++count }, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.ChangeListener(value={ ob, ov, nv -> ++count }, weak=$weak)
             String name
 
             int count = 0
@@ -79,8 +79,8 @@ class ChangeListenerSpec extends Specification {
         given:
         String script = """
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.ChangeListener(value='snoop', weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.ChangeListener(value='snoop', weak=$weak)
             String name
 
             int count = 0

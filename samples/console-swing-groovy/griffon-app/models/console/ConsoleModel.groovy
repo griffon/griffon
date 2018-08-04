@@ -19,10 +19,11 @@ package console
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Observable
+import griffon.transform.beans.Observable
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
 
 @ArtifactProviderFor(GriffonModel)
-class ConsoleModel {
+class ConsoleModel extends AbstractSwingGriffonModel {
     String scriptSource                                  //<1>
     @Observable Object scriptResult                      //<2>
     @Observable boolean enabled = true                   //<3>

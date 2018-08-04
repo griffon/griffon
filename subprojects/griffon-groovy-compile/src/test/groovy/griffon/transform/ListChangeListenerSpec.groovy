@@ -26,8 +26,8 @@ class ListChangeListenerSpec extends Specification {
         given:
         String script = """import javafx.collections.FXCollections
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener(value=snoop, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.ListChangeListener(value=snoop, weak=$weak)
             javafx.collections.ObservableList list = FXCollections.observableArrayList()
 
             int count = 0
@@ -53,8 +53,8 @@ class ListChangeListenerSpec extends Specification {
         given:
         String script = """import javafx.collections.FXCollections
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener(value={ c -> ++count }, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.ListChangeListener(value={ c -> ++count }, weak=$weak)
             javafx.collections.ObservableList list = FXCollections.observableArrayList()
 
             int count = 0
@@ -79,8 +79,8 @@ class ListChangeListenerSpec extends Specification {
         given:
         String script = """import javafx.collections.FXCollections
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.ListChangeListener(value='snoop', weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.ListChangeListener(value='snoop', weak=$weak)
             javafx.collections.ObservableList list = FXCollections.observableArrayList()
 
             int count = 0

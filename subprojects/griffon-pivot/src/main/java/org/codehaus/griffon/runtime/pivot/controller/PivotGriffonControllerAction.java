@@ -20,6 +20,7 @@ package org.codehaus.griffon.runtime.pivot.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
+import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.pivot.support.PivotAction;
 import org.apache.pivot.wtk.Component;
@@ -27,7 +28,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
 
 import static java.util.Objects.requireNonNull;
 
@@ -54,7 +54,7 @@ public class PivotGriffonControllerAction extends AbstractAction {
         return new PivotAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
         if (KEY_NAME.equals(evt.getPropertyName())) {
             toolkitAction.setName((String) evt.getNewValue());
         } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {

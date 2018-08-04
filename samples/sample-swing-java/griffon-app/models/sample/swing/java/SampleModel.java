@@ -19,10 +19,10 @@ package sample.swing.java;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractVetoableGriffonModel;
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class SampleModel extends AbstractVetoableGriffonModel {
+public class SampleModel extends AbstractSwingGriffonModel {
     private String input;                                                //<1>
     private String output;                                               //<1>
 

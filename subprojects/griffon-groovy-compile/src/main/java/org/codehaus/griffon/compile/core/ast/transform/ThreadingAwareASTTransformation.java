@@ -19,7 +19,7 @@ package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.core.threading.ThreadingHandler;
 import griffon.core.threading.UIThreadManager;
-import griffon.transform.ThreadingAware;
+import griffon.transform.core.ThreadingAware;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.griffon.compile.core.ThreadingAwareConstants;

@@ -21,6 +21,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.editors.PropertyEditorResolver;
+import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
@@ -31,7 +32,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyEditor;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
@@ -74,7 +74,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
         return new SwingAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
         if (KEY_NAME.equals(evt.getPropertyName())) {
             toolkitAction.putValue(Action.NAME, evt.getNewValue());
         } else if (KEY_COMMAND.equals(evt.getPropertyName())) {

@@ -43,6 +43,7 @@ import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
+import org.codehaus.griffon.runtime.core.properties.AbstractPropertySource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,7 @@ import static java.util.Objects.requireNonNull;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
+public abstract class AbstractGriffonApplication extends AbstractPropertySource implements GriffonApplication {
     public static final String[] EMPTY_ARGS = new String[0];
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     private static final Class<?>[] CTOR_ARGS = new Class<?>[]{String[].class};

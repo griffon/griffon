@@ -17,6 +17,7 @@
  */
 package griffon.transform
 
+import griffon.beans.Vetoable
 import spock.lang.Specification
 
 import java.lang.reflect.Method
@@ -28,14 +29,14 @@ class VetoableSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.Vetoable
+            @griffon.transform.beans.Vetoable
             class Bean { }
             new Bean()
             ''')
 
         then:
-        bean instanceof griffon.core.Vetoable
-        griffon.core.Vetoable.methods.each { Method target ->
+        bean instanceof Vetoable
+        Vetoable.methods.each { Method target ->
             assert bean.class.declaredMethods.find { Method candidate ->
                 candidate.name == target.name &&
                     candidate.returnType == target.returnType &&

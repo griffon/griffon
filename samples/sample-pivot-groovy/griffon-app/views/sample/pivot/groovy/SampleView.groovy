@@ -20,11 +20,12 @@ package sample.pivot.groovy
 import griffon.core.artifact.GriffonView
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
+import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView
 
 import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
-class SampleView {
+class SampleView extends AbstractPivotGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder                                                              //<1>
 

@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.transform.FXObservable;
+import griffon.transform.javafx.FXObservable;
 import griffon.util.GriffonNameUtils;
 import groovyjarjarasm.asm.Opcodes;
 import javafx.beans.property.BooleanProperty;
@@ -214,7 +214,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
         if (parent instanceof FieldNode) {
             int modifiers = ((FieldNode) parent).getModifiers();
             if ((modifiers & Modifier.FINAL) != 0) {
-                String msg = "@griffon.transform.FXObservable cannot annotate a final property.";
+                String msg = "@griffon.transform.javafx.FXObservable cannot annotate a final property.";
                 generateSyntaxErrorMessage(sourceUnit, node, msg);
             }
             addJavaFXProperty(sourceUnit, node, declaringClass, (FieldNode) parent);
@@ -237,7 +237,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
         for (PropertyNode propertyNode : declaringClass.getProperties()) {
             if (propertyNode.getName().equals(fieldName)) {
                 if (field.isStatic()) {
-                    String message = "@griffon.transform.FXObservable cannot annotate a static property.";
+                    String message = "@griffon.transform.javafx.FXObservable cannot annotate a static property.";
                     generateSyntaxErrorMessage(source, node, message);
                 } else {
                     createPropertyGetterSetter(declaringClass, propertyNode);
@@ -246,7 +246,7 @@ public class FXObservableASTTransformation extends AbstractASTTransformation imp
             }
         }
 
-        String message = "@griffon.transform.FXObservable must be on a property, not a field. Try removing the private, " +
+        String message = "@griffon.transform.javafx.FXObservable must be on a property, not a field. Try removing the private, " +
             "protected, or public modifier.";
         generateSyntaxErrorMessage(source, node, message);
     }

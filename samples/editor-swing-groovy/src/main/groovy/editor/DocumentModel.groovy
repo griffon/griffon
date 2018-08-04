@@ -17,8 +17,8 @@
  */
 package editor
 
-import griffon.transform.Observable
-import griffon.transform.PropertyListener
+import griffon.transform.beans.PropertyListener
+import griffon.transform.beans.Observable
 
 import java.beans.PropertyChangeListener
 

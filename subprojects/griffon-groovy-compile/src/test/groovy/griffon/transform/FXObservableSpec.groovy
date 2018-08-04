@@ -33,7 +33,7 @@ class FXObservableSpec extends Specification {
     void "Observable primitive properties"() {
         given:
         String script = '''
-        @griffon.transform.FXObservable
+        @griffon.transform.javafx.FXObservable
         class Bean {
             boolean theBoolean
             byte theByte
@@ -62,7 +62,7 @@ class FXObservableSpec extends Specification {
     void "Observable wrapper properties"() {
         given:
         String script = '''
-        @griffon.transform.FXObservable
+        @griffon.transform.javafx.FXObservable
         class Bean {
             Boolean theBoolean
             byte theByte
@@ -97,7 +97,7 @@ class FXObservableSpec extends Specification {
     void "Observable collection properties"() {
         given:
         String script = '''
-        @griffon.transform.FXObservable
+        @griffon.transform.javafx.FXObservable
         class Bean {
             List<String> theList
             Map<String,String> theMap

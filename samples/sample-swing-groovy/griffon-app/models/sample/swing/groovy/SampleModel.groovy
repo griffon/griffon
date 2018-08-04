@@ -19,10 +19,11 @@ package sample.swing.groovy
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Observable
+import griffon.transform.beans.Observable
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
 
 @ArtifactProviderFor(GriffonModel)
-class SampleModel {
+class SampleModel extends AbstractSwingGriffonModel {
     @Observable String input                                             //<1>
     @Observable String output                                            //<1>
 }

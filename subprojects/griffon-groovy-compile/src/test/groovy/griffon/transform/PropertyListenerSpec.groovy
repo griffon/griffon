@@ -24,8 +24,8 @@ class PropertyListenerSpec extends Specification {
         given:
         String script = '''
         class Bean {
-            @griffon.transform.Observable
-            @griffon.transform.PropertyListener(snoop)
+            @griffon.transform.beans.Observable
+            @griffon.transform.beans.PropertyListener(snoop)
             String name
 
             int count = 0
@@ -48,8 +48,8 @@ class PropertyListenerSpec extends Specification {
         given:
         String script = '''
         class Bean {
-            @griffon.transform.Observable
-            @griffon.transform.PropertyListener({ ++count })
+            @griffon.transform.beans.Observable
+            @griffon.transform.beans.PropertyListener({ ++count })
             String name
 
             int count = 0
@@ -71,8 +71,8 @@ class PropertyListenerSpec extends Specification {
         given:
         String script = '''
         class Bean {
-            @griffon.transform.Observable
-            @griffon.transform.PropertyListener("snoop")
+            @griffon.transform.beans.Observable
+            @griffon.transform.beans.PropertyListener("snoop")
             String name
 
             int count = 0

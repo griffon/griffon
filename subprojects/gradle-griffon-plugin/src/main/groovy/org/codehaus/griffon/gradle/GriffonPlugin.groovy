@@ -200,6 +200,7 @@ class GriffonPlugin implements Plugin<Project> {
                 if (extension.toolkit) {
                     appendDependency(extension.toolkit)
                     appendDependency(extension.toolkit + '-test')
+                    appendDependency((extension.toolkit == 'javafx' ? 'javafx' : ' beans') + '-compile')
                     maybeIncludeGroovyDependency(groovyDependenciesEnabled, extension.toolkit + '-groovy')
                 }
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')

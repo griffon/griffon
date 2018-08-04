@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.core.Vetoable;
+import griffon.beans.Vetoable;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
-import org.codehaus.griffon.compile.core.VetoableConstants;
+import org.codehaus.griffon.compile.beans.VetoableConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -79,13 +79,13 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
-@AnnotationHandlerFor(griffon.transform.Vetoable.class)
+@AnnotationHandlerFor(griffon.transform.beans.Vetoable.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class VetoableASTTransformation extends AbstractASTTransformation implements VetoableConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(VetoableASTTransformation.class);
     private static final ClassNode VETOABLE_CNODE = makeClassSafe(Vetoable.class);
     private static final ClassNode PROPERTY_VETO_EXCEPTION_CNODE = makeClassSafe(PropertyVetoException.class);
-    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Vetoable.class);
+    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.beans.Vetoable.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @Vetoable}.

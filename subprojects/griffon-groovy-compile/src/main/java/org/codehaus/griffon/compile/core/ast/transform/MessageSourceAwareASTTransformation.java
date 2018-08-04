@@ -18,7 +18,7 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.core.i18n.MessageSource;
-import griffon.transform.MessageSourceAware;
+import griffon.transform.core.MessageSourceAware;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.griffon.compile.core.MessageSourceAwareConstants;

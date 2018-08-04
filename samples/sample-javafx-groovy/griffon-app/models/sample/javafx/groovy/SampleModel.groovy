@@ -19,10 +19,11 @@ package sample.javafx.groovy
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
-import griffon.transform.FXObservable
+import griffon.transform.javafx.FXObservable
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel
 
 @ArtifactProviderFor(GriffonModel)
-class SampleModel {
+class SampleModel extends AbstractGriffonModel {
     @FXObservable String input                                           //<1>
     @FXObservable String output                                          //<1>
 }

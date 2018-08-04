@@ -26,8 +26,8 @@ class InvalidationListenerSpec extends Specification {
         given:
         String script = """
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.InvalidationListener(value=snoop, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.InvalidationListener(value=snoop, weak=$weak)
             String name
 
             int count = 0
@@ -52,8 +52,8 @@ class InvalidationListenerSpec extends Specification {
         given:
         String script = """
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.InvalidationListener(value={ ++count }, weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.InvalidationListener(value={ ++count }, weak=$weak)
             String name
 
             int count = 0
@@ -77,8 +77,8 @@ class InvalidationListenerSpec extends Specification {
         given:
         String script = """
         class Bean {
-            @griffon.transform.FXObservable
-            @griffon.transform.InvalidationListener(value='snoop', weak=$weak)
+            @griffon.transform.javafx.FXObservable
+            @griffon.transform.javafx.InvalidationListener(value='snoop', weak=$weak)
             String name
 
             int count = 0

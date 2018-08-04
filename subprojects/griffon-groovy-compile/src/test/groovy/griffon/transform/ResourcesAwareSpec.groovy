@@ -29,7 +29,7 @@ class ResourcesAwareSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.ResourcesAware
+            @griffon.transform.core.ResourcesAware
             class Bean { }
             new Bean()
             ''')

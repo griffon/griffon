@@ -20,6 +20,7 @@ package org.codehaus.griffon.runtime.javafx.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
+import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
@@ -29,7 +30,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyEditor;
 
 import static griffon.core.editors.PropertyEditorResolver.findEditor;
@@ -80,7 +80,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         return new JavaFXAction();
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
         if (KEY_NAME.equals(evt.getPropertyName())) {
             toolkitAction.setName(String.valueOf(evt.getNewValue()));
         } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {

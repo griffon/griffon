@@ -19,10 +19,10 @@ package sample.pivot.java;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractVetoableGriffonModel;
+import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class SampleModel extends AbstractVetoableGriffonModel {
+public class SampleModel extends AbstractPivotGriffonModel {
     private String input;                                                //<1>
     private String output;                                               //<1>
 

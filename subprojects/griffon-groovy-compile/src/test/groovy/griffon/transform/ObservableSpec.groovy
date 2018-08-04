@@ -17,6 +17,7 @@
  */
 package griffon.transform
 
+import griffon.beans.Observable
 import spock.lang.Specification
 
 import java.lang.reflect.Method
@@ -28,14 +29,14 @@ class ObservableSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.Observable
+            @griffon.transform.beans.Observable
             class Bean { }
             new Bean()
             ''')
 
         then:
-        bean instanceof griffon.core.Observable
-        griffon.core.Observable.methods.each { Method target ->
+        bean instanceof Observable
+        Observable.methods.each { Method target ->
             assert bean.class.declaredMethods.find { Method candidate ->
                 candidate.name == target.name &&
                     candidate.returnType == target.returnType &&

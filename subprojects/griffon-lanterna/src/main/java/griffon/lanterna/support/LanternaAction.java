@@ -18,13 +18,13 @@
 package griffon.lanterna.support;
 
 import com.googlecode.lanterna.gui.Action;
-import org.codehaus.griffon.runtime.core.AbstractObservable;
+import org.codehaus.griffon.runtime.core.properties.AbstractPropertySource;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class LanternaAction extends AbstractObservable implements Action {
+public class LanternaAction extends AbstractPropertySource implements Action {
     public static final String NAME = "name";
 
     private Runnable runnable;

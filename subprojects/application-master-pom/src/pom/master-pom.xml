@@ -121,6 +121,18 @@
             </dependency>
             <dependency>
                 <groupId>org.codehaus.griffon</groupId>
+                <artifactId>griffon-beans</artifactId>
+                <version>${griffon.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.griffon</groupId>
+                <artifactId>griffon-beans-compile</artifactId>
+                <version>${griffon.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.griffon</groupId>
                 <artifactId>griffon-core-test</artifactId>
                 <version>${griffon.version}</version>
                 <scope>test</scope>
@@ -160,6 +172,12 @@
                 <artifactId>griffon-javafx</artifactId>
                 <version>${griffon.version}</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.griffon</groupId>
+                <artifactId>griffon-javafx-compile</artifactId>
+                <version>${griffon.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.griffon</groupId>
@@ -373,6 +391,12 @@
                         <classpathDependencyExcludes>
                             <classpathDependencyExclude>
                                 org.codehaus.griffon:griffon-core-compile
+                            </classpathDependencyExclude>
+                            <classpathDependencyExclude>
+                                org.codehaus.griffon:griffon-beans-compile
+                            </classpathDependencyExclude>
+                            <classpathDependencyExclude>
+                                org.codehaus.griffon:griffon-javafx-compile
                             </classpathDependencyExclude>
                             <classpathDependencyExclude>
                                 org.codehaus.griffon:griffon-groovy-compile

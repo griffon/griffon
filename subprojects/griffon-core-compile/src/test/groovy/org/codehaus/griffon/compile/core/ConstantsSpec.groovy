@@ -40,24 +40,6 @@ class ConstantsSpec extends Specification implements BaseConstants {
         ThreadingAwareConstants        | THREADING_METHODS
     }
 
-    void "Verify methods of org.codehaus.griffon.compile.core.ObservableConstants"() {
-        given:
-        def actualMethods = ObservableConstants.OBSERVABLE_METHODS + ObservableConstants.OBSERVABLE_FIRE_METHODS
-
-        expect:
-        actualMethods.size() == OBSERVABLE_METHODS.size()
-        actualMethods.each { assert OBSERVABLE_METHODS.contains(it.toString()) }
-    }
-
-    void "Verify methods of org.codehaus.griffon.compile.core.VetoableConstants"() {
-        given:
-        def actualMethods = VetoableConstants.VETOABLE_METHODS + VetoableConstants.VETOABLE_FIRE_METHODS
-
-        expect:
-        actualMethods.size() == VETOABLE_METHODS.size()
-        actualMethods.each { assert VETOABLE_METHODS.contains(it.toString()) }
-    }
-
     private static final List<String> EVENT_PUBLISHER_METHODS = [
         'public void addEventListener(@javax.annotation.Nonnull java.lang.Object arg0)',
         'public void addEventListener(@javax.annotation.Nonnull java.lang.String arg0, @javax.annotation.Nonnull griffon.core.RunnableWithArgs<?> arg1)',
@@ -206,27 +188,5 @@ class ConstantsSpec extends Specification implements BaseConstants {
         '@javax.annotation.Nonnull public <R> java.util.concurrent.Future<R> executeFuture(@javax.annotation.Nonnull java.util.concurrent.ExecutorService arg0, @javax.annotation.Nonnull java.util.concurrent.Callable<R> arg1)',
         '@javax.annotation.Nonnull public <R> java.util.concurrent.Future<R> executeFuture(@javax.annotation.Nonnull java.util.concurrent.Callable<R> arg0)',
         '@javax.annotation.Nullable public <R> R executeInsideUISync(@javax.annotation.Nonnull java.util.concurrent.Callable<R> arg0)'
-    ]
-
-    private static final List<String> OBSERVABLE_METHODS = [
-        'public void addPropertyChangeListener(@javax.annotation.Nullable java.beans.PropertyChangeListener arg0)',
-        'public void addPropertyChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.PropertyChangeListener arg1)',
-        'public void removePropertyChangeListener(@javax.annotation.Nullable java.beans.PropertyChangeListener arg0)',
-        'public void removePropertyChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.PropertyChangeListener arg1)',
-        '@javax.annotation.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners()',
-        '@javax.annotation.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners(@javax.annotation.Nullable java.lang.String arg0)',
-        'protected void firePropertyChange(@javax.annotation.Nonnull java.beans.PropertyChangeEvent arg0)',
-        'protected void firePropertyChange(@javax.annotation.Nonnull java.lang.String arg0, @javax.annotation.Nullable java.lang.Object arg1, @javax.annotation.Nullable java.lang.Object arg2)'
-    ]
-
-    private static final List<String> VETOABLE_METHODS = [
-        'public void addVetoableChangeListener(@javax.annotation.Nullable java.beans.VetoableChangeListener arg0)',
-        'public void addVetoableChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.VetoableChangeListener arg1)',
-        'public void removeVetoableChangeListener(@javax.annotation.Nullable java.beans.VetoableChangeListener arg0)',
-        'public void removeVetoableChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.VetoableChangeListener arg1)',
-        '@javax.annotation.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners()',
-        '@javax.annotation.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners(@javax.annotation.Nullable java.lang.String arg0)',
-        'protected void fireVetoableChange(@javax.annotation.Nonnull java.beans.PropertyChangeEvent arg0) throws java.beans.PropertyVetoException',
-        'protected void fireVetoableChange(@javax.annotation.Nonnull java.lang.String arg0, @javax.annotation.Nullable java.lang.Object arg1, @javax.annotation.Nullable java.lang.Object arg2) throws java.beans.PropertyVetoException'
     ]
 }

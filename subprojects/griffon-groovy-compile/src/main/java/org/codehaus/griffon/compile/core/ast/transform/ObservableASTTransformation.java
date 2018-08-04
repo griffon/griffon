@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.core.Observable;
+import griffon.beans.Observable;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
-import org.codehaus.griffon.compile.core.ObservableConstants;
+import org.codehaus.griffon.compile.beans.ObservableConstants;
 import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -77,12 +77,12 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
-@AnnotationHandlerFor(griffon.transform.Observable.class)
+@AnnotationHandlerFor(griffon.transform.beans.Observable.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class ObservableASTTransformation extends AbstractASTTransformation implements ObservableConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ObservableASTTransformation.class);
     private static final ClassNode OBSERVABLE_CNODE = makeClassSafe(Observable.class);
-    private static final ClassNode OBSERVABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Observable.class);
+    private static final ClassNode OBSERVABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.beans.Observable.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @Observable}.

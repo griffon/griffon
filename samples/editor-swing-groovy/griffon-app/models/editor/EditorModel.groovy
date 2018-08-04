@@ -19,9 +19,10 @@ package editor
 
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Observable
+import griffon.transform.beans.Observable
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
 
 @ArtifactProviderFor(GriffonModel)
-class EditorModel {
+class EditorModel extends AbstractSwingGriffonModel {
     @Observable Document document
 }

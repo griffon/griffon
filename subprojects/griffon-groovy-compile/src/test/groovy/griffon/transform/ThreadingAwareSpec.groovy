@@ -29,7 +29,7 @@ class ThreadingAwareSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.ThreadingAware
+            @griffon.transform.core.ThreadingAware
             class Bean { }
             new Bean()
             ''')

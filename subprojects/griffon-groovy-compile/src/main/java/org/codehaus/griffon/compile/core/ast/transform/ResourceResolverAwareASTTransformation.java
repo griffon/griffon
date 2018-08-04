@@ -18,7 +18,7 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.core.resources.ResourceResolver;
-import griffon.transform.ResourceResolverAware;
+import griffon.transform.core.ResourceResolverAware;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.griffon.compile.core.ResourceResolverAwareConstants;

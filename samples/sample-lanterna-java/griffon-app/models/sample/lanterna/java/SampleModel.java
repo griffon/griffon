@@ -19,10 +19,10 @@ package sample.lanterna.java;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractVetoableGriffonModel;
+import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
-public class SampleModel extends AbstractVetoableGriffonModel {
+public class SampleModel extends AbstractLanternaGriffonModel {
     private String input;                                                //<1>
     private String output;                                               //<1>
 

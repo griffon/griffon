@@ -29,7 +29,7 @@ class MessageSourceAwareSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.MessageSourceAware
+            @griffon.transform.core.MessageSourceAware
             class Bean { }
             new Bean()
             ''')

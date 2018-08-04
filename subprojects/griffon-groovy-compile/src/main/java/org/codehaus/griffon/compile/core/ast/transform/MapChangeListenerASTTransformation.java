@@ -17,8 +17,10 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.transform.MapChangeListener;
+import griffon.transform.javafx.MapChangeListener;
 import javafx.collections.WeakMapChangeListener;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -57,8 +59,9 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
  * @author Andres Almiray
  * @since 2.4.0
  */
+@AnnotationHandlerFor(MapChangeListener.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class MapChangeListenerASTTransformation extends AbstractASTTransformation {
+public class MapChangeListenerASTTransformation extends AbstractASTTransformation implements AnnotationHandler {
     private static final ClassNode MAP_CHANGE_LISTENER_CLASS = makeClassSafe(MapChangeListener.class);
     private static final ClassNode JAVAFX_MAP_CHANGE_LISTENER_CLASS = makeClassSafe(javafx.collections.MapChangeListener.class);
     private static final ClassNode JAVAFX_WEAK_MAP_CHANGE_LISTENER_CLASS = makeClassSafe(WeakMapChangeListener.class);

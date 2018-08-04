@@ -17,7 +17,7 @@
  */
 package editor;
 
-import org.codehaus.griffon.runtime.core.AbstractObservable;
+import org.codehaus.griffon.runtime.beans.AbstractObservable;
 
 import java.io.File;
 

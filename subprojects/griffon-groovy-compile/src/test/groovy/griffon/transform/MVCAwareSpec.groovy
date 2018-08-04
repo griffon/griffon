@@ -29,7 +29,7 @@ class MVCAwareSpec extends Specification {
 
         when:
         def bean = shell.evaluate('''
-            @griffon.transform.MVCAware
+            @griffon.transform.core.MVCAware
             class Bean { }
             new Bean()
             ''')

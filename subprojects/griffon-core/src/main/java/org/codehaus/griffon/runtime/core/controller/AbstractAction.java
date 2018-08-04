@@ -21,7 +21,7 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
-import org.codehaus.griffon.runtime.core.AbstractObservable;
+import org.codehaus.griffon.runtime.core.properties.AbstractPropertySource;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public abstract class AbstractAction extends AbstractObservable implements Action {
+public abstract class AbstractAction extends AbstractPropertySource implements Action {
     private String name;
     private boolean enabled = true;
     private final ActionManager actionManager;

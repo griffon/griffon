@@ -17,7 +17,6 @@
  */
 package griffon.util
 
-import griffon.core.Vetoable
 import griffon.core.addon.GriffonAddon
 import griffon.core.artifact.GriffonArtifact
 import griffon.core.artifact.GriffonMvcArtifact
@@ -135,15 +134,17 @@ class GriffonClassUtilsSpec extends Specification {
         [result, method] << methodsOf(ThreadingHandler, true).plus(methodsOf(ResourceHandler, false))
     }
 
+    /*
     void "isObservableMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
         assert result == GriffonClassUtils.isObservableMethod(method, true)
 
         where:
-        [result, method] << methodsOf(griffon.core.Observable, true)
+        [result, method] << methodsOf(Observable, true)
             .plus(methodsOf(Vetoable, true))
             .plus(methodsOf(ResourceHandler, false))
     }
+    */
 
     void "isArtifactMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
         expect:
@@ -235,15 +236,17 @@ class GriffonClassUtilsSpec extends Specification {
         [result, method] << methodDescriptorsOf(ThreadingHandler, true).plus(methodDescriptorsOf(ResourceHandler, false))
     }
 
+    /*
     void "isObservableMethod() returns #result for '#method'"() {
         expect:
         assert result == GriffonClassUtils.isObservableMethod(method)
 
         where:
-        [result, method] << methodDescriptorsOf(griffon.core.Observable, true)
+        [result, method] << methodDescriptorsOf(Observable, true)
             .plus(methodDescriptorsOf(Vetoable, true))
             .plus(methodDescriptorsOf(ResourceHandler, false))
     }
+    */
 
     void "isArtifactMethod() returns #result for '#method'"() {
         expect:

@@ -22,12 +22,13 @@ import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Threading
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
 
 import javax.annotation.Nonnull
 
 @Threading(Threading.Policy.SKIP)
 @ArtifactProviderFor(GriffonController)
-class BrowserController {
+class BrowserController extends AbstractGriffonController {
     @MVCMember @Nonnull
     BrowserModel model
     @MVCMember @Nonnull

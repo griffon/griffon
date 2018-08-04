@@ -20,9 +20,10 @@ package browser
 import griffon.core.artifact.GriffonModel
 import griffon.metadata.ArtifactProviderFor
 import groovyx.javafx.beans.FXBindable
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel
 
 @ArtifactProviderFor(GriffonModel)
-class BrowserModel {
+class BrowserModel extends AbstractGriffonModel {
     @FXBindable String status = ''
     @FXBindable String url
 }

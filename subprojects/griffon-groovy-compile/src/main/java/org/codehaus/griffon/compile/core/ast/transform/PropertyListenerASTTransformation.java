@@ -17,7 +17,9 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.transform.PropertyListener;
+import griffon.transform.beans.PropertyListener;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -51,8 +53,9 @@ import java.util.Map;
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(PropertyListener.class)
 @GroovyASTTransformation(phase= CompilePhase.CANONICALIZATION)
-public class PropertyListenerASTTransformation extends AbstractASTTransformation {
+public class PropertyListenerASTTransformation extends AbstractASTTransformation implements AnnotationHandler {
     private static final ClassNode PROPERTY_LISTENER_CLASS = makeClassSafe(PropertyListener.class);
     private static final ClassNode PROPERTY_CHANGE_LISTENER_CLASS = makeClassSafe(PropertyChangeListener.class);
     private static final String EMPTY_STRING = "";

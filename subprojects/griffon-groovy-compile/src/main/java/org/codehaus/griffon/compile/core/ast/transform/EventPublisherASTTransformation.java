@@ -67,14 +67,14 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
-@AnnotationHandlerFor(griffon.transform.EventPublisher.class)
+@AnnotationHandlerFor(griffon.transform.core.EventPublisher.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation extends AbstractASTTransformation implements EventPublisherConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);
     private static final ClassNode EVENT_ROUTER_CNODE = makeClassSafe(EventRouter.class);
     private static final ClassNode EVENT_PUBLISHER_CNODE = makeClassSafe(EventPublisher.class);
     private static final ClassNode EVENT_PUBLISHER_FIELD_CNODE = makeClassSafe(DefaultEventPublisher.class);
-    private static final ClassNode EVENT_PUBLISHER_ANODE = makeClassSafe(griffon.transform.EventPublisher.class);
+    private static final ClassNode EVENT_PUBLISHER_ANODE = makeClassSafe(griffon.transform.core.EventPublisher.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
