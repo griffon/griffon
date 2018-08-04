@@ -61,7 +61,7 @@ binding will be created instead.
 
 [source,groovy,linenums,options="nowrap"]
 ----
-import griffon.transform.Observable
+import griffon.transform.beans.Observable
 import groovy.swing.SwingBuilder
 
 class MyModel {
@@ -92,7 +92,7 @@ Transforms the value before it is sent to event listeners.
 
 [source,groovy,linenums,options="nowrap"]
 ----
-import griffon.transform.Observable
+import griffon.transform.beans.Observable
 import groovy.swing.SwingBuilder
 
 class MyModel {
@@ -129,7 +129,7 @@ Guards the trigger. Prevents the event from being sent if the return value is `f
 
 [source,groovy,linenums,options="nowrap"]
 ----
-import griffon.transform.Observable
+import griffon.transform.beans.Observable
 import groovy.swing.SwingBuilder
 
 class MyModel {
@@ -173,7 +173,7 @@ Specify a value that may come from a different source. Usually found in partners
 
 [source,groovy,linenums,options="nowrap"]
 ----
-import griffon.transform.Observable
+import griffon.transform.beans.Observable
 import groovy.swing.SwingBuilder
 
 class MyModel {
@@ -203,7 +203,7 @@ swing.edt {
 A contrived way to copy text from one textfield to another. The copy is performed by listening to `ActionEvent`s
 pumped by the button.
 
-NOTE: These examples made use of the `@griffon.transform.Observable` AST transformation. This transformation is a carbon
+NOTE: These examples made use of the `@griffon.transform.beans.Observable` AST transformation. This transformation is a carbon
 copy of `@groovy.beans.Bindable` with one addition: the owner class will also implement the `{link_observable} interface.
 Both transformations are functionally equivalent and can be used interchangeably.
 

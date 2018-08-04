@@ -10,7 +10,7 @@ The following example shows a trivial usage of this feature:
 
 [source,groovy,linenums,options="nowrap"]
 ----
-@griffon.transform.EventPublisher
+@griffon.transform.core.EventPublisher
 class Publisher {
    void doit(String name) {
       publishEvent('arg', [name])
@@ -55,7 +55,7 @@ transformation:
 
 [source,groovy,linenums,options="nowrap"]
 ----
-@griffon.transform.EventPublisher('my-private-event-router')
+@griffon.transform.core.EventPublisher('my-private-event-router')
 class Publisher {
    void doit(String name) {
       publishEvent('arg', [name])

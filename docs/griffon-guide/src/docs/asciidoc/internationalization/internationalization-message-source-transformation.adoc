@@ -13,7 +13,7 @@ Here's an example of a custom bean that's able to resolve messages:
 
 [source,groovy,linenums,options="nowrap"]
 ----
-@griffon.transform.MessageSourceAware
+@griffon.transform.core.MessageSourceAware
 class Bean {
     String name
 }
@@ -61,7 +61,7 @@ Then make use of any of these bindings like so:
 
 [source,groovy,linenums,options="nowrap"]
 ----
-@griffon.transform.MessageSourceAware('foo')
+@griffon.transform.core.MessageSourceAware('foo')
 class Bean {
     String name
 }

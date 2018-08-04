@@ -13,7 +13,7 @@ Here's an example of a custom bean that's able to resolve resources:
 
 [source,groovy,linenums,options="nowrap"]
 ----
-@griffon.transform.ResourceResolverAware
+@griffon.transform.core.ResourceResolverAware
 class Bean {
     String name
 }
@@ -61,7 +61,7 @@ Then make use of any of these bindings, like so:
 
 [source,groovy,linenums,options="nowrap"]
 ----
-@griffon.transform.ResourceResolverAware('foo')
+@griffon.transform.core.ResourceResolverAware('foo')
 class Bean {
     String name
 }
