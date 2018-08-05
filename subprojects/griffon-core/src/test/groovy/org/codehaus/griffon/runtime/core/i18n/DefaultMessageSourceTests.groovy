@@ -51,7 +51,7 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class DefaultMessageSourceTests extends MessageSourceTest{
+class DefaultMessageSourceTests extends MessageSourceTest {
     private static final String KEY_PROVERB_MAP = 'key.proverb.map'
     private static final List TWO_ARGS_LIST = ['apple', 'doctor']
     private static final Map TWO_ARGS_MAP = [fruit: 'apple', occupation: 'doctor']
