@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.gui.Window;
+import com.googlecode.lanterna.gui2.Window;
 import griffon.core.GriffonApplication;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import groovy.lang.Closure;

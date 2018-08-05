@@ -17,9 +17,7 @@
  */
 package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.gui.Window;
-import com.googlecode.lanterna.gui.listener.WindowAdapter;
-import griffon.core.ApplicationEvent;
+import com.googlecode.lanterna.gui2.Window;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
 import griffon.lanterna.LanternaWindowDisplayHandler;
@@ -30,7 +28,6 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -38,11 +35,10 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> implements LanternaWindowManager {
-    protected final WindowHelper windowHelper = new WindowHelper();
-
     @Inject
     @Nonnull
-    public DefaultLanternaWindowManager(@Nonnull GriffonApplication application, @Nonnull @Named("windowDisplayHandler") LanternaWindowDisplayHandler windowDisplayHandler) {
+    public DefaultLanternaWindowManager(@Nonnull GriffonApplication application,
+                                        @Nonnull @Named("windowDisplayHandler") LanternaWindowDisplayHandler windowDisplayHandler) {
         super(application, windowDisplayHandler);
         requireNonNull(application.getEventRouter(), "Argument 'application.eventRouter' must not be null");
     }
@@ -50,7 +46,6 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
     @Override
     protected void doAttach(@Nonnull Window window) {
         requireNonNull(window, ERROR_WINDOW_NULL);
-        window.addWindowListener(windowHelper);
     }
 
     @Override
@@ -64,6 +59,7 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
         return true;
     }
 
+    /*
     public void handleClose(@Nonnull Window widget) {
         if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {
             return;
@@ -74,12 +70,14 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
             show(widget);
         }
     }
+    */
 
     /**
      * WindowAdapter that optionally invokes hide() when the window is about to be closed.
      *
      * @author Andres Almiray
      */
+    /*
     protected class WindowHelper extends WindowAdapter {
         @Override
         public void onWindowClosed(@Nonnull Window window) {
@@ -94,4 +92,5 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
             event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
         }
     }
+    */
 }

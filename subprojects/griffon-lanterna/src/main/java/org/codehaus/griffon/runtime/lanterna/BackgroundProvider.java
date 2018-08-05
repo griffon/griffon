@@ -15,14 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.lanterna;
+package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.gui2.Window;
-import griffon.core.view.WindowManager;
+import com.googlecode.lanterna.gui2.Component;
+import com.googlecode.lanterna.gui2.GUIBackdrop;
+
+import javax.inject.Provider;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
-public interface LanternaWindowManager extends WindowManager<Window> {
+public class BackgroundProvider implements Provider<Component> {
+    @Override
+    public Component get() {
+        return new GUIBackdrop();
+    }
 }

@@ -17,58 +17,33 @@
  */
 package griffon.lanterna.support;
 
-import com.googlecode.lanterna.gui.Action;
 import org.codehaus.griffon.runtime.core.properties.AbstractPropertySource;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class LanternaAction extends AbstractPropertySource implements Action {
+public class LanternaAction extends AbstractPropertySource {
     public static final String NAME = "name";
 
     private Runnable runnable;
-    private Action delegate;
     private String name;
 
-    public enum ResolveStrategy {
-        DELEGATE_FIRST,
-        RUNNABLE_FIRST,
-        DELEGATE_ONLY,
-        RUNNABLE_ONLY
-    }
-
-    private ResolveStrategy resolveStrategy = ResolveStrategy.DELEGATE_FIRST;
-
-    public ResolveStrategy getResolveStrategy() {
-        return resolveStrategy;
-    }
-
-    public void setResolveStrategy(ResolveStrategy resolveStrategy) {
-        this.resolveStrategy = resolveStrategy != null ? resolveStrategy : ResolveStrategy.DELEGATE_FIRST;
-    }
-
-    public LanternaAction() {
-    }
-
-    public LanternaAction(String name) {
+    public LanternaAction(String name, Runnable runnable) {
         this.name = name;
-    }
-
-    public LanternaAction(Runnable runnable) {
         this.runnable = runnable;
     }
 
-    public LanternaAction(Action delegate) {
-        this.delegate = delegate;
+    public LanternaAction(Runnable runnable) {
+        this("", runnable);
     }
 
-    public Action getDelegate() {
-        return delegate;
+    public LanternaAction(String name) {
+        this(name, null);
     }
 
-    public void setDelegate(Action delegate) {
-        this.delegate = delegate;
+    public LanternaAction() {
+        this("", null);
     }
 
     public Runnable getRunnable() {
@@ -92,31 +67,8 @@ public class LanternaAction extends AbstractPropertySource implements Action {
     }
 
     public void doAction() {
-        switch (resolveStrategy) {
-            case DELEGATE_ONLY:
-                if (delegate != null) {
-                    delegate.doAction();
-                }
-                break;
-            case DELEGATE_FIRST:
-                if (delegate != null) {
-                    delegate.doAction();
-                } else if (runnable != null) {
-                    runnable.run();
-                }
-                break;
-            case RUNNABLE_FIRST:
-                if (runnable != null) {
-                    runnable.run();
-                } else if (delegate != null) {
-                    delegate.doAction();
-                }
-                break;
-            case RUNNABLE_ONLY:
-                if (runnable != null) {
-                    runnable.run();
-                }
-                break;
+        if (runnable != null) {
+            runnable.run();
         }
     }
 }

@@ -17,10 +17,10 @@
  */
 package sample.lanterna.java;
 
-import com.googlecode.lanterna.gui.Window;
-import com.googlecode.lanterna.gui.component.Label;
-import com.googlecode.lanterna.gui.component.Panel;
-import com.googlecode.lanterna.gui.component.TextBox;
+import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.Panel;
+import com.googlecode.lanterna.gui2.TextBox;
+import com.googlecode.lanterna.gui2.Window;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.lanterna.support.LanternaAction;
@@ -53,7 +53,7 @@ public class SampleView extends AbstractLanternaGriffonView {
         Window window = (Window) getApplication()
             .createApplicationContainer(Collections.<String, Object>emptyMap());
         getApplication().getWindowManager().attach("mainWindow", window);        //<2>
-        Panel panel = new Panel(Panel.Orientation.VERTICAL);
+        Panel panel = new Panel();
 
         panel.addComponent(new Label(getApplication().getMessageSource().getMessage("name.label")));
 
@@ -71,7 +71,7 @@ public class SampleView extends AbstractLanternaGriffonView {
         });
         panel.addComponent(new MutableButton(sayHelloAction));                   //<4>
 
-        final Label output = new Label();
+        final Label output = new Label("");
         panel.addComponent(output);
         model.addPropertyChangeListener("output", new PropertyChangeListener() { //<3>
             @Override
@@ -80,6 +80,6 @@ public class SampleView extends AbstractLanternaGriffonView {
             }
         });
 
-        window.addComponent(panel);
+        window.setComponent(panel);
     }
 }

@@ -17,7 +17,12 @@
  */
 package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.gui.GUIScreen;
+import com.googlecode.lanterna.gui2.Component;
+import com.googlecode.lanterna.gui2.TextGUIThreadFactory;
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import com.googlecode.lanterna.gui2.WindowPostRenderer;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.terminal.TerminalFactory;
 import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
@@ -43,8 +48,33 @@ public class LanternaModule extends AbstractModule {
     @Override
     protected void doConfigure() {
         // tag::bindings[]
-        bind(GUIScreen.class)
-            .toProvider(GUIScreenProvider.class)
+        bind(TerminalFactory.class)
+            .toProvider(TerminalFactoryProvider.class)
+            .asSingleton();
+
+        bind(Screen.class)
+            .toProvider(ScreenProvider.class)
+            .asSingleton();
+
+        bind(TextGUIThreadFactory.class)
+            .toProvider(TextGUIThreadFactoryProvider.class)
+            .asSingleton();
+
+        bind(com.googlecode.lanterna.gui2.WindowManager.class)
+            .toProvider(WindowManagerProvider.class)
+            .asSingleton();
+
+        bind(WindowPostRenderer.class)
+            .toProvider(WindowPostRendererProvider.class)
+            .asSingleton();
+
+        bind(Component.class)
+            .withClassifier(named("background"))
+            .toProvider(BackgroundProvider.class)
+            .asSingleton();
+
+        bind(WindowBasedTextGUI.class)
+            .toProvider(WindowBasedTextGUIProvider.class)
             .asSingleton();
 
         bind(LanternaWindowDisplayHandler.class)

@@ -70,7 +70,7 @@ class LanternaUIThreadManagerTest extends ThreadingHandlerTest {
                 .in(Singleton)
 
             bind(GUIScreen)
-                .toProvider(GUIScreenProvider)
+                .toProvider(WindowBasedTextGUIProvider)
                 .in(Singleton)
         }
     }

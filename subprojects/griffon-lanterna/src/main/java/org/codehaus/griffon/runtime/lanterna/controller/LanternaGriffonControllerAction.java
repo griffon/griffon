@@ -45,7 +45,7 @@ public class LanternaGriffonControllerAction extends AbstractAction {
 
     @Nonnull
     protected LanternaAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        return new LanternaAction((Runnable) () -> actionManager.invokeAction(controller, actionName));
+        return new LanternaAction(() -> actionManager.invokeAction(controller, actionName));
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {

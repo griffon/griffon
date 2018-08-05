@@ -17,11 +17,12 @@
  */
 package griffon.lanterna;
 
-import com.googlecode.lanterna.gui.GUIScreen;
-import com.googlecode.lanterna.gui.Window;
+import com.googlecode.lanterna.gui2.BasicWindow;
+import com.googlecode.lanterna.screen.Screen;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -29,7 +30,7 @@ import java.util.Map;
  * @since 2.0.0
  */
 public class LanternaGriffonApplication extends AbstractGriffonApplication {
-    private GUIScreen screen;
+    private Screen screen;
 
     public LanternaGriffonApplication() {
         this(EMPTY_ARGS);
@@ -39,14 +40,13 @@ public class LanternaGriffonApplication extends AbstractGriffonApplication {
         super(args);
     }
 
-    public GUIScreen getGUIScreen() {
-        return getInjector().getInstance(GUIScreen.class);
+    public Screen getScreen() {
+        return getInjector().getInstance(Screen.class);
     }
 
     @Override
     public void initialize() {
-        this.screen = getGUIScreen();
-        this.screen.getScreen().startScreen();
+        this.screen = getScreen();
         super.initialize();
     }
 
@@ -59,7 +59,11 @@ public class LanternaGriffonApplication extends AbstractGriffonApplication {
     }
 
     public void exit() {
-        this.screen.getScreen().stopScreen();
+        try {
+            this.screen.stopScreen();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         System.exit(0);
     }
 
@@ -70,7 +74,7 @@ public class LanternaGriffonApplication extends AbstractGriffonApplication {
         if (title == null) {
             title = getConfiguration().getAsString("application.title");
         }
-        return new Window(title);
+        return new BasicWindow(title);
     }
 
     public static void main(String[] args) throws Exception {

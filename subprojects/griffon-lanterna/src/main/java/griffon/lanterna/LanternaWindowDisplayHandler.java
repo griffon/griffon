@@ -17,7 +17,7 @@
  */
 package griffon.lanterna;
 
-import com.googlecode.lanterna.gui.Window;
+import com.googlecode.lanterna.gui2.Window;
 import griffon.core.view.WindowDisplayHandler;
 
 /**

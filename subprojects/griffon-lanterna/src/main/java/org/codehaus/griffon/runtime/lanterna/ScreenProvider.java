@@ -17,24 +17,34 @@
  */
 package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.TerminalFacade;
-import com.googlecode.lanterna.gui.GUIScreen;
+import com.googlecode.lanterna.screen.Screen;
+import com.googlecode.lanterna.screen.TerminalScreen;
+import com.googlecode.lanterna.terminal.TerminalFactory;
 
+import javax.inject.Inject;
 import javax.inject.Provider;
+import java.io.IOException;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
-public class GUIScreenProvider implements Provider<GUIScreen> {
-    private final GUIScreen screen;
+public class ScreenProvider implements Provider<Screen> {
+    private final TerminalFactory terminalFactory;
 
-    public GUIScreenProvider() {
-        this.screen = TerminalFacade.createGUIScreen();
+    @Inject
+    public ScreenProvider(TerminalFactory terminalFactory) {
+        this.terminalFactory = terminalFactory;
     }
 
     @Override
-    public GUIScreen get() {
-        return screen;
+    public Screen get() {
+        try {
+            TerminalScreen screen = new TerminalScreen(terminalFactory.createTerminal());
+            screen.startScreen();
+            return screen;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

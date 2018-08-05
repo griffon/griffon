@@ -17,8 +17,8 @@
  */
 package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.gui.GUIScreen;
-import com.googlecode.lanterna.gui.Window;
+import com.googlecode.lanterna.gui2.Window;
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 
 import javax.annotation.Nonnull;
@@ -35,17 +35,17 @@ public class DefaultLanternaWindowDisplayHandler implements LanternaWindowDispla
     private static final String ERROR_NAME_BLANK = "Argument 'name' must not be null";
     private static final String ERROR_WINDOW_NULL = "Argument 'window' must not be null";
 
-    private final GUIScreen screen;
+    private final WindowBasedTextGUI windowBasedTextGUI;
 
     @Inject
-    public DefaultLanternaWindowDisplayHandler(@Nonnull GUIScreen screen) {
-        this.screen = requireNonNull(screen, "Argument 'screen' must not be null");
+    public DefaultLanternaWindowDisplayHandler(@Nonnull WindowBasedTextGUI windowBasedTextGUI) {
+        this.windowBasedTextGUI = requireNonNull(windowBasedTextGUI, "Argument 'windowBasedTextGUI' must not be null");
     }
 
     public void show(@Nonnull String name, @Nonnull Window window) {
         requireNonBlank(name, ERROR_NAME_BLANK);
         requireNonNull(window, ERROR_WINDOW_NULL);
-        screen.showWindow(window, GUIScreen.Position.CENTER);
+        windowBasedTextGUI.addWindowAndWait(window);
     }
 
     public void hide(@Nonnull String name, @Nonnull Window window) {

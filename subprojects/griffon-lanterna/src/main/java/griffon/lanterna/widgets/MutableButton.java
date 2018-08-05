@@ -17,12 +17,8 @@
  */
 package griffon.lanterna.widgets;
 
-import com.googlecode.lanterna.gui.Action;
-import com.googlecode.lanterna.gui.component.Button;
-import griffon.exceptions.GriffonException;
+import com.googlecode.lanterna.gui2.Button;
 import griffon.lanterna.support.LanternaAction;
-
-import java.lang.reflect.Field;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
 
@@ -36,27 +32,21 @@ public class MutableButton extends Button {
         this("", new LanternaAction());
     }
 
-    public MutableButton(Action action) {
-        this("", action instanceof LanternaAction ? action : new LanternaAction(action));
+    public MutableButton(LanternaAction action) {
+        this(action.getName(), action);
     }
 
     public MutableButton(String text) {
         this(text, new LanternaAction());
     }
 
-    public MutableButton(String text, Action action) {
-        super(text, action instanceof LanternaAction ? action : new LanternaAction(action));
-        try {
-            Field field = getClass().getSuperclass().getDeclaredField("onPressEvent");
-            field.setAccessible(true);
-            lanternaAction = (LanternaAction) field.get(this);
+    public MutableButton(String text, LanternaAction action) {
+        super(text, action.getRunnable());
+        lanternaAction = action;
 
-            lanternaAction.addPropertyChangeListener(LanternaAction.NAME, event -> setText(event.getNewValue().toString()));
-            if (isNotBlank(lanternaAction.getName())) {
-                setText(lanternaAction.getName());
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new GriffonException(e);
+        lanternaAction.addPropertyChangeListener(LanternaAction.NAME, event -> setLabel(event.getNewValue().toString()));
+        if (isNotBlank(lanternaAction.getName())) {
+            setLabel(lanternaAction.getName());
         }
     }
 

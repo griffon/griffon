@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.lanterna;
 
-import com.googlecode.lanterna.gui.GUIScreen;
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
 import javax.annotation.Nonnull;
@@ -30,15 +30,15 @@ import javax.inject.Inject;
  * @since 2.0.0
  */
 public class LanternaUIThreadManager extends AbstractUIThreadManager {
-    private final GUIScreen screen;
+    private final WindowBasedTextGUI windowBasedTextGUI;
 
     @Inject
-    public LanternaUIThreadManager(@Nonnull GUIScreen screen) {
-        this.screen = screen;
+    public LanternaUIThreadManager(@Nonnull WindowBasedTextGUI windowBasedTextGUI) {
+        this.windowBasedTextGUI = windowBasedTextGUI;
     }
 
     public boolean isUIThread() {
-        return screen.isInEventThread();
+        return windowBasedTextGUI.getGUIThread().getThread() == Thread.currentThread();
     }
 
     @Override
@@ -51,7 +51,11 @@ public class LanternaUIThreadManager extends AbstractUIThreadManager {
         if (isUIThread()) {
             runnable.run();
         } else {
-            screen.runInEventThread(() -> runnable.run());
+            try {
+                windowBasedTextGUI.getGUIThread().invokeAndWait(runnable);
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
         }
     }
 }
