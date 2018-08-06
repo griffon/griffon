@@ -276,6 +276,7 @@ class InvalidBinding<T> implements Binding<T> {
 
 interface Animal {}
 
+@SuppressWarnings('EmptyClass')
 class Dog implements Animal {}
 
 class DogProvider implements Provider<Dog> {

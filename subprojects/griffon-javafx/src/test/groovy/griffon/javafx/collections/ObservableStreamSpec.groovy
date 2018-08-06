@@ -111,7 +111,7 @@ class ObservableStreamSpec extends Specification {
 
         when:
         mapper1.setValue({ g -> g.id } as Function)
-        filter1.setValue({ n -> n % 2 == 1 } as Predicate)
+        filter1.setValue({ n -> n % 2 != 0 } as Predicate)
         mapper2.setValue({ n -> n * 2 } as Function)
         accumulator1.setValue({ a, b -> a * b } as BinaryOperator)
 
@@ -145,7 +145,7 @@ class ObservableStreamSpec extends Specification {
 
         when:
         mapper1.setValue({ g -> g.id } as Function)
-        filter1.setValue({ n -> n % 2 == 1 } as Predicate)
+        filter1.setValue({ n -> n % 2 != 0 } as Predicate)
         mapper2.setValue({ n -> n * 2 } as Function)
         accumulator1.setValue({ a, b -> a * b } as BinaryOperator)
 

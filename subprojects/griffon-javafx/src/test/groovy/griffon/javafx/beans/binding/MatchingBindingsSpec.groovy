@@ -386,7 +386,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in List"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         ObservableList<Integer> items = FXCollections.observableArrayList()
         BooleanBinding binding = MatchingBindings.allMatch(items, predicate)
 
@@ -409,7 +409,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in List with mapper"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         Function<Box, Integer> mapper = { e -> e.id } as Function<Box, Integer>
         ObservableList<Box> items = FXCollections.observableArrayList()
         BooleanBinding binding = MatchingBindings.allMatch(items, mapper, predicate)
@@ -433,7 +433,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in List with observable predicate"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         ObservableList<Integer> items = FXCollections.observableArrayList()
         BooleanBinding binding = MatchingBindings.allMatch(items, predicate)
@@ -463,7 +463,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in List with observable predicate and mapper"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         Function<Box, Integer> m = { e -> e.id } as Function<Box, Integer>
         ObjectProperty<Function<Box, Integer>> mapper = new SimpleObjectProperty<>(m)
@@ -501,7 +501,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Set"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         ObservableSet<Integer> items = FXCollections.observableSet()
         BooleanBinding binding = MatchingBindings.allMatch(items, predicate)
 
@@ -524,7 +524,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Set with mapper"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         Function<Box, Integer> mapper = { e -> e.id } as Function<Box, Integer>
         ObservableSet<Box> items = FXCollections.observableSet()
         BooleanBinding binding = MatchingBindings.allMatch(items, mapper, predicate)
@@ -548,7 +548,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Set with observable predicate"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         ObservableSet<Integer> items = FXCollections.observableSet()
         BooleanBinding binding = MatchingBindings.allMatch(items, predicate)
@@ -578,7 +578,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Set with observable predicate and mapper"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         Function<Box, Integer> m = { e -> e.id } as Function<Box, Integer>
         ObjectProperty<Function<Box, Integer>> mapper = new SimpleObjectProperty<>(m)
@@ -616,7 +616,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Map"() {
         given:
-        Predicate<Box> predicate = { e -> e.id % 2 == 1 } as Predicate<Box>
+        Predicate<Box> predicate = { e -> e.id % 2 != 0 } as Predicate<Box>
         ObservableMap<String, Box> items = FXCollections.observableMap([:])
         BooleanBinding binding = MatchingBindings.allMatch(items, predicate)
 
@@ -639,7 +639,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Map with mapper"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         Function<Box, Integer> mapper = { e -> e.id } as Function<Box, Integer>
         ObservableMap<String, Box> items = FXCollections.observableMap([:])
         BooleanBinding binding = MatchingBindings.allMatch(items, mapper, predicate)
@@ -663,7 +663,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Map with observable predicate"() {
         given:
-        Predicate<Box> p = { e -> e.id % 2 == 1 } as Predicate<Box>
+        Predicate<Box> p = { e -> e.id % 2 != 0 } as Predicate<Box>
         ObjectProperty<Predicate<Box>> predicate = new SimpleObjectProperty<>(p)
         ObservableMap<String, Box> items = FXCollections.observableMap([:])
         BooleanBinding binding = MatchingBindings.allMatch(items, predicate)
@@ -693,7 +693,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "AllMatch in Map with observable predicate and mapper"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         Function<Box, Integer> m = { e -> e.id } as Function<Box, Integer>
         ObjectProperty<Function<Box, Integer>> mapper = new SimpleObjectProperty<>(m)
@@ -731,7 +731,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in List"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         ObservableList<Integer> items = FXCollections.observableArrayList()
         BooleanBinding binding = MatchingBindings.noneMatch(items, predicate)
 
@@ -754,7 +754,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in List with mapper"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         Function<Box, Integer> mapper = { e -> e.id } as Function<Box, Integer>
         ObservableList<Box> items = FXCollections.observableArrayList()
         BooleanBinding binding = MatchingBindings.noneMatch(items, mapper, predicate)
@@ -778,7 +778,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in List with observable predicate"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         ObservableList<Integer> items = FXCollections.observableArrayList()
         BooleanBinding binding = MatchingBindings.noneMatch(items, predicate)
@@ -808,7 +808,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in List with observable predicate and mapper"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         Function<Box, Integer> m = { e -> e.id } as Function<Box, Integer>
         ObjectProperty<Function<Box, Integer>> mapper = new SimpleObjectProperty<>(m)
@@ -846,7 +846,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Set"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         ObservableSet<Integer> items = FXCollections.observableSet()
         BooleanBinding binding = MatchingBindings.noneMatch(items, predicate)
 
@@ -869,7 +869,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Set with mapper"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         Function<Box, Integer> mapper = { e -> e.id } as Function<Box, Integer>
         ObservableSet<Box> items = FXCollections.observableSet()
         BooleanBinding binding = MatchingBindings.noneMatch(items, mapper, predicate)
@@ -893,7 +893,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Set with observable predicate"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         ObservableSet<Integer> items = FXCollections.observableSet()
         BooleanBinding binding = MatchingBindings.noneMatch(items, predicate)
@@ -923,7 +923,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Set with observable predicate and mapper"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         Function<Box, Integer> m = { e -> e.id } as Function<Box, Integer>
         ObjectProperty<Function<Box, Integer>> mapper = new SimpleObjectProperty<>(m)
@@ -961,7 +961,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Map"() {
         given:
-        Predicate<Box> predicate = { e -> e.id % 2 == 1 } as Predicate<Box>
+        Predicate<Box> predicate = { e -> e.id % 2 != 0 } as Predicate<Box>
         ObservableMap<String, Box> items = FXCollections.observableMap([:])
         BooleanBinding binding = MatchingBindings.noneMatch(items, predicate)
 
@@ -984,7 +984,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Map with mapper"() {
         given:
-        Predicate<Integer> predicate = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> predicate = { e -> e % 2 != 0 } as Predicate<Integer>
         Function<Box, Integer> mapper = { e -> e.id } as Function<Box, Integer>
         ObservableMap<String, Box> items = FXCollections.observableMap([:])
         BooleanBinding binding = MatchingBindings.noneMatch(items, mapper, predicate)
@@ -1008,7 +1008,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Map with observable predicate"() {
         given:
-        Predicate<Box> p = { e -> e.id % 2 == 1 } as Predicate<Box>
+        Predicate<Box> p = { e -> e.id % 2 != 0 } as Predicate<Box>
         ObjectProperty<Predicate<Box>> predicate = new SimpleObjectProperty<>(p)
         ObservableMap<String, Box> items = FXCollections.observableMap([:])
         BooleanBinding binding = MatchingBindings.noneMatch(items, predicate)
@@ -1038,7 +1038,7 @@ class MatchingBindingsSpec extends Specification {
 
     def "NoneMatch in Map with observable predicate and mapper"() {
         given:
-        Predicate<Integer> p = { e -> e % 2 == 1 } as Predicate<Integer>
+        Predicate<Integer> p = { e -> e % 2 != 0 } as Predicate<Integer>
         ObjectProperty<Predicate<Integer>> predicate = new SimpleObjectProperty<>(p)
         Function<Box, Integer> m = { e -> e.id } as Function<Box, Integer>
         ObjectProperty<Function<Box, Integer>> mapper = new SimpleObjectProperty<>(m)
