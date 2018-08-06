@@ -42,6 +42,7 @@ buildscript {
         classpath 'com.gradle:build-scan-plugin:1.15.1'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
         classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
     }
 }
 apply plugin: 'com.gradle.build-scan'
@@ -322,7 +323,8 @@ subprojects { subproj ->
             "org.ow2.asm:asm:$asmVersion",
             "org.ow2.asm:asm-commons:$asmVersion",
             "org.ow2.asm:asm-tree:$asmVersion",
-            "org.objenesis:objenesis:$objenesisVersion"
+            "org.objenesis:objenesis:$objenesisVersion",
+            "net.bytebuddy:byte-buddy:$bytebuddyVersion"
 
         resolutionStrategy.failOnVersionConflict()
     }

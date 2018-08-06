@@ -17,6 +17,7 @@
  */
 
 apply plugin: 'maven-publish'
+apply plugin: 'nebula.optional-base'
 
 def pomConfig = {
     name project.name
@@ -106,10 +107,25 @@ task generateMinPom {
                 <artifactId>$dep.name</artifactId>
                 <version>$dep.version</version>
             </dependency>
-        """.stripIndent(4) }
+        """.stripIndent(4)
+        }
+
+        def optionalDependencyTemplate = { dep -> """
+            <dependency>
+                <groupId>$dep.group</groupId>
+                <artifactId>$dep.name</artifactId>
+                <version>$dep.version</version>
+                <optional>true</optional>
+            </dependency>
+        """.stripIndent(4)
+        }
+
+        def dependencyEntry = { dep ->
+            project.ext.optionalDeps.contains(dep) ? optionalDependencyTemplate(dep) : dependencyTemplate(dep)
+        }
 
         String deps = configurations.runtime.allDependencies.findAll({it.name!= 'unspecified'})
-            .collect({ dep -> dependencyTemplate(dep)}).join('')
+            .collect({ dep -> dependencyEntry(dep)}).join('')
 
         String pom = pomHeader
         if (deps) {

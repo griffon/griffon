@@ -1,3 +1,5 @@
+enableFeaturePreview('IMPROVED_POM_SUPPORT')
+
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 boolean fullBuild = !travis && !appveyor
