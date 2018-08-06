@@ -17,7 +17,7 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.ActionListBox
+import com.googlecode.lanterna.gui2.ActionListBox
 import griffon.builder.lanterna.LanternaBuilderCustomizer
 import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder
@@ -40,7 +40,7 @@ class ActionListBoxFactorySpec extends Specification {
         listBox != null
         builder.listBox != null
         builder.listBox == listBox
-        listBox.size == 1
-        listBox.getItemAt(0).title == builder.someAction.name
+        listBox.items.size == 1
+        listBox.getItemAt(0).toString() == builder.someAction.name
     }
 }

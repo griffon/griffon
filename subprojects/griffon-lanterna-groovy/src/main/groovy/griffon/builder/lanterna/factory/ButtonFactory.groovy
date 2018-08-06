@@ -17,7 +17,6 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.Action
 import griffon.lanterna.support.LanternaAction
 import griffon.lanterna.widgets.MutableButton
 
@@ -30,19 +29,19 @@ class ButtonFactory extends ComponentFactory {
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        if (value instanceof Action) {
-            return new MutableButton((Action) value)
+        if (value instanceof LanternaAction) {
+            return new MutableButton((LanternaAction) value)
         }
 
         def text = attributes.remove('text')
-        if (text == null && value instanceof CharSequence) text = String.valueOf(value)
+        if (text == null && value != null) text = String.valueOf(value)
         text = text != null ? text.toString() : ''
 
         def action = attributes.remove('action')
-        if (action instanceof Runnable || action instanceof Action) {
-            action = new LanternaAction(action)
-        } else if (action != null && !(action instanceof Action)) {
-            throw new IllegalArgumentException("In $name action: is not a Runnable nor an Action")
+        if (action instanceof Runnable) {
+            action = new LanternaAction(text, action)
+        } else if (action != null && !(action instanceof LanternaAction)) {
+            throw new IllegalArgumentException("In $name action: is not a Runnable nor a LanternaAction")
         }
 
         new MutableButton(text, action)
@@ -53,7 +52,7 @@ class ButtonFactory extends ComponentFactory {
     }
 
     boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure childContent) {
-        node.setAction(childContent)
+        node.action = childContent
         false
     }
 }

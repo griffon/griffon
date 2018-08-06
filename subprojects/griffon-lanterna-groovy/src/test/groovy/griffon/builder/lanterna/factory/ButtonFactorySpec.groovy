@@ -46,13 +46,13 @@ class ButtonFactorySpec extends Specification {
 
         then:
         builder.theButton != null
-        builder.theButton.text == text
+        builder.theButton.label == text
 
         where:
         text       | attrs                                            | value                          | closure
-        ''         | [:]                                              | null                           | null
+        ' '        | [:]                                              | null                           | null
         'lanterna' | [:]                                              | 'lanterna'                     | null
-        ''         | [:]                                              | 1                              | null
+        '1'        | [:]                                              | 1                              | null
         'lanterna' | [:]                                              | new LanternaAction('lanterna') | null
         '1'        | [text: 1]                                        | null                           | null
         'lanterna' | [text: 'lanterna']                               | null                           | null

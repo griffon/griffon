@@ -17,7 +17,8 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.Window
+import com.googlecode.lanterna.gui2.BasicWindow
+import com.googlecode.lanterna.gui2.Window
 import griffon.builder.lanterna.LanternaBuilderCustomizer
 import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder
@@ -33,7 +34,7 @@ class ApplicationFactorySpec extends Specification {
             configuration: [
                 'application.title': 'lanterna'
             ],
-            createApplicationContainer: { options -> new Window(options.title) },
+            createApplicationContainer: { options -> new BasicWindow(options.title) },
             windowManager: new Expando(
                 attach: { name, window ->
                     builder.variables[name] = window
@@ -49,10 +50,10 @@ class ApplicationFactorySpec extends Specification {
         window1 != null
         window1 == builder.w1
         window1 == builder.variables.mywindow
-        window1.toString() == 'Griffon'
+        window1.title == 'Griffon'
         window2 != null
         window2 == builder.w2
         window2 == builder.variables.window0
-        window2.toString() == 'lanterna'
+        window2.title == 'lanterna'
     }
 }

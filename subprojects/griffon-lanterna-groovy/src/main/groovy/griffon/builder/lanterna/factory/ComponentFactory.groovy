@@ -17,13 +17,13 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.Component
-import com.googlecode.lanterna.gui.Window
+import com.googlecode.lanterna.gui2.Component
+import com.googlecode.lanterna.gui2.Panel
+import com.googlecode.lanterna.gui2.Window
 
 /**
  * @author Andres Almiray
  */
-
 class ComponentFactory extends BeanFactory {
     ComponentFactory(Class beanClass) {
         super(beanClass)
@@ -37,6 +37,13 @@ class ComponentFactory extends BeanFactory {
         if (!(child instanceof Component) || (child instanceof Window)) {
             return
         }
+
+        if (parent instanceof Window) {
+            parent.component = child
+        } else if(parent instanceof Panel) {
+            child.addTo(parent)
+        }
+        /*
         try {
             def constraints = builder.context.constraints
             if (constraints != null) {
@@ -48,5 +55,6 @@ class ComponentFactory extends BeanFactory {
         } catch (MissingPropertyException mpe) {
             parent.addComponent(child)
         }
+        */
     }
 }

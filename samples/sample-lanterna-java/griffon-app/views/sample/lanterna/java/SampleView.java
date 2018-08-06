@@ -17,7 +17,9 @@
  */
 package sample.lanterna.java;
 
+import com.googlecode.lanterna.gui2.Direction;
 import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.LinearLayout;
 import com.googlecode.lanterna.gui2.Panel;
 import com.googlecode.lanterna.gui2.TextBox;
 import com.googlecode.lanterna.gui2.Window;
@@ -53,7 +55,7 @@ public class SampleView extends AbstractLanternaGriffonView {
         Window window = (Window) getApplication()
             .createApplicationContainer(Collections.<String, Object>emptyMap());
         getApplication().getWindowManager().attach("mainWindow", window);        //<2>
-        Panel panel = new Panel();
+        Panel panel = new Panel(new LinearLayout(Direction.VERTICAL));
 
         panel.addComponent(new Label(getApplication().getMessageSource().getMessage("name.label")));
 

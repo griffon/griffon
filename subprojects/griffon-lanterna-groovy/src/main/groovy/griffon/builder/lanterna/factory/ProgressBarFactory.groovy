@@ -17,7 +17,7 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.ProgressBar
+import com.googlecode.lanterna.gui2.ProgressBar
 
 /**
  * @author Andres Almiray
@@ -29,6 +29,6 @@ class ProgressBarFactory extends ComponentFactory {
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         int width = (attributes.remove('width') ?: 1) as int
-        new ProgressBar(width)
+        new ProgressBar(0, 100, width)
     }
 }

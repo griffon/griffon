@@ -17,7 +17,7 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.Panel
+import com.googlecode.lanterna.gui2.Panel
 import griffon.builder.lanterna.LanternaBuilderCustomizer
 import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder
@@ -26,37 +26,25 @@ import spock.lang.Unroll
 
 @Unroll
 class BoxFactorySpec extends Specification {
-    void "Can create an horizontal Box with title '#value'"() {
+    void "Can create an horizontal Box"() {
         given:
         CompositeBuilder builder = new CompositeBuilder([new LanternaBuilderCustomizer()] as BuilderCustomizer[])
 
         when:
-        Panel box = builder.hbox(value)
+        Panel box = builder.hbox()
 
         then:
         box != null
-        box.title == title
-
-        where:
-        value      | title
-        null       | ''
-        'lanterna' | 'lanterna'
     }
 
-    void "Can create a vertical Box with title '#value'"() {
+    void "Can create a vertical Box"() {
         given:
         CompositeBuilder builder = new CompositeBuilder([new LanternaBuilderCustomizer()] as BuilderCustomizer[])
 
         when:
-        Panel box = builder.vbox(value)
+        Panel box = builder.vbox()
 
         then:
         box != null
-        box.title == title
-
-        where:
-        value      | title
-        null       | ''
-        'lanterna' | 'lanterna'
     }
 }

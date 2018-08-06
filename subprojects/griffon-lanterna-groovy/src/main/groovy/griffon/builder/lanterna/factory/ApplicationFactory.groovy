@@ -17,7 +17,7 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.Window
+import com.googlecode.lanterna.gui2.Window
 
 /**
  * @author Andres Almiray

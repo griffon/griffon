@@ -17,7 +17,8 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.TextBox
+import com.googlecode.lanterna.TerminalSize
+import com.googlecode.lanterna.gui2.TextBox
 
 /**
  * @author Andres Almiray
@@ -32,6 +33,6 @@ class TextBoxFactory extends ComponentFactory {
         if (text == null && value instanceof CharSequence) text = value
         if (text == null) text = ''
         def width = attributes.remove('width')
-        width != null ? new TextBox(text, width as int) : new TextBox(text)
+        width != null ? new TextBox(new TerminalSize(width as int, 1), text) : new TextBox(text)
     }
 }

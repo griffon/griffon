@@ -17,7 +17,9 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.Panel
+
+import com.googlecode.lanterna.gui2.Direction
+import com.googlecode.lanterna.gui2.Panel
 
 /**
  * @author Andres Almiray
@@ -26,16 +28,30 @@ class LayoutFactory extends BeanFactory {
     private Map contextProps
     static final String DELEGATE_PROPERTY_CONSTRAINT = '_delegateProperty:Constraint'
     static final String DEFAULT_DELEGATE_PROPERTY_CONSTRAINT = 'constraints'
+    final Direction direction
 
     LayoutFactory(Class klass) {
+        this(klass, null)
+    }
+
+    LayoutFactory(Class klass, Direction direction) {
         super(klass, true)
+        this.direction = direction
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {
         builder.context[DELEGATE_PROPERTY_CONSTRAINT] = attributes.remove('constraintsProperty') ?: DEFAULT_DELEGATE_PROPERTY_CONSTRAINT
-        Object o = super.newInstance(builder, name, value, attributes)
+        Object o = doNewInstance(builder, name, value, attributes)
         addLayoutProperties(builder.context)
         return o
+    }
+
+    private Object doNewInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        if (value instanceof CharSequence) value = String.valueOf(value)
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, beanClass)) {
+            return value
+        }
+        direction ? beanClass.newInstance(direction) : beanClass.newInstance()
     }
 
     protected void addLayoutProperties(Map context, Class layoutClass) {

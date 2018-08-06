@@ -29,7 +29,7 @@ public class MutableButton extends Button {
     private LanternaAction lanternaAction;
 
     public MutableButton() {
-        this("", new LanternaAction());
+        this("", new LanternaAction(""));
     }
 
     public MutableButton(LanternaAction action) {
@@ -37,12 +37,12 @@ public class MutableButton extends Button {
     }
 
     public MutableButton(String text) {
-        this(text, new LanternaAction());
+        this(text, new LanternaAction(""));
     }
 
     public MutableButton(String text, LanternaAction action) {
-        super(text, action.getRunnable());
-        lanternaAction = action;
+        super(text, action != null ? action.getRunnable() : null);
+        lanternaAction = action != null ? action : new LanternaAction(() -> {});
 
         lanternaAction.addPropertyChangeListener(LanternaAction.NAME, event -> setLabel(event.getNewValue().toString()));
         if (isNotBlank(lanternaAction.getName())) {

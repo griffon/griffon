@@ -17,8 +17,7 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.Label
-import com.googlecode.lanterna.terminal.Terminal
+import com.googlecode.lanterna.gui2.Label
 
 /**
  * @author Andres Almiray
@@ -34,17 +33,9 @@ class LabelFactory extends ComponentFactory {
         if (text != null) {
             text = text.toString()
         } else {
-            return new Label()
+            return new Label('')
         }
 
-        def fixedWidth = attributes.remove('fixedWidth')
-        def textBold = attributes.remove('textBold') ?: false
-        Terminal.Color color = attributes.remove('color') ?: Terminal.Color.BLACK
-
-        if (fixedWidth != null) {
-            return new Label(text, fixedWidth as int, color, textBold as boolean)
-        } else {
-            return new Label(text, color, textBold as boolean)
-        }
+        new Label(text)
     }
 }

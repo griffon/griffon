@@ -17,20 +17,22 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.Panel
+import com.googlecode.lanterna.gui2.Direction
+import com.googlecode.lanterna.gui2.LinearLayout
+import com.googlecode.lanterna.gui2.Panel
 
 /**
  * @author Andres Almiray
  */
 class BoxFactory extends ComponentFactory {
-    final Panel.Orientation orientation
+    final Direction direction
 
-    BoxFactory(Panel.Orientation orientation) {
+    BoxFactory(Direction direction) {
         super(Panel)
-        this.orientation = orientation
+        this.direction = direction
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        value instanceof CharSequence ? new Panel(value.toString(), orientation) : new Panel(orientation)
+        new Panel(new LinearLayout(direction))
     }
 }

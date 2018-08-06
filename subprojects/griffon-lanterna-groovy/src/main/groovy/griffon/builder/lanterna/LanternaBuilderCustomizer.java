@@ -17,11 +17,10 @@
  */
 package griffon.builder.lanterna;
 
-import com.googlecode.lanterna.gui.Component;
-import com.googlecode.lanterna.gui.component.Panel;
-import com.googlecode.lanterna.gui.layout.BorderLayout;
-import com.googlecode.lanterna.gui.layout.HorisontalLayout;
-import com.googlecode.lanterna.gui.layout.VerticalLayout;
+import com.googlecode.lanterna.gui2.BorderLayout;
+import com.googlecode.lanterna.gui2.Component;
+import com.googlecode.lanterna.gui2.Direction;
+import com.googlecode.lanterna.gui2.LinearLayout;
 import griffon.builder.lanterna.factory.ActionFactory;
 import griffon.builder.lanterna.factory.ActionListBoxFactory;
 import griffon.builder.lanterna.factory.ApplicationFactory;
@@ -34,7 +33,6 @@ import griffon.builder.lanterna.factory.EmptySpaceFactory;
 import griffon.builder.lanterna.factory.LabelFactory;
 import griffon.builder.lanterna.factory.LayoutFactory;
 import griffon.builder.lanterna.factory.PanelFactory;
-import griffon.builder.lanterna.factory.PasswordBoxFactory;
 import griffon.builder.lanterna.factory.ProgressBarFactory;
 import griffon.builder.lanterna.factory.TableFactory;
 import griffon.builder.lanterna.factory.TextAreaFactory;
@@ -72,19 +70,18 @@ public class LanternaBuilderCustomizer extends AbstractBuilderCustomizer {
         factories.put("checkBox", new CheckBoxFactory());
         factories.put("container", new ComponentFactory(Component.class, false));
         factories.put("emptySpace", new EmptySpaceFactory());
-        factories.put("hbox", new BoxFactory(Panel.Orientation.HORISONTAL));
-        factories.put("horisontalLayout", new LayoutFactory(HorisontalLayout.class));
-        factories.put("horizontalLayout", new LayoutFactory(HorisontalLayout.class));
+        factories.put("hbox", new BoxFactory(Direction.HORIZONTAL));
+        factories.put("horisontalLayout", new LayoutFactory(LinearLayout.class, Direction.HORIZONTAL));
+        factories.put("horizontalLayout", new LayoutFactory(LinearLayout.class, Direction.HORIZONTAL));
         factories.put("label", new LabelFactory());
         factories.put("list", new CollectionFactory());
         factories.put("panel", new PanelFactory());
-        factories.put("passwordBox", new PasswordBoxFactory());
         factories.put("progressBar", new ProgressBarFactory());
         factories.put("table", new TableFactory());
         factories.put("textArea", new TextAreaFactory());
         factories.put("textBox", new TextBoxFactory());
-        factories.put("vbox", new BoxFactory(Panel.Orientation.VERTICAL));
-        factories.put("verticalLayout", new LayoutFactory(VerticalLayout.class));
+        factories.put("vbox", new BoxFactory(Direction.VERTICAL));
+        factories.put("verticalLayout", new LayoutFactory(LinearLayout.class, Direction.VERTICAL));
         factories.put("widget", new ComponentFactory(Component.class, true));
         setFactories(factories);
 

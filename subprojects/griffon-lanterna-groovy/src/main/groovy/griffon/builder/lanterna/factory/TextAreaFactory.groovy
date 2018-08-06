@@ -17,15 +17,15 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.TextArea
-import com.googlecode.lanterna.terminal.TerminalSize
+import com.googlecode.lanterna.TerminalSize
+import com.googlecode.lanterna.gui2.TextBox
 
 /**
  * @author Andres Almiray
  */
 class TextAreaFactory extends ComponentFactory {
     TextAreaFactory() {
-        super(TextArea, true)
+        super(TextBox, true)
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
@@ -36,6 +36,6 @@ class TextAreaFactory extends ComponentFactory {
         def cols = attributes.remove('columns') ?: attributes.remove('cols')
         def rows = attributes.remove('rows')
         if (cols != null && rows != null) size = new TerminalSize(cols as int, rows as int)
-        size != null ? new TextArea(size, text) : new TextArea(size)
+        size != null ? new TextBox(size, text) : new TextBox(size)
     }
 }

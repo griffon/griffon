@@ -17,9 +17,9 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.Component
-import com.googlecode.lanterna.gui.Window
-import com.googlecode.lanterna.gui.component.Table
+import com.googlecode.lanterna.gui2.Component
+import com.googlecode.lanterna.gui2.Window
+import com.googlecode.lanterna.gui2.table.Table
 
 /**
  * @author Andres Almiray
@@ -30,14 +30,12 @@ class TableFactory extends ComponentFactory {
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        def title = attributes.remove('title')
-        if (title == null && value instanceof CharSequence) title = value
-        int cols = ((attributes.remove('columns') ?: attributes.remove('cols')) ?: 1) as int
+        String[] cols = ((attributes.remove('columns') ?: attributes.remove('cols')) ?: []) as String[]
 
         builder.context.cols = cols
         builder.context.row = []
 
-        new Table(cols, title)
+        new Table(cols)
     }
 
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
@@ -51,7 +49,7 @@ class TableFactory extends ComponentFactory {
             def components = []
             components.addAll(builder.parentContext.row)
             builder.parentContext.row.clear()
-            parent.addRow(* components)
+            parent.tableModel.addRow(* components)
         }
     }
 
@@ -60,7 +58,7 @@ class TableFactory extends ComponentFactory {
             def components = []
             components.addAll(builder.context.row)
             builder.context.row.clear()
-            node.addRow(* components)
+            node.tableModel.addRow(* components)
         }
     }
 }

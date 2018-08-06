@@ -17,7 +17,8 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.EmptySpace
+import com.googlecode.lanterna.TerminalSize
+import com.googlecode.lanterna.gui2.EmptySpace
 
 /**
  * @author Andres Almiray
@@ -30,6 +31,6 @@ class EmptySpaceFactory extends ComponentFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         def width = attributes.remove('width') ?: 1
         def height = attributes.remove('height') ?: 1
-        new EmptySpace(width as int, height as int)
+        new EmptySpace(new TerminalSize(width as int, height as int))
     }
 }

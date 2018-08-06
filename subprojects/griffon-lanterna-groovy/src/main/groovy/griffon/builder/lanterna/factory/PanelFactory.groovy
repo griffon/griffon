@@ -17,7 +17,8 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.Panel
+import com.googlecode.lanterna.gui2.Direction
+import com.googlecode.lanterna.gui2.Panel
 
 /**
  * @author Andres Almiray
@@ -28,22 +29,22 @@ class PanelFactory extends ComponentFactory {
     }
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        def orientation = attributes.remove('orientation') ?: Panel.Orientation.HORISONTAL
-        if (orientation instanceof CharSequence) {
-            orientation = orientation.toString().toLowerCase()
-            switch (orientation) {
+        def direction = attributes.remove('direction') ?: Direction.HORIZONTAL
+        if (direction instanceof CharSequence) {
+            direction = direction.toString().toLowerCase()
+            switch (direction) {
                 case 'vertical':
-                    orientation = Panel.Orientation.VERTICAL
+                    direction = Direction.VERTICAL
                     break
                 case 'horizontal':
                 case 'horisontal':
                 default:
-                    orientation = Panel.Orientation.HORISONTAL
+                    direction = Direction.HORIZONTAL
             }
-        } else if (!(orientation instanceof Panel.Orientation)) {
-            throw new IllegalArgumentException("In $name the value of orientation: must be either 'horisontal' or 'vertical'.")
+        } else if (!(direction instanceof Direction)) {
+            throw new IllegalArgumentException("In $name the value of direction: must be either 'horisontal' or 'vertical'.")
         }
 
-        value instanceof CharSequence ? new Panel(value.toString(), orientation) : new Panel(orientation)
+        new Panel(direction)
     }
 }

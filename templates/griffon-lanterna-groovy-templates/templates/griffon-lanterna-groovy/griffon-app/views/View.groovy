@@ -23,9 +23,10 @@ class ${project_class_name}View {
     void initUI() {
         builder.with {
             application(id: 'mainWindow') {
-                verticalLayout()
-                label(id: 'clickLabel')
-                button(clickAction)
+                vbox {
+                    label(id: 'clickLabel')
+                    button(clickAction)
+                }
             }
         }
     }

@@ -17,8 +17,8 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.Action
-import com.googlecode.lanterna.gui.component.ActionListBox
+import com.googlecode.lanterna.gui2.ActionListBox
+import griffon.lanterna.support.LanternaAction
 
 /**
  * @author Andres Almiray
@@ -29,9 +29,10 @@ class ActionListBoxFactory extends ComponentFactory {
     }
 
     void setChild(FactoryBuilderSupport builder, Object parent, Object child) {
-        if (!(child instanceof Action)) {
+        if (!(child instanceof LanternaAction)) {
             return
         }
-        parent.addAction(child)
+
+        parent.addItem(child.name, child.runnable)
     }
 }

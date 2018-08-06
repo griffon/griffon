@@ -17,7 +17,7 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.EmptySpace
+import com.googlecode.lanterna.gui2.EmptySpace
 import griffon.builder.lanterna.LanternaBuilderCustomizer
 import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder

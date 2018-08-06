@@ -17,7 +17,7 @@
  */
 package griffon.builder.lanterna.factory
 
-import com.googlecode.lanterna.gui.component.CheckBox
+import com.googlecode.lanterna.gui2.CheckBox
 
 /**
  * @author Andres Almiray
@@ -31,7 +31,8 @@ class CheckBoxFactory extends ComponentFactory {
         def text = attributes.remove('text')
         if (text == null && value instanceof CharSequence) text = value
         if (text == null) text = ''
-        boolean selected = (attributes.remove('selected') ?: false) as boolean
-        return new CheckBox(text, selected)
+        CheckBox checkBox = new CheckBox(text)
+        checkBox.checked = (attributes.remove('selected') ?: false) as boolean
+        return checkBox
     }
 }

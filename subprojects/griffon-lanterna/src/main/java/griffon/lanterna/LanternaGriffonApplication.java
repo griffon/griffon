@@ -70,11 +70,11 @@ public class LanternaGriffonApplication extends AbstractGriffonApplication {
     @Nonnull
     @Override
     public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
-        String title = (String) attributes.remove("title");
+        CharSequence title = (CharSequence) attributes.remove("title");
         if (title == null) {
             title = getConfiguration().getAsString("application.title");
         }
-        return new BasicWindow(title);
+        return new BasicWindow(String.valueOf(title));
     }
 
     public static void main(String[] args) throws Exception {

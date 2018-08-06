@@ -1,8 +1,11 @@
 package ${project_package};
 
-import com.googlecode.lanterna.gui.Window;
-import com.googlecode.lanterna.gui.component.Label;
-import com.googlecode.lanterna.gui.component.Panel;
+import com.googlecode.lanterna.gui2.Direction;
+import com.googlecode.lanterna.gui2.Label;
+import com.googlecode.lanterna.gui2.LinearLayout;
+import com.googlecode.lanterna.gui2.Panel;
+import com.googlecode.lanterna.gui2.TextBox;
+import com.googlecode.lanterna.gui2.Window;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.lanterna.support.LanternaAction;
@@ -10,10 +13,10 @@ import griffon.lanterna.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
-import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ${project_class_name}View extends AbstractLanternaGriffonView {
@@ -35,7 +38,7 @@ public class ${project_class_name}View extends AbstractLanternaGriffonView {
         Window window = (Window) getApplication()
             .createApplicationContainer(Collections.<String, Object>emptyMap());
         getApplication().getWindowManager().attach("mainWindow", window);
-        Panel panel = new Panel(Panel.Orientation.VERTICAL);
+        Panel panel = new Panel(new LinearLayout(Direction.VERTICAL));
 
         final Label clickLabel = new Label(String.valueOf(model.getClickCount()));
         panel.addComponent(clickLabel);
