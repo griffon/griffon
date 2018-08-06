@@ -18,7 +18,12 @@
 package org.codehaus.griffon.runtime.lanterna
 
 import com.google.inject.AbstractModule
-import com.googlecode.lanterna.gui.GUIScreen
+import com.googlecode.lanterna.gui2.Component
+import com.googlecode.lanterna.gui2.TextGUIThreadFactory
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI
+import com.googlecode.lanterna.gui2.WindowPostRenderer
+import com.googlecode.lanterna.screen.Screen
+import com.googlecode.lanterna.terminal.TerminalFactory
 import griffon.core.ExecutorServiceManager
 import griffon.core.threading.UIThreadManager
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
@@ -41,7 +46,7 @@ import static griffon.util.AnnotationUtils.named
 @Ignore('The test Thread is also the UI thread')
 class LanternaUIThreadManagerTest extends ThreadingHandlerTest {
     @Inject private UIThreadManager uiThreadManager
-    @Inject private GUIScreen screen
+    @Inject private WindowBasedTextGUI windowBasedTextGUI
 
     @Override
     protected ThreadingHandler resolveThreadingHandler() {
@@ -50,7 +55,7 @@ class LanternaUIThreadManagerTest extends ThreadingHandlerTest {
 
     @Override
     protected boolean isUIThread() {
-        return screen.isInEventThread()
+        return windowBasedTextGUI.getGUIThread().thread == Thread.currentThread()
     }
 
     static class TestModule extends AbstractModule {
@@ -69,7 +74,32 @@ class LanternaUIThreadManagerTest extends ThreadingHandlerTest {
                 .to(LanternaUIThreadManager)
                 .in(Singleton)
 
-            bind(GUIScreen)
+            bind(TerminalFactory)
+                .toProvider(TerminalFactoryProvider)
+                .in(Singleton)
+
+            bind(Screen)
+                .toProvider(ScreenProvider)
+                .in(Singleton)
+
+            bind(TextGUIThreadFactory)
+                .toProvider(TextGUIThreadFactoryProvider)
+                .in(Singleton)
+
+            bind(com.googlecode.lanterna.gui2.WindowManager)
+                .toProvider(WindowManagerProvider)
+                .in(Singleton)
+
+            bind(WindowPostRenderer)
+                .toProvider(WindowPostRendererProvider)
+                .in(Singleton)
+
+            bind(Component)
+                .annotatedWith(named("background"))
+                .toProvider(BackgroundProvider)
+                .in(Singleton)
+
+            bind(WindowBasedTextGUI)
                 .toProvider(WindowBasedTextGUIProvider)
                 .in(Singleton)
         }

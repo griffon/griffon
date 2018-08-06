@@ -17,19 +17,18 @@
  */
 package griffon.lanterna.widgets
 
-import com.googlecode.lanterna.gui.Action
 import griffon.lanterna.support.LanternaAction
 import spock.lang.Specification
 
 class MutableButtonSpec extends Specification {
     void 'Can initialize button using an Action'() {
         given:
-        Action action = new LanternaAction('open')
+        LanternaAction action = new LanternaAction('open')
 
         when:
         MutableButton button = new MutableButton(action)
 
         then:
-        button.text == 'open'
+        button.label == 'open'
     }
 }

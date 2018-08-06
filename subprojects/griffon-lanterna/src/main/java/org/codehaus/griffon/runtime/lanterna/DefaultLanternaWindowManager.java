@@ -19,7 +19,6 @@ package org.codehaus.griffon.runtime.lanterna;
 
 import com.googlecode.lanterna.gui2.Window;
 import griffon.core.GriffonApplication;
-import griffon.core.env.ApplicationPhase;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import griffon.lanterna.LanternaWindowManager;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
