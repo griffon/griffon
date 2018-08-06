@@ -19,54 +19,6 @@
 apply plugin: 'maven-publish'
 apply plugin: 'nebula.optional-base'
 
-def pomConfig = {
-    name project.name
-    description project.pomDescription
-    url 'http://griffon-framework.org'
-    inceptionYear '2008'
-    licenses {
-        license([:]) {
-            name 'The Apache Software License, Version 2.0'
-            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-            distribution 'repo'
-        }
-    }
-    scm {
-        url 'https://github.com/griffon/griffon'
-    }
-    developers {
-        [
-            aalmiray: 'Andres Almiray',
-            shemnon: 'Danno Ferrin',
-            jwill: 'James Williams',
-            aklein: 'Alexander Klein',
-            rgroeschke: 'Rene Groeschke'
-        ].each { devId, devName ->
-            developer {
-                id devId
-                name devName
-                roles {
-                    role 'Developer'
-                }
-            }
-        }
-    }
-    contributors {
-        [
-            'Dierk Koenig',
-            'Guillaume Laforge',
-            'Dean Iverson'
-        ].each { cName ->
-            contributor {
-                name cName
-                roles {
-                    role 'contributor'
-                }
-            }
-        }
-    }
-}
-
 publishing {
     publications {
         mavenCustom(MavenPublication) {
@@ -74,16 +26,46 @@ publishing {
             artifact sourceJar
             artifact javadocJar
 
-            pom.withXml {
-                // all dependencies should use the default scope (compile) but
-                // Gradle insists in using runtime as default
-                asNode().dependencies.dependency.each { dep ->
-                    if (dep.scope.text() == 'runtime') {
-                        dep.remove(dep.scope)
+            pom {
+                name = project.name
+                description = project.pomDescription
+                url = 'http://griffon-framework.org'
+                inceptionYear = '2008'
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
                     }
                 }
-                asNode().children().last() + pomConfig
-                asNode().appendNode('description', project.pomDescription)
+                scm {
+                    url = 'https://github.com/griffon/griffon'
+                }
+                developers {
+                    [
+                        aalmiray: 'Andres Almiray',
+                        shemnon: 'Danno Ferrin',
+                        jwill: 'James Williams',
+                        aklein: 'Alexander Klein',
+                        rgroeschke: 'Rene Groeschke'
+                    ].each { devId, devName ->
+                        developer {
+                            id = devId
+                            name = devName
+                        }
+                    }
+                }
+                contributors {
+                    [
+                        'Dierk Koenig',
+                        'Guillaume Laforge',
+                        'Dean Iverson'
+                    ].each { cName ->
+                        contributor {
+                            name = cName
+                        }
+                    }
+                }
             }
         }
     }
