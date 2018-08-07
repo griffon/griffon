@@ -25,7 +25,7 @@ import org.gradle.api.Project
  */
 @CompileStatic
 class GriffonExtension {
-    static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'pivot', 'lanterna']
+    static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'pivot', 'lanterna3']
 
     String version = '3.0.0-SNAPSHOT'
 

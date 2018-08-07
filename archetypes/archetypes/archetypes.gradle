@@ -3,8 +3,8 @@ apply plugin: 'java'
 dependencies {
     compile project(':griffon-javafx-java-archetype')
     compile project(':griffon-javafx-groovy-archetype')
-    compile project(':griffon-lanterna-java-archetype')
-    compile project(':griffon-lanterna-groovy-archetype')
+    compile project(':griffon-lanterna3-java-archetype')
+    compile project(':griffon-lanterna3-groovy-archetype')
     compile project(':griffon-pivot-java-archetype')
     compile project(':griffon-pivot-groovy-archetype')
     compile project(':griffon-swing-java-archetype')
@@ -20,8 +20,8 @@ task installAllArchetypes(type: DefaultTask) {
 installAllArchetypes.dependsOn([
     ':griffon-javafx-java-archetype:publishToMavenLocal',
     ':griffon-javafx-groovy-archetype:publishToMavenLocal',
-    ':griffon-lanterna-java-archetype:publishToMavenLocal',
-    ':griffon-lanterna-groovy-archetype:publishToMavenLocal',
+    ':griffon-lanterna3-java-archetype:publishToMavenLocal',
+    ':griffon-lanterna3-groovy-archetype:publishToMavenLocal',
     ':griffon-pivot-java-archetype:publishToMavenLocal',
     ':griffon-pivot-groovy-archetype:publishToMavenLocal',
     ':griffon-swing-java-archetype:publishToMavenLocal',
@@ -34,8 +34,8 @@ task publishAllArchetypes(type: DefaultTask) {
 publishAllArchetypes.dependsOn([
     ':griffon-javafx-java-archetype:bintrayUpload',
     ':griffon-javafx-groovy-archetype:bintrayUpload',
-    ':griffon-lanterna-java-archetype:bintrayUpload',
-    ':griffon-lanterna-groovy-archetype:bintrayUpload',
+    ':griffon-lanterna3-java-archetype:bintrayUpload',
+    ':griffon-lanterna3-groovy-archetype:bintrayUpload',
     ':griffon-pivot-java-archetype:bintrayUpload',
     ':griffon-pivot-groovy-archetype:bintrayUpload',
     ':griffon-swing-java-archetype:bintrayUpload',
