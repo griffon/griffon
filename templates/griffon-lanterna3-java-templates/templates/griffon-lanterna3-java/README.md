@@ -1,7 +1,7 @@
-Basic Griffon Lanterna/Java project
------------------------------------
+Basic Griffon Lanterna3/Java project
+------------------------------------
 
-You have just created a basic Griffon application with Lanterna as UI toolkit
+You have just created a basic Griffon application with Lanterna3 as UI toolkit
 and Java as main language. The project has the following file structure
 
     .

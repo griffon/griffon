@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.gui2.Component;
 import com.googlecode.lanterna.gui2.TextGUIThreadFactory;
@@ -28,10 +28,10 @@ import griffon.core.controller.ActionManager;
 import griffon.core.injection.Module;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
-import griffon.lanterna.LanternaWindowDisplayHandler;
+import griffon.lanterna3.LanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.lanterna.controller.LanternaActionFactory;
-import org.codehaus.griffon.runtime.lanterna.controller.LanternaActionManager;
+import org.codehaus.griffon.runtime.lanterna3.controller.LanternaActionFactory;
+import org.codehaus.griffon.runtime.lanterna3.controller.LanternaActionManager;
 import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
@@ -40,7 +40,7 @@ import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 @Named("lanterna")
 @ServiceProviderFor(Module.class)

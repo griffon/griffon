@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.graphics.ThemedTextGraphics;
 import com.googlecode.lanterna.gui2.TextGUI;

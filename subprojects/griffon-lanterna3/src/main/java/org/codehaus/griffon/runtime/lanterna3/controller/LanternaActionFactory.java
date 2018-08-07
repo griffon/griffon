@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna.controller;
+package org.codehaus.griffon.runtime.lanterna3.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
@@ -29,7 +29,7 @@ import javax.inject.Inject;
 
 /**
  * @author Andres Almiray
- * @since 2.11.0
+ * @since 3.0.0
  */
 public class LanternaActionFactory implements ActionFactory {
     @Inject

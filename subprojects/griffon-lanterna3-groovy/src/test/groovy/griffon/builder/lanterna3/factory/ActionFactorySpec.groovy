@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.lanterna.factory
+package griffon.builder.lanterna3.factory
 
-import griffon.builder.lanterna.LanternaBuilderCustomizer
-import griffon.lanterna.support.LanternaAction
+import griffon.builder.lanterna3.LanternaBuilderCustomizer
+import griffon.lanterna3.support.LanternaAction
 import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder
 import spock.lang.Specification

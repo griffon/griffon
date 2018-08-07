@@ -15,17 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.groovy
+package sample.lanterna3.groovy
 
 application {
-    title = 'Lanterna + Groovy'
+    title = 'Lanterna3 + Groovy'
     startupGroups = ['sample']
     autoShutdown = true
 }
 mvcGroups {
     // MVC Group for "sample"
     'sample' {
-        view       = 'sample.lanterna.groovy.SampleView'
-        controller = 'sample.lanterna.groovy.SampleController'
+        view       = 'sample.lanterna3.groovy.SampleView'
+        controller = 'sample.lanterna3.groovy.SampleController'
     }
 }

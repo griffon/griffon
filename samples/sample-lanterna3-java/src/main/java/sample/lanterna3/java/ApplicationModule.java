@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.java;
+package sample.lanterna3.java;
 
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
@@ -32,7 +32,7 @@ public class ApplicationModule extends AbstractModule {
     protected void doConfigure() {
         bind(ResourceBundle.class)
             .withClassifier(named("applicationResourceBundle"))
-            .toProvider(new ResourceBundleProvider("sample.lanterna.java.Config"))
+            .toProvider(new ResourceBundleProvider("sample.lanterna3.java.Config"))
             .asSingleton();
     }
 }

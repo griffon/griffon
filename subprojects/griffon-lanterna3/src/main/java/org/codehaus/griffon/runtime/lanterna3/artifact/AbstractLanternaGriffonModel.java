@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna.artifact;
+package org.codehaus.griffon.runtime.lanterna3.artifact;
 
 import griffon.beans.Vetoable;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;

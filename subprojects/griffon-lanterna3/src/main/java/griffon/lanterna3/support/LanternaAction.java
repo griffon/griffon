@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.lanterna.support;
+package griffon.lanterna3.support;
 
 import org.codehaus.griffon.runtime.core.properties.AbstractPropertySource;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public class LanternaAction extends AbstractPropertySource {
     public static final String NAME = "name";

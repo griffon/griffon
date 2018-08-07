@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.java;
+package sample.lanterna3.java;
 
 import griffon.core.artifact.GriffonService;
 import griffon.core.i18n.MessageSource;

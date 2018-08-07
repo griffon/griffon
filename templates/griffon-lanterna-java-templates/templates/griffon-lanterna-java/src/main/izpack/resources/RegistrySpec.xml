@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<registry>
+    <pack name="UninstallStuff">
+        <value name="DisplayName"
+               keypath="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\@{app.title}-@app.version@"
+               root="HKLM"
+               string="@{app.title} @app.version@"/>
+        <value name="UninstallString"
+               keypath="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\@{app.title}-@app.version@"
+               root="HKLM"
+               string="&quot;$JAVA_HOME\bin\javaw.exe&quot; -jar &quot;$INSTALL_PATH\Uninstaller\uninstaller.jar&quot;"/>
+        <value name="HelpLink"
+               keypath="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\@{app.title}-@app.version@"
+               root="HKLM"
+               string="$APP_URL"/>
+    </pack>
+</registry>

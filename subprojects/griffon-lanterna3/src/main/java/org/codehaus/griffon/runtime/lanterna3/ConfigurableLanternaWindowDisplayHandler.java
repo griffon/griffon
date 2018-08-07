@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.gui2.Window;
 import griffon.core.GriffonApplication;
 import griffon.exceptions.InstanceNotFoundException;
-import griffon.lanterna.LanternaWindowDisplayHandler;
+import griffon.lanterna3.LanternaWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public class ConfigurableLanternaWindowDisplayHandler extends ConfigurableWindowDisplayHandler<Window> implements LanternaWindowDisplayHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigurableLanternaWindowDisplayHandler.class);

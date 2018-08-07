@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.groovy
+package sample.lanterna3.groovy
 
 import griffon.core.artifact.GriffonView
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
-import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView
+import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonView
 
 import javax.annotation.Nonnull
 

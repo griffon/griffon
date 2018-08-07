@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna.artifact;
+package org.codehaus.griffon.runtime.lanterna3.artifact;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
-import griffon.lanterna.support.LanternaAction;
+import griffon.lanterna3.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * Lanterna-friendly implementation of the GriffonView interface.
  *
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public abstract class AbstractLanternaGriffonView extends AbstractGriffonView {
     public AbstractLanternaGriffonView() {

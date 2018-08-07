@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.groovy
+package sample.lanterna3.groovy
 
 import griffon.core.injection.Module
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
@@ -30,7 +30,7 @@ class ApplicationModule extends AbstractModule {
     protected void doConfigure() {
         bind(ResourceBundle.class)
             .withClassifier(named('applicationResourceBundle'))
-            .toProvider(new ResourceBundleProvider('sample.lanterna.groovy.Config'))
+            .toProvider(new ResourceBundleProvider('sample.lanterna3.groovy.Config'))
             .asSingleton()
     }
 }

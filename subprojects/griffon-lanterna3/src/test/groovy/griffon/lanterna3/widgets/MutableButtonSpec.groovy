@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.lanterna.widgets
+package griffon.lanterna3.widgets
 
-import griffon.lanterna.support.LanternaAction
+import griffon.lanterna3.support.LanternaAction
 import spock.lang.Specification
 
 class MutableButtonSpec extends Specification {

@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.gui2.Window;
 import griffon.core.GriffonApplication;
-import griffon.lanterna.LanternaWindowDisplayHandler;
-import griffon.lanterna.LanternaWindowManager;
+import griffon.lanterna3.LanternaWindowDisplayHandler;
+import griffon.lanterna3.LanternaWindowManager;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> implements LanternaWindowManager {
     @Inject

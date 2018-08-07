@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna.controller;
+package org.codehaus.griffon.runtime.lanterna3.controller;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
-import griffon.lanterna.support.LanternaAction;
+import griffon.lanterna3.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
@@ -31,6 +31,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
 public class LanternaGriffonControllerAction extends AbstractAction {
     private final LanternaAction toolkitAction;

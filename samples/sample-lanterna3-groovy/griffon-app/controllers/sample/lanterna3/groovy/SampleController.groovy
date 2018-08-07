@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.groovy
+package sample.lanterna3.groovy
 
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction

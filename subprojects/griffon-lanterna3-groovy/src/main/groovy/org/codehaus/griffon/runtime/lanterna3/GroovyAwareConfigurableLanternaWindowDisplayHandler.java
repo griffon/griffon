@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.gui2.Window;
 import griffon.core.GriffonApplication;
-import griffon.lanterna.LanternaWindowDisplayHandler;
+import griffon.lanterna3.LanternaWindowDisplayHandler;
 import groovy.lang.Closure;
 
 import javax.annotation.Nonnull;
@@ -29,7 +29,7 @@ import javax.inject.Named;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public class GroovyAwareConfigurableLanternaWindowDisplayHandler extends ConfigurableLanternaWindowDisplayHandler {
     @Inject

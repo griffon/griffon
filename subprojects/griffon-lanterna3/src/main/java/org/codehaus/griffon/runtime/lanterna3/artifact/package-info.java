@@ -18,7 +18,7 @@
 /**
  * Artifact implementation <strong>[INTERNAL USE]</strong>.
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 
-package org.codehaus.griffon.runtime.lanterna.artifact;
+package org.codehaus.griffon.runtime.lanterna3.artifact;

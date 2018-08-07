@@ -15,28 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.lanterna;
+package griffon.builder.lanterna3;
 
 import com.googlecode.lanterna.gui2.BorderLayout;
 import com.googlecode.lanterna.gui2.Component;
 import com.googlecode.lanterna.gui2.Direction;
 import com.googlecode.lanterna.gui2.LinearLayout;
-import griffon.builder.lanterna.factory.ActionFactory;
-import griffon.builder.lanterna.factory.ActionListBoxFactory;
-import griffon.builder.lanterna.factory.ApplicationFactory;
-import griffon.builder.lanterna.factory.BoxFactory;
-import griffon.builder.lanterna.factory.ButtonFactory;
-import griffon.builder.lanterna.factory.CheckBoxFactory;
-import griffon.builder.lanterna.factory.CollectionFactory;
-import griffon.builder.lanterna.factory.ComponentFactory;
-import griffon.builder.lanterna.factory.EmptySpaceFactory;
-import griffon.builder.lanterna.factory.LabelFactory;
-import griffon.builder.lanterna.factory.LayoutFactory;
-import griffon.builder.lanterna.factory.PanelFactory;
-import griffon.builder.lanterna.factory.ProgressBarFactory;
-import griffon.builder.lanterna.factory.TableFactory;
-import griffon.builder.lanterna.factory.TextAreaFactory;
-import griffon.builder.lanterna.factory.TextBoxFactory;
+import griffon.builder.lanterna3.factory.ActionFactory;
+import griffon.builder.lanterna3.factory.ActionListBoxFactory;
+import griffon.builder.lanterna3.factory.ApplicationFactory;
+import griffon.builder.lanterna3.factory.BoxFactory;
+import griffon.builder.lanterna3.factory.ButtonFactory;
+import griffon.builder.lanterna3.factory.CheckBoxFactory;
+import griffon.builder.lanterna3.factory.CollectionFactory;
+import griffon.builder.lanterna3.factory.ComponentFactory;
+import griffon.builder.lanterna3.factory.EmptySpaceFactory;
+import griffon.builder.lanterna3.factory.LabelFactory;
+import griffon.builder.lanterna3.factory.LayoutFactory;
+import griffon.builder.lanterna3.factory.PanelFactory;
+import griffon.builder.lanterna3.factory.ProgressBarFactory;
+import griffon.builder.lanterna3.factory.TableFactory;
+import griffon.builder.lanterna3.factory.TextAreaFactory;
+import griffon.builder.lanterna3.factory.TextBoxFactory;
 import griffon.inject.DependsOn;
 import groovy.lang.Closure;
 import groovy.util.Factory;
@@ -51,7 +51,7 @@ import static griffon.util.CollectionUtils.newList;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 @Named("lanterna")
 @DependsOn({"core"})

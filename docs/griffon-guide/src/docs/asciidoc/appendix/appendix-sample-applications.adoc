@@ -526,6 +526,155 @@ include::{sample-lanterna-java}/build/reports/stats/sample-lanterna-java.txt[ind
 include::{sample-lanterna-groovy}/build/reports/stats/sample-lanterna-groovy.txt[indent=0]
 ----
 
+[[_sample_lanterna3]]
+== Lanterna3
+
+http://code.google.com/p/lanterna3/[Lanterna] is a Java library allowing you to write
+easy semi-graphical user interfaces in a text-only environment, very much like the
+C library curses, but with more functionality. Lanterna supports xterm-compatible terminals
+and terminal emulators such as konsole, gnome-terminal, putty, xterm and many more.
+One of the main benefits of lanterna is that it's not dependent on any native library,
+but runs 100% in pure Java.
+
+[[_sample_lanterna3_model]]
+=== Model
+
+Even though Lanterna UI components do not expose observable properties in any way,
+it's a good thing to use observable properties in the Model, and so the following
+Model is identical to the <<_swing,Swing>> version.
+
+.sample-lanterna3-java/griffon-app/models/sample/lanterna3/java/SampleModel.java
+[source,java,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-java}/griffon-app/models/sample/lanterna3/java/SampleModel.java[lines=18..-1]
+----
+<1> Define a private field for the property
+<2> Property accessor
+<3> Property mutator must fire a `PropertyChangeEvent`
+
+For reasons we'll see in the Groovy View and Controller, we decided to skip a Model
+for the Groovy version. This also demonstrates that even though an MVC group is the
+smallest building block, you can still configure how it's assembled. Have a look at
+the application's configuration to find out how:
+
+.sample-lanterna3-groovy/griffon-app/conf/sample/lanterna3/groovy/Config.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-groovy}/griffon-app/conf/sample/lanterna3/groovy/Config.groovy[lines=18..-1]
+----
+
+[[_sample_lanterna3_controller]]
+=== Controller
+
+We find that for the Java version, the Controller is identical to the <<_swing,Swing>>
+and <<_javafx, JavaFX>> versions. For the Groovy one we notice that both `input`
+and `output` view components are accessed directly. We know we've said in the past
+that a Controller should never do this, but because Lanterna exposes no bind mechanism,
+the Groovy binding implementation would look as verbose as the Java version; we
+decided to take a shortcut for demonstration purposes.
+
+.sample-lanterna3-java/griffon-app/controllers/sample/lanterna3/java/SampleController.java
+[source,java,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-java}/griffon-app/controllers/sample/lanterna3/java/SampleController.java[lines=18..-1]
+----
+<1> MVC member injected by `{link_mvc_group_manager}`
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
+
+.sample-lanterna3-groovy/griffon-app/controllers/sample/lanterna3/groovy/SampleController.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-groovy}/griffon-app/controllers/sample/lanterna3/groovy/SampleController.groovy[lines=18..-1]
+----
+<1> MVC member injected by `{link_mvc_group_manager}`
+<2> Injected by JSR 330
+<3> Automatically run off the UI thread
+<4> Get back inside the UI thread
+
+[[_sample_lanterna3_service]]
+=== Service
+
+Again, services should not be affected by the choice of UI tookit, so the following
+Service definitions are identical to the previous ones we saw earlier.
+
+.sample-lanterna3-java/griffon-app/services/sample/lanterna3/java/SampleService.java
+[source,java,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-java}/griffon-app/services/sample/lanterna3/java/SampleService.java[lines=18..-1]
+----
+
+.sample-lanterna3-groovy/griffon-app/services/sample/lanterna3/groovy/SampleService.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-groovy}/griffon-app/services/sample/lanterna3/groovy/SampleService.groovy[lines=18..-1]
+----
+
+[[_sample_lanterna3_view]]
+=== View
+
+We'd expect the View to follow the same pattern we've seen in the previous examples;
+that is, create two components that will be bound to model properties and a button
+that's connected to a Controller action. Here we see that the Java version is rather
+verbose due to the fact that Lanterna has no observable UI components. This is the
+reason we must explicitly set the value of the `input` component in
+the `input` Model property as soon as the button is clicked.
+
+.sample-lanterna3-java/griffon-app/views/sample/lanterna3/java/SampleView.java
+[source,java,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-java}/griffon-app/views/sample/lanterna3/java/SampleView.java[lines=18..-1]
+----
+<1> MVC member injected by `{link_mvc_group_manager}`
+<2> Create window and attach it to `{link_window_manager}`
+<3> Apply component-to-model binding
+<4> Hook actions by convention
+
+Fortunately, we can rely on the observable `output` Model property to write back the
+value to the `output` component as soon as said property is updated.
+
+.sample-lanterna3-groovy/griffon-app/views/sample/lanterna3/groovy/SampleView.groovy
+[source,groovy,linenums,options="nowrap"]
+----
+include::{sample-lanterna3-groovy}/griffon-app/views/sample/lanterna3/groovy/SampleView.groovy[lines=18..-1]
+----
+<1> MVC member injected by `{link_mvc_group_manager}`
+<2> Create window and attach it to `{link_window_manager}`
+<3> Hook actions by convention
+
+Here we can see there's no binding code in the View; for this reason, the Controller has
+to access UI components directly.
+
+[[_sample_lanterna3_resources]]
+=== Resources
+
+The resources file is identical to the ones found in the other applications. There are
+in fact no changes brought about by the choice of UI toolkit.
+
+.sample-lanterna3-java/griffon-app/i18n/messages.properties
+[source,java,linenums]
+----
+include::{sample-lanterna3-java}/griffon-app/i18n/messages.properties[lines=19..-1]
+----
+
+[[_sample_lanterna3_statistics]]
+=== Statistics
+
+The following statistics show the number of lines per artifact required by both applications:
+
+.Java
+[source]
+----
+include::{sample-lanterna3-java}/build/reports/stats/sample-lanterna3-java.txt[indent=0]
+----
+
+.Groovy
+[source]
+----
+include::{sample-lanterna3-groovy}/build/reports/stats/sample-lanterna3-groovy.txt[indent=0]
+----
+
 [[_sample_pivot]]
 == Pivot
 

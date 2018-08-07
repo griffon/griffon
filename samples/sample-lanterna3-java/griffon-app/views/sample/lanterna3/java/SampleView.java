@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.java;
+package sample.lanterna3.java;
 
 import com.googlecode.lanterna.gui2.Direction;
 import com.googlecode.lanterna.gui2.Label;
@@ -25,10 +25,10 @@ import com.googlecode.lanterna.gui2.TextBox;
 import com.googlecode.lanterna.gui2.Window;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
-import griffon.lanterna.support.LanternaAction;
-import griffon.lanterna.widgets.MutableButton;
+import griffon.lanterna3.support.LanternaAction;
+import griffon.lanterna3.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
+import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonView;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;

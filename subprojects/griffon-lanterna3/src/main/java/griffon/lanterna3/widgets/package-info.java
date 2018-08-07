@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 /**
- * Custom Lanterna widgets.
+ * Custom Lanterna3 widgets.
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 
-package griffon.lanterna.widgets;
+package griffon.lanterna3.widgets;

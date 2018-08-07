@@ -1,0 +1,63 @@
+configurations {
+    integrationTestCompile {
+        extendsFrom testCompile
+    }
+    integrationTestRuntime {
+        extendsFrom integrationTestCompile, testRuntime
+    }
+}
+
+sourceSets {
+    integrationTest {
+        if (file('src/integration-test/java').exists()) {
+            java.srcDirs file('src/integration-test/java')
+        }
+        if (file('src/integration-test/groovy').exists()) {
+            groovy.srcDirs file('src/integration-test/groovy')
+        }
+        resources.srcDir file('src/integration-test/resources')
+        compileClasspath += sourceSets.main.output
+        compileClasspath += configurations.compileOnly
+        compileClasspath += configurations.testCompileOnly
+        runtimeClasspath += compileClasspath
+    }
+}
+
+idea {
+    module {
+        scopes.TEST.plus += [configurations.integrationTestCompile]
+        scopes.TEST.plus += [configurations.integrationTestRuntime]
+        testSourceDirs += sourceSets.integrationTest.allSource.srcDirs
+    }
+}
+
+task integrationTest(type: Test, dependsOn: jar) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    reports.html.enabled = false
+}
+
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("${buildDir}/reports/integration-tests")
+    reportOn integrationTest.binResultsDir
+}
+
+integrationTest.mustRunAfter test
+integrationTest.finalizedBy integrationTestReport
+integrationTestReport.dependsOn integrationTest
+check.dependsOn integrationTestReport
+
+task jacocoIntegrationTestReport(dependsOn: integrationTest, type: JacocoReport) {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running integration tests.'
+    executionData file("${buildDir}/jacoco/integrationTest.exec")
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories = files(sourceSets.main.output)
+    reports {
+        csv.enabled = false
+        xml.enabled = true
+        html.enabled = true
+        html.destination = file("${buildDir}/reports/jacoco/integration-test/html")
+        xml.destination = file("${buildDir}/reports/jacoco/integration-test/jacocoIntegrationTestReport.xml")
+    }
+}

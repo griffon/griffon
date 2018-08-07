@@ -1,6 +1,6 @@
 package ${groupId};
 
-import griffon.lanterna.LanternaGriffonApplication;
+import griffon.lanterna3.LanternaGriffonApplication;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {

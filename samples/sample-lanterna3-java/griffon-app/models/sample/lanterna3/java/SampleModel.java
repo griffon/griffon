@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.java;
+package sample.lanterna3.java;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonModel;
+import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonModel;
 
 @ArtifactProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractLanternaGriffonModel {

@@ -15,10 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.lanterna.factory
+package griffon.builder.lanterna3.factory
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
 class BeanFactory extends AbstractFactory {
     final Class beanClass

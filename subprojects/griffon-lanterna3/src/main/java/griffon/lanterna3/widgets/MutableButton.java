@@ -15,15 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.lanterna.widgets;
+package griffon.lanterna3.widgets;
 
 import com.googlecode.lanterna.gui2.Button;
-import griffon.lanterna.support.LanternaAction;
+import griffon.lanterna3.support.LanternaAction;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
 public class MutableButton extends Button {
     private LanternaAction lanternaAction;

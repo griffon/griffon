@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.java;
+package sample.lanterna3.java;
 
-import griffon.lanterna.LanternaGriffonApplication;
+import griffon.lanterna3.LanternaGriffonApplication;
 
 public class Launcher {
     public static void main(String[] args) throws Exception {

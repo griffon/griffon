@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.lanterna.factory
+package griffon.builder.lanterna3.factory
 
 import com.googlecode.lanterna.gui2.BasicWindow
 import com.googlecode.lanterna.gui2.Window
-import griffon.builder.lanterna.LanternaBuilderCustomizer
+import griffon.builder.lanterna3.LanternaBuilderCustomizer
 import griffon.util.BuilderCustomizer
 import griffon.util.CompositeBuilder
 import spock.lang.Specification

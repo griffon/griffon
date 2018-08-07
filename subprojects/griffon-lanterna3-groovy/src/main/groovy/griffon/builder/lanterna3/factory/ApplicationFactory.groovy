@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.lanterna.factory
+package griffon.builder.lanterna3.factory
 
 import com.googlecode.lanterna.gui2.Window
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
 class ApplicationFactory extends ComponentFactory {
     ApplicationFactory() {

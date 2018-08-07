@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;
 
-import griffon.builder.lanterna.LanternaBuilderCustomizer;
+import griffon.builder.lanterna3.LanternaBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
-import griffon.lanterna.LanternaWindowDisplayHandler;
+import griffon.lanterna3.LanternaWindowDisplayHandler;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
@@ -31,6 +31,7 @@ import static griffon.util.AnnotationUtils.named;
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
 @ServiceProviderFor(Module.class)
 @DependsOn("lanterna")

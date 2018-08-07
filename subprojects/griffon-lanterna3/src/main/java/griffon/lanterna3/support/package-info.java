@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 /**
- * Lanterna utilities.
+ * Lanterna3 utilities.
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 
-package griffon.lanterna.support;
+package griffon.lanterna3.support;

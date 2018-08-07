@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.groovy
+package sample.lanterna3.groovy
 
-import griffon.lanterna.LanternaGriffonApplication
+import griffon.lanterna3.LanternaGriffonApplication
 
 class Launcher {
     static void main(String[] args) throws Exception {

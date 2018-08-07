@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.lanterna;
+package griffon.lanterna3;
 
 import com.googlecode.lanterna.gui2.Window;
 import griffon.core.view.WindowDisplayHandler;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public interface LanternaWindowDisplayHandler extends WindowDisplayHandler<Window> {
 }

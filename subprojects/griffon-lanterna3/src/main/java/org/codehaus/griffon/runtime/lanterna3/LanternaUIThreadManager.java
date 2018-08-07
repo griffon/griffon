@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
@@ -27,7 +27,7 @@ import javax.inject.Inject;
  * Executes code honoring Lanterna's threading model.
  *
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public class LanternaUIThreadManager extends AbstractUIThreadManager {
     private final WindowBasedTextGUI windowBasedTextGUI;

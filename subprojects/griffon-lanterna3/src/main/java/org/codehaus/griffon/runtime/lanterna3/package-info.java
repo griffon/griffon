@@ -18,7 +18,7 @@
 /**
  * Lanterna specific implementations <strong>[INTERNAL USE]</strong>.
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 
-package org.codehaus.griffon.runtime.lanterna;
+package org.codehaus.griffon.runtime.lanterna3;

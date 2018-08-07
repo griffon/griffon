@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.lanterna;
+package griffon.lanterna3;
 
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.screen.Screen;
@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
 public class LanternaGriffonApplication extends AbstractGriffonApplication {
     private Screen screen;

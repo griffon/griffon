@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.builder.lanterna.factory
+package griffon.builder.lanterna3.factory
 
-import griffon.lanterna.support.LanternaAction
+import griffon.lanterna3.support.LanternaAction
 
 /**
  * @author Andres Almiray
+ * @since 3.0.0
  */
 class ActionFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) {

@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * <p>Annotates a class.</p>
  *
  * @author Andres Almiray
- * @see griffon.core.Observable
+ * @see griffon.beans.Observable
  * @since 2.0.0
  */
 @Documented

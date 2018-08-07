@@ -32,29 +32,31 @@ apply plugin: 'com.bmuschko.java2html'
 
 ext.childProjects = [
     ':griffon-core',
-    ':griffon-core-compile',
     ':griffon-core-test',
     ':griffon-beans',
-    ':griffon-beans-compile',
     ':griffon-groovy',
-    ':griffon-groovy-compile',
     ':griffon-guice',
+    ':griffon-core-compile',
+    ':griffon-beans-compile',
+    ':griffon-groovy-compile',
+    ':griffon-javafx-compile',
     ':griffon-swing',
     ':griffon-javafx',
+    ':griffon-lanterna',
     ':griffon-lanterna3',
     ':griffon-pivot',
-    ':griffon-javafx-compile',
     ':griffon-swing-groovy',
     ':griffon-javafx-groovy',
+    ':griffon-lanterna-groovy',
     ':griffon-lanterna3-groovy',
     ':griffon-pivot-groovy',
-    ':griffon-javafx-test',
     ':griffon-swing-test',
+    ':griffon-javafx-test',
     ':griffon-pivot-test'
 ]
 
 def sampleApps = []
-for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna3']) {
+for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna', 'lanterna3']) {
     for (lang in ['groovy', 'java']) {
         sampleApps << ":sample-${toolkit}-${lang}".toString()
     }

@@ -1,7 +1,7 @@
-Basic Griffon Lanterna/Groovy project
--------------------------------------
+Basic Griffon Lanterna3/Groovy project
+--------------------------------------
 
-You have just created a basic Griffon application with Lanterna as UI toolkit
+You have just created a basic Griffon application with Lanterna3 as UI toolkit
 and Groovy as main language. The project has the following file structure
 
     .

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.lanterna.java;
+package sample.lanterna3.java;
 
 import griffon.util.AbstractMapResourceBundle;
 import griffon.util.CollectionUtils;
@@ -30,15 +30,15 @@ public class Config extends AbstractMapResourceBundle {
     protected void initialize(@Nonnull Map<String, Object> entries) {
         CollectionUtils.map(entries)
             .e("application", CollectionUtils.map()
-                .e("title", "Lanterna + Java")
+                .e("title", "Lanterna3 + Java")
                 .e("startupGroups", singletonList("sample"))
                 .e("autoShutdown", true)
             )
             .e("mvcGroups", CollectionUtils.map()
                 .e("sample", CollectionUtils.map()
-                    .e("model", "sample.lanterna.java.SampleModel")
-                    .e("view", "sample.lanterna.java.SampleView")
-                    .e("controller", "sample.lanterna.java.SampleController")
+                    .e("model", "sample.lanterna3.java.SampleModel")
+                    .e("view", "sample.lanterna3.java.SampleView")
+                    .e("controller", "sample.lanterna3.java.SampleController")
                 )
             );
     }

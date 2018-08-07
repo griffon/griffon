@@ -1,6 +1,6 @@
 package ${project_package}
 
-import griffon.lanterna.LanternaGriffonApplication
+import griffon.lanterna3.LanternaGriffonApplication
 
 class Launcher {
     static void main(String[] args) throws Exception {
