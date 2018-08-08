@@ -38,12 +38,12 @@ import griffon.core.mvc.MVCGroup;
 import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.GriffonException;
 import griffon.exceptions.InstanceMethodInvocationException;
-import griffon.transform.Threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.threading.Threading;
 import javax.inject.Inject;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;

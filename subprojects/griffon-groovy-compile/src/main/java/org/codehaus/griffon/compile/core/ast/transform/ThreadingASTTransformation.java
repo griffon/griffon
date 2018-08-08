@@ -18,7 +18,6 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.core.artifact.GriffonController;
-import griffon.transform.Threading;
 import griffon.util.GriffonClassUtils;
 import griffon.util.MethodDescriptor;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
@@ -42,6 +41,7 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 
+import javax.application.threading.Threading;
 import java.util.Iterator;
 import java.util.List;
 

@@ -6,7 +6,7 @@ import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import griffon.transform.Threading;
+import javax.application.threading.Threading;
 import javax.annotation.Nonnull;
 
 @ArtifactProviderFor(GriffonController.class)

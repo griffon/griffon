@@ -21,12 +21,12 @@ import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.Threading;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.threading.Threading;
 import java.io.File;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;

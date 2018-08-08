@@ -74,7 +74,7 @@ contribute(enclosingClass(annotatedBy('griffon.transform.MVCAware'))) {
     delegatesTo "griffon.core.mvc.MVCHandler"
 }
 
-contribute(enclosingClass(annotatedBy('griffon.transform.ThreadingAware'))) {
+contribute(enclosingClass(annotatedBy('javax.application.threading.ThreadingAware'))) {
     provider = "Griffon DSL"
     delegatesTo "griffon.core.threading.ThreadingHandler"
 }

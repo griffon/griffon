@@ -18,7 +18,7 @@ package org.example;
 import griffon.core.artifact.GriffonController;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
-import griffon.transform.Threading;
+import javax.application.threading.Threading;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
