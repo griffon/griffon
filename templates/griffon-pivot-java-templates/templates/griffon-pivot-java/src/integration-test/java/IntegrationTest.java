@@ -1,6 +1,6 @@
 package ${project_package};
 
-import griffon.pivot.test.GriffonPivotFuncRule;
+import griffon.test.pivot.GriffonPivotFuncRule;
 import org.junit.Rule;
 import org.junit.Test;
 

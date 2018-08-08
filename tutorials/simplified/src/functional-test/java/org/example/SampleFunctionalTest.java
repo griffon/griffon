@@ -15,7 +15,7 @@
  */
 package org.example;
 
-import griffon.javafx.test.GriffonTestFXClassRule;
+import griffon.test.javafx.GriffonTestFXClassRule;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.ClassRule;

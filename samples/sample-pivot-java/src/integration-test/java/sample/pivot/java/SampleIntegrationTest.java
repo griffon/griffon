@@ -19,7 +19,7 @@ package sample.pivot.java;
 
 import com.google.inject.Inject;
 import griffon.core.mvc.MVCGroupManager;
-import griffon.pivot.test.GriffonPivotFuncRule;
+import griffon.test.pivot.GriffonPivotFuncRule;
 import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.TextInput;
 import org.junit.Rule;

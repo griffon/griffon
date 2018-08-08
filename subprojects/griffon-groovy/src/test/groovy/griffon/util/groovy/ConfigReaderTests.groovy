@@ -457,7 +457,7 @@ log4j {
 
     void testNotProperlyNestedPropertiesArePreserved() throws IOException {
         Properties props = new Properties()
-        props.load(ConfigReaderTests.class.getResourceAsStream("/griffon/util/system.properties"))
+        props.load(ConfigReaderTests.class.getResourceAsStream("/griffon/util/groovy/system.properties"))
         assertEquals("false", props.get("catalog.prov"))
         assertEquals("sa", props.get("catalog.prov.db.user"))
 

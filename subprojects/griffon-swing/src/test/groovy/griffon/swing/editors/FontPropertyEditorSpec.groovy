@@ -17,7 +17,7 @@
  */
 package griffon.swing.editors
 
-import griffon.util.TestUtils
+import griffon.swing.TestUtils
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 import spock.lang.Unroll

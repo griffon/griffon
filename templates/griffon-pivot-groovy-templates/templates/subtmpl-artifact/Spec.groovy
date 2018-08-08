@@ -1,6 +1,6 @@
 package ${project_package}
 
-import griffon.pivot.test.GriffonPivotRule
+import griffon.test.pivot.GriffonPivotRule
 import griffon.test.core.TestFor
 import org.junit.Rule
 import spock.lang.Specification

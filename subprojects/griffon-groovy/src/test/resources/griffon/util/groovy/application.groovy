@@ -1,5 +1,3 @@
-package griffon.util.groovy
-
 application(title: app.config.application.title, pack: true) {
     actions {
         action(id: 'clickAction', name: 'Click', closure: { controller.click(it) })

@@ -1,7 +1,7 @@
 package ${project_package};
 
 import griffon.core.artifact.ArtifactManager;
-import griffon.pivot.test.GriffonPivotRule;
+import griffon.test.pivot.GriffonPivotRule;
 import griffon.test.core.TestFor;
 import org.junit.Rule;
 import org.junit.Test;

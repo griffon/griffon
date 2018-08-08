@@ -61,9 +61,9 @@ class GroovyScriptResourceBundleLoaderSpec extends Specification {
         bundles[0].getObject(key) == value
 
         where:
-        name << (['org/codehaus/griffon/runtime/util/groovy/GroovyClassBundle'] * 4) +
-            (['org/codehaus/griffon/runtime/util/groovy/JavaClassBundle'] * 4) +
-            (['org/codehaus/griffon/runtime/util/groovy/GroovyScriptBundle'] * 4)
+        name << (['org/codehaus/griffon/runtime/groovy/util/GroovyClassBundle'] * 4) +
+            (['org/codehaus/griffon/runtime/groovy/util/JavaClassBundle'] * 4) +
+            (['org/codehaus/griffon/runtime/groovy/util/GroovyScriptBundle'] * 4)
         key << (['string', 'integer', 'keys.bar', 'foo'] * 3)
         value << (['string', 42, 'bar', 'dev'] * 3)
     }

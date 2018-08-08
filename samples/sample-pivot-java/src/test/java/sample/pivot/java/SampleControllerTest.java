@@ -19,7 +19,7 @@ package sample.pivot.java;
 
 import griffon.core.artifact.ArtifactManager;
 import griffon.test.core.TestFor;
-import griffon.pivot.test.GriffonPivotRule;
+import griffon.test.pivot.GriffonPivotRule;
 import org.junit.Rule;
 import org.junit.Test;
 

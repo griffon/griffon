@@ -17,8 +17,8 @@
  */
 package sample.javafx.groovy
 
-import griffon.javafx.test.FunctionalJavaFXRunner
-import griffon.javafx.test.GriffonTestFXClassRule
+import griffon.test.javafx.FunctionalJavaFXRunner
+import griffon.test.javafx.GriffonTestFXClassRule
 import org.junit.ClassRule
 import org.junit.Test
 import org.junit.runner.RunWith

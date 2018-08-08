@@ -1,6 +1,6 @@
 package ${project_package}
 
-import griffon.javafx.test.GriffonTestFXRule
+import griffon.test.javafx.GriffonTestFXRule
 import org.junit.Rule
 import spock.lang.Specification
 

@@ -17,7 +17,7 @@
  */
 package sample.javafx.java
 
-import griffon.javafx.test.GriffonTestFXClassRule
+import griffon.test.javafx.GriffonTestFXClassRule
 import spock.lang.Specification
 import spock.lang.Stepwise
 

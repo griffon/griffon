@@ -23,7 +23,7 @@ import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.test.core.TestModuleOverrides;
 import griffon.inject.BindTo;
-import griffon.javafx.test.GriffonTestFXRule;
+import griffon.test.javafx.GriffonTestFXRule;
 import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;
 import org.junit.Rule;
 import org.junit.Test;

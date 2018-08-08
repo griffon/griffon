@@ -1,6 +1,6 @@
 package ${project_package}
 
-import griffon.test.core.GriffonFestRule
+import griffon.test.swing.GriffonFestRule
 import org.fest.swing.fixture.FrameFixture
 import org.junit.Rule
 import org.junit.Test
