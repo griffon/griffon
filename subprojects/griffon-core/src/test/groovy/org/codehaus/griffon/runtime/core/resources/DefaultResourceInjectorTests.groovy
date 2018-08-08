@@ -40,7 +40,7 @@ import org.kordamp.jsr377.converter.IntegerConverter
 import org.kordamp.jsr377.converter.StringConverter
 
 import javax.application.converter.ConverterRegistry
-import javax.application.resources.ResourceInjectorTest
+import javax.application.resources.tck.ResourceInjectorTest
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider

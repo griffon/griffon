@@ -19,10 +19,10 @@ package console
 
 import griffon.core.artifact.ArtifactManager
 import griffon.core.injection.Module
-import griffon.core.test.GriffonUnitRule
-import griffon.core.test.TestFor
+import griffon.test.core.GriffonUnitRule
+import griffon.test.core.TestFor
 import griffon.inject.DependsOn
-import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule
+import org.codehaus.griffon.test.core.injection.AbstractTestingModule
 import org.junit.Rule
 import org.junit.Test
 

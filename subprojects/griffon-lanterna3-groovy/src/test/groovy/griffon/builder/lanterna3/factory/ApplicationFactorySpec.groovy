@@ -20,8 +20,8 @@ package griffon.builder.lanterna3.factory
 import com.googlecode.lanterna.gui2.BasicWindow
 import com.googlecode.lanterna.gui2.Window
 import griffon.builder.lanterna3.LanternaBuilderCustomizer
-import griffon.util.BuilderCustomizer
-import griffon.util.CompositeBuilder
+import griffon.util.groovy.BuilderCustomizer
+import griffon.util.groovy.CompositeBuilder
 import spock.lang.Specification
 import spock.lang.Unroll
 

@@ -17,8 +17,8 @@ package org.example;
 
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.injection.Module;
-import griffon.core.test.GriffonUnitRule;
-import griffon.core.test.TestFor;
+import griffon.test.core.GriffonUnitRule;
+import griffon.test.core.TestFor;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;

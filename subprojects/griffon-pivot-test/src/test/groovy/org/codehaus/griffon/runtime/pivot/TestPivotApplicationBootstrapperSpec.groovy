@@ -20,8 +20,8 @@ package org.codehaus.griffon.runtime.pivot
 import griffon.core.GriffonApplication
 import org.apache.pivot.wtk.ApplicationContext
 import org.apache.pivot.wtk.Display
-import org.codehaus.griffon.runtime.core.DefaultGriffonApplication
-import org.codehaus.griffon.runtime.core.TestApplicationBootstrapper
+import org.codehaus.griffon.test.core.DefaultGriffonApplication
+import org.codehaus.griffon.test.core.TestApplicationBootstrapper
 import spock.lang.Specification
 
 import javax.swing.SwingUtilities

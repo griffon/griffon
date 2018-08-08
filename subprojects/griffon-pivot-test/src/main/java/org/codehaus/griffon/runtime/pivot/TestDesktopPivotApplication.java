@@ -19,7 +19,7 @@ package org.codehaus.griffon.runtime.pivot;
 
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
-import griffon.core.test.TestCaseAware;
+import griffon.test.core.TestCaseAware;
 import griffon.pivot.DesktopPivotGriffonApplication;
 import org.apache.pivot.wtk.Display;
 

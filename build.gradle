@@ -43,6 +43,7 @@ buildscript {
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
         classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3'
+        classpath 'gradle.plugin.gradle-java9-collision:plugin:0.2.3'
     }
 }
 apply plugin: 'com.gradle.build-scan'
@@ -222,7 +223,13 @@ subprojects { subproj ->
         }
 
         if (subproj.publishJars.toBoolean()) {
+            subproj.apply plugin: 'org.jonnyzzz.java9c'
             subproj.apply from: rootProject.file('gradle/publish.gradle')
+
+            java9c {
+                failOnCollision = false
+            }
+
             if (subproj.name.startsWith('griffon-')) {
                 subproj.apply plugin: 'org.kordamp.gradle.clirr'
                 subproj.apply plugin: 'org.kordamp.jdeps'

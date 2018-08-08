@@ -1,7 +1,7 @@
 package ${project_package}
 
-import griffon.core.test.GriffonUnitRule
-import griffon.core.test.TestFor
+import griffon.test.core.GriffonUnitRule
+import griffon.test.core.TestFor
 import javafx.embed.swing.JFXPanel
 import org.junit.Assert
 import org.junit.Rule

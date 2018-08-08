@@ -17,8 +17,8 @@
  */
 package griffon.builder.core
 
-import griffon.util.BuilderCustomizer
-import griffon.util.CompositeBuilder
+import griffon.util.groovy.BuilderCustomizer
+import griffon.util.groovy.CompositeBuilder
 import groovy.swing.factory.CollectionFactory
 import groovy.swing.factory.MapFactory
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager

@@ -17,7 +17,7 @@
  */
 package sample.swing.java
 
-import griffon.core.test.GriffonFestRule
+import griffon.test.core.GriffonFestRule
 import org.fest.swing.fixture.FrameFixture
 import org.junit.Rule
 import spock.lang.Specification

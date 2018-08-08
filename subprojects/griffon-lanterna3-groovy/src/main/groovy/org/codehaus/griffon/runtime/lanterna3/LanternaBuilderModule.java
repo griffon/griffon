@@ -21,7 +21,7 @@ import griffon.builder.lanterna3.LanternaBuilderCustomizer;
 import griffon.core.injection.Module;
 import griffon.inject.DependsOn;
 import griffon.lanterna3.LanternaWindowDisplayHandler;
-import griffon.util.BuilderCustomizer;
+import griffon.util.groovy.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 

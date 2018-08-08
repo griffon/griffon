@@ -19,8 +19,8 @@ package griffon.builder.lanterna.factory
 
 import griffon.builder.lanterna.LanternaBuilderCustomizer
 import griffon.lanterna.support.LanternaAction
-import griffon.util.BuilderCustomizer
-import griffon.util.CompositeBuilder
+import griffon.util.groovy.BuilderCustomizer
+import griffon.util.groovy.CompositeBuilder
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll

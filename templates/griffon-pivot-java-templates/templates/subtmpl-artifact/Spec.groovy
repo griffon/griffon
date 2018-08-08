@@ -1,7 +1,7 @@
 package ${project_package}
 
 import griffon.pivot.test.GriffonPivotRule
-import griffon.core.test.TestFor
+import griffon.test.core.TestFor
 import org.junit.Rule
 import spock.lang.Specification
 

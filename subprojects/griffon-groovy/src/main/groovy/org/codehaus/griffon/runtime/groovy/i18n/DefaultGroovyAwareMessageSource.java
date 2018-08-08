@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.groovy.i18n;
 
-import griffon.core.i18n.GroovyAwareMessageSource;
+import griffon.core.i18n.groovy.GroovyAwareMessageSource;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecorator;

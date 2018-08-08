@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.swing
 
-import griffon.core.test.GriffonUnitRule
+import griffon.test.core.GriffonUnitRule
 import griffon.core.view.WindowManager
 import org.junit.Rule
 import spock.lang.Specification

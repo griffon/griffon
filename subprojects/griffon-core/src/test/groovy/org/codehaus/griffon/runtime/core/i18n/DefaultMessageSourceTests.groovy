@@ -37,11 +37,10 @@ import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
 import org.junit.Before
 import org.junit.Rule
-import org.junit.Test
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
-import javax.application.i18n.MessageSourceTest
+import javax.application.i18n.tck.MessageSourceTest
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider

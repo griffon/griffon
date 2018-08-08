@@ -19,9 +19,9 @@ package org.codehaus.griffon.runtime.groovy.util;
 
 import griffon.core.resources.ResourceHandler;
 import griffon.inject.Evicts;
-import griffon.util.ConfigReader;
 import griffon.util.Instantiator;
 import griffon.util.ResourceBundleReader;
+import griffon.util.groovy.ConfigReader;
 import groovy.lang.Script;
 import org.codehaus.griffon.runtime.util.ClassResourceBundleLoader;
 

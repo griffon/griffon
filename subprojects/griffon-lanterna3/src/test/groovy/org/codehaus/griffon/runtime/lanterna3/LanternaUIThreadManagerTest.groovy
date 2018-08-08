@@ -34,7 +34,7 @@ import org.junit.Ignore
 import org.junit.runner.RunWith
 
 import javax.application.threading.ThreadingHandler
-import javax.application.threading.ThreadingHandlerTest
+import javax.application.threading.tck.ThreadingHandlerTest
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.util.concurrent.ExecutorService

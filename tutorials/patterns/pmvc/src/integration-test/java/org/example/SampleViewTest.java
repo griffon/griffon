@@ -21,7 +21,7 @@ import griffon.core.injection.Module;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
-import griffon.core.test.TestModuleOverrides;
+import griffon.test.core.TestModuleOverrides;
 import griffon.inject.BindTo;
 import griffon.javafx.test.GriffonTestFXRule;
 import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;

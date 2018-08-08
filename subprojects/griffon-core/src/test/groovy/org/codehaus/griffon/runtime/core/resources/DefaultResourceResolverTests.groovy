@@ -43,7 +43,7 @@ import org.kordamp.jsr377.converter.IntegerConverter
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
 import javax.application.converter.ConverterRegistry
-import javax.application.resources.ResourceResolverTest
+import javax.application.resources.tck.ResourceResolverTest
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider

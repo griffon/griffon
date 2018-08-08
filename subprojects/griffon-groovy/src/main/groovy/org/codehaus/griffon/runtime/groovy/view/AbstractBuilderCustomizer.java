@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.groovy.view;
 
-import griffon.util.BuilderCustomizer;
+import griffon.util.groovy.BuilderCustomizer;
 import groovy.lang.Closure;
 import groovy.util.Factory;
 

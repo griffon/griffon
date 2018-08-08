@@ -19,7 +19,7 @@ package griffon.builder.javafx.action
 
 import griffon.core.GriffonApplication
 import griffon.core.mvc.MVCGroupManager
-import griffon.core.test.GriffonUnitRule
+import griffon.test.core.GriffonUnitRule
 import javafx.embed.swing.JFXPanel
 import org.junit.Rule
 import spock.lang.Specification

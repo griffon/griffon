@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.test;
+package griffon.test.core;
 
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
-import org.codehaus.griffon.runtime.core.TestApplicationBootstrapper;
 import org.codehaus.griffon.runtime.swing.FestAwareSwingGriffonApplication;
+import org.codehaus.griffon.test.core.TestApplicationBootstrapper;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 

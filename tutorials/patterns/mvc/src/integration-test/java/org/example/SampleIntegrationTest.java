@@ -18,7 +18,7 @@ package org.example;
 import griffon.core.injection.Module;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupManager;
-import griffon.core.test.GriffonUnitRule;
+import griffon.test.core.GriffonUnitRule;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import junitparams.JUnitParamsRunner;

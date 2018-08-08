@@ -18,7 +18,7 @@
 package org.codehaus.griffon.runtime.javafx;
 
 import griffon.core.ApplicationBootstrapper;
-import griffon.core.test.TestCaseAware;
+import griffon.test.core.TestCaseAware;
 import griffon.javafx.JavaFXGriffonApplication;
 
 import javax.annotation.Nonnull;

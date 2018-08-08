@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.groovy.util;
 
-import griffon.util.ConfigReader;
+import griffon.util.groovy.ConfigReader;
 import groovy.lang.Script;
 import groovy.util.ConfigObject;
 
@@ -83,7 +83,7 @@ public class GroovyScriptResourceBundle extends ResourceBundle {
     @SuppressWarnings("unchecked")
     protected Object handleGetObject(@Nonnull String key) {
         Object value = getConfigValue(config, requireNonBlank(key, "Argument 'key' must not be blank"), null);
-        if (null == value) return null;
+        if (null == value) { return null; }
         if (value instanceof ConfigObject) {
             return ((ConfigObject) value).isEmpty() ? null : value;
         }
