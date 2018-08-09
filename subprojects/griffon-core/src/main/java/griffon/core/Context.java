@@ -335,7 +335,7 @@ public interface Context {
     <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
 
     /**
-     * Inject properties and members annotated with {@code griffon.inject.Contextual}.
+     * Inject properties and members annotated with {@code griffon.annotations.inject.Contextual}.
      *
      * @param instance the instance on which contextual members will be injected.
      * @param <T>      the type of the instance

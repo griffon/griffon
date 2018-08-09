@@ -17,7 +17,7 @@
  */
 package integration;
 
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 public class SimpleView extends AbstractGriffonView implements Invokable {

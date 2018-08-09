@@ -17,8 +17,8 @@
  */
 package griffon.builder.swing;
 
+import griffon.annotations.inject.DependsOn;
 import griffon.builder.swing.factory.ApplicationFactory;
-import griffon.inject.DependsOn;
 import groovy.swing.SwingBuilder;
 import groovy.util.Factory;
 import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;

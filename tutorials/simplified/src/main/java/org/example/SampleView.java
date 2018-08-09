@@ -15,7 +15,7 @@
  */
 package org.example;
 
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;

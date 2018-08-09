@@ -17,10 +17,10 @@
  */
 package sample.swing.groovy
 
+import griffon.annotations.inject.DependsOn
 import griffon.core.LifecycleHandler
 import griffon.core.env.Lifecycle
 import griffon.core.injection.Module
-import griffon.inject.DependsOn
 import griffon.swing.SwingWindowDisplayHandler
 import org.codehaus.griffon.runtime.core.LifecycleHandlerProvider
 import org.codehaus.griffon.runtime.core.injection.AbstractModule

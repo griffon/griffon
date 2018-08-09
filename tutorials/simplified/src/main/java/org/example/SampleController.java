@@ -15,7 +15,7 @@
  */
 package org.example;
 
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import javax.application.threading.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 

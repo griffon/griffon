@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.swing.groovy;
 
+import griffon.annotations.inject.DependsOn;
 import griffon.builder.swing.SwingBuilderCustomizer;
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
 import griffon.swing.SwingWindowDisplayHandler;
 import griffon.util.groovy.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;

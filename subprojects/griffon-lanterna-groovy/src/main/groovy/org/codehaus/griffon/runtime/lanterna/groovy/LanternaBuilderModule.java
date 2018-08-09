@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.lanterna.groovy;
 
+import griffon.annotations.inject.DependsOn;
 import griffon.builder.lanterna.LanternaBuilderCustomizer;
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import griffon.util.groovy.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;

@@ -17,7 +17,7 @@ package org.example.calculator;
 
 import griffon.core.addon.GriffonAddon;
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
+import griffon.annotations.inject.DependsOn;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 

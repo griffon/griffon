@@ -17,6 +17,7 @@
  */
 package griffon.builder.pivot;
 
+import griffon.annotations.inject.DependsOn;
 import griffon.builder.pivot.factory.AccordionFactory;
 import griffon.builder.pivot.factory.AdapterFactory;
 import griffon.builder.pivot.factory.ApplicationFactory;
@@ -61,7 +62,6 @@ import griffon.builder.pivot.factory.TextComponentFactory;
 import griffon.builder.pivot.factory.ViewportFactory;
 import griffon.builder.pivot.factory.WidgetFactory;
 import griffon.exceptions.PropertyException;
-import griffon.inject.DependsOn;
 import griffon.pivot.support.PivotAction;
 import griffon.pivot.support.adapters.*;
 import groovy.lang.Closure;

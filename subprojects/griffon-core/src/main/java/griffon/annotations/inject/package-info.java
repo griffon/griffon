@@ -15,22 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.inject;
-
-import javax.inject.Qualifier;
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 /**
- * @author Andres Almiray
- * @since 2.2.0
+ * Annotations used with injection.
+ *
+ * @since 3.0.0
  */
-@Qualifier
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
-public @interface Contextual {
-}
+
+package griffon.annotations.inject;

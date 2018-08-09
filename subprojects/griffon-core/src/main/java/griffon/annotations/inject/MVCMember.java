@@ -15,8 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.inject;
+package griffon.annotations.inject;
 
+import javax.application.converter.Converter;
+import javax.application.converter.NoopConverter;
+import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,11 +28,14 @@ import java.lang.annotation.Target;
 
 /**
  * @author Andres Almiray
- * @since 2.10.0
+ * @since 2.8.0
  */
+@Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface Evicts {
-    String value();
+@Target({ElementType.METHOD, ElementType.FIELD})
+public @interface MVCMember {
+    String format() default "";
+
+    Class<? extends Converter> converter() default NoopConverter.class;
 }

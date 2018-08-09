@@ -17,7 +17,7 @@ package org.example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import griffon.inject.BindTo;
+import griffon.annotations.inject.BindTo;
 import griffon.test.javafx.GriffonTestFXRule;
 import griffon.test.javafx.WindowMatchers;
 import javafx.scene.control.Button;

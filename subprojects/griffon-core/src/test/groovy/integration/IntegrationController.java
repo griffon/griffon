@@ -18,8 +18,8 @@
 package integration;
 
 import griffon.annotations.core.Nonnull;
-import griffon.inject.Contextual;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.Contextual;
+import griffon.annotations.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.inject.Inject;

@@ -17,10 +17,10 @@
  */
 package griffon.util
 
-import griffon.inject.BindTo
-import griffon.inject.DependsOn
-import griffon.inject.Evicts
-import griffon.inject.Typed
+import griffon.annotations.inject.BindTo
+import griffon.annotations.inject.DependsOn
+import griffon.annotations.inject.Evicts
+import griffon.annotations.inject.Typed
 import spock.lang.Specification
 import spock.lang.Unroll
 

@@ -19,9 +19,9 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.inject.Contextual;
 import griffon.core.Context;
 import griffon.exceptions.FieldException;
-import griffon.inject.Contextual;
 
 import javax.application.converter.Converter;
 import javax.application.converter.ConverterRegistry;

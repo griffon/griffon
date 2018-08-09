@@ -18,8 +18,8 @@
 package browser
 
 import griffon.annotations.core.Nonnull
+import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
-import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import javafx.beans.value.ChangeListener
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView

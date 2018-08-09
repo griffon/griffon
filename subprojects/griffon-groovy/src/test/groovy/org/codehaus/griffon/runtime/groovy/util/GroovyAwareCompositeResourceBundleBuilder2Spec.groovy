@@ -36,7 +36,6 @@ import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.env.EnvironmentProvider
 import org.codehaus.griffon.runtime.core.env.MetadataProvider
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
-import org.codehaus.griffon.runtime.groovy.util.GroovyScriptResourceBundleLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
 import org.junit.Rule

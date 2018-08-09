@@ -27,6 +27,7 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.Contextual;
 import griffon.core.ApplicationEvent;
 import griffon.core.Context;
 import griffon.core.GriffonApplication;
@@ -37,7 +38,6 @@ import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
 import griffon.exceptions.FieldException;
 import griffon.exceptions.NewInstanceException;
-import griffon.inject.Contextual;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 
 import javax.annotation.PostConstruct;

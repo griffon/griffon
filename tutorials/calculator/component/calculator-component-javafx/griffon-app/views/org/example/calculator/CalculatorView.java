@@ -16,7 +16,7 @@
 package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.util.CollectionUtils;
 import javafx.fxml.FXML;

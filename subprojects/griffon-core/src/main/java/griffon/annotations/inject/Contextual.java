@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.inject;
+package griffon.annotations.inject;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
@@ -26,12 +26,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 2.2.0
  */
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD})
-public @interface BindTo {
-    Class<?> value();
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+public @interface Contextual {
 }

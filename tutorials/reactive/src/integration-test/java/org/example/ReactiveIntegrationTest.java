@@ -20,7 +20,7 @@ import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.test.core.GriffonUnitRule;
 import griffon.test.core.TestModuleOverrides;
-import griffon.inject.BindTo;
+import griffon.annotations.inject.BindTo;
 import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;
 import org.example.api.Github;
 import org.example.api.Repository;

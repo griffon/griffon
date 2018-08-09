@@ -3,7 +3,7 @@ package ${project_package};
 import griffon.test.core.GriffonUnitRule;
 import griffon.test.core.TestFor;
 import griffon.core.threading.UIThreadManager;
-import griffon.inject.BindTo;
+import griffon.annotations.inject.BindTo;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.junit.Rule;
 import org.junit.Test;

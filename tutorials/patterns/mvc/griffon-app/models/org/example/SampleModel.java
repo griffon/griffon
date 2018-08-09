@@ -16,7 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

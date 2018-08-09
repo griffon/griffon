@@ -18,9 +18,9 @@
 package console
 
 import griffon.annotations.core.Nonnull
+import griffon.annotations.inject.DependsOn
 import griffon.core.artifact.ArtifactManager
 import griffon.core.injection.Module
-import griffon.inject.DependsOn
 import griffon.test.core.GriffonUnitRule
 import griffon.test.core.TestFor
 import org.codehaus.griffon.test.core.injection.AbstractTestingModule

@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.test.core;
 
-import griffon.inject.BindTo;
+import griffon.annotations.inject.BindTo;
 
 import javax.inject.Named;
 import javax.inject.Provider;

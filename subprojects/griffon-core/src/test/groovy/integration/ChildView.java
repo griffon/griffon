@@ -17,8 +17,8 @@
  */
 package integration;
 
+import griffon.annotations.inject.MVCMember;
 import griffon.core.mvc.MVCGroup;
-import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
 public class ChildView extends AbstractGriffonView implements Invokable {

@@ -17,6 +17,7 @@
  */
 package griffon.builder.javafx;
 
+import griffon.annotations.inject.DependsOn;
 import griffon.builder.core.factory.CollectionFactory;
 import griffon.builder.javafx.factory.ActionFactory;
 import griffon.builder.javafx.factory.ApplicationFactory;
@@ -26,7 +27,6 @@ import griffon.builder.javafx.factory.FXMetaComponentFactory;
 import griffon.builder.javafx.factory.LabeledFactory;
 import griffon.builder.javafx.factory.MenuFactory;
 import griffon.builder.javafx.factory.MenuItemFactory;
-import griffon.inject.DependsOn;
 import griffon.javafx.scene.layout.IndexedCardPane;
 import griffon.javafx.scene.layout.NamedCardPane;
 import groovy.util.Factory;

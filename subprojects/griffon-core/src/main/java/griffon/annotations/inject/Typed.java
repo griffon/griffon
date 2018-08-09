@@ -15,32 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package integration;
+package griffon.annotations.inject;
 
-import griffon.annotations.inject.MVCMember;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import javax.inject.Qualifier;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class RootView extends AbstractGriffonView implements Invokable {
-    private RootController controller;
-    private RootModel model;
-    private boolean invoked;
-
-    @MVCMember
-    public void setController(RootController controller) {
-        this.controller = controller;
-    }
-
-    @MVCMember
-    public void setModel(RootModel model) {
-        this.model = model;
-    }
-
-    @Override
-    public void initUI() {
-        invoked = true;
-    }
-
-    public boolean isInvoked() {
-        return invoked;
-    }
+/**
+ * @author Andres Almiray
+ * @since 2.0.0
+ */
+@Qualifier
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Typed {
+    Class<?> value();
 }

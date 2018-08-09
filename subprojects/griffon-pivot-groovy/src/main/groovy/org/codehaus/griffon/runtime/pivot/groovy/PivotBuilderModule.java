@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.pivot.groovy;
 
+import griffon.annotations.inject.DependsOn;
 import griffon.builder.pivot.PivotBuilderCustomizer;
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
 import griffon.pivot.PivotWindowDisplayHandler;
 import griffon.util.groovy.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;

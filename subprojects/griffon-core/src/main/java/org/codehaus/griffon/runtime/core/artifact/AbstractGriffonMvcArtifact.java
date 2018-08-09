@@ -18,6 +18,7 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonMvcArtifact;
@@ -27,7 +28,6 @@ import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConsumer;
 import griffon.core.mvc.TypedMVCGroup;
 import griffon.core.mvc.TypedMVCGroupConsumer;
-import griffon.inject.MVCMember;
 
 import java.util.List;
 import java.util.Map;

@@ -18,7 +18,7 @@
 package integration
 
 import griffon.annotations.core.Nonnull
-import griffon.inject.Contextual
+import griffon.annotations.inject.Contextual
 import groovy.transform.Canonical
 
 @Canonical

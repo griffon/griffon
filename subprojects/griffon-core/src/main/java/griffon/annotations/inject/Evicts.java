@@ -15,10 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Annotations used with injection.
- *
- * @since 2.0.0
- */
+package griffon.annotations.inject;
 
-package griffon.inject;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * @author Andres Almiray
+ * @since 2.10.0
+ */
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Evicts {
+    String value();
+}

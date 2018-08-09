@@ -17,7 +17,7 @@
  */
 package griffon.core
 
-import griffon.inject.Contextual
+import griffon.annotations.inject.Contextual
 import org.codehaus.griffon.runtime.core.DefaultContext
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import org.kordamp.jsr377.converter.IntegerConverter

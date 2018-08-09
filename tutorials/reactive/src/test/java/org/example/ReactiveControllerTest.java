@@ -19,7 +19,7 @@ import griffon.core.artifact.ArtifactManager;
 import griffon.core.event.EventHandler;
 import griffon.test.core.GriffonUnitRule;
 import griffon.test.core.TestFor;
-import griffon.inject.BindTo;
+import griffon.annotations.inject.BindTo;
 import javafx.embed.swing.JFXPanel;
 import lombok.Getter;
 import org.example.api.Github;

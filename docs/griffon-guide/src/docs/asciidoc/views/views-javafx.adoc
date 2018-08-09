@@ -101,7 +101,7 @@ import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 import griffon.javafx.support.ActionMatcher;
-import griffon.inject.DependsOn;
+import griffon.annotations.inject.DependsOn;
 
 @DependsOn("javafx")
 @ServiceProviderFor(Module.class)
@@ -186,7 +186,7 @@ public class SampleController extends AbstractGriffonController {
 package com.acme;
 
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -334,7 +334,7 @@ the root node that can be added to its parent view; the convention is to use the
 package org.example;
 
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

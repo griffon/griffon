@@ -18,10 +18,10 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.Typed;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.GriffonArtifact;
-import griffon.inject.Typed;
 import griffon.util.ServiceLoaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

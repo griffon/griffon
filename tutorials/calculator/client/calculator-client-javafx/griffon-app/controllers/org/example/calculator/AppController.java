@@ -17,7 +17,7 @@ package org.example.calculator;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.mvc.MVCGroup;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 

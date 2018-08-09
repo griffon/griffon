@@ -4,7 +4,7 @@ import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.component.Label;
 import com.googlecode.lanterna.gui.component.Panel;
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;

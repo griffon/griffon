@@ -1,7 +1,7 @@
 package ${project_package}
 
 import griffon.core.artifact.GriffonView
-import griffon.inject.MVCMember
+import griffon.annotations.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import java.beans.PropertyChangeListener
 import griffon.annotations.core.Nonnull

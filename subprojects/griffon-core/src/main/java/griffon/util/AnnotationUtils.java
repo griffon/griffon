@@ -19,10 +19,10 @@ package griffon.util;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.inject.BindTo;
-import griffon.inject.DependsOn;
-import griffon.inject.Evicts;
-import griffon.inject.Typed;
+import griffon.annotations.inject.BindTo;
+import griffon.annotations.inject.DependsOn;
+import griffon.annotations.inject.Evicts;
+import griffon.annotations.inject.Typed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

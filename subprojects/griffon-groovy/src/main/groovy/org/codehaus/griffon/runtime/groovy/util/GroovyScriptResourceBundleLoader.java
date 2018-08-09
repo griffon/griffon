@@ -18,8 +18,8 @@
 package org.codehaus.griffon.runtime.groovy.util;
 
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.Evicts;
 import griffon.core.resources.ResourceHandler;
-import griffon.inject.Evicts;
 import griffon.util.Instantiator;
 import griffon.util.ResourceBundleReader;
 import griffon.util.groovy.ConfigReader;

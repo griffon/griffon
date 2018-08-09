@@ -15,9 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.inject;
+package griffon.annotations.inject;
 
-import javax.inject.Scope;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,9 +27,9 @@ import java.lang.annotation.Target;
  * @author Andres Almiray
  * @since 2.0.0
  */
-@Scope
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface Prototype {
+public @interface DependsOn {
+    String[] value();
 }

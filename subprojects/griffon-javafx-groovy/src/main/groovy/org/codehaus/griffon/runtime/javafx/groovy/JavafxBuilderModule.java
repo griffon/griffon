@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.javafx.groovy;
 
+import griffon.annotations.inject.DependsOn;
 import griffon.builder.javafx.JavafxBuilderCustomizer;
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import griffon.util.groovy.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;

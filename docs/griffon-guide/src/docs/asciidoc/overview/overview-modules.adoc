@@ -70,7 +70,7 @@ are specified using the `{link_depends_on}` annotation, like so:
 [source,java,linenums,options="nowrap"]
 ----
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
+import griffon.annotations.inject.DependsOn;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -319,7 +319,7 @@ as follows
 [source, java]
 ----
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
+import griffon.annotations.inject.DependsOn;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 
@@ -340,8 +340,8 @@ You may evict this module by defining another module annotated with `{link_evict
 [source, java]
 ----
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
-import griffon.inject.Evicts;
+import griffon.annotations.inject.DependsOn;
+import griffon.annotations.inject.Evicts;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
 

@@ -48,7 +48,7 @@ customization:
 ----
 package griffon.builder.swing;
 
-import griffon.inject.DependsOn;
+import griffon.annotations.inject.DependsOn;
 import groovy.swing.factory.LayoutFactory;
 import net.miginfocom.swing.MigLayout;
 import groovy.util.Factory;
@@ -76,7 +76,7 @@ package org.codehaus.griffon.runtime.miglayout;
 
 import griffon.builder.swing.MiglayoutSwingBuilderCustomizer;
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
+import griffon.annotations.inject.DependsOn;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.ServiceProviderFor;
@@ -182,7 +182,7 @@ package sample
 
 import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
-import griffon.inject.MVCMember
+import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 
 @ArtifactProviderFor(GriffonView)

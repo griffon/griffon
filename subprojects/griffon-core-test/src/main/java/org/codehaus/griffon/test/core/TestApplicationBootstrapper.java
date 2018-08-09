@@ -20,7 +20,7 @@ package org.codehaus.griffon.test.core;
 import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.injection.Module;
-import griffon.inject.BindTo;
+import griffon.annotations.inject.BindTo;
 import griffon.test.core.TestCaseAware;
 import griffon.test.core.TestModuleAware;
 import griffon.test.core.TestModuleOverrides;

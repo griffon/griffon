@@ -17,8 +17,8 @@
  */
 package console
 
+import griffon.annotations.inject.DependsOn
 import griffon.core.injection.Module
-import griffon.inject.DependsOn
 import griffon.swing.SwingWindowDisplayHandler
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
 import org.kordamp.jipsy.ServiceProviderFor

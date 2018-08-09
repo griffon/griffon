@@ -19,6 +19,8 @@ package org.codehaus.griffon.runtime.core.mvc;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.inject.Contextual;
+import griffon.annotations.inject.MVCMember;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
@@ -35,8 +37,6 @@ import griffon.exceptions.GriffonException;
 import griffon.exceptions.GriffonViewInitializationException;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.exceptions.NewInstanceException;
-import griffon.inject.Contextual;
-import griffon.inject.MVCMember;
 import griffon.util.CollectionUtils;
 import griffon.util.Instantiator;
 import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;

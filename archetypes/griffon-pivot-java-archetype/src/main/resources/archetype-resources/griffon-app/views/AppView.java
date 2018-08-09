@@ -1,7 +1,7 @@
 package ${groupId};
 
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
 import org.apache.pivot.serialization.SerializationException;

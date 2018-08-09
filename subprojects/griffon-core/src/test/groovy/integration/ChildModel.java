@@ -17,8 +17,8 @@
  */
 package integration;
 
+import griffon.annotations.inject.MVCMember;
 import griffon.core.mvc.MVCGroup;
-import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
 public class ChildModel extends AbstractGriffonModel {
