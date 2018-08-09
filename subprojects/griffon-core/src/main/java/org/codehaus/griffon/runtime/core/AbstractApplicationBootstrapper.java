@@ -111,26 +111,24 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
     }
 
     protected void createArtifactsModule(@Nonnull List<Module> modules) {
-        final List<Class<?>> classes = new ArrayList<>();
-        load(getClass().getClassLoader(), GRIFFON_PATH, path -> !path.endsWith(PROPERTIES), (classLoader, line) -> {
-            line = line.trim();
-            try {
-                classes.add(classLoader.loadClass(line));
-            } catch (ClassNotFoundException e) {
-                LOG.warn("'" + line + "' could not be resolved as a Class");
-            }
-        });
 
         modules.add(new AbstractModule() {
             @Override
             protected void doConfigure() {
-                for (Class<?> clazz : classes) {
-                    if (GriffonService.class.isAssignableFrom(clazz)) {
-                        bind(clazz).asSingleton();
-                    } else {
-                        bind(clazz);
+                load(getClass().getClassLoader(), GRIFFON_PATH, path -> !path.endsWith(PROPERTIES), (classLoader, line) -> {
+                    line = line.trim();
+                    try {
+                        Class<?> clazz = classLoader.loadClass(line);
+                        if (GriffonService.class.isAssignableFrom(clazz)) {
+                            bind(clazz).asSingleton();
+                        } else {
+                            bind(clazz);
+                        }
+                    } catch (ClassNotFoundException e) {
+                        LOG.error("'" + line + "' could not be resolved as a Class");
+                        throw new IllegalStateException(e);
                     }
-                }
+                });
             }
         });
     }
