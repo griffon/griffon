@@ -104,10 +104,6 @@ public class Metadata {
         return get(Environment.KEY);
     }
 
-    public String getRunMode() {
-        return get(RunMode.KEY);
-    }
-
     /**
      * @return The application name
      */

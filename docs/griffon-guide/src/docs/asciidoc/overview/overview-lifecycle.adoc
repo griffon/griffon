@@ -3,9 +3,8 @@
 = Lifecycle
 
 Every Griffon application goes through the same lifecycle phases no matter in which
-mode it is running, with the exception of applet mode where there is an additional
-phase due to the intrinsic nature of applets. The application's lifecycle was
-inspired by JSR-296, the Swing Application Framework.
+mode it is running. The application's lifecycle was inspired by JSR-296, the Swing
+Application Framework.
 
 Every phase has an associated lifecycle class that will be invoked at the appropriate
 time. Class names match each phase name; you'll find them inside `griffon-app/lifecycle`.
@@ -51,9 +50,4 @@ sequence by calling `shutdown()` on the `{link_griffon_application}` instance.
 NOTE: The `Shutdown` lifecycle handler will be called after all ``{link_shutdown_handler}``s and
 event handlers interested in the `<<_events_lifecycle_events,ShutdownStart>>` event.
 
-[[_overview_lifecycle_stop]]
-== Stop
-
-This phase is only available when running in applet mode. It will be called when the
-applet container invokes `destroy()` on the applet instance.
 
