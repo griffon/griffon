@@ -20,10 +20,10 @@ package sample.javafx.groovy
 import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
-import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
+import org.kordamp.jipsy.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class SampleView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder                                                              //<1>

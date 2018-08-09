@@ -22,18 +22,21 @@ import griffon.core.addon.GriffonAddon;
 import griffon.core.controller.ActionHandler;
 import griffon.core.env.Lifecycle;
 import griffon.core.i18n.MessageSource;
+import griffon.core.injection.Module;
 import griffon.core.resources.ResourceResolver;
 import org.codehaus.griffon.runtime.core.LifecycleHandlerProvider;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
 import java.util.ResourceBundle;
 
 import static griffon.util.AnnotationUtils.named;
 
+@ServiceProviderFor(Module.class)
 @Named("integration")
 public class IntegrationModule extends AbstractModule {
     @Override

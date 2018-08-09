@@ -17,7 +17,7 @@ package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import griffon.util.CollectionUtils;
 import net.miginfocom.swing.MigLayout;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
@@ -47,7 +47,7 @@ import static org.example.calculator.CalculatorPM.ATTR_RESULT;
 import static org.example.calculator.CalculatorPM.PM_CALCULATION;
 import static org.opendolphin.binding.Binder.bind;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class CalculatorView extends AbstractSwingGriffonView {
     private static final String TEXT = "text";
 

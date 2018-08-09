@@ -18,7 +18,7 @@ package org.example;
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
 import griffon.javafx.support.JavaFXAction;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
@@ -46,7 +46,7 @@ import static griffon.util.GriffonNameUtils.isBlank;
 import static org.example.State.DISABLED;
 import static org.example.State.READY;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class ReactiveView extends AbstractJavaFXGriffonView {
     private ReactiveController controller;
     private ReactiveModel model;

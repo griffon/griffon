@@ -18,7 +18,7 @@ package org.example;
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
 import griffon.javafx.beans.binding.UIThreadAwareBindings;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -31,7 +31,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 
 import griffon.annotations.core.Nonnull;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class Tab2View extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private SampleController controller;
     @MVCMember @Nonnull private SampleModel model;

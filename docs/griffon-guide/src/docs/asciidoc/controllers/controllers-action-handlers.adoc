@@ -12,10 +12,10 @@ annotations that are handled by an `ActionHandler`, like this:
 ----
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.plugins.shiro.annotation.*
 
-@ArtifactProviderFor(GriffonController)
+@ServiceProviderFor(GriffonController)
 @RequiresAuthentication
 class PrinterController {
     @RequiresPermission('printer:print')
@@ -35,7 +35,7 @@ Take the following snippet for example
 ----
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.plugins.shiro.annotation.*
 import org.apache.shiro.authc.UsernamePasswordToken
 impprt org.apache.shiro.subject.Subject
@@ -43,7 +43,7 @@ import javax.swing.JOptionPane
 
 import javax.inject.Inject
 
-@ArtifactProviderFor(GriffonController)
+@ServiceProviderFor(GriffonController)
 class StrutsController {
     @Inject
     private Subject subject

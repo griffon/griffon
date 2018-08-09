@@ -19,10 +19,13 @@ package integration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonController;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import java.util.Map;
 
+@ServiceProviderFor(GriffonController.class)
 public class ArgsController extends AbstractGriffonController {
     private ArgsModel model;
     private ArgsView view;

@@ -22,7 +22,7 @@ import griffon.core.controller.ControllerAction
 import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 
-@griffon.metadata.ArtifactProviderFor(GriffonController)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
 class BadController {
     @MVCMember @Nonnull def model
 
@@ -65,7 +65,7 @@ import griffon.core.controller.ControllerAction
 import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 
-@griffon.metadata.ArtifactProviderFor(GriffonController)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
 class GoodController {
     @MVCMember @Nonnull def model
 

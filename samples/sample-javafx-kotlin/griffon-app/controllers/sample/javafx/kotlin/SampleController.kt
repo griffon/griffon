@@ -20,12 +20,12 @@ package sample.javafx.kotlin
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
 import griffon.annotations.core.Nonnull
 import javax.inject.Inject
 
-@ArtifactProviderFor(GriffonController::class)
+@ServiceProviderFor(GriffonController::class)
 class SampleController : AbstractGriffonController() {
     @set:[MVCMember Nonnull]
     lateinit var model: SampleModel

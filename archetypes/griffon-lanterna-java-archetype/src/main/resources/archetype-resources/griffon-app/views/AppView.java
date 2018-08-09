@@ -7,7 +7,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
 import griffon.lanterna.support.LanternaAction;
 import griffon.lanterna.widgets.MutableButton;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView;
 
 import java.beans.PropertyChangeEvent;
@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import griffon.annotations.core.Nonnull;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class AppView extends AbstractLanternaGriffonView {
     private AppModel model;
     private AppController controller;

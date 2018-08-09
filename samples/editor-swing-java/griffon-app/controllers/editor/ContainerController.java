@@ -22,16 +22,16 @@ import griffon.annotations.core.Nullable;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
-import griffon.metadata.ArtifactProviderFor;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.application.threading.Threading;
 import java.io.File;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull
     private ContainerModel model;

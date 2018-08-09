@@ -2,7 +2,7 @@ package ${groupId};
 
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ import griffon.annotations.core.Nonnull;
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class AppView extends AbstractSwingGriffonView {
     private AppModel model;
     private AppController controller;

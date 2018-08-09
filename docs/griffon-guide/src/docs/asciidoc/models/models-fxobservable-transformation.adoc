@@ -12,10 +12,10 @@ and the JavaFX property type. For example,
 package org.example
 
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.transform.javafx.FXObservable
 
-@ArtifactProviderFor(GriffonModel)
+@ServiceProviderFor(GriffonModel)
 class SampleModel {
     @FXObservable String input = 'foo'
 }
@@ -29,11 +29,11 @@ is functionally equivalent to
 package org.example
 
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
 
-@ArtifactProviderFor(GriffonModel)
+@ServiceProviderFor(GriffonModel)
 class SampleModel {
     private StringProperty input
 

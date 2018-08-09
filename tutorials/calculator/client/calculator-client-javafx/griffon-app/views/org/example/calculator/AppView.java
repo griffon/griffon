@@ -16,7 +16,7 @@
 package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -26,7 +26,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
 import java.util.Collections;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class AppView extends AbstractJavaFXGriffonView {
     private BorderPane container;
 

@@ -18,10 +18,10 @@
 package sample.pivot.java;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractPivotGriffonModel {
     private String input;                                                //<1>
     private String output;                                               //<1>

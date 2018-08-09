@@ -144,7 +144,7 @@ class ApplicationModule extends AbstractModule {
 
 == Artifacts
 
-All artifacts must be annotated with `{link_artifact_provider_for}` without exception.
+All artifacts must be annotated with `@org.kordamp.jipsy.ServiceProviderFor` without exception.
 Failure to follow this rule will make Griffon miss the artifact during bootstrap.
 The value for this annotation must be the basic interface that defines the artifact's
 type, for example:
@@ -155,9 +155,9 @@ type, for example:
 package sample
 
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonModel)
+@ServiceProviderFor(GriffonModel)
 class SampleModel {
     ...
 }
@@ -181,11 +181,11 @@ class as an starting point:
 package sample
 
 import griffon.core.artifact.GriffonView
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class SampleView {
     @MVCMember @Nonnull def builder
     @MVCMember @Nonnull def model

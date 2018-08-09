@@ -20,7 +20,7 @@ import griffon.annotations.inject.MVCMember;
 import griffon.javafx.beans.binding.UIThreadAwareBindings;
 import griffon.javafx.support.JavaFXAction;
 import griffon.javafx.support.JavaFXUtils;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,7 +36,7 @@ import griffon.annotations.core.Nonnull;
 import static javafx.scene.layout.AnchorPane.setLeftAnchor;
 import static javafx.scene.layout.AnchorPane.setTopAnchor;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class Tab1View extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull private SampleController controller;
     @MVCMember @Nonnull private SampleModel model;

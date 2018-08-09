@@ -18,7 +18,7 @@ package org.example
 import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
 import griffon.javafx.beans.binding.UIThreadAwareBindings
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import javafx.beans.property.StringProperty
 import javafx.scene.control.Tab
 import org.kordamp.ikonli.fontawesome.FontAwesome
@@ -26,7 +26,7 @@ import org.kordamp.ikonli.javafx.FontIcon
 
 import griffon.annotations.core.Nonnull
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class Tab3View {
     @MVCMember @Nonnull FactoryBuilderSupport builder
     @MVCMember @Nonnull SampleModel model

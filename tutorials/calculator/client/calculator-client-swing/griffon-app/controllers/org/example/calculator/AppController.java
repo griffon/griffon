@@ -17,13 +17,13 @@ package org.example.calculator;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.mvc.MVCGroup;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import java.awt.BorderLayout;
 import java.util.Map;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class AppController extends AbstractGriffonController {
     private AppView view;
 

@@ -1,12 +1,12 @@
 package ${project_package}
 
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import javafx.beans.property.StringProperty
 import javafx.beans.property.SimpleStringProperty
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel
 
-@ArtifactProviderFor(GriffonModel::class)
+@ServiceProviderFor(GriffonModel::class)
 class ${project_class_name}Model : AbstractGriffonModel() {
     private var _clickCount: StringProperty = SimpleStringProperty(this, "clickCount", "0")
 

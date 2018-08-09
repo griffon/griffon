@@ -17,10 +17,13 @@
  */
 package integration;
 
+import griffon.core.artifact.GriffonModel;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import java.beans.PropertyVetoException;
 
+@ServiceProviderFor(GriffonModel.class)
 public class SimpleModel extends AbstractGriffonModel {
     private String value1;
     private String value2;

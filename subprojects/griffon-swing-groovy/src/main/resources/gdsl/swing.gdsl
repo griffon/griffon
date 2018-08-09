@@ -257,7 +257,7 @@ def addNodeContributions = { receiver ->
     widgetNode(receiver, 'matteBorder', MatteBorder)
 }
 
-String artifactProviderForType = 'griffon.metadata.ArtifactProviderFor'
+String artifactProviderForType = 'org.kordamp.jipsy.ServiceProviderFor'
 contributor(scope: annotatedScope(ctype: artifactProviderForType)) {
     def clazz = enclosingClass()
     if (clazz) {

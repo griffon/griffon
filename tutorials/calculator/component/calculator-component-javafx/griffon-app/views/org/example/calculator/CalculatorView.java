@@ -17,7 +17,7 @@ package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import griffon.util.CollectionUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -36,7 +36,7 @@ import static org.example.calculator.CalculatorPM.ATTR_RESULT;
 import static org.example.calculator.CalculatorPM.PM_CALCULATION;
 import static org.opendolphin.binding.JFXBinder.bind;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class CalculatorView extends AbstractJavaFXGriffonView {
     private static final String TEXT = "text";
 

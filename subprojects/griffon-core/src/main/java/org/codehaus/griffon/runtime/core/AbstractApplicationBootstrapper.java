@@ -20,7 +20,10 @@ package org.codehaus.griffon.runtime.core;
 import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
+import griffon.core.artifact.GriffonController;
+import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonService;
+import griffon.core.artifact.GriffonView;
 import griffon.core.env.GriffonEnvironment;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
@@ -28,6 +31,7 @@ import griffon.core.injection.InjectorFactory;
 import griffon.core.injection.Key;
 import griffon.core.injection.Module;
 import griffon.util.GriffonClassUtils;
+import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +57,7 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractApplicationBootstrapper implements ApplicationBootstrapper {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractApplicationBootstrapper.class);
     private static final String INJECTOR = "injector";
-    private static final String GRIFFON_PATH = "META-INF/griffon";
-    private static final String PROPERTIES = ".properties";
+    private static final String SERVICES_PATH = "META-INF/services";
     protected final GriffonApplication application;
 
     public AbstractApplicationBootstrapper(@Nonnull GriffonApplication application) {
@@ -111,21 +114,29 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
     }
 
     protected void createArtifactsModule(@Nonnull List<Module> modules) {
-
         modules.add(new AbstractModule() {
             @Override
             protected void doConfigure() {
-                load(getClass().getClassLoader(), GRIFFON_PATH, path -> !path.endsWith(PROPERTIES), (classLoader, line) -> {
+                ServiceLoaderUtils.LineProcessor lineProcessor = (cl, type, line) -> {
                     line = line.trim();
                     try {
-                        Class<?> clazz = classLoader.loadClass(line);
-                        if (GriffonService.class.isAssignableFrom(clazz)) {
-                            bind(clazz).asSingleton();
-                        } else {
-                            bind(clazz);
-                        }
+                        bind(cl.loadClass(line));
                     } catch (ClassNotFoundException e) {
-                        LOG.error("'" + line + "' could not be resolved as a Class");
+                        LOG.error("'" + line + "' could not be resolved as a subtype of " + type.getName());
+                        throw new IllegalStateException(e);
+                    }
+                };
+                ClassLoader classLoader = getClass().getClassLoader();
+
+                load(classLoader, SERVICES_PATH, GriffonModel.class, lineProcessor);
+                load(classLoader, SERVICES_PATH, GriffonController.class, lineProcessor);
+                load(classLoader, SERVICES_PATH, GriffonView.class, lineProcessor);
+                load(classLoader, SERVICES_PATH, GriffonService.class, (cl, type, line) -> {
+                    line = line.trim();
+                    try {
+                        bind(cl.loadClass(line)).asSingleton();
+                    } catch (ClassNotFoundException e) {
+                        LOG.error("'" + line + "' could not be resolved as a subtype of " + type.getName());
                         throw new IllegalStateException(e);
                     }
                 });

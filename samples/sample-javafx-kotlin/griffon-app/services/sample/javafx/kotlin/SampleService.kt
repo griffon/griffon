@@ -18,11 +18,11 @@
 package sample.javafx.kotlin
 
 import griffon.core.artifact.GriffonService
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService
 
-@ArtifactProviderFor(GriffonService::class)
+@ServiceProviderFor(GriffonService::class)
 class SampleService : AbstractGriffonService() {
     fun sayHello(input: String?): String {
         return if (isBlank(input)) {

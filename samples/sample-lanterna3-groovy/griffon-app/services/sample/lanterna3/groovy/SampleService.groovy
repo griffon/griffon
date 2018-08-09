@@ -19,13 +19,13 @@ package sample.lanterna3.groovy
 
 import griffon.core.artifact.GriffonService
 import griffon.core.i18n.MessageSource
-import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService
+import org.kordamp.jipsy.ServiceProviderFor
 
 import static griffon.util.GriffonNameUtils.isBlank
 
 @javax.inject.Singleton
-@ArtifactProviderFor(GriffonService)
+@ServiceProviderFor(GriffonService)
 class SampleService extends AbstractGriffonService {
     String sayHello(String input) {
         MessageSource ms = application.messageSource

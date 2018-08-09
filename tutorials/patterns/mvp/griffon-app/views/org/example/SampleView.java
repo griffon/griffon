@@ -17,7 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -31,7 +31,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import griffon.annotations.core.Nonnull;
 import java.util.Collections;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class SampleView extends AbstractJavaFXGriffonView {
     private SamplePresenter presenter;
 

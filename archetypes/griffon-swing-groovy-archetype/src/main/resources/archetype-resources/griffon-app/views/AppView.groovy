@@ -3,11 +3,11 @@ package \${groupId}
 import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import javax.swing.SwingConstants
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class AppView extends AbstractSwingGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder

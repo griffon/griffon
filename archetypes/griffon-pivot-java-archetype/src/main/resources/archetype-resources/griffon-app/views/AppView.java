@@ -2,7 +2,7 @@ package ${groupId};
 
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import griffon.pivot.support.PivotAction;
 import org.apache.pivot.serialization.SerializationException;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
@@ -15,7 +15,7 @@ import griffon.annotations.core.Nonnull;
 
 import static java.util.Arrays.asList;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class AppView extends AbstractPivotGriffonView {
     private AppModel model;
     private AppController controller;

@@ -19,8 +19,11 @@ package integration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonView;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.kordamp.jipsy.ServiceProviderFor;
 
+@ServiceProviderFor(GriffonView.class)
 public class IntegrationView extends AbstractGriffonView implements Invokable {
     private IntegrationController controller;
     private IntegrationModel model;

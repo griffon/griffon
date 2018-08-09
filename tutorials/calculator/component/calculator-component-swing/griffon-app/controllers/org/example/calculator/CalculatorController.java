@@ -16,7 +16,7 @@
 package org.example.calculator;
 
 import griffon.core.artifact.GriffonController;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.opendolphin.core.client.ClientDolphin;
 
@@ -27,7 +27,7 @@ import static org.example.calculator.CalculatorPM.COMMAND_MUL;
 import static org.example.calculator.CalculatorPM.COMMAND_SUB;
 import static org.example.calculator.CalculatorPM.COMMAND_SUM;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class CalculatorController extends AbstractGriffonController {
     @Inject
     private ClientDolphin clientDolphin;

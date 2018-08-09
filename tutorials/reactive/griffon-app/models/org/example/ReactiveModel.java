@@ -16,7 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -35,7 +35,7 @@ import java.util.Map;
 import static javafx.collections.FXCollections.observableArrayList;
 import static org.example.State.READY;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class ReactiveModel extends AbstractGriffonModel {
     private final ObservableList<Repository> repositories = observableArrayList();
     private StringProperty organization;

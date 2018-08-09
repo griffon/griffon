@@ -28,14 +28,14 @@ import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
 import griffon.lanterna3.support.LanternaAction;
 import griffon.lanterna3.widgets.MutableButton;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonView;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class SampleView extends AbstractLanternaGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>

@@ -39,6 +39,7 @@ import griffon.core.injection.InjectorFactory;
 import griffon.exceptions.FieldException;
 import griffon.exceptions.NewInstanceException;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -68,6 +69,7 @@ import static integration.GuiceInjector.moduleFromBindings;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
+@ServiceProviderFor(InjectorFactory.class)
 public class GuiceInjectorFactory implements InjectorFactory {
     @Nonnull
     @Override

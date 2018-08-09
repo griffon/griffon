@@ -20,7 +20,6 @@ package sample.pivot.java;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
-import griffon.metadata.ArtifactProviderFor;
 import griffon.pivot.support.PivotAction;
 import griffon.pivot.support.adapters.TextInputContentAdapter;
 import org.apache.pivot.serialization.SerializationException;
@@ -32,12 +31,13 @@ import org.apache.pivot.wtk.PushButton;
 import org.apache.pivot.wtk.TextInput;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class SampleView extends AbstractPivotGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>

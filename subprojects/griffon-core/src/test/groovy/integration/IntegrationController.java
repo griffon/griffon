@@ -20,11 +20,14 @@ package integration;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.Contextual;
 import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonController;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+@ServiceProviderFor(GriffonController.class)
 public class IntegrationController extends AbstractGriffonController {
     private IntegrationModel model;
     private String key;

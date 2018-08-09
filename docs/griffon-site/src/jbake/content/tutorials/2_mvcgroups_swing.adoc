@@ -141,10 +141,10 @@ We're almost done with the `container` MVC group, what remains to be done is upd
 package editor;
 
 import griffon.core.artifact.GriffonController;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
     private ContainerModel model;
     private ContainerView view;

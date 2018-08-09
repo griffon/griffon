@@ -20,7 +20,7 @@ package sample.javafx.kotlin
 import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import javafx.fxml.FXML
 import javafx.scene.Group
 import javafx.scene.Scene
@@ -32,7 +32,7 @@ import javafx.stage.Window
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
 import griffon.annotations.core.Nonnull
 
-@ArtifactProviderFor(GriffonView::class)
+@ServiceProviderFor(GriffonView::class)
 class SampleView : AbstractJavaFXGriffonView() {
     @set:[MVCMember Nonnull]
     lateinit var controller: SampleController

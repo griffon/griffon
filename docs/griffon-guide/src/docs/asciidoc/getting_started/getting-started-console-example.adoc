@@ -224,22 +224,22 @@ include::{console-swing-groovy}/griffon-app/models/console/ConsoleModel.groovy[l
 Griffon Models are *_not_* domain classes like the ones you find in Grails; they're more akin
 to presentation models, and as such, they're used to transfer data between Views and Controllers.
 
-Notice the usage of the `{link_artifact_provider_for}` annotation. This annotation serves as an additional hint to the
+Notice the usage of the `@org.kordamp.jipsy.ServiceProviderFor` annotation. This annotation serves as an additional hint to the
 compiler, letting it know it must generate or update a metadata file in an specific location.
 The file is named after the argument set on the annotation, in this case, `griffon.core.artifact.GriffonModel`. This file
-is automatically placed under `META-INF/griffon`. It's contents are fully qualified class names of types that implement
+is automatically placed under `META-INF/services`. It's contents are fully qualified class names of types that implement
 the argument set on the annotation. This results in the following file being automatically created or updated with every
 compilation session
 
-.META-INF/griffon/griffon.core.artifact.GriffonModel
+.META-INF/services/griffon.core.artifact.GriffonModel
 [source,java,linenums,options="nowrap"]
 ----
 console.ConsoleModel
 ----
 
 You will see this annotation being used by other artifacts too albeit with different values, which will produce different
-files, such as `META-INF/griffon/griffon.core.artifact.GriffonController`, `META-INF/griffon/griffon.core.artifact.GriffonView`,
-and `META-INF/griffon/griffon.core.artifact.GriffonService`.
+files, such as `META-INF/services/griffon.core.artifact.GriffonController`, `META-INF/services/griffon.core.artifact.GriffonView`,
+and `META-INF/services/griffon.core.artifact.GriffonService`.
 
 It's worth mentioning that you may skip applying this annotation, in which case you'll be responsible for creating and
 updating the files mentioned earlier. These files are *very important* to the Griffon runtime, as they are used to

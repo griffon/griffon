@@ -17,8 +17,11 @@
  */
 package integration;
 
+import griffon.core.artifact.GriffonModel;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
+@ServiceProviderFor(GriffonModel.class)
 public class RootModel extends AbstractGriffonModel {
 
 }

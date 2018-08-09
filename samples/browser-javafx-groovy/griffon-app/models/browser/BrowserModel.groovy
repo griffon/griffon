@@ -18,11 +18,11 @@
 package browser
 
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
 import groovyx.javafx.beans.FXBindable
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel
+import org.kordamp.jipsy.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonModel)
+@ServiceProviderFor(GriffonModel)
 class BrowserModel extends AbstractGriffonModel {
     @FXBindable String status = ''
     @FXBindable String url

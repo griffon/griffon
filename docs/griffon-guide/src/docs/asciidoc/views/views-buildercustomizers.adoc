@@ -123,10 +123,10 @@ package org.example
 
 import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.annotations.core.Nonnull
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class SampleView {
     @MVCMember @Nonnull FactoryBuilderSupport builder
 
@@ -145,10 +145,10 @@ package com.acme
 
 import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.annotations.core.Nonnull
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class PrimaryView {
     @MVCMember @Nonnull FactoryBuilderSupport builder
 

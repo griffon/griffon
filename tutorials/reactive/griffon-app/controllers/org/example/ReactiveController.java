@@ -17,7 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonController;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 import org.example.api.Github;
 import org.example.api.Repository;
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 import static org.example.State.READY;
 import static org.example.State.RUNNING;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class ReactiveController extends AbstractGriffonController {
     private ReactiveModel model;
 

@@ -21,12 +21,12 @@ import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
-import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
+import org.kordamp.jipsy.ServiceProviderFor
 
 import javax.swing.JFileChooser
 
-@ArtifactProviderFor(GriffonController)
+@ServiceProviderFor(GriffonController)
 class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull
     ContainerModel model

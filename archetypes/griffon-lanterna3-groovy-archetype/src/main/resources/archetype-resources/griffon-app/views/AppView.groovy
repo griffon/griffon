@@ -3,11 +3,11 @@ package \${groupId}
 import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import java.beans.PropertyChangeListener
 import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonView
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class AppView extends AbstractLanternaGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder

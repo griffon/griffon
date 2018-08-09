@@ -20,13 +20,16 @@ package integration;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.Contextual;
 import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonController;
 import griffon.core.mvc.MVCGroup;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
+@ServiceProviderFor(GriffonController.class)
 public class ChildController extends AbstractGriffonController {
     private ChildModel model;
     private ChildView view;

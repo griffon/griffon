@@ -112,32 +112,32 @@ icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
 == Metadata Files
 
 Usually Griffon projects will automatically generate metadata files associated with Griffon artifacts, thanks to the usage
-of the `@ArtifactProviderFor` annotation in combination with {link_jipsy}. But given that we did not define a dependency in
+of the `@ServiceProviderFor` annotation in combination with {link_jipsy}. But given that we did not define a dependency in
 _provided_ scope for {link_jipsy} we must have to write these files by hand. The catch is that these files must be updated
 every time an artifact is added, renamed, or deleted.
 
 [source,java]
-.META-INF/griffon/griffon.core.artifact.GriffonController
+.META-INF/services/griffon.core.artifact.GriffonController
 ----
-include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonController[]
-----
-
-[source,java]
-.META-INF/griffon/griffon.core.artifact.GriffonModel
-----
-include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonModel[]
+include::{app-dir}/src/main/resources/META-INF/services/griffon.core.artifact.GriffonController[]
 ----
 
 [source,java]
-.META-INF/griffon/griffon.core.artifact.GriffonService
+.META-INF/services/griffon.core.artifact.GriffonModel
 ----
-include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonService[]
+include::{app-dir}/src/main/resources/META-INF/services/griffon.core.artifact.GriffonModel[]
 ----
 
 [source,java]
-.META-INF/griffon/griffon.core.artifact.GriffonView
+.META-INF/services/griffon.core.artifact.GriffonService
 ----
-include::{app-dir}/src/main/resources/META-INF/griffon/griffon.core.artifact.GriffonView[]
+include::{app-dir}/src/main/resources/META-INF/services/griffon.core.artifact.GriffonService[]
+----
+
+[source,java]
+.META-INF/services/griffon.core.artifact.GriffonView
+----
+include::{app-dir}/src/main/resources/META-INF/services/griffon.core.artifact.GriffonView[]
 ----
 
 icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>

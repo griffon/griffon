@@ -19,14 +19,14 @@ package sample.lanterna3.java;
 
 import griffon.core.artifact.GriffonService;
 import griffon.core.i18n.MessageSource;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static java.util.Collections.singletonList;
 
 @javax.inject.Singleton
-@ArtifactProviderFor(GriffonService.class)
+@ServiceProviderFor(GriffonService.class)
 public class SampleService extends AbstractGriffonService {
     public String sayHello(String input) {
         MessageSource messageSource = getApplication().getMessageSource();

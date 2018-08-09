@@ -19,12 +19,12 @@ package sample.javafx.java;
 
 import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractGriffonModel {
     private StringProperty input;                                       //<1>
     private StringProperty output;                                      //<1>

@@ -18,11 +18,11 @@
 package console
 
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
 import griffon.transform.beans.Observable
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
+import org.kordamp.jipsy.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonModel)
+@ServiceProviderFor(GriffonModel)
 class ConsoleModel extends AbstractSwingGriffonModel {
     String scriptSource                                  //<1>
     @Observable Object scriptResult                      //<2>

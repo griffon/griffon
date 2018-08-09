@@ -21,10 +21,10 @@ import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
-import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
+import org.kordamp.jipsy.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonController)
+@ServiceProviderFor(GriffonController)
 class EditorController extends AbstractGriffonController {
     @MVCMember @Nonnull
     EditorModel model

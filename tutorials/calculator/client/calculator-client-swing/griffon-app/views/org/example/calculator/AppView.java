@@ -16,7 +16,7 @@
 package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
 import griffon.annotations.core.Nonnull;
@@ -30,7 +30,7 @@ import java.util.Collections;
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class AppView extends AbstractSwingGriffonView {
     private JFrame window;
     private JComponent container;

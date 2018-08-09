@@ -16,7 +16,7 @@
 package org.example;
 
 import griffon.core.artifact.GriffonView;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
@@ -26,7 +26,7 @@ import griffon.annotations.core.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class AppView extends AbstractJavaFXGriffonView {
     private TabPane tabPane;
 

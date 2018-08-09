@@ -20,8 +20,8 @@ package sample.swing.java;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -40,7 +40,7 @@ import java.util.Collections;
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class SampleView extends AbstractSwingGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>

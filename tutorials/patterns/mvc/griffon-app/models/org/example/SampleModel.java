@@ -17,7 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonModel;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
@@ -25,7 +25,7 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import griffon.annotations.core.Nonnull;
 import java.util.Map;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractGriffonModel {
     private StringProperty output;
     private SampleView view;

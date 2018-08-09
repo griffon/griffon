@@ -21,8 +21,8 @@ import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Map;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.io.FileUtils.writeStringToFile;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class EditorController extends AbstractGriffonController {
     @MVCMember @Nonnull
     private EditorModel model;

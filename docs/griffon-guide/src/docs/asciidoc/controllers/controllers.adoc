@@ -17,7 +17,7 @@ import griffon.core.controller.ControllerAction
 import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 
-@griffon.metadata.ArtifactProviderFor(GriffonController)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
 class SampleController {
     @MVCMember @Nonnull SampleModel model
 
@@ -39,7 +39,7 @@ import griffon.core.controller.ControllerAction;
 import griffon.annotations.inject.MVCMember;
 import griffon.annotations.core.Nonnull;
 
-@griffon.metadata.ArtifactProviderFor(GriffonController.class)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController.class)
 public class SampleController {
     private SampleModel model;
 
@@ -77,7 +77,7 @@ import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 
-@griffon.metadata.ArtifactProviderFor(GriffonView)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonView)
 class SampleView {
     @MVCMember @Nonnull FactoryBuilderSupport builder
     @MVCMember @Nonnull SampleModel model

@@ -2,10 +2,10 @@ package \${groupId}
 
 import griffon.core.artifact.GriffonModel
 import griffon.transform.beans.Observable
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonModel
 
-@ArtifactProviderFor(GriffonModel)
+@ServiceProviderFor(GriffonModel)
 class AppModel extends AbstractLanternaGriffonModel {
     @Observable int clickCount = 0
 }

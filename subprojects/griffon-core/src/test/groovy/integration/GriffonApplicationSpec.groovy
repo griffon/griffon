@@ -355,7 +355,7 @@ class GriffonApplicationSpec extends Specification {
         !application.artifactManager.findGriffonClass(SimpleModel, 'domain')
         !application.artifactManager.findGriffonClass(SimpleModel, 'controller')
 
-        application.artifactManager.getClassesOfType('model').clazz == [IntegrationModel, SimpleModel, RootModel, ChildModel, ArgsModel]
+        application.artifactManager.getClassesOfType('model').clazz == [ArgsModel, ChildModel, IntegrationModel, RootModel, SimpleModel]
         !application.artifactManager.getClassesOfType('domain')
 
         application.artifactManager.allClasses*.clazz.sort() == [
@@ -370,7 +370,7 @@ class GriffonApplicationSpec extends Specification {
         modelHandler.trailing == 'Model'
         modelHandler.type == 'model'
         modelHandler.classesByName.keySet() == (['integration.IntegrationModel', 'integration.SimpleModel', 'integration.RootModel', 'integration.ChildModel', 'integration.ArgsModel'] as Set)
-        modelHandler.classes.clazz == [IntegrationModel, SimpleModel, RootModel, ChildModel, ArgsModel]
+        modelHandler.classes.clazz == [ArgsModel, ChildModel, IntegrationModel, RootModel, SimpleModel]
         modelHandler.findClassFor('integrationModel')
         modelHandler.findClassFor('integration')
         !modelHandler.findClassFor('sample')

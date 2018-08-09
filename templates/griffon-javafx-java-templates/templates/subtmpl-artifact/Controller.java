@@ -3,13 +3,13 @@ package ${project_package};
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.application.threading.Threading;
 import griffon.annotations.core.Nonnull;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class ${project_class_name}Controller extends AbstractGriffonController {
     private ${project_class_name}Model model;
 

@@ -20,15 +20,15 @@ package editor;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import java.util.Objects;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class EditorView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     private EditorModel model;

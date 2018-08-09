@@ -18,10 +18,10 @@
 package sample.lanterna3.java;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractLanternaGriffonModel {
     private String input;                                                //<1>
     private String output;                                               //<1>

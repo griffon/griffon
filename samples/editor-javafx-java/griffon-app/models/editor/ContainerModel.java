@@ -18,12 +18,12 @@
 package editor;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {
     private static final String MVC_IDENTIFIER = "mvcIdentifier";
     private final DocumentModel documentModel = new DocumentModel();

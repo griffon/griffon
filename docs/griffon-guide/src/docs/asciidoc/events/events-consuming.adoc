@@ -75,7 +75,7 @@ package com.acme
 
 import griffon.core.artifact.GriffonController
 
-@griffon.metadata.ArtifactProviderFor(GriffonController)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
 class MyController {
     void onShutdownStart(application)
         println "${application.configuration['application.title']} is shutting down"
@@ -93,7 +93,7 @@ package com.acme
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
 
-@griffon.metadata.ArtifactProviderFor(GriffonController)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addEventListener([
@@ -119,7 +119,7 @@ package com.acme
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
 
-@griffon.metadata.ArtifactProviderFor(GriffonController)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addEventListener('Foo',
@@ -145,7 +145,7 @@ package com.acme
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
 
-@griffon.metadata.ArtifactProviderFor(GriffonController)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
 class MyController {
     void mvcGroupInit(Map<String, Object> args) {
         application.eventRouter.addListener(Foo) { e -> assert e instanceof Foo }

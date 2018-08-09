@@ -39,10 +39,10 @@ must define a field with matching type and name, such as
 ----
 import griffon.core.artifact.GriffonController
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import griffon.annotations.core.Nonnull
 
-@ArtifactProviderFor(GriffonController)
+@ServiceProviderFor(GriffonController)
 class SampleController {
     @MVCMember @Nonnull SampleModel model
 }
@@ -79,7 +79,7 @@ the `FooController` can reach the key defined in the configuration:
 
 [source,groovy,linenums,options="nowrap"]
 ----
-@ArtifactProviderFor(GriffonController)
+@ServiceProviderFor(GriffonController)
 class FooController {
     void mvcGroupInit(Map<String, Object> args) {
         println mvcGroup.configuration.config.key

@@ -23,7 +23,7 @@ import javax.application.resources.InjectedResource
 import javax.swing.Icon
 import griffon.core.artifact.GriffonModel
 
-@griffon.metadata.ArtifactProviderFor(GriffonModel)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonModel)
 class SampleModel {
     @InjectedResource Icon griffonLogo
     @InjectedResource(key='logo', args=['16']) Icon smallGriffonLogo
@@ -51,7 +51,7 @@ package sample
 import javax.application.resources.InjectedResource
 import griffon.core.artifact.GriffonModel
 
-@griffon.metadata.ArtifactProviderFor(GriffonModel)
+@org.kordamp.jipsy.ServiceProviderFor(GriffonModel)
 class SampleModel {
     @InjectedResource(defaultValue='10.04.2013 2:30 PM', format='dd.MM.yyyy h:mm a')
     Date date

@@ -20,10 +20,10 @@ package sample.lanterna3.groovy
 import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
-import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonView
+import org.kordamp.jipsy.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class SampleView extends AbstractLanternaGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder                                                              //<1>

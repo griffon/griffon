@@ -3,7 +3,7 @@ package ${project_package}
 import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import org.kordamp.jipsy.ServiceProviderFor
 import javafx.fxml.FXML
 import javafx.scene.Group
 import javafx.scene.Scene
@@ -14,7 +14,7 @@ import javafx.stage.Window
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
 import griffon.annotations.core.Nonnull
 
-@ArtifactProviderFor(GriffonView::class)
+@ServiceProviderFor(GriffonView::class)
 class ${project_class_name}View : AbstractJavaFXGriffonView() {
     @set:[MVCMember Nonnull]
     lateinit var model: ${project_class_name}Model

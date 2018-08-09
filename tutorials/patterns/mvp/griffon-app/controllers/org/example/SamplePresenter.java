@@ -17,7 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonController;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javax.application.threading.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
@@ -25,7 +25,7 @@ import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 import java.util.Map;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class SamplePresenter extends AbstractGriffonController {
     private SampleModel model;
     private SampleView view;

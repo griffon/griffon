@@ -2,7 +2,7 @@ package ${project_package};
 
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import org.kordamp.jipsy.ServiceProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -16,7 +16,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import java.util.Collections;
 import griffon.annotations.core.Nonnull;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class ${project_class_name}View extends AbstractJavaFXGriffonView {
     private ${project_class_name}Controller controller;
     private ${project_class_name}Model model;

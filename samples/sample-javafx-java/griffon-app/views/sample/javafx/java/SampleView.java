@@ -20,7 +20,6 @@ package sample.javafx.java;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -30,10 +29,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.jipsy.ServiceProviderFor;
 
 import java.util.Collections;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class SampleView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     private SampleController controller;                                  //<1>

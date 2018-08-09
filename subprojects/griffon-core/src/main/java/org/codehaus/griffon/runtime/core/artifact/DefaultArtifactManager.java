@@ -59,7 +59,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
             final String artifactType = e.getKey();
             ArtifactHandler<?> artifactHandler = e.getValue();
             Class<?> klass = artifactHandler.getClass().getAnnotation(Typed.class).value();
-            ServiceLoaderUtils.load(applicationClassLoader.get(), "META-INF/griffon/", klass, (classLoader, type, line) -> {
+            ServiceLoaderUtils.load(applicationClassLoader.get(), "META-INF/services/", klass, (classLoader, type, line) -> {
                 List<Class<? extends GriffonArtifact>> list = artifacts.computeIfAbsent(artifactType, k -> new ArrayList<>());
 
                 try {

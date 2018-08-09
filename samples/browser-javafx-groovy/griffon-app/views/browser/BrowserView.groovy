@@ -20,11 +20,11 @@ package browser
 import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
-import griffon.metadata.ArtifactProviderFor
 import javafx.beans.value.ChangeListener
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
+import org.kordamp.jipsy.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class BrowserView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder

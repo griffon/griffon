@@ -18,10 +18,10 @@
 package sample.swing.java;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class SampleModel extends AbstractSwingGriffonModel {
     private String input;                                                //<1>
     private String output;                                               //<1>

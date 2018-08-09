@@ -18,12 +18,12 @@
 package editor;
 
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class EditorModel extends AbstractGriffonModel {
     private ObjectProperty<Document> document = new SimpleObjectProperty<>(this,"document");
 
