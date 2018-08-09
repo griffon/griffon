@@ -1,17 +1,19 @@
 package ${project_package}
 
-import griffon.core.artifact.GriffonView
+import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
+import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
-import griffon.annotations.core.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class ${project_class_name}View extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder
+
     @MVCMember @Nonnull
     ${project_class_name}Controller controller
+
     @MVCMember @Nonnull
     ${project_class_name}Model model
 

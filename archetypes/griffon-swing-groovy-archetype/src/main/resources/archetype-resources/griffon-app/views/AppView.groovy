@@ -1,15 +1,17 @@
 package \${groupId}
 
-import griffon.core.artifact.GriffonView
+import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
+import griffon.core.artifact.GriffonView
 import griffon.metadata.ArtifactProviderFor
 import javax.swing.SwingConstants
-import griffon.annotations.core.Nonnull
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView
 
 @ArtifactProviderFor(GriffonView)
-class AppView {
+class AppView extends AbstractSwingGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder
+
     @MVCMember @Nonnull
     AppModel model
 
