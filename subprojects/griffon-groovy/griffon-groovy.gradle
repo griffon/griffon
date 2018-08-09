@@ -21,7 +21,9 @@ apply from: rootProject.file('gradle/coverage.gradle')
 
 dependencies {
     compile project(':griffon-core')
-    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    compile("org.codehaus.groovy:groovy-all:$groovyVersion") {
+        exclude group: 'junit', module: 'junit'
+    }
 
     compileOnly project(':griffon-core-compile')
 

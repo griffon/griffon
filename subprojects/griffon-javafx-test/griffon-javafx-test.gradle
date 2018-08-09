@@ -22,7 +22,10 @@ apply from: rootProject.file('gradle/coverage.gradle')
 dependencies {
     compile project(':griffon-javafx')
     compile project(':griffon-core-test')
-    compile "org.testfx:testfx-core:$testfxVersion"
+    compile("org.testfx:testfx-core:$testfxVersion") {
+        transitive = false
+    }
+    compile "com.google.guava:guava:$guavaVersion"
 
     testRuntime project(':griffon-guice')
 }

@@ -20,9 +20,16 @@ apply plugin: 'groovy'
 apply from: rootProject.file('gradle/coverage.gradle')
 
 dependencies {
-    compile "org.easytesting:fest-swing:$festVersion"
-    compile "org.easytesting:fest-swing-junit:$festVersion"
-    compile "org.easytesting:fest-swing-junit-4.5:$festVersion"
+    compile("org.easytesting:fest-swing:$festVersion") {
+        exclude group: 'junit', module: 'junit'
+    }
+    compile("org.easytesting:fest-swing-junit:$festVersion") {
+        exclude group: 'junit', module: 'junit'
+    }
+    compile("org.easytesting:fest-swing-junit-4.5:$festVersion") {
+        exclude group: 'org.easytesting', module: 'fest-swing-junit'
+        exclude group: 'junit', module: 'junit'
+    }
 
     compile project(':griffon-swing')
     compile project(':griffon-core-test')

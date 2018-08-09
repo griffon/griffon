@@ -29,8 +29,9 @@ dependencies {
     testCompile project(':griffon-pivot-test')
     testCompile("org.awaitility:awaitility-groovy:$awaitilityVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        exclude group: 'org.hamcrest', module: 'hamcrest-library'
     }
-    testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
     testRuntime project(':griffon-guice')
 }

@@ -21,6 +21,12 @@ apply from: rootProject.file('gradle/coverage.gradle')
 
 dependencies {
     compile project(':griffon-core')
-    compile "junit:junit:$junitVersion"
-    compile "org.awaitility:awaitility:$awaitilityVersion"
+    compile("junit:junit:$junitVersion") {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
+    compile("org.awaitility:awaitility:$awaitilityVersion") {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        exclude group: 'org.hamcrest', module: 'hamcrest-library'
+    }
+    compile "org.hamcrest:java-hamcrest:$hamcrestVersion"
 }
