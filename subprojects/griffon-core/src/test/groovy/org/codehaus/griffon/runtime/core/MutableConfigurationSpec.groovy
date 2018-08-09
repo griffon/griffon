@@ -20,17 +20,19 @@ package org.codehaus.griffon.runtime.core
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
-import com.google.inject.Inject
 import griffon.core.Configuration
 import griffon.core.MutableConfiguration
-import griffon.core.editors.IntegerPropertyEditor
-import griffon.core.editors.PropertyEditorResolver
 import org.codehaus.griffon.runtime.core.configuration.ConfigurationDecoratorFactory
 import org.codehaus.griffon.runtime.core.configuration.MutableConfigurationDecoratorFactory
 import org.codehaus.griffon.runtime.core.configuration.ResourceBundleConfigurationProvider
 import org.junit.Rule
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
+import org.kordamp.jsr377.converter.IntegerConverter
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import javax.application.converter.ConverterRegistry
+import javax.inject.Inject
 
 import static com.google.inject.util.Providers.guicify
 import static griffon.util.AnnotationUtils.named
@@ -42,6 +44,9 @@ class MutableConfigurationSpec extends Specification {
 
     @Inject
     private Configuration configuration
+
+    @Inject
+    private ConverterRegistry converterRegistry
 
     def 'Calling configuration.get(#key, #defaultValue) returns #expectedValue'() {
         expect:
@@ -188,50 +193,12 @@ class MutableConfigurationSpec extends Specification {
         'key.foo'            || _
     }
 
-    def 'Calling configuration.removeAs(#key) removes the key'() {
-        given:
-        assert configuration instanceof MutableConfiguration
-        configuration.set('key.foo', 'foo')
-
-        expect:
-        configuration.containsKey(key)
-        null != configuration.get(key)
-
-        when:
-        String val = configuration.removeAs(key)
-
-        then:
-        !configuration.containsKey(key)
-
-        when:
-        def value = configuration.get(key)
-
-        then:
-        null == value
-
-        when:
-        value = configuration.remove(key)
-
-        then:
-        null == value
-
-        where:
-        key                  || _
-        'key.string'         || _
-        'key.boolean.string' || _
-        'key.int.string'     || _
-        'key.long.string'    || _
-        'key.float.string'   || _
-        'key.double.string'  || _
-        'key.foo'            || _
-    }
-
     def 'Calling configuration.removeConverted(#key) removes the key'() {
         given:
         assert configuration instanceof MutableConfiguration
         configuration.set('key.foo', 2)
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Integer, IntegerConverter)
 
         expect:
         configuration.containsKey(key)
@@ -256,7 +223,7 @@ class MutableConfigurationSpec extends Specification {
         null == value
 
         cleanup:
-        PropertyEditorResolver.clear()
+        converterRegistry.clear()
 
         where:
         key              || _
@@ -364,6 +331,8 @@ class MutableConfigurationSpec extends Specification {
                 .to(MutableConfigurationDecoratorFactory)
             bind(Configuration)
                 .toProvider(guicify(new ResourceBundleConfigurationProvider()))
+            bind(ConverterRegistry)
+                .to(DefaultConverterRegistry)
         }
     }
 }

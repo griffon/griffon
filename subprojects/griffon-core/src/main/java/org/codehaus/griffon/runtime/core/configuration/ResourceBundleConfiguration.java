@@ -19,6 +19,7 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.ConverterRegistry;
 import javax.inject.Inject;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -41,7 +42,8 @@ public class ResourceBundleConfiguration extends AbstractConfiguration {
     private final Map<String, Object> flatMap = new LinkedHashMap<>();
 
     @Inject
-    public ResourceBundleConfiguration(@Nonnull ResourceBundle resourceBundle) {
+    public ResourceBundleConfiguration(@Nonnull ConverterRegistry converterRegistry, @Nonnull ResourceBundle resourceBundle) {
+        super(converterRegistry);
         this.resourceBundle = requireNonNull(resourceBundle, "Argument 'resourceBundle' must not be null");
         Enumeration<String> keys = resourceBundle.getKeys();
         while (keys.hasMoreElements()) {
@@ -68,7 +70,7 @@ public class ResourceBundleConfiguration extends AbstractConfiguration {
 
     @Nullable
     @Override
-    public Object get(@Nonnull String key) {
+    public <T> T get(@Nonnull String key) {
         try {
             return getConfigValue(resourceBundle, key);
         } catch (MissingResourceException mre) {

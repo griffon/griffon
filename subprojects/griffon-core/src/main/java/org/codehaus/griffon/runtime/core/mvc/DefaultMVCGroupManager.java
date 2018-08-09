@@ -26,8 +26,6 @@ import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
-import griffon.core.editors.ExtendedPropertyEditor;
-import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.FieldException;
@@ -40,14 +38,17 @@ import griffon.inject.MVCMember;
 import griffon.util.CollectionUtils;
 import griffon.util.Instantiator;
 import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;
+import org.kordamp.jsr377.converter.FormattingConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.Converter;
+import javax.application.converter.ConverterRegistry;
+import javax.application.converter.NoopConverter;
 import javax.inject.Inject;
 import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -59,7 +60,6 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.namesFor;
@@ -97,7 +97,9 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     protected final Instantiator instantiator;
 
     @Inject
-    public DefaultMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader, @Nonnull Instantiator instantiator) {
+    public DefaultMVCGroupManager(@Nonnull GriffonApplication application,
+                                  @Nonnull ApplicationClassLoader applicationClassLoader,
+                                  @Nonnull Instantiator instantiator) {
         super(application);
         this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
         this.instantiator = requireNonNull(instantiator, "Argument 'instantiator' must not be null");
@@ -318,19 +320,21 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     protected abstract static class InjectionPoint {
+        protected final ConverterRegistry converterRegistry;
         protected final String name;
         protected final boolean nullable;
         protected final Kind kind;
         protected final Class<?> type;
         protected final String format;
-        protected final Class<? extends PropertyEditor> editor;
+        protected final Class<? extends Converter> converter;
 
-        protected InjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, String format, Class<? extends PropertyEditor> editor) {
+        protected InjectionPoint(ConverterRegistry converterRegistry, String name, boolean nullable, Kind kind, Class<?> type, String format, Class<? extends Converter> converter) {
+            this.converterRegistry = converterRegistry;
             this.name = name;
             this.nullable = nullable;
             this.kind = kind;
             this.type = type; this.format = format;
-            this.editor = editor;
+            this.converter = converter;
         }
 
         protected enum Kind {
@@ -342,51 +346,50 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         protected abstract void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args);
 
         @Nonnull
-        protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
+        protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends Converter> converter) {
             requireNonNull(type, ERROR_TYPE_NULL);
             requireNonNull(value, ERROR_VALUE_NULL);
 
-            PropertyEditor propertyEditor = resolvePropertyEditor(type, format, editor);
-            if (isNoopPropertyEditor(propertyEditor.getClass())) { return value; }
+            Converter resolvedConverter = resolveConverter(type, format, converter);
+            if (isNoopConverter(resolvedConverter.getClass())) { return value; }
             if (value instanceof CharSequence) {
-                propertyEditor.setAsText(String.valueOf(value));
+                return resolvedConverter.fromObject(String.valueOf(value));
             } else {
-                propertyEditor.setValue(value);
+                return resolvedConverter.fromObject(value);
             }
-            return propertyEditor.getValue();
         }
 
         @Nonnull
-        protected PropertyEditor resolvePropertyEditor(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
+        protected Converter resolveConverter(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends Converter> converter) {
             requireNonNull(type, ERROR_TYPE_NULL);
 
-            PropertyEditor propertyEditor = null;
-            if (isNoopPropertyEditor(editor)) {
-                propertyEditor = findEditor(type);
+            Converter resolvedConverter = null;
+            if (isNoopConverter(converter)) {
+                resolvedConverter = converterRegistry.findConverter(type);
             } else {
                 try {
-                    propertyEditor = editor.newInstance();
+                    resolvedConverter = converter.newInstance();
                 } catch (InstantiationException | IllegalAccessException e) {
-                    throw new GriffonException("Could not instantiate editor with " + editor, e);
+                    throw new GriffonException("Could not instantiate converter with " + converter, e);
                 }
             }
 
-            if (propertyEditor instanceof ExtendedPropertyEditor) {
-                ((ExtendedPropertyEditor) propertyEditor).setFormat(format);
+            if (resolvedConverter instanceof FormattingConverter) {
+                ((FormattingConverter) resolvedConverter).setFormat(format);
             }
-            return propertyEditor;
+            return resolvedConverter;
         }
 
-        protected boolean isNoopPropertyEditor(@Nonnull Class<? extends PropertyEditor> editor) {
-            return PropertyEditorResolver.NoopPropertyEditor.class.isAssignableFrom(editor);
+        protected boolean isNoopConverter(@Nonnull Class<? extends Converter> converter) {
+            return NoopConverter.class.isAssignableFrom(converter);
         }
     }
 
     protected static class FieldInjectionPoint extends InjectionPoint {
         protected final Field field;
 
-        protected FieldInjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, Field field, String format, Class<? extends PropertyEditor> editor) {
-            super(name, nullable, kind, type, format, editor);
+        protected FieldInjectionPoint(ConverterRegistry converterRegistry, String name, boolean nullable, Kind kind, Class<?> type, Field field, String format, Class<? extends Converter> converter) {
+            super(converterRegistry, name, nullable, kind, type, format, converter);
             this.field = field;
         }
 
@@ -420,8 +423,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                         }
                     }
                     return;
-                } else if (kind == Kind.MEMBER && (!isNoopPropertyEditor(editor) || !type.isAssignableFrom(argValue.getClass()))) {
-                    argValue = convertValue(type, argValue, format, editor);
+                } else if (kind == Kind.MEMBER && (!isNoopConverter(converter) || !type.isAssignableFrom(argValue.getClass()))) {
+                    argValue = convertValue(type, argValue, format, converter);
                 }
 
                 setFieldValue(instance, name, argValue);
@@ -438,8 +441,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     protected static class MethodInjectionPoint extends InjectionPoint {
         protected final Method method;
 
-        protected MethodInjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, Method method, String format, Class<? extends PropertyEditor> editor) {
-            super(name, nullable, kind, type, format, editor);
+        protected MethodInjectionPoint(ConverterRegistry converterRegistry, String name, boolean nullable, Kind kind, Class<?> type, Method method, String format, Class<? extends Converter> converter) {
+            super(converterRegistry, name, nullable, kind, type, format, converter);
             this.method = method;
         }
 
@@ -481,8 +484,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                             }
                         }
                         return;
-                    } else if (kind == Kind.MEMBER && (!isNoopPropertyEditor(editor) || !type.isAssignableFrom(argValue.getClass()))) {
-                        argValue = convertValue(type, argValue, format, editor);
+                    } else if (kind == Kind.MEMBER && (!isNoopConverter(converter) || !type.isAssignableFrom(argValue.getClass()))) {
+                        argValue = convertValue(type, argValue, format, converter);
                     }
 
                     method.invoke(instance, argValue);
@@ -516,16 +519,16 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                 boolean nullable = method.getAnnotation(Nonnull.class) == null && findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) == null;
                 InjectionPoint.Kind kind = resolveKind(method);
                 String format = resolveFormat(method);
-                Class<? extends PropertyEditor> editor = resolveEditor(method);
+                Class<? extends Converter> converter = resolveEditor(method);
                 Field field = fields.get(descriptor.getName());
                 if (field != null && kind == InjectionPoint.Kind.OTHER) {
                     kind = resolveKind(field);
                     nullable = field.getAnnotation(Nonnull.class) == null;
                     type = field.getType();
                     format = resolveFormat(field);
-                    editor = resolveEditor(field);
+                    converter = resolveEditor(field);
                 }
-                injectionPoints.put(descriptor.getName(), new MethodInjectionPoint(descriptor.getName(), nullable, kind, type, method, format, editor));
+                injectionPoints.put(descriptor.getName(), new MethodInjectionPoint(converterRegistry, descriptor.getName(), nullable, kind, type, method, format, converter));
             }
 
             for (Field field : getAllDeclaredFields(resolveMemberClass(member))) {
@@ -535,8 +538,8 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
                     InjectionPoint.Kind kind = resolveKind(field);
                     Class<?> type = field.getType();
                     String format = resolveFormat(field);
-                    Class<? extends PropertyEditor> editor = resolveEditor(field);
-                    injectionPoints.put(field.getName(), new FieldInjectionPoint(field.getName(), nullable, kind, type, field, format, editor));
+                    Class<? extends Converter> converter = resolveEditor(field);
+                    injectionPoints.put(field.getName(), new FieldInjectionPoint(converterRegistry, field.getName(), nullable, kind, type, field, format, converter));
                 }
             }
 
@@ -579,11 +582,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     @Nonnull
-    protected Class<? extends PropertyEditor> resolveEditor(@Nonnull AnnotatedElement element) {
+    protected Class<? extends Converter> resolveEditor(@Nonnull AnnotatedElement element) {
         if (isMvcMember(element)) {
-            return element.getAnnotation(MVCMember.class).editor();
+            return element.getAnnotation(MVCMember.class).converter();
         }
-        return PropertyEditorResolver.NoopPropertyEditor.class;
+        return NoopConverter.class;
     }
 
     protected boolean isContextual(AnnotatedElement element) {

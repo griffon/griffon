@@ -21,6 +21,7 @@ import griffon.core.Context;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.ConverterRegistry;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -36,12 +37,12 @@ public class DefaultContext extends AbstractContext {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     private final Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-    public DefaultContext() {
-        this(null);
+    public DefaultContext(@Nonnull ConverterRegistry converterRegistry) {
+        this(converterRegistry,null);
     }
 
-    public DefaultContext(@Nullable Context parentContext) {
-        super(parentContext);
+    public DefaultContext(@Nonnull ConverterRegistry converterRegistry, @Nullable Context parentContext) {
+        super(converterRegistry, parentContext);
     }
 
     @Nullable

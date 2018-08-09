@@ -17,16 +17,15 @@
  */
 package griffon.pivot.formatters;
 
-import griffon.core.formatters.AbstractFormatter;
-import griffon.core.formatters.ParseException;
 import griffon.pivot.support.Colors;
+import org.kordamp.jsr377.formatter.AbstractFormatter;
+import org.kordamp.jsr377.formatter.ParseException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.Color;
 import java.util.Arrays;
 
-import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.lang.Integer.toHexString;
 import static java.util.Objects.requireNonNull;
@@ -53,7 +52,7 @@ import static java.util.Objects.requireNonNull;
  * </p>
  *
  * @author Andres Almiray
- * @see griffon.core.formatters.Formatter
+ * @see org.kordamp.jsr377.formatter.Formatter
  * @since 2.0.0
  */
 public class ColorFormatter extends AbstractFormatter<Color> {
@@ -113,7 +112,9 @@ public class ColorFormatter extends AbstractFormatter<Color> {
      * <p>Returns a {@code ColorFormatter} given a color pattern.</p>
      *
      * @param pattern the input pattern. Must be one of the 4 supported color patterns.
+     *
      * @return a {@code ColorPattern} instance
+     *
      * @throws IllegalArgumentException if the supplied {@code pattern} is not supported
      */
     @Nonnull
@@ -175,7 +176,9 @@ public class ColorFormatter extends AbstractFormatter<Color> {
      * {@code griffon.pivot.support.Colors}.
      *
      * @param str the string representation of a {@code java.awt.Color}
+     *
      * @return a {@code java.awt.Color} instance matching the supplied RGBA color components
+     *
      * @throws ParseException if the string cannot be parsed by the chosen pattern
      * @see griffon.pivot.support.Colors
      */
@@ -406,5 +409,13 @@ public class ColorFormatter extends AbstractFormatter<Color> {
 
     private static String padLeft(String self, String padding) {
         return 2 <= self.length() ? self : padding + self;
+    }
+
+    private static int parseHexInt(@Nonnull String val, @Nonnull Class<?> klass) throws ParseException {
+        try {
+            return Integer.parseInt(String.valueOf(requireNonNull(val)).trim(), 16) & 0xFF;
+        } catch (NumberFormatException e) {
+            throw parseError(val, klass, e);
+        }
     }
 }

@@ -21,6 +21,7 @@ import griffon.util.AbstractMapResourceBundle;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.ConverterRegistry;
 import java.util.Collections;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -39,7 +40,8 @@ public abstract class AbstractMapConfiguration extends AbstractConfiguration {
     private static final String ERROR_MAP_NULL = "Argument 'map' must not be null";
     private final Map<String, Object> map;
 
-    protected AbstractMapConfiguration(@Nonnull Map<String, Object> map) {
+    protected AbstractMapConfiguration(@Nonnull ConverterRegistry converterRegistry, @Nonnull Map<String, Object> map) {
+        super(converterRegistry);
         this.map = requireNonNull(map, ERROR_MAP_NULL);
     }
 
@@ -67,7 +69,7 @@ public abstract class AbstractMapConfiguration extends AbstractConfiguration {
 
     @Nullable
     @Override
-    public Object get(@Nonnull String key) {
+    public <T> T get(@Nonnull String key) {
         try {
             return getConfigValue(map, key);
         } catch (MissingResourceException mre) {

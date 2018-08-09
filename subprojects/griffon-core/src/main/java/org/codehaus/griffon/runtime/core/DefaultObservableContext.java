@@ -23,6 +23,7 @@ import griffon.util.TypeUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.ConverterRegistry;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -43,12 +44,12 @@ public class DefaultObservableContext extends DefaultContext implements Observab
         }
     };
 
-    public DefaultObservableContext() {
-        super();
+    public DefaultObservableContext(@Nonnull ConverterRegistry converterRegistry) {
+        super(converterRegistry);
     }
 
-    public DefaultObservableContext(@Nullable Context parentContext) {
-        super(parentContext);
+    public DefaultObservableContext(@Nonnull ConverterRegistry converterRegistry, @Nullable Context parentContext) {
+        super(converterRegistry, parentContext);
         if (parentContext instanceof ObservableContext) {
             ObservableContext observableParent = (ObservableContext) parentContext;
             observableParent.addContextEventListener(parentListener);

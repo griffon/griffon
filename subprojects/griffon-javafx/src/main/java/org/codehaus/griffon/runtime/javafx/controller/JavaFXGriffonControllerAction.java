@@ -30,9 +30,9 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyEditor;
+import javax.application.converter.Converter;
+import javax.application.converter.ConverterRegistry;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.TypeUtils.castToBoolean;
 import static java.util.Objects.requireNonNull;
@@ -199,9 +199,13 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
 
     @Nullable
     public Image getImage() {
-        PropertyEditor editor = findEditor(Image.class);
-        editor.setValue(image);
-        return (Image) editor.getValue();
+        ConverterRegistry converterRegistry = getController().getApplication()
+            .getInjector().getInstance(ConverterRegistry.class);
+        Converter<Image> converter = converterRegistry.findConverter(Image.class);
+        if (converter != null) {
+            return converter.fromObject(image);
+        }
+        return null;
     }
 
     public void setImage(@Nullable String image) {

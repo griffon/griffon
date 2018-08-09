@@ -65,7 +65,7 @@ public interface Context {
 
     /**
      * Removes a key from this context. Does not affect the context's hierarchy. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key  the key to be removed
      * @param type the type to be returned
@@ -311,7 +311,7 @@ public interface Context {
     /**
      * /**
      * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key  the key to search
      * @param type the type to be returned
@@ -322,7 +322,7 @@ public interface Context {
 
     /**
      * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * converted to type <tt>T</tt> if found using a {@code Converter}.
      * If not found then the supplied <tt>defaultValue</tt> will be returned.
      *
      * @param key          the key to search

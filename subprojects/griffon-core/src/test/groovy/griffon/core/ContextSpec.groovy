@@ -17,21 +17,23 @@
  */
 package griffon.core
 
-import griffon.core.editors.IntegerPropertyEditor
-import griffon.core.editors.PropertyEditorResolver
 import griffon.inject.Contextual
 import org.codehaus.griffon.runtime.core.DefaultContext
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
+import org.kordamp.jsr377.converter.IntegerConverter
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.application.converter.ConverterRegistry
 import javax.inject.Named
 
 @Unroll
 class ContextSpec extends Specification {
-    @Shared private Context ctx1 = new DefaultContext()
-    @Shared private Context ctx2 = new DefaultContext(ctx1)
-    @Shared private Context ctx3 = new DefaultContext(ctx1)
+    @Shared private ConverterRegistry converterRegistry = new DefaultConverterRegistry()
+    @Shared private Context ctx1 = new DefaultContext(converterRegistry)
+    @Shared private Context ctx2 = new DefaultContext(converterRegistry, ctx1)
+    @Shared private Context ctx3 = new DefaultContext(converterRegistry, ctx1)
 
     def setup() {
         ctx1['foo'] = 'foo'
@@ -122,8 +124,8 @@ class ContextSpec extends Specification {
 
     def "Find values on context 1 using converted value"() {
         given:
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Integer, IntegerConverter)
 
         when:
         Integer val = ctx1.getConverted(key, type)
@@ -132,7 +134,7 @@ class ContextSpec extends Specification {
         value == val
 
         cleanup:
-        PropertyEditorResolver.clear()
+        converterRegistry.clear()
 
         where:
         key       | type    || value
@@ -156,8 +158,8 @@ class ContextSpec extends Specification {
 
     def "Remove values on context 1 using converted value"() {
         given:
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Integer, IntegerConverter)
 
         when:
         Integer val = ctx1.removeConverted(key, type)
@@ -167,7 +169,7 @@ class ContextSpec extends Specification {
         value == val
 
         cleanup:
-        PropertyEditorResolver.clear()
+        converterRegistry.clear()
 
         where:
         key       | type    || value

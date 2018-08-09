@@ -17,8 +17,8 @@
  */
 package griffon.javafx.formatters
 
-import griffon.core.formatters.ParseException
 import javafx.scene.paint.Color
+import org.kordamp.jsr377.formatter.ParseException
 import spock.lang.Specification
 import spock.lang.Unroll
 

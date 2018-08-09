@@ -26,6 +26,7 @@ import griffon.util.ExpandableResourceBundle
 import integration.TestGriffonApplication
 import org.codehaus.griffon.runtime.core.configuration.AbstractConfiguration
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -79,6 +80,7 @@ class TestConfiguration extends AbstractConfiguration {
     private ResourceBundle resourceBundle
 
     TestConfiguration() {
+        super(new DefaultConverterRegistry())
         resourceBundle = ExpandableResourceBundle.wrapResourceBundle(new AbstractMapResourceBundle() {
             @Override
             protected void initialize(@Nonnull Map<String, Object> entries) {
@@ -115,7 +117,7 @@ class TestConfiguration extends AbstractConfiguration {
     }
 
     @Override
-    Object get(@Nonnull String key) {
+    <T> T get(@Nonnull String key) {
         return resourceBundle.getObject(key)
     }
 }

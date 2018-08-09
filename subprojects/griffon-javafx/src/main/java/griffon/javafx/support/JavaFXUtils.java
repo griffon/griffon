@@ -21,7 +21,6 @@ import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
-import griffon.core.editors.ValueConversionException;
 import griffon.core.i18n.MessageSource;
 import griffon.exceptions.InstanceMethodInvocationException;
 import javafx.application.Platform;
@@ -62,6 +61,7 @@ import javafx.stage.Window;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.ConversionException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -1624,11 +1624,11 @@ public final class JavaFXUtils {
         return null;
     }
 
-    private static ValueConversionException illegalValue(Object value, Class<?> klass) {
-        throw new ValueConversionException(value, klass);
+    private static ConversionException illegalValue(Object value, Class<?> klass) {
+        throw new ConversionException(value, klass);
     }
 
-    private static ValueConversionException illegalValue(Object value, Class<?> klass, Exception e) {
-        throw new ValueConversionException(value, klass, e);
+    private static ConversionException illegalValue(Object value, Class<?> klass, Exception e) {
+        throw new ConversionException(value, klass, e);
     }
 }

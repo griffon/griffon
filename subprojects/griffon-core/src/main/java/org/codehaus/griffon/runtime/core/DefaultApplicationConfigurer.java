@@ -27,13 +27,11 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionHandler;
-import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.env.Lifecycle;
 import griffon.core.event.EventHandler;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.resources.ResourceInjector;
-import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +40,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
-import java.beans.PropertyEditor;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.AnnotationUtils.sortByDependencies;
 import static java.util.Collections.singletonList;
@@ -115,7 +111,6 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         event(ApplicationEvent.BOOTSTRAP_START, singletonList(application));
 
-        initializePropertyEditors();
         initializeResourcesInjector();
         initializeConfigurationManager();
         runLifecycleHandler(Lifecycle.INITIALIZE);
@@ -138,42 +133,6 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
         application.getEventRouter().publishEvent(event.getName(), args);
-    }
-
-    protected void initializePropertyEditors() {
-        ServiceLoaderUtils.load(applicationClassLoader().get(), "META-INF/editors/", PropertyEditor.class, (classLoader, type, line) -> {
-            try {
-                String[] parts = line.trim().split("=");
-                Class<?> targetType = loadClass(parts[0].trim(), classLoader);
-                Class<? extends PropertyEditor> editorClass = (Class<? extends PropertyEditor>) loadClass(parts[1].trim(), classLoader);
-
-                // Editor must have a no-args constructor
-                // CCE means the class can not be used
-                editorClass.newInstance();
-                PropertyEditorResolver.registerEditor(targetType, editorClass);
-                LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
-            } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not load " + type.getName() + " with " + line, sanitize(e));
-                }
-            }
-        });
-
-        Class<?>[][] pairs = new Class<?>[][]{
-            new Class<?>[]{Boolean.class, Boolean.TYPE},
-            new Class<?>[]{Byte.class, Byte.TYPE},
-            new Class<?>[]{Short.class, Short.TYPE},
-            new Class<?>[]{Integer.class, Integer.TYPE},
-            new Class<?>[]{Long.class, Long.TYPE},
-            new Class<?>[]{Float.class, Float.TYPE},
-            new Class<?>[]{Double.class, Double.TYPE}
-        };
-
-        for (Class<?>[] pair : pairs) {
-            PropertyEditor editor = PropertyEditorResolver.findEditor(pair[0]);
-            LOG.debug("Registering {} as editor for {}", editor.getClass().getName(), pair[1].getName());
-            PropertyEditorResolver.registerEditor(pair[1], editor.getClass());
-        }
     }
 
     protected void initializeResourcesInjector() {

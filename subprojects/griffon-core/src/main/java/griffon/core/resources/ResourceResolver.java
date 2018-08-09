@@ -202,7 +202,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
     <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException;
 
     /**
-     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key  Key to lookup, such as 'sample.SampleModel.icon'
      * @param args Arguments that will be filled in for params within the resource (params look like "{0}" within a
@@ -218,7 +218,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
     <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Class<T> type) throws NoSuchResourceException;
 
     /**
-     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key    Key to lookup, such as 'sample.SampleModel.icon'
      * @param args   Arguments that will be filled in for params within the resource (params look like "{0}" within a
@@ -252,7 +252,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
 
     /**
      * Try to resolve the resource. Returns default value if no resource was found.
-     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key          Key to lookup, such as 'sample.SampleModel.icon'
      * @param args         Arguments that will be filled in for params within the resource (params look like "{0}"
@@ -269,7 +269,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
 
     /**
      * Try to resolve the resource. Returns default value if no resource was found.
-     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key          Key to lookup, such as 'sample.SampleModel.icon'
      * @param args         Arguments that will be filled in for params within the resource (params look like "{0}"
@@ -286,7 +286,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
     <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type);
 
     /**
-     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key  Key to lookup, such as 'sample.SampleModel.icon'
      * @param args Arguments that will be filled in for params within the resource (params look like "{:key}"
@@ -302,7 +302,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
     <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Class<T> type) throws NoSuchResourceException;
 
     /**
-     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * Try to resolve the resource. The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key    Key to lookup, such as 'sample.SampleModel.icon'
      * @param args   Arguments that will be filled in for params within the resource (params look like "{:key}"
@@ -320,7 +320,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
 
     /**
      * Try to resolve the resource. Returns default value if no resource was found.
-     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key          Key to lookup, such as 'sample.SampleModel.icon'
      * @param args         Arguments that will be filled in for params within the resource (params look like "{:key}"
@@ -337,7 +337,7 @@ public interface ResourceResolver extends javax.application.resources.ResourceRe
 
     /**
      * Try to resolve the resource. Returns default value if no resource was found.
-     * The value is converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * The value is converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key          Key to lookup, such as 'sample.SampleModel.icon'
      * @param args         Arguments that will be filled in for params within the resource (params look like "{:key}"

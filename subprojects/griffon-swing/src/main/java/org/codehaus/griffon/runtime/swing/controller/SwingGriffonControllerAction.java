@@ -20,7 +20,6 @@ package org.codehaus.griffon.runtime.swing.controller;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
-import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
@@ -28,11 +27,12 @@ import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.Converter;
+import javax.application.converter.ConverterRegistry;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.KeyStroke;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyEditor;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
@@ -106,9 +106,12 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
     protected void handleIcon(@Nullable Object value, @Nonnull String key) {
         if (value != null) {
-            PropertyEditor editor = PropertyEditorResolver.findEditor(Icon.class);
-            editor.setValue(value);
-            toolkitAction.putValue(key, editor.getValue());
+            Converter<Icon> converter = getController().getApplication()
+                .getInjector().getInstance(ConverterRegistry.class)
+                .findConverter(Icon.class);
+            if (converter != null) {
+                toolkitAction.putValue(key, converter.fromObject(value));
+            }
         }
     }
 

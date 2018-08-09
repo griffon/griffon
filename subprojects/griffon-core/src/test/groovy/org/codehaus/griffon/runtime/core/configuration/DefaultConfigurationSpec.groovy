@@ -20,6 +20,7 @@ package org.codehaus.griffon.runtime.core.configuration
 import griffon.core.Configuration
 import griffon.util.AbstractMapResourceBundle
 import org.codehaus.griffon.runtime.core.MapResourceBundle
+import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -30,7 +31,7 @@ class DefaultConfigurationSpec extends Specification {
     def 'Calling configuration.#method(#key, #defaultValue) gives #value as result'() {
         given:
         ResourceBundle bundle = new MapResourceBundle()
-        Configuration configuration = new ResourceBundleConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(new DefaultConverterRegistry(), bundle)
 
         expect:
         value == (defaultValue != null ? configuration."$method"(key, defaultValue) : configuration."$method"(key))
@@ -67,7 +68,7 @@ class DefaultConfigurationSpec extends Specification {
     def 'Can resolve nested keys from sample application configuration'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
-        Configuration configuration = new ResourceBundleConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(new DefaultConverterRegistry(), bundle)
         Properties props = configuration.asProperties()
 
         expect:

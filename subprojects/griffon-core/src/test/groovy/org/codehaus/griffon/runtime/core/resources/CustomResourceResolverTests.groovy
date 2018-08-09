@@ -20,18 +20,17 @@ package org.codehaus.griffon.runtime.core.resources
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
-import com.google.inject.Inject
-import griffon.core.editors.IntegerPropertyEditor
-import griffon.core.editors.PropertyEditorResolver
 import griffon.core.resources.NoSuchResourceException
 import griffon.core.resources.ResourceResolver
 import griffon.util.AbstractMapResourceBundle
 import org.junit.Rule
 import org.junit.Test
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
+import org.kordamp.jsr377.converter.IntegerConverter
 
 import javax.annotation.Nonnull
 import javax.application.converter.ConverterRegistry
+import javax.inject.Inject
 import javax.inject.Singleton
 
 class CustomResourceResolverTests {
@@ -40,6 +39,9 @@ class CustomResourceResolverTests {
 
     @Inject
     private ResourceResolver resourceResolver
+
+    @Inject
+    private ConverterRegistry converterRegistry
 
     @Test
     void getAllDefinedMessages() {
@@ -156,8 +158,8 @@ class CustomResourceResolverTests {
 
     @Test
     void exerciseAllMethodsWithConverter() {
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Integer, IntegerConverter)
 
         try {
             Integer defaultValue = 21
@@ -179,7 +181,7 @@ class CustomResourceResolverTests {
             assert 42 == resourceResolver.resolveResourceConverted('integer', [:], Locale.default, Integer)
             assert 42 == resourceResolver.resolveResourceConverted('integer', [] as Object[], Locale.default, Integer)
         } finally {
-            PropertyEditorResolver.clear()
+            converterRegistry.clear()
         }
     }
 

@@ -17,10 +17,9 @@
  */
 package griffon.inject;
 
-import griffon.core.editors.PropertyEditorResolver;
-
+import javax.application.converter.Converter;
+import javax.application.converter.NoopConverter;
 import javax.inject.Qualifier;
-import java.beans.PropertyEditor;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -38,5 +37,5 @@ import java.lang.annotation.Target;
 public @interface MVCMember {
     String format() default "";
 
-    Class<? extends PropertyEditor> editor() default PropertyEditorResolver.NoopPropertyEditor.class;
+    Class<? extends Converter> converter() default NoopConverter.class;
 }

@@ -17,14 +17,11 @@
  */
 package griffon.util;
 
-import griffon.core.editors.ExtendedPropertyEditor;
-import griffon.core.editors.PropertyEditorResolver;
 import griffon.exceptions.GriffonException;
 import griffon.exceptions.TypeConversionException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyEditor;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static griffon.util.GriffonNameUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,7 +42,6 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public final class TypeUtils {
-
     private static final String ERROR_VALUE_NULL = "Argument 'value' must not be null";
 
     private TypeUtils() {
@@ -229,15 +224,20 @@ public final class TypeUtils {
             }
         }
 
+        /*
         PropertyEditor targetEditor = resolveTargetPropertyEditor(targetType, format);
         if (targetEditor != null) {
             targetEditor.setValue(value);
             return (T) targetEditor.getValue();
         }
+        */
 
         throw new TypeConversionException(value, targetType);
     }
 
+    // TODO: FIX ME!
+
+    /*
     @Nullable
     private static <T> PropertyEditor resolveTargetPropertyEditor(@Nonnull Class<T> targetType, @Nullable String format) {
         PropertyEditor editor = doResolveTargetPropertyEditor(targetType);
@@ -251,6 +251,7 @@ public final class TypeUtils {
     private static <T> PropertyEditor doResolveTargetPropertyEditor(@Nonnull Class<T> targetType) {
         return PropertyEditorResolver.findEditor(targetType);
     }
+    */
 
     public static boolean isBoolean(@Nonnull Class<?> type) {
         return Boolean.class == type || Boolean.TYPE == type;

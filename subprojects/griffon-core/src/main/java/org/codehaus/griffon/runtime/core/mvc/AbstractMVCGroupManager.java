@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.ConverterRegistry;
 import javax.inject.Inject;
 import java.lang.reflect.Constructor;
 import java.util.Collections;
@@ -82,13 +83,16 @@ public abstract class AbstractMVCGroupManager implements MVCGroupManager {
     private boolean initialized;
 
     @Inject
-    private MVCGroupConfigurationFactory mvcGroupConfigurationFactory;
+    protected MVCGroupConfigurationFactory mvcGroupConfigurationFactory;
 
     @Inject
-    private MVCGroupFactory mvcGroupFactory;
+    protected MVCGroupFactory mvcGroupFactory;
 
     @Inject
-    private ContextFactory contextFactory;
+    protected ContextFactory contextFactory;
+
+    @Inject
+    protected ConverterRegistry converterRegistry;
 
     @Inject
     public AbstractMVCGroupManager(@Nonnull GriffonApplication application) {

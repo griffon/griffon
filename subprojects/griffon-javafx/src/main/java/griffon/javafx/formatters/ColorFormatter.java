@@ -17,16 +17,15 @@
  */
 package griffon.javafx.formatters;
 
-import griffon.core.formatters.AbstractFormatter;
-import griffon.core.formatters.ParseException;
 import javafx.scene.paint.Color;
+import org.kordamp.jsr377.formatter.AbstractFormatter;
+import org.kordamp.jsr377.formatter.ParseException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import static griffon.util.GriffonNameUtils.isBlank;
 import static java.lang.Integer.toHexString;
 import static java.util.Objects.requireNonNull;
 
@@ -52,7 +51,7 @@ import static java.util.Objects.requireNonNull;
  * </p>
  *
  * @author Andres Almiray
- * @see griffon.core.formatters.Formatter
+ * @see org.kordamp.jsr377.formatter.Formatter
  * @since 2.0.0
  */
 public class ColorFormatter extends AbstractFormatter<Color> {
@@ -435,5 +434,13 @@ public class ColorFormatter extends AbstractFormatter<Color> {
 
     private static String padLeft(String self, String padding) {
         return 2 <= self.length() ? self : padding + self;
+    }
+
+    private static int parseHexInt(@Nonnull String val, @Nonnull Class<?> klass) throws ParseException {
+        try {
+            return Integer.parseInt(String.valueOf(requireNonNull(val)).trim(), 16) & 0xFF;
+        } catch (NumberFormatException e) {
+            throw parseError(val, klass, e);
+        }
     }
 }

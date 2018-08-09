@@ -62,23 +62,16 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
 
     @Nullable
     @Override
-    public Object remove(@Nonnull String key) {
+    public <T> T remove(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);
         if (mutableKeyValues.containsKey(key)) {
             removedKeys.add(key);
-            return mutableKeyValues.remove(key);
+            return (T) mutableKeyValues.remove(key);
         } else if (!removedKeys.contains(key) && delegate.containsKey(key)) {
             removedKeys.add(key);
             return delegate.get(key);
         }
         return null;
-    }
-
-    @Nullable
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T removeAs(@Nonnull String key) {
-        return (T) remove(key);
     }
 
     @Nullable
@@ -107,7 +100,7 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
 
     @Nullable
     @Override
-    public Object get(@Nonnull String key) {
+    public <T> T get(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);
         try {
             return getConfigValue(mutableKeyValues, key);

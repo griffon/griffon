@@ -1,0 +1,289 @@
+
+[[_resources_property_converters]]
+= Converters
+
+Resource injection makes use of the `javax.application.converter.Converter mechanism provided by JSR-377.
+The default `{link_resources_injector}` queries the application's `javax.application.converter.ConverterRegistry`
+whenever a resource value must be transformed to a target type.
+
+ConverterRegistry provides methods for registering custom Converters; it also
+follows a class naming convention to load Converters should a custom one may not be
+programmatically registered. Griffon applications will automatically load and register
+Converters from the following classpath resource: `/META-INF/services/javax.application.converter.spi.ConverterProvider`.
+Each line follows the format
+
+[source]
+----
+fully.qualified.classname
+----
+
+The following table enumerates the default Converters loaded by Griffon at startup.
+
+.Core Converter mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| java.lang.String
+| org.kordamp.jsr377.converter.spi.StringConverter
+|
+
+| java.io.File
+| org.kordamp.jsr377.converter.spi.FileConverter
+|
+
+| java.net.URL
+| org.kordamp.jsr377.converter.spi.URLConverter
+|
+
+| java.net.URI
+| org.kordamp.jsr377.converter.spi.URIConverter
+|
+
+| java.math.BigDecimal
+| org.kordamp.jsr377.converter.spi.BigDecimalConverter
+| 'currency', 'percent'
+
+| java.math.BigInteger
+| org.kordamp.jsr377.converter.spi.BigIntegerConverter
+| 'currency', 'percent'
+
+| java.lang.Boolean
+| org.kordamp.jsr377.converter.spi.BooleanConverter
+| 'boolean', 'query', 'switch'
+
+| java.lang.Byte
+| org.kordamp.jsr377.converter.spi.ByteConverter
+| 'currency', 'percent'
+
+| java.lang.Short
+| org.kordamp.jsr377.converter.spi.ShortConverter
+| 'currency', 'percent'
+
+| java.lang.Integer
+| org.kordamp.jsr377.converter.spi.IntegerConverter
+| 'currency', 'percent'
+
+| java.lang.Long
+| org.kordamp.jsr377.converter.spi.LongConverter
+| 'currency', 'percent'
+
+| java.lang.Float
+| org.kordamp.jsr377.converter.spi.FloatConverter
+| 'currency', 'percent'
+
+| java.lang.Double
+| org.kordamp.jsr377.converter.spi.DoubleConverter
+| 'currency', 'percent'
+
+| java.util.Calendar
+| org.kordamp.jsr377.converter.spi.CalendarConverter
+|
+
+| java.util.Date
+| org.kordamp.jsr377.converter.spi.DateConverter
+|
+
+| java.util.Locale
+| org.kordamp.jsr377.converter.spi.LocaleConverter
+| <language>[\_<country>[_<variant>]]
+
+| java.time.LocalDate
+| org.kordamp.jsr377.converter.spi.LocalDateConverter
+|
+
+| java.time.LocalDateTime
+| org.kordamp.jsr377.converter.spi.LocalDateTimeConverter
+|
+
+| java.time.LocalTime
+| org.kordamp.jsr377.converter.spi.LocalTimeConverter
+|
+
+|===
+
+Where the following apply:
+
+ * 'currency' and 'percent' are literal values.
+ * 'boolean' accepts `true` and `false` as values.
+ * 'query' accepts `yes` and `no` as values.
+ * 'switch' accepts `on` and `off` as values.
+
+Core UI Toolkit dependencies, such as `griffon-swing`, `griffon-javafx`, and `griffon-pivot` deliver
+additional Converters. The following tables summarize these additions:
+
+.Swing Converter mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| java.awt.Color
+| griffon.swing.converters.ColorConverter
+| #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
+
+| java.awt.Dimension
+| griffon.swing.converters.DimensionConverter
+| width, height
+
+| java.awt.Font
+| griffon.swing.converters.FontConverter
+| family-style-size
+
+| java.awt.GradientPaint
+| griffon.swing.converters.GradientPaintConverter
+| x1, y1, #RGB, x2, y2, #RGB, CYCLIC
+
+| java.awt.Image
+| griffon.swing.converters.ImageConverter
+| path/to/image_file
+
+| java.awt.Insets
+| griffon.swing.converters.InsetsConverter
+| top, left, bottom, right
+
+| java.awt.LinearGradientPaint
+| griffon.swing.converters.LinearGradientPaintConverter
+| xy, y1, x2, x2, [0.0, 1.0], [#RGB, #RGB], REPEAT
+
+| java.awt.Point
+| griffon.swing.converters.PointConverter
+| x, y
+
+| java.awt.Polygon
+| griffon.swing.converters.PolygonConverter
+| x1, y1, x2, y2, ..., xn, yn
+
+| java.awt.RadialGradientPaint
+| griffon.swing.converters.RadialGradientPaintConverter
+| xy, y1, r, fx, fy, [0.0, 1.0], [#RGB, #RGB], REPEAT
+
+| java.awt.Rectangle
+| griffon.swing.converters.RectangleConverter
+| x, y, width, height
+
+| java.awt.geom.Point2D
+| griffon.swing.converters.Point2DConverter
+| x, y
+
+| java.awt.geom.Rectangle2D
+| griffon.swing.converters.Rectangle2DConverter
+| x, y, width, height
+
+| java.awt.image.BufferedImage
+| griffon.swing.converters.BufferedImageConverter
+| path/to/image_file
+
+| javax.swing.Icon
+| griffon.swing.converters.IconConverter
+| path/to/image_file
+
+|===
+
+Where the following apply:
+
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+ * CYCLIC may be `true` or `false`.
+ * REPEAT must be one of `MultipleGradientPaint.CycleMethod`.
+ * GradientPaint supports another format: x1, y1 | x2, y2, | #RGB, #RGB | CYCLIC
+ * Color supports all color constants defined by `griffon.swing.support.Colors`.
+ * All color formats are supported by gradient converters.
+
+The following styles are supported by `FontConverter`:
+
+ * BOLD
+ * ITALIC
+ * BOLDITALIC
+ * PLAIN
+
+.JavaFX Converter mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| javafx.geometry.Dimension2D
+| griffon.javafx.converters.Dimension2DConverter
+| width, height
+
+| javafx.geometry.Insets
+| griffon.javafx.converters.InsetsConverter
+| top, left, bottom, right
+
+| javafx.geometry.Point2D
+| griffon.javafx.converters.Point2DConverter
+| x, y
+
+| javafx.geometry.Rectangle2D
+| griffon.javafx.converters.Rectangle2DConverter
+| x, y , width, height
+
+| javafx.scene.image.Image
+| griffon.javafx.converters.ImageConverter
+| path/to/image_file
+
+| javafx.scene.paint.Color
+| griffon.javafx.converters.ColorConverter
+| #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
+
+| javafx.scene.paint.LinearGradient
+| griffon.javafx.converters.LinearGradientConverter
+| LinearGradient.parse()
+
+| javafx.scene.paint.RadialGradient
+| griffon.javafx.converters.RadialGradientConverter
+| RadialGradient.parse()
+
+| javafx.scene.paint.Paint|
+| griffon.javafx.converters.PaintConverter
+| all Color, LinearGradient and RadialGradient formats
+
+|===
+
+Where the following applies:
+
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+
+.Pivot Converter mappings
+[cols="3*", options="header"]
+|===
+
+| Type
+| Editor Class
+| Format
+
+| java.awt.Color
+| griffon.pivot.converters.ColorConverter
+| #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
+
+| org.apache.pivot.wtk.Bounds
+| griffon.pivot.converters.BoundsConverter
+| x, y , width, height
+
+| org.apache.pivot.wtk.Dimensions
+| griffon.pivot.converters.DimensionsConverter
+| width, height
+
+| org.apache.pivot.wtk.Insets
+| griffon.pivot.converters.InsetsConverter
+| top, left, right, bottom
+
+| org.apache.pivot.wtk.Point
+| griffon.pivot.converters.PointConverter
+| x, y
+
+|===
+
+Where the following apply:
+
+ * `R`, `G`, `B` and `A` represent an hexadecimal number.
+ * Color supports all color constants defined by `griffon.pivot.support.Colors`.
+
+

@@ -17,7 +17,7 @@
  */
 package griffon.pivot.formatters
 
-import griffon.core.formatters.ParseException
+import org.kordamp.jsr377.formatter.ParseException
 import spock.lang.Specification
 import spock.lang.Unroll
 

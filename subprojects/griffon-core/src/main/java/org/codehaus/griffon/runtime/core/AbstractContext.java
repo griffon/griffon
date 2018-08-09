@@ -23,13 +23,13 @@ import griffon.inject.Contextual;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.Converter;
+import javax.application.converter.ConverterRegistry;
 import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.nameFor;
@@ -48,9 +48,11 @@ import static java.util.Objects.requireNonNull;
  * @since 2.2.0
  */
 public abstract class AbstractContext implements Context {
+    protected final ConverterRegistry converterRegistry;
     protected Context parentContext;
 
-    public AbstractContext(@Nullable Context parentContext) {
+    public AbstractContext(@Nonnull ConverterRegistry converterRegistry, @Nullable Context parentContext) {
+        this.converterRegistry = requireNonNull(converterRegistry, "Argument 'converterRegistry' must not be null");
         this.parentContext = parentContext;
     }
 
@@ -207,9 +209,10 @@ public abstract class AbstractContext implements Context {
             if (type.isAssignableFrom(value.getClass())) {
                 return (T) value;
             } else {
-                PropertyEditor editor = findEditor(type);
-                editor.setValue(value);
-                return (T) editor.getValue();
+                Converter<T> converter = converterRegistry.findConverter(type);
+                if (null != converter) {
+                    return converter.fromObject(value);
+                }
             }
         }
         return null;

@@ -53,10 +53,8 @@ class GroovyScriptResourceBundleLoaderSpec extends Specification {
     def 'Load bundle #name and check #key = #value'() {
         when:
         Collection<ResourceBundle> bundles = resourceBundleLoader.load(name)
-        println bundles
 
         then:
-        println bundles[0].keySet()
         bundles.size() == 1
         bundles[0].getObject(key) == value
 

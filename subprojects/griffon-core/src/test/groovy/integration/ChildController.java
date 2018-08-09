@@ -33,7 +33,7 @@ public class ChildController extends AbstractGriffonController {
     private MVCGroup parentGroup;
     private RootController parentController;
 
-    @MVCMember(editor = ListPropertyEditor.class)
+    @MVCMember(converter = ListConverter.class)
     private List<String> list1 = new ArrayList<>();
     private List<String> list2 = new ArrayList<>();
     private List<String> list3 = new ArrayList<>();
@@ -94,7 +94,7 @@ public class ChildController extends AbstractGriffonController {
         return list1;
     }
 
-    @MVCMember(editor = ListPropertyEditor.class)
+    @MVCMember(converter = ListConverter.class)
     public void setList2(List<String> list) {
         this.list2.addAll(list);
     }

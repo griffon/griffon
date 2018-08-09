@@ -21,12 +21,12 @@ import griffon.core.Configuration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyEditor;
+import javax.application.converter.Converter;
+import javax.application.converter.ConverterRegistry;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
 import static griffon.util.CollectionUtils.toProperties;
 import static griffon.util.TypeUtils.castToBoolean;
 import static griffon.util.TypeUtils.castToDouble;
@@ -46,9 +46,15 @@ public class ConfigurationDecorator implements Configuration {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null.");
     }
 
+    @Nonnull
+    @Override
+    public ConverterRegistry getConverterRegistry() {
+        return delegate.getConverterRegistry();
+    }
+
     @Override
     @Nullable
-    public Object get(@Nonnull String key) {
+    public <T> T get(@Nonnull String key) {
         return delegate.get(key);
     }
 
@@ -61,7 +67,7 @@ public class ConfigurationDecorator implements Configuration {
 
     @Nullable
     @Override
-    public Object getAt(@Nonnull String key) {
+    public <T> T getAt(@Nonnull String key) {
         return get(key);
     }
 
@@ -135,18 +141,6 @@ public class ConfigurationDecorator implements Configuration {
 
     @Nullable
     @Override
-    public <T> T getAs(@Nonnull String key) {
-        return delegate.getAs(key);
-    }
-
-    @Nullable
-    @Override
-    public <T> T getAs(@Nonnull String key, @Nullable T defaultValue) {
-        return delegate.getAs(key, defaultValue);
-    }
-
-    @Nullable
-    @Override
     public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type) {
         return delegate.getConverted(key, type);
     }
@@ -198,9 +192,10 @@ public class ConfigurationDecorator implements Configuration {
             if (type.isAssignableFrom(value.getClass())) {
                 return (T) value;
             } else {
-                PropertyEditor editor = findEditor(type);
-                editor.setValue(value);
-                return (T) editor.getValue();
+                Converter<T> converter = getConverterRegistry().findConverter(type);
+                if (null != converter) {
+                    return converter.fromObject(value);
+                }
             }
         }
         return null;

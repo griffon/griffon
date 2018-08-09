@@ -17,8 +17,6 @@
  */
 package griffon.util;
 
-import griffon.core.editors.PropertyEditorResolver;
-import griffon.core.editors.URIPropertyEditor;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -181,6 +179,8 @@ public class TypeUtilsTest {
         TypeUtils.castToNumber(new Object(), 1);
     }
 
+    /*
+    @Test
     public void convertValue() throws URISyntaxException {
         URI expected = new URI("http://localhost");
         assertEquals(expected, TypeUtils.convertValue(URI.class, expected));
@@ -189,6 +189,7 @@ public class TypeUtilsTest {
         assertEquals(expected, TypeUtils.convertValue(URI.class, "http://localhost", "format"));
         TypeUtils.convertValue(TypeUtils.class, expected);
     }
+    */
 
     @Test
     public void convertBooleans() {

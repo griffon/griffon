@@ -22,15 +22,20 @@ import griffon.core.ContextFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.application.converter.ConverterRegistry;
+import javax.inject.Inject;
 
 /**
  * @author Andres Almiray
  * @since 2.4.0
  */
 public class DefaultContextFactory implements ContextFactory {
+    @Inject
+    private ConverterRegistry converterRegistry;
+
     @Nonnull
     @Override
     public Context create(@Nullable Context parentContext) {
-        return new DefaultContext(parentContext);
+        return new DefaultContext(converterRegistry, parentContext);
     }
 }

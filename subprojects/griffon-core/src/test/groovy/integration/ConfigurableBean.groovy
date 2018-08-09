@@ -17,9 +17,8 @@
  */
 package integration
 
-import griffon.core.configuration.Configured
-
 import javax.annotation.Nonnull
+import javax.application.configuration.Configured
 
 class ConfigurableBean {
     private String pstring
@@ -40,6 +39,6 @@ class ConfigurableBean {
         this.pstring = pstring
     }
 
-    @Configured(value='keys.key4', defaultValue = '*custom*', editor = CustomStringPropertyEditor)
+    @Configured(value = 'keys.key4', defaultValue = '*custom*', converter = CustomStringConverter)
     String customString
 }

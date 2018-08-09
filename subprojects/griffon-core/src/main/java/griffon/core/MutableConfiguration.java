@@ -37,29 +37,21 @@ public interface MutableConfiguration extends Configuration {
      * Removes a key from this configuration.
      *
      * @param key the key to be removed
-     * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
-     */
-    @Nullable
-    Object remove(@Nonnull String key);
-
-    /**
-     * Removes a key from this configuration.
-     * Blindly casts the returned value.
      *
-     * @param key the key to be removed
      * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
-     * @since 2.5.0
      */
     @Nullable
-    <T> T removeAs(@Nonnull String key);
+    <T> T remove(@Nonnull String key);
 
     /**
      * Removes a key from this configuration. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
+     * converted to type <tt>T</tt> if found using a {@code Converter}.
      *
      * @param key  the key to be removed
      * @param type the type to be returned
+     *
      * @return the value associated with the key or <tt>null</tt> if there wasn't any value.
+     *
      * @since 2.5.0
      */
     @Nullable
