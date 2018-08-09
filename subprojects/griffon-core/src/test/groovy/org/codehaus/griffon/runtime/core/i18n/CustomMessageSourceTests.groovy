@@ -21,13 +21,13 @@ import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import com.google.inject.Inject
+import griffon.annotations.core.Nonnull
 import griffon.core.i18n.MessageSource
 import griffon.core.i18n.NoSuchMessageException
 import griffon.util.AbstractMapResourceBundle
 import org.junit.Rule
 import org.junit.Test
 
-import javax.annotation.Nonnull
 import javax.inject.Singleton
 
 class CustomMessageSourceTests {

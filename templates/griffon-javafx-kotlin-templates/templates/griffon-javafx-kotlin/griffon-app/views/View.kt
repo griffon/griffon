@@ -12,7 +12,7 @@ import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.stage.Window
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 
 @ArtifactProviderFor(GriffonView::class)
 class ${project_class_name}View : AbstractJavaFXGriffonView() {

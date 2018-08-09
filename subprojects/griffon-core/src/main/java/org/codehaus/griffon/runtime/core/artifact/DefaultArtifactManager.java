@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.GriffonArtifact;
@@ -25,7 +26,6 @@ import griffon.util.ServiceLoaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
 import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.groovy.ast.ASTNode;
@@ -33,8 +34,6 @@ import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.kordamp.jipsy.ServiceProviderFor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.GuardedBy;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,9 +44,9 @@ import java.util.Map;
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 public class AnnotationHandlerASTTransformation extends AbstractASTTransformation {
     private final Object lock = new Object();
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private boolean initialized;
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private final Map<String, Class<? extends ASTTransformation>> transformations = new LinkedHashMap<>();
 
     @Override
@@ -79,9 +78,9 @@ public class AnnotationHandlerASTTransformation extends AbstractASTTransformatio
     private void visitAnnotationsOnNode(AnnotatedNode node, ClassNode owner) {
         for (AnnotationNode annotationNode : node.getAnnotations()) {
             Class<? extends ASTTransformation> transformationClass = transformations.get(annotationNode.getClassNode().getName());
-            if (transformationClass == null) continue;
+            if (transformationClass == null) { continue; }
             GroovyASTTransformation annotation = transformationClass.getAnnotation(GroovyASTTransformation.class);
-            if (annotation == null) continue;
+            if (annotation == null) { continue; }
             // Set<ASTNode> nodes = owner.getTransforms(annotation.phase()).get(transformationClass);
             // if (nodes != null && !nodes.isEmpty()) continue;
             owner.addTransform(transformationClass, annotationNode);

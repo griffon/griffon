@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.injection;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.injection.Binding;
 import griffon.core.injection.InstanceBinding;
 import griffon.core.injection.ProviderBinding;
@@ -24,8 +26,6 @@ import griffon.core.injection.ProviderTypeBinding;
 import griffon.core.injection.TargetBinding;
 import griffon.util.AnnotationUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Provider;
 import javax.inject.Qualifier;
 import java.lang.annotation.Annotation;

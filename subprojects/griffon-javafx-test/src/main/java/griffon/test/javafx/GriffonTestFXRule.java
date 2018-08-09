@@ -17,6 +17,8 @@
  */
 package griffon.test.javafx;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationEvent;
 import griffon.core.RunnableWithArgs;
 import griffon.core.env.Environment;
@@ -24,15 +26,13 @@ import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
 import javafx.stage.Window;
 import org.awaitility.Duration;
-import org.codehaus.griffon.test.javafx.TestJavaFXGriffonApplication;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
+import org.codehaus.griffon.test.javafx.TestJavaFXGriffonApplication;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.testfx.api.FxToolkit;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.concurrent.TimeoutException;
 
 import static griffon.test.javafx.TestContext.getTestContext;

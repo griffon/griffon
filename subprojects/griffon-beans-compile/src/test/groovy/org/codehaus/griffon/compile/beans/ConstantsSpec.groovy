@@ -42,24 +42,24 @@ class ConstantsSpec extends Specification implements BaseConstants {
     }
 
     private static final List<String> OBSERVABLE_METHODS = [
-        'public void addPropertyChangeListener(@javax.annotation.Nullable java.beans.PropertyChangeListener arg0)',
-        'public void addPropertyChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.PropertyChangeListener arg1)',
-        'public void removePropertyChangeListener(@javax.annotation.Nullable java.beans.PropertyChangeListener arg0)',
-        'public void removePropertyChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.PropertyChangeListener arg1)',
-        '@javax.annotation.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners()',
-        '@javax.annotation.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners(@javax.annotation.Nullable java.lang.String arg0)',
-        'protected void firePropertyChange(@javax.annotation.Nonnull java.beans.PropertyChangeEvent arg0)',
-        'protected void firePropertyChange(@javax.annotation.Nonnull java.lang.String arg0, @javax.annotation.Nullable java.lang.Object arg1, @javax.annotation.Nullable java.lang.Object arg2)'
+        'public void addPropertyChangeListener(@griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg0)',
+        'public void addPropertyChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg1)',
+        'public void removePropertyChangeListener(@griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg0)',
+        'public void removePropertyChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg1)',
+        '@griffon.annotations.core.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners()',
+        '@griffon.annotations.core.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners(@griffon.annotations.core.Nullable java.lang.String arg0)',
+        'protected void firePropertyChange(@griffon.annotations.core.Nonnull java.beans.PropertyChangeEvent arg0)',
+        'protected void firePropertyChange(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nullable java.lang.Object arg1, @griffon.annotations.core.Nullable java.lang.Object arg2)'
     ]
 
     private static final List<String> VETOABLE_METHODS = [
-        'public void addVetoableChangeListener(@javax.annotation.Nullable java.beans.VetoableChangeListener arg0)',
-        'public void addVetoableChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.VetoableChangeListener arg1)',
-        'public void removeVetoableChangeListener(@javax.annotation.Nullable java.beans.VetoableChangeListener arg0)',
-        'public void removeVetoableChangeListener(@javax.annotation.Nullable java.lang.String arg0, @javax.annotation.Nullable java.beans.VetoableChangeListener arg1)',
-        '@javax.annotation.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners()',
-        '@javax.annotation.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners(@javax.annotation.Nullable java.lang.String arg0)',
-        'protected void fireVetoableChange(@javax.annotation.Nonnull java.beans.PropertyChangeEvent arg0) throws java.beans.PropertyVetoException',
-        'protected void fireVetoableChange(@javax.annotation.Nonnull java.lang.String arg0, @javax.annotation.Nullable java.lang.Object arg1, @javax.annotation.Nullable java.lang.Object arg2) throws java.beans.PropertyVetoException'
+        'public void addVetoableChangeListener(@griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg0)',
+        'public void addVetoableChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg1)',
+        'public void removeVetoableChangeListener(@griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg0)',
+        'public void removeVetoableChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg1)',
+        '@griffon.annotations.core.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners()',
+        '@griffon.annotations.core.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners(@griffon.annotations.core.Nullable java.lang.String arg0)',
+        'protected void fireVetoableChange(@griffon.annotations.core.Nonnull java.beans.PropertyChangeEvent arg0) throws java.beans.PropertyVetoException',
+        'protected void fireVetoableChange(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nullable java.lang.Object arg1, @griffon.annotations.core.Nullable java.lang.Object arg2) throws java.beans.PropertyVetoException'
     ]
 }

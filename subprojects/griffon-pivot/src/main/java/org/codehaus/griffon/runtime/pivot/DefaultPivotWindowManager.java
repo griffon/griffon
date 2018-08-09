@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
@@ -28,7 +29,6 @@ import org.apache.pivot.wtk.Display;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 

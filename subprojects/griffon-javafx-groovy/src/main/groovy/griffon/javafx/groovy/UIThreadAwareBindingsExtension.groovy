@@ -17,6 +17,7 @@
  */
 package griffon.javafx.groovy
 
+import griffon.annotations.core.Nonnull
 import griffon.javafx.beans.binding.UIThreadAwareBindings
 import groovy.transform.CompileStatic
 import javafx.beans.InvalidationListener
@@ -74,7 +75,6 @@ import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 
-import javax.annotation.Nonnull
 import java.util.function.Consumer
 
 /**

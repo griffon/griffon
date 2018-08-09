@@ -17,14 +17,13 @@
  */
 package org.codehaus.griffon.runtime.core.configuration
 
+import griffon.annotations.core.Nonnull
 import griffon.core.Configuration
 import griffon.util.AbstractMapResourceBundle
 import org.codehaus.griffon.runtime.core.MapResourceBundle
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import javax.annotation.Nonnull
 
 @Unroll
 class ConfigurationDecoratorSpec extends Specification {

@@ -18,12 +18,12 @@
 package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.gui2.Window;
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.lanterna3.LanternaWindowDisplayHandler;
 import griffon.lanterna3.LanternaWindowManager;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 

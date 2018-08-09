@@ -17,10 +17,10 @@
  */
 package griffon.core.resources.groovy;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

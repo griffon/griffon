@@ -17,6 +17,7 @@
  */
 package griffon.javafx.groovy
 
+import griffon.annotations.core.Nonnull
 import griffon.javafx.beans.binding.MatchingBindings
 import groovy.transform.CompileStatic
 import javafx.beans.binding.BooleanBinding
@@ -25,7 +26,6 @@ import javafx.collections.ObservableList
 import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
 
-import javax.annotation.Nonnull
 import java.util.function.Function
 import java.util.function.Predicate
 

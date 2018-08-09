@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.pivot.controller;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
@@ -28,8 +30,6 @@ import org.codehaus.griffon.runtime.core.controller.AbstractActionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import static griffon.util.GriffonClassUtils.EMPTY_ARGS;

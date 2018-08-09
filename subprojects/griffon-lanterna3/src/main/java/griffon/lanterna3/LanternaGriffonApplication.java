@@ -19,9 +19,9 @@ package griffon.lanterna3;
 
 import com.googlecode.lanterna.gui2.BasicWindow;
 import com.googlecode.lanterna.screen.Screen;
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 

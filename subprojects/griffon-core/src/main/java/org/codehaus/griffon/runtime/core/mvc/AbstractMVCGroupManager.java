@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.Context;
 import griffon.core.ContextFactory;
 import griffon.core.GriffonApplication;
@@ -40,8 +42,6 @@ import griffon.util.AnnotationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.application.converter.ConverterRegistry;
 import javax.inject.Inject;
 import java.lang.reflect.Constructor;

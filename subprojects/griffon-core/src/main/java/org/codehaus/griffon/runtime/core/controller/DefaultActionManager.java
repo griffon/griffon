@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.runtime.core.controller;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionMetadataFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**

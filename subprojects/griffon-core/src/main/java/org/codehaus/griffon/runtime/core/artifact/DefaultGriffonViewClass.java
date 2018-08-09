@@ -17,10 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonViewClass;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

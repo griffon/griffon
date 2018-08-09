@@ -17,13 +17,12 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionManager;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 

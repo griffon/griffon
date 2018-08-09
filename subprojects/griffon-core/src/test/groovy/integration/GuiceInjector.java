@@ -24,6 +24,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.core.injection.InstanceBinding;
@@ -36,8 +38,6 @@ import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;
 import griffon.util.AnnotationUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;

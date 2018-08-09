@@ -17,9 +17,9 @@
  */
 package griffon.swing;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.view.WindowDisplayHandler;
 
-import javax.annotation.Nonnull;
 import javax.swing.JInternalFrame;
 import java.awt.Window;
 

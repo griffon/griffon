@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.runtime.core.controller;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.controller.AbortActionExecution;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionExecutionStatus;
 import griffon.core.controller.ActionHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
 /**

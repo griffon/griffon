@@ -21,7 +21,7 @@ import griffon.metadata.ArtifactProviderFor;
 import javax.application.threading.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 import java.util.Map;
 

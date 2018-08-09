@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.swing;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
 import griffon.core.GriffonExceptionHandler;
@@ -24,8 +26,6 @@ import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 import org.jdesktop.swinghelper.debug.CheckThreadViolationRepaintManager;
 import org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.swing.RepaintManager;
 

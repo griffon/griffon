@@ -18,9 +18,9 @@
 package org.codehaus.griffon.runtime.lanterna3;
 
 import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**

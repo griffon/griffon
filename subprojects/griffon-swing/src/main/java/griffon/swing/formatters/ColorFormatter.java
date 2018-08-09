@@ -17,12 +17,12 @@
  */
 package griffon.swing.formatters;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.swing.support.Colors;
 import org.kordamp.jsr377.formatter.AbstractFormatter;
 import org.kordamp.jsr377.formatter.ParseException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.Color;
 import java.util.Arrays;
 

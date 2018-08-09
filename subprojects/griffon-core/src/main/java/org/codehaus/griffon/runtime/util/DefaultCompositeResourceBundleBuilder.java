@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.util;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.injection.Injector;
 import griffon.util.ResourceBundleLoader;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.ArrayList;

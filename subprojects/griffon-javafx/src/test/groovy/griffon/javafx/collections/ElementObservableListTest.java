@@ -17,6 +17,8 @@
  */
 package griffon.javafx.collections;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,8 +28,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javafx.collections.FXCollections.observableArrayList;

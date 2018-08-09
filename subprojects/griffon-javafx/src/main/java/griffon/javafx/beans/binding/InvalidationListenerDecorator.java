@@ -17,10 +17,9 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

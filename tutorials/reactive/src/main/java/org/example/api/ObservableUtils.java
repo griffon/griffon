@@ -18,7 +18,7 @@ package org.example.api;
 import retrofit2.Response;
 import rx.Observable;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;

@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.test.core;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
 import griffon.core.injection.Binding;
@@ -28,7 +29,6 @@ import griffon.core.injection.ProviderTypeBinding;
 import griffon.core.injection.TargetBinding;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.lang.annotation.Annotation;

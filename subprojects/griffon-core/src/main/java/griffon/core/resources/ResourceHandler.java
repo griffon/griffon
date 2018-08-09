@@ -17,8 +17,9 @@
  */
 package griffon.core.resources;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;

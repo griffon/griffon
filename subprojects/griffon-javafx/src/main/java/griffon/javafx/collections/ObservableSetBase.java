@@ -18,11 +18,11 @@
 package griffon.javafx.collections;
 
 import com.sun.javafx.collections.SetListenerHelper;
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 
-import javax.annotation.Nonnull;
 import java.util.AbstractSet;
 
 import static java.util.Objects.requireNonNull;

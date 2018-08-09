@@ -17,8 +17,9 @@
  */
 package griffon.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
+
 import javax.annotation.PostConstruct;
 import java.util.Enumeration;
 import java.util.Iterator;

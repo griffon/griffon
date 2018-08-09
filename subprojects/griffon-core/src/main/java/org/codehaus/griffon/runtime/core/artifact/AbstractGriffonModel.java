@@ -17,10 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonModelClass;
-
-import javax.annotation.Nonnull;
 
 /**
  * Base implementation of the GriffonModel interface.

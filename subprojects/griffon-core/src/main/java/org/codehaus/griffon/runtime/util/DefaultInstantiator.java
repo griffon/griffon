@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.util;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.injection.Injector;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.util.Instantiator;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Provider;

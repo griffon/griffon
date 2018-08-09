@@ -17,9 +17,8 @@
  */
 package griffon.javafx.artifact;
 
+import griffon.annotations.core.Nonnull;
 import javafx.scene.Node;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

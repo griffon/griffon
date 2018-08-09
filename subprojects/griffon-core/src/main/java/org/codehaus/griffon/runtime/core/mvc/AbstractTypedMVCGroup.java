@@ -17,13 +17,12 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.TypedMVCGroup;
-
-import javax.annotation.Nonnull;
 
 import static griffon.util.GriffonClassUtils.requireState;
 

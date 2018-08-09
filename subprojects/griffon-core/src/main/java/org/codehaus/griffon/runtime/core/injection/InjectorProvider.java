@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.injection;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.injection.Injector;
 
-import javax.annotation.Nonnull;
 import javax.inject.Provider;
 
 /**

@@ -17,14 +17,14 @@
  */
 package org.codehaus.griffon.runtime.core.configuration;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.Configuration;
 import griffon.core.MutableConfiguration;
 import griffon.util.AbstractMapResourceBundle;
 import griffon.util.CompositeResourceBundle;
 import griffon.util.ConfigUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;

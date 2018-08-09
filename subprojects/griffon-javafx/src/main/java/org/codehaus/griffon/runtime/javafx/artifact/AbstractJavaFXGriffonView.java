@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.javafx.artifact;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
@@ -31,8 +33,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;

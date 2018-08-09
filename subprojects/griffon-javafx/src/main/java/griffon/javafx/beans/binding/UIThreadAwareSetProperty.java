@@ -17,13 +17,12 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.SetProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
-
-import javax.annotation.Nonnull;
 
 import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.application.Platform.runLater;

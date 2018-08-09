@@ -17,6 +17,7 @@
  */
 package griffon.builder.javafx.factory
 
+import griffon.annotations.core.Nullable
 import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.RunnableWithArgs
@@ -25,8 +26,6 @@ import griffon.core.mvc.MVCGroupManager
 import griffon.javafx.artifact.ContentProvider
 import groovyx.javafx.factory.AbstractNodeFactory
 import javafx.scene.Node
-
-import javax.annotation.Nullable
 
 import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURRENT_MVCGROUP
 

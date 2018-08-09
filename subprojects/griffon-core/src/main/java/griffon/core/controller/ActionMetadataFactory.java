@@ -17,9 +17,9 @@
  */
 package griffon.core.controller;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 /**

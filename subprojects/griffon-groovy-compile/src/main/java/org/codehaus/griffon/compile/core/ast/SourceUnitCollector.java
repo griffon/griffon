@@ -17,12 +17,12 @@
  */
 package org.codehaus.griffon.compile.core.ast;
 
+import griffon.annotations.core.Nonnull;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.SourceUnit;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

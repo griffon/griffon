@@ -17,7 +17,7 @@
  */
 package griffon.core;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * A ShutdownHandler may prevent the application from exiting.

@@ -13,7 +13,7 @@ import griffon.lanterna3.widgets.MutableButton;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.lanterna3.artifact.AbstractLanternaGriffonView;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;

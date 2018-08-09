@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
 import griffon.core.ApplicationEvent;
@@ -36,9 +38,6 @@ import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
@@ -66,7 +65,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     private final Object lock = new Object();
     private final GriffonApplication application;
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private boolean initialized;
 
     @Inject

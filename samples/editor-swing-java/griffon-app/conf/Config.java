@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
+import griffon.annotations.core.Nonnull;
 import griffon.util.AbstractMapResourceBundle;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 import static griffon.util.CollectionUtils.map;

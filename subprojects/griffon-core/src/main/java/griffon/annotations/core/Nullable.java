@@ -15,25 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.resources;
+package griffon.annotations.core;
 
-import java.lang.annotation.ElementType;
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
- * @author Andres Almiray
- * @since 2.0.0
+ * The annotated element could be null under some circumstances.
+ * <p>
+ * When this annotation is applied to a method it applies to the method return value.
+ *
+ * @since 3.0.0
  */
+@Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
-public @interface InjectedResource {
-    String key() default "";
+public @interface Nullable {
 
-    String[] args() default {};
-
-    String defaultValue() default "";
-
-    String format() default "";
 }

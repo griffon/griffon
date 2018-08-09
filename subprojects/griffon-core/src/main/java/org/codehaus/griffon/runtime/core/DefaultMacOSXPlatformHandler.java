@@ -21,9 +21,8 @@ import com.apple.mrj.MRJAboutHandler;
 import com.apple.mrj.MRJApplicationUtils;
 import com.apple.mrj.MRJPrefsHandler;
 import com.apple.mrj.MRJQuitHandler;
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
-
-import javax.annotation.Nonnull;
 
 import static griffon.util.GriffonNameUtils.capitalize;
 import static java.util.Collections.singletonList;

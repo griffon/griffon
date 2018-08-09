@@ -17,9 +17,8 @@
  */
 package griffon.core;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.env.Lifecycle;
-
-import javax.annotation.Nonnull;
 
 /**
  * Configures an application during startup

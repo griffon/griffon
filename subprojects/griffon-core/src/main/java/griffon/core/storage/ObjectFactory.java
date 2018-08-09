@@ -17,7 +17,7 @@
  */
 package griffon.core.storage;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * @author Andres Almiray

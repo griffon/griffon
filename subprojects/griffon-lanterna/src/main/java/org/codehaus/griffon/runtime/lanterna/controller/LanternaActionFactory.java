@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.lanterna.controller;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionFactory;
@@ -24,7 +25,6 @@ import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.threading.UIThreadManager;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**

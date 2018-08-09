@@ -28,8 +28,8 @@ import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 import org.example.api.Repository;
 import rx.Subscription;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import java.util.Map;
 
 import static javafx.collections.FXCollections.observableArrayList;

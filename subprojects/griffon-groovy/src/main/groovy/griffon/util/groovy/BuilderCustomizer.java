@@ -17,11 +17,11 @@
  */
 package griffon.util.groovy;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import groovy.lang.Closure;
 import groovy.util.Factory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 

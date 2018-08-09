@@ -19,7 +19,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 public class SampleModel extends AbstractGriffonModel {
     private StringProperty input;

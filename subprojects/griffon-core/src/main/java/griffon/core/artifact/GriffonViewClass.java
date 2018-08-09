@@ -17,7 +17,7 @@
  */
 package griffon.core.artifact;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * Represents a View class in Griffon.<p>

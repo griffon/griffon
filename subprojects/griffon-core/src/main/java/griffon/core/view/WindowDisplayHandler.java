@@ -17,7 +17,7 @@
  */
 package griffon.core.view;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * Controls how windows are shown and hidden at runtime.

@@ -19,7 +19,7 @@ import griffon.inject.MVCMember;
 import javax.application.threading.Threading;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 
 public class SampleController extends AbstractGriffonController {

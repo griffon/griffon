@@ -17,11 +17,10 @@
  */
 package griffon.util
 
+import griffon.annotations.core.Nonnull
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import javax.annotation.Nonnull
 
 import static griffon.util.ExpandableResourceBundle.wrapResourceBundle
 import static java.util.Arrays.asList

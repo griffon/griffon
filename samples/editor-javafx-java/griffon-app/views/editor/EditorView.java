@@ -17,6 +17,7 @@
  */
 package editor;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -25,7 +26,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 @ArtifactProviderFor(GriffonView.class)

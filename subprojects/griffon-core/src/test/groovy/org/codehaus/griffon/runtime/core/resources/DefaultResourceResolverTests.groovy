@@ -20,6 +20,8 @@ package org.codehaus.griffon.runtime.core.resources
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
+import griffon.annotations.core.Nonnull
+import griffon.annotations.core.Nullable
 import griffon.core.ApplicationClassLoader
 import griffon.core.CallableWithArgs
 import griffon.core.injection.Injector
@@ -40,8 +42,6 @@ import org.junit.Test
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import org.kordamp.jsr377.converter.IntegerConverter
 
-import javax.annotation.Nonnull
-import javax.annotation.Nullable
 import javax.application.converter.ConverterRegistry
 import javax.application.resources.tck.ResourceResolverTest
 import javax.inject.Inject

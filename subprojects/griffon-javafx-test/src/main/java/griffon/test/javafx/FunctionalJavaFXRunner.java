@@ -17,6 +17,7 @@
  */
 package griffon.test.javafx;
 
+import griffon.annotations.core.Nonnull;
 import org.junit.internal.runners.statements.Fail;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
@@ -26,7 +27,6 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.beans;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.beans.Vetoable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;

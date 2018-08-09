@@ -17,6 +17,8 @@
  */
 package griffon.core.mvc;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.Context;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
@@ -24,8 +26,6 @@ import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonView;
 import griffon.exceptions.ArtifactNotFoundException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 /**

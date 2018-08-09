@@ -17,7 +17,8 @@
  */
 package griffon.util;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

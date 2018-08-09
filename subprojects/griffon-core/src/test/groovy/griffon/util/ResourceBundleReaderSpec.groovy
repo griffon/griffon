@@ -21,11 +21,11 @@ import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import com.google.inject.Injector
+import griffon.annotations.core.Nonnull
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javax.annotation.Nonnull
 import javax.inject.Inject
 
 @Unroll

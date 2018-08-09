@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.util;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.resources.ResourceHandler;
 import griffon.util.ResourceBundleLoader;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.net.URL;
 import java.util.List;

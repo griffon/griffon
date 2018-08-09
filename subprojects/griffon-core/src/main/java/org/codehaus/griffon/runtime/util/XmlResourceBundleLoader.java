@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.util;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.ResourceHandler;
 import griffon.util.AbstractMapResourceBundle;
 import griffon.util.ResourceBundleReader;
@@ -24,7 +25,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.parsers.DocumentBuilder;

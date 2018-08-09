@@ -17,11 +17,10 @@
  */
 package griffon.pivot.support;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.RunnableWithArgs;
 import org.apache.pivot.wtk.Action;
 import org.apache.pivot.wtk.Component;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

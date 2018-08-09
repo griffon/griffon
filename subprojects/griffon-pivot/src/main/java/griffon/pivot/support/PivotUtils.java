@@ -17,12 +17,11 @@
  */
 package griffon.pivot.support;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.exceptions.InstanceMethodInvocationException;
 import org.apache.pivot.wtk.Component;
 import org.apache.pivot.wtk.Container;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
 import static griffon.util.GriffonNameUtils.requireNonBlank;

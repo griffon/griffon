@@ -17,6 +17,7 @@
  */
 package sample.pivot.java;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
@@ -32,7 +33,6 @@ import org.apache.pivot.wtk.TextInput;
 import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.pivot.artifact.AbstractPivotGriffonView;
 
-import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;

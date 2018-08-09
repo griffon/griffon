@@ -17,6 +17,7 @@
  */
 package griffon.util.groovy
 
+import griffon.annotations.core.Nonnull
 import griffon.core.ApplicationClassLoader
 import griffon.core.env.Environment
 import griffon.core.env.GriffonEnvironment
@@ -25,7 +26,6 @@ import griffon.util.CollectionUtils
 import griffon.util.GriffonApplicationUtils
 import org.codehaus.groovy.runtime.InvokerHelper
 
-import javax.annotation.Nonnull
 import javax.inject.Inject
 
 import static griffon.util.GriffonNameUtils.isBlank

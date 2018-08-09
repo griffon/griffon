@@ -17,11 +17,11 @@
  */
 package griffon.util;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.exceptions.GriffonException;
 import griffon.exceptions.TypeConversionException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;

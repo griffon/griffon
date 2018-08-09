@@ -17,6 +17,8 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.value.ObservableValue;
@@ -24,8 +26,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
 import java.util.function.Function;

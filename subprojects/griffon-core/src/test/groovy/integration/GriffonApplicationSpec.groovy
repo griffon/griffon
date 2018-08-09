@@ -17,6 +17,8 @@
  */
 package integration
 
+import griffon.annotations.core.Nonnull
+import griffon.annotations.core.Nullable
 import griffon.core.ApplicationBootstrapper
 import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
@@ -42,9 +44,6 @@ import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
-
-import javax.annotation.Nonnull
-import javax.annotation.Nullable
 
 import static griffon.util.AnnotationUtils.named
 import static griffon.util.AnnotationUtils.typed

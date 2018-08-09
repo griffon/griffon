@@ -24,7 +24,7 @@ import javafx.scene.control.Tab
 import org.kordamp.ikonli.fontawesome.FontAwesome
 import org.kordamp.ikonli.javafx.FontIcon
 
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class Tab3View {

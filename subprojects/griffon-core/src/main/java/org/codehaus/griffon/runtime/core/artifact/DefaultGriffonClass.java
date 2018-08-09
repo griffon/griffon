@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
-
-import javax.annotation.Nonnull;
 
 /**
  * A default implementation for Griffon classes that need to be registered and managed by a GriffonApplication,

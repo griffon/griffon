@@ -16,7 +16,7 @@
 
 import griffon.util.AbstractMapResourceBundle;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.Map;
 
 import static griffon.util.CollectionUtils.map;

@@ -22,7 +22,7 @@ import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 import javax.inject.Inject
 
 @ArtifactProviderFor(GriffonController::class)

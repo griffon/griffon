@@ -17,6 +17,7 @@
  */
 package griffon.javafx.collections;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,7 +26,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 import static javafx.collections.FXCollections.observableArrayList;

@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.ResourceHandler;
 import griffon.transform.core.ResourcesAware;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
@@ -32,8 +33,6 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
 
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;
 

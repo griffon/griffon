@@ -17,7 +17,7 @@
  */
 package griffon.core.env;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;

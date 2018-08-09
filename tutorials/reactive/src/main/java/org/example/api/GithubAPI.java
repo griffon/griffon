@@ -21,7 +21,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.List;
 
 public interface GithubAPI {

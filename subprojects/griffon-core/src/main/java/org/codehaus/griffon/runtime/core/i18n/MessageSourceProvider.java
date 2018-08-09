@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.i18n;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.i18n.MessageSource;
 import griffon.util.CompositeResourceBundleBuilder;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 

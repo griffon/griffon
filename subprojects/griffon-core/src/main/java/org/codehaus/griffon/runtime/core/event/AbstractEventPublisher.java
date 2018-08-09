@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.runtime.core.event;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.RunnableWithArgs;
 import griffon.core.event.Event;
 import griffon.core.event.EventPublisher;
 import griffon.core.event.EventRouter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;

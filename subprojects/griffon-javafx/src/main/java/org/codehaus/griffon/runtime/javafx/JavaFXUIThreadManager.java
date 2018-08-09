@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.javafx;
 
+import griffon.annotations.core.Nonnull;
 import javafx.application.Platform;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 

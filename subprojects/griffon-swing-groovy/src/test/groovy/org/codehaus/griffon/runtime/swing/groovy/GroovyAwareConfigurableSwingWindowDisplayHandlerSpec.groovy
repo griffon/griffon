@@ -17,8 +17,8 @@
  */
 package org.codehaus.griffon.runtime.swing.groovy
 
-import griffon.test.core.GriffonUnitRule
 import griffon.core.view.WindowManager
+import griffon.test.core.GriffonUnitRule
 import org.junit.Rule
 import spock.lang.Specification
 

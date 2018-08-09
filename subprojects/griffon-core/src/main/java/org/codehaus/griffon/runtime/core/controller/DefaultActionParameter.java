@@ -17,12 +17,12 @@
  */
 package org.codehaus.griffon.runtime.core.controller;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.controller.ActionParameter;
 import griffon.inject.Contextual;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Named;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;

@@ -17,11 +17,10 @@
  */
 package griffon.core.mvc;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonView;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

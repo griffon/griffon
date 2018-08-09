@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.resources.ResourceInjector;
 import griffon.util.PropertyDescriptor;
 import griffon.util.PropertyDescriptorResolver;
@@ -24,8 +26,6 @@ import org.kordamp.jsr377.converter.FormattingConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.application.converter.Converter;
 import javax.application.converter.ConverterRegistry;
 import javax.application.resources.InjectedResource;

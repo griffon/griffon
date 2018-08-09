@@ -13,7 +13,7 @@ import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonVie
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
 public class ${project_class_name}View extends AbstractLanternaGriffonView {

@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionStage;

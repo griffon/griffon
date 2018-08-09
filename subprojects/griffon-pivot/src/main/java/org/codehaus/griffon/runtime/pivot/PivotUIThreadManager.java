@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
-import javax.annotation.Nonnull;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
 

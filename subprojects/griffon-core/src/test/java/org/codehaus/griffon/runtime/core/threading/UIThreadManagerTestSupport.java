@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core.threading;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 public class UIThreadManagerTestSupport extends AbstractUIThreadManager {
     @Override

@@ -17,7 +17,8 @@
  */
 package griffon.util;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;

@@ -36,25 +36,25 @@ public interface ResourcesAwareConstants extends BaseConstants {
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_NET_URL),
             METHOD_GET_RESOURCE_AS_URL,
-            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+            args(MethodDescriptor.annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type("java.io.InputStream"),
             METHOD_GET_RESOURCE_AS_STREAM,
-            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+            args(MethodDescriptor.annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_UTIL_LIST, JAVA_NET_URL),
             METHOD_GET_RESOURCES,
-            args(MethodDescriptor.annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+            args(MethodDescriptor.annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type("java.lang.ClassLoader"),
             METHOD_CLASSLOADER
         )

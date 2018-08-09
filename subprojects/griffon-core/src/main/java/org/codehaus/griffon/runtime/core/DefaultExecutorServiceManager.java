@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ExecutorServiceManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;

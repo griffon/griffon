@@ -17,13 +17,12 @@
  */
 package org.codehaus.griffon.runtime.pivot.artifact;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.pivot.support.PivotAction;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Pivot-friendly implementation of the GriffonView interface.

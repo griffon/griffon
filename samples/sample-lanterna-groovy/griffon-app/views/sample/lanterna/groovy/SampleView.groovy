@@ -17,12 +17,11 @@
  */
 package sample.lanterna.groovy
 
+import griffon.annotations.core.Nonnull
 import griffon.core.artifact.GriffonView
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.lanterna.artifact.AbstractLanternaGriffonView
-
-import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class SampleView extends AbstractLanternaGriffonView {

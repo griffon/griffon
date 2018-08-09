@@ -18,9 +18,9 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.beans.Observable;
+import org.codehaus.griffon.compile.beans.ObservableConstants;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
-import org.codehaus.griffon.compile.beans.ObservableConstants;
 import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;

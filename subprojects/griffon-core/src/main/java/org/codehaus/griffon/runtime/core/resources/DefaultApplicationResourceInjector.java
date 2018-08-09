@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.ResourceResolver;
 
-import javax.annotation.Nonnull;
 import javax.application.converter.ConverterRegistry;
 import javax.inject.Inject;
 import javax.inject.Named;

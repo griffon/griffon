@@ -20,6 +20,7 @@ package org.codehaus.griffon.runtime.core.resources
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
+import griffon.annotations.core.Nonnull
 import griffon.core.resources.NoSuchResourceException
 import griffon.core.resources.ResourceResolver
 import griffon.util.AbstractMapResourceBundle
@@ -28,7 +29,6 @@ import org.junit.Test
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import org.kordamp.jsr377.converter.IntegerConverter
 
-import javax.annotation.Nonnull
 import javax.application.converter.ConverterRegistry
 import javax.inject.Inject
 import javax.inject.Singleton

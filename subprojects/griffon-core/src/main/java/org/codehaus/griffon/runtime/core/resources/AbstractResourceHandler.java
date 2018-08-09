@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.resources.ResourceHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

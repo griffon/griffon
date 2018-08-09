@@ -17,9 +17,9 @@
  */
 package sample.swing.java;
 
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.swing.DefaultSwingWindowDisplayHandler;
 
-import javax.annotation.Nonnull;
 import java.awt.Window;
 
 import static griffon.swing.support.SwingUtils.centerOnScreen;

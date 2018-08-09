@@ -17,6 +17,7 @@
  */
 package griffon.javafx.scene.control;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -26,8 +27,6 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.StringConverter;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 import static javafx.collections.FXCollections.observableArrayList;

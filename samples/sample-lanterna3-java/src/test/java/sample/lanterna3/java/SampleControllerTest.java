@@ -18,10 +18,10 @@
 package sample.lanterna3.java;
 
 import griffon.core.artifact.ArtifactManager;
-import griffon.test.core.GriffonUnitRule;
-import griffon.test.core.TestFor;
 import griffon.core.threading.UIThreadManager;
 import griffon.inject.BindTo;
+import griffon.test.core.GriffonUnitRule;
+import griffon.test.core.TestFor;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.junit.Rule;
 import org.junit.Test;

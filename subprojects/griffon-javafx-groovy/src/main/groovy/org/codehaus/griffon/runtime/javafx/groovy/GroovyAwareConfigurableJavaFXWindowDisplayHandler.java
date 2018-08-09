@@ -17,14 +17,14 @@
  */
 package org.codehaus.griffon.runtime.javafx.groovy;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import groovy.lang.Closure;
 import javafx.stage.Window;
 import org.codehaus.griffon.runtime.javafx.ConfigurableJavaFXWindowDisplayHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 

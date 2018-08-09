@@ -17,10 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonService;
 import griffon.core.artifact.GriffonServiceClass;
-
-import javax.annotation.Nonnull;
 
 /**
  * Base implementation of the GriffonService interface.

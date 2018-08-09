@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.lanterna.artifact;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.beans.Vetoable;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

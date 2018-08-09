@@ -17,11 +17,11 @@
  */
 package integration;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
-import javax.annotation.Nonnull;
 import javax.inject.Named;
 import java.util.Map;
 

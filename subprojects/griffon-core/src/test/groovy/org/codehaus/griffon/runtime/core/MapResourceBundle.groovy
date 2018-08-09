@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import griffon.annotations.core.Nonnull
 import griffon.util.AbstractMapResourceBundle
-
-import javax.annotation.Nonnull
 
 class MapResourceBundle extends AbstractMapResourceBundle {
     @Override

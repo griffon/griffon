@@ -17,10 +17,9 @@
  */
 package integration;
 
+import griffon.annotations.core.Nonnull;
 import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-
-import javax.annotation.Nonnull;
 
 public class ArgsView extends AbstractGriffonView implements Invokable {
     private ArgsController controller;

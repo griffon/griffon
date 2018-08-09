@@ -17,15 +17,15 @@
  */
 package griffon.test.swing;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
 import griffon.test.core.GriffonUnitRule;
-import org.codehaus.griffon.test.swing.FestAwareSwingGriffonApplication;
 import org.codehaus.griffon.test.core.TestApplicationBootstrapper;
+import org.codehaus.griffon.test.swing.FestAwareSwingGriffonApplication;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 
-import javax.annotation.Nonnull;
 import java.awt.Frame;
 import java.lang.reflect.Field;
 

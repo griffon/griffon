@@ -22,7 +22,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 

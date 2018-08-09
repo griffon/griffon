@@ -17,13 +17,13 @@
  */
 package griffon.javafx;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.registerExceptionHandler;

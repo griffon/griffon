@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.addon;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 /**

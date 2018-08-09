@@ -17,11 +17,11 @@
  */
 package griffon.core.addon;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.ShutdownHandler;
 import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 

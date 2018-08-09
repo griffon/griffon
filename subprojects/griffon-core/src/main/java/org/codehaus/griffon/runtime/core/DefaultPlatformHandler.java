@@ -17,10 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.PlatformHandler;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

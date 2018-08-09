@@ -17,10 +17,10 @@
  */
 package integration;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.AbstractLifecycleHandler;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 public class IntegrationReady extends AbstractLifecycleHandler implements Invokable {

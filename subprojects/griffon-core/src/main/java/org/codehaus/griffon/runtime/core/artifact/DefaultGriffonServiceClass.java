@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonServiceClass;
 import griffon.util.GriffonClassUtils;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.TreeSet;

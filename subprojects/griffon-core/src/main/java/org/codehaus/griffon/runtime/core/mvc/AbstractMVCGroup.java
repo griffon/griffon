@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.Context;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
@@ -33,8 +35,6 @@ import griffon.core.mvc.MVCGroupManager;
 import griffon.core.mvc.TypedMVCGroup;
 import griffon.core.mvc.TypedMVCGroupConsumer;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;

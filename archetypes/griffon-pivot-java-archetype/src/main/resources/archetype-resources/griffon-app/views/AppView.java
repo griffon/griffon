@@ -11,7 +11,7 @@ import org.apache.pivot.wtk.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 import static java.util.Arrays.asList;
 

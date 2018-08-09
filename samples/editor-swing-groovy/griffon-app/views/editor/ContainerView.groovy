@@ -17,12 +17,12 @@
  */
 package editor
 
+import griffon.annotations.core.Nonnull
 import griffon.core.artifact.GriffonView
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView
 
-import javax.annotation.Nonnull
 import javax.swing.event.ChangeListener
 import java.awt.BorderLayout
 

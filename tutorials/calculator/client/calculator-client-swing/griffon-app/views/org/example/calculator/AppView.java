@@ -19,7 +19,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;

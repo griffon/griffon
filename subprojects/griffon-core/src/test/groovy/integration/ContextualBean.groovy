@@ -17,10 +17,9 @@
  */
 package integration
 
+import griffon.annotations.core.Nonnull
 import griffon.inject.Contextual
 import groovy.transform.Canonical
-
-import javax.annotation.Nonnull
 
 @Canonical
 class ContextualBean {

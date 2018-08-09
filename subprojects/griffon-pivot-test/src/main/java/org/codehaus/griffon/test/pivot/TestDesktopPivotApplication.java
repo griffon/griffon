@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.test.pivot;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
-import griffon.test.core.TestCaseAware;
 import griffon.pivot.DesktopPivotGriffonApplication;
+import griffon.test.core.TestCaseAware;
 import org.apache.pivot.wtk.Display;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.CountDownLatch;
 
 /**

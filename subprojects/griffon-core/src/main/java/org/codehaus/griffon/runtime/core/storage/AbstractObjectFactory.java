@@ -18,11 +18,11 @@
 package org.codehaus.griffon.runtime.core.storage;
 
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
 import griffon.core.storage.ObjectFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;

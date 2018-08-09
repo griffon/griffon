@@ -17,13 +17,12 @@
  */
 package griffon.builder.core.factory
 
+import griffon.annotations.core.Nullable
 import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.RunnableWithArgs
 import griffon.core.mvc.MVCGroup
 import griffon.core.mvc.MVCGroupManager
-
-import javax.annotation.Nullable
 
 import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURRENT_MVCGROUP
 

@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.core.event;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.threading.UIThreadManager;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static java.util.Objects.requireNonNull;

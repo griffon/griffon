@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationClassLoader;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

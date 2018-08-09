@@ -17,7 +17,8 @@
  */
 package griffon.core.controller;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
+
 import java.lang.annotation.Annotation;
 
 /**

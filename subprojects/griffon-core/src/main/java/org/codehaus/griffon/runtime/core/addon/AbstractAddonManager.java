@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.addon;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.addon.AddonManager;
@@ -25,9 +27,6 @@ import griffon.core.mvc.MVCGroupConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
@@ -55,7 +54,7 @@ public abstract class AbstractAddonManager implements AddonManager {
     private static final String ERROR_NAME_BLANK = "Argument 'name' must not be blank";
     private final Map<String, GriffonAddon> addons = new LinkedHashMap<>();
     private final Object lock = new Object[0];
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private boolean initialized;
 
     private final GriffonApplication application;

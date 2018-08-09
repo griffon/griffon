@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import griffon.annotations.core.Nonnull
 import griffon.core.threading.UIThreadManager
 import org.codehaus.griffon.runtime.core.threading.AbstractThreadingHandler
 
-import javax.annotation.Nonnull
 import javax.inject.Inject
 
 /**

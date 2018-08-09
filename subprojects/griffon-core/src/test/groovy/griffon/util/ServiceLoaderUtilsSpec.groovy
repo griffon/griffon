@@ -17,10 +17,9 @@
  */
 package griffon.util
 
+import griffon.annotations.core.Nonnull
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import javax.annotation.Nonnull
 
 @Unroll
 class ServiceLoaderUtilsSpec extends Specification {

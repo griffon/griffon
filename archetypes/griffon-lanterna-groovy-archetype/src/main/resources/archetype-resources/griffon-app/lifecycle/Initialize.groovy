@@ -1,7 +1,7 @@
 import griffon.core.GriffonApplication
 import org.codehaus.griffon.runtime.core.AbstractLifecycleHandler
 
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 import javax.inject.Inject
 
 class Initialize extends AbstractLifecycleHandler {

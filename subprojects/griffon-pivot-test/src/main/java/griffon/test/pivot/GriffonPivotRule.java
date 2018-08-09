@@ -17,19 +17,19 @@
  */
 package griffon.test.pivot;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.env.Environment;
 import griffon.test.core.TestFor;
 import org.apache.pivot.wtk.DesktopApplicationContext;
-import org.codehaus.griffon.test.pivot.TestDesktopPivotApplication;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
+import org.codehaus.griffon.test.pivot.TestDesktopPivotApplication;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
-import javax.annotation.Nonnull;
 import javax.swing.SwingUtilities;
 import java.lang.reflect.Field;
 import java.util.Arrays;

@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core.threading;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.threading.ThreadingHandler;
 import griffon.core.threading.UIThreadManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;

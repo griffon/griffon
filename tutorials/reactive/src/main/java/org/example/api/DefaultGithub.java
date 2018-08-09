@@ -17,7 +17,7 @@ package org.example.api;
 
 import rx.Observable;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;

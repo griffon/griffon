@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.event;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.CallableWithArgs;
 import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
@@ -29,8 +31,6 @@ import griffon.util.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

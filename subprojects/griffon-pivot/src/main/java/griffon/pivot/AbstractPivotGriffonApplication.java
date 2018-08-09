@@ -17,6 +17,7 @@
  */
 package griffon.pivot;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
 import griffon.exceptions.InstanceNotFoundException;
 import org.apache.pivot.wtk.Application;
@@ -26,7 +27,6 @@ import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 import org.codehaus.griffon.runtime.pivot.PivotApplicationBootstrapper;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 

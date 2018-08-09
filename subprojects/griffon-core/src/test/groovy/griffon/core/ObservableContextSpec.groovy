@@ -17,6 +17,7 @@
  */
 package griffon.core
 
+import griffon.annotations.core.Nonnull
 import org.codehaus.griffon.runtime.core.DefaultObservableContext
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import org.kordamp.jsr377.converter.IntegerConverter
@@ -24,7 +25,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javax.annotation.Nonnull
 import javax.application.converter.ConverterRegistry
 
 @Unroll

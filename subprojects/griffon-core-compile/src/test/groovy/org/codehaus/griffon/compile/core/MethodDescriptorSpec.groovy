@@ -95,27 +95,27 @@ class MethodDescriptorSpec extends Specification implements BaseConstants {
             type(T)
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             JAVA_LANG_STRING
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             JAVA_LANG_STRING,
             1
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             JAVA_UTIL_LIST,
             0
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             JAVA_UTIL_LIST,
             1,
             type(T)
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             JAVA_UTIL_LIST,
             type(T)
         ],
@@ -138,11 +138,11 @@ class MethodDescriptorSpec extends Specification implements BaseConstants {
         "java.lang.String[]",
         "java.util.List",
         "java.util.List<T>[]",
-        "@javax.annotation.Nonnull java.lang.String",
-        "@javax.annotation.Nonnull java.lang.String[]",
-        "@javax.annotation.Nonnull java.util.List",
-        "@javax.annotation.Nonnull java.util.List<T>[]",
-        "@javax.annotation.Nonnull java.util.List<T>",
+        "@griffon.annotations.core.Nonnull java.lang.String",
+        "@griffon.annotations.core.Nonnull java.lang.String[]",
+        "@griffon.annotations.core.Nonnull java.util.List",
+        "@griffon.annotations.core.Nonnull java.util.List<T>[]",
+        "@griffon.annotations.core.Nonnull java.util.List<T>",
         "java.util.List[]",
         "java.util.Map<K, V>"
     ]
@@ -248,66 +248,66 @@ class MethodDescriptorSpec extends Specification implements BaseConstants {
     @Shared
     private List ANNOTATED_METHOD_ARGUMENTS = [
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             type(JAVA_LANG_STRING),
             METHOD_NAME
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
-            type(JAVA_LANG_STRING),
-            METHOD_NAME,
-            types(type(JAVA_LANG_STRING))
-        ],
-        [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
-            type(T),
-            typeParams(T),
-            METHOD_NAME
-        ],
-        [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
-            type(T),
-            typeParams(T),
-            METHOD_NAME,
-            types(type(JAVA_LANG_STRING))
-        ],
-        [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
-            Modifier.PRIVATE,
-            type(JAVA_LANG_STRING),
-            METHOD_NAME
-        ],
-        [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
-            Modifier.PRIVATE,
+            types(type(ANNOTATION_NONNULL)),
             type(JAVA_LANG_STRING),
             METHOD_NAME,
             types(type(JAVA_LANG_STRING))
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
-            Modifier.PRIVATE,
+            types(type(ANNOTATION_NONNULL)),
             type(T),
             typeParams(T),
             METHOD_NAME
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
-            Modifier.PRIVATE,
+            types(type(ANNOTATION_NONNULL)),
             type(T),
             typeParams(T),
             METHOD_NAME,
             types(type(JAVA_LANG_STRING))
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
+            Modifier.PRIVATE,
+            type(JAVA_LANG_STRING),
+            METHOD_NAME
+        ],
+        [
+            types(type(ANNOTATION_NONNULL)),
+            Modifier.PRIVATE,
+            type(JAVA_LANG_STRING),
+            METHOD_NAME,
+            types(type(JAVA_LANG_STRING))
+        ],
+        [
+            types(type(ANNOTATION_NONNULL)),
+            Modifier.PRIVATE,
+            type(T),
+            typeParams(T),
+            METHOD_NAME
+        ],
+        [
+            types(type(ANNOTATION_NONNULL)),
+            Modifier.PRIVATE,
+            type(T),
+            typeParams(T),
+            METHOD_NAME,
+            types(type(JAVA_LANG_STRING))
+        ],
+        [
+            types(type(ANNOTATION_NONNULL)),
             type(JAVA_LANG_STRING),
             METHOD_NAME,
             types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             type(T),
             typeParams(T),
             METHOD_NAME,
@@ -315,7 +315,7 @@ class MethodDescriptorSpec extends Specification implements BaseConstants {
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
             type(JAVA_LANG_STRING),
             METHOD_NAME,
@@ -323,7 +323,7 @@ class MethodDescriptorSpec extends Specification implements BaseConstants {
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
-            types(type(JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
             type(T),
             typeParams(T),
@@ -335,17 +335,17 @@ class MethodDescriptorSpec extends Specification implements BaseConstants {
 
     @Shared
     private List ANNOTATED_METHOD_SIGNATURES = [
-        '@javax.annotation.Nonnull public java.lang.String doSomething()',
-        '@javax.annotation.Nonnull public java.lang.String doSomething(java.lang.String arg0)',
-        '@javax.annotation.Nonnull public <T> T doSomething()',
-        '@javax.annotation.Nonnull public <T> T doSomething(java.lang.String arg0)',
-        '@javax.annotation.Nonnull private java.lang.String doSomething()',
-        '@javax.annotation.Nonnull private java.lang.String doSomething(java.lang.String arg0)',
-        '@javax.annotation.Nonnull private <T> T doSomething()',
-        '@javax.annotation.Nonnull private <T> T doSomething(java.lang.String arg0)',
-        '@javax.annotation.Nonnull public java.lang.String doSomething(java.lang.String arg0) throws java.lang.Exception',
-        '@javax.annotation.Nonnull public <T> T doSomething(java.lang.String arg0) throws java.lang.Exception',
-        '@javax.annotation.Nonnull private java.lang.String doSomething(java.lang.String arg0) throws java.lang.Exception',
-        '@javax.annotation.Nonnull private <T> T doSomething(java.lang.String arg0) throws java.lang.Exception'
+        '@griffon.annotations.core.Nonnull public java.lang.String doSomething()',
+        '@griffon.annotations.core.Nonnull public java.lang.String doSomething(java.lang.String arg0)',
+        '@griffon.annotations.core.Nonnull public <T> T doSomething()',
+        '@griffon.annotations.core.Nonnull public <T> T doSomething(java.lang.String arg0)',
+        '@griffon.annotations.core.Nonnull private java.lang.String doSomething()',
+        '@griffon.annotations.core.Nonnull private java.lang.String doSomething(java.lang.String arg0)',
+        '@griffon.annotations.core.Nonnull private <T> T doSomething()',
+        '@griffon.annotations.core.Nonnull private <T> T doSomething(java.lang.String arg0)',
+        '@griffon.annotations.core.Nonnull public java.lang.String doSomething(java.lang.String arg0) throws java.lang.Exception',
+        '@griffon.annotations.core.Nonnull public <T> T doSomething(java.lang.String arg0) throws java.lang.Exception',
+        '@griffon.annotations.core.Nonnull private java.lang.String doSomething(java.lang.String arg0) throws java.lang.Exception',
+        '@griffon.annotations.core.Nonnull private <T> T doSomething(java.lang.String arg0) throws java.lang.Exception'
     ]
 }

@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core.configuration;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.Configuration;
 import org.kordamp.jsr377.converter.FormattingConverter;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.application.converter.Converter;
 import javax.application.converter.ConverterRegistry;
 import java.util.Properties;

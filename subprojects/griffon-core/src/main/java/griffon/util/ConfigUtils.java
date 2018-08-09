@@ -17,8 +17,9 @@
  */
 package griffon.util;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
+
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.MissingResourceException;

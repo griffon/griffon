@@ -17,9 +17,8 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.MapChangeListener;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

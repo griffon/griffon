@@ -42,6 +42,6 @@ public interface BaseConstants {
     String APPLICATION = "application";
     String JAVAX_INJECT_INJECT = "javax.inject.Inject";
     String JAVAX_INJECT_NAMED = "javax.inject.Named";
-    String JAVAX_ANNOTATION_NONNULL = "javax.annotation.Nonnull";
-    String JAVAX_ANNOTATION_NULLABLE = "javax.annotation.Nullable";
+    String ANNOTATION_NONNULL = "griffon.annotations.core.Nonnull";
+    String ANNOTATION_NULLABLE = "griffon.annotations.core.Nullable";
 }

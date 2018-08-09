@@ -17,7 +17,8 @@
  */
 package integration
 
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
+
 import javax.application.configuration.Configured
 
 class ConfigurableBean {

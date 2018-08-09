@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.test.javafx;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.injection.Module;
 import griffon.core.view.WindowManager;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.test.core.TestApplicationBootstrapper;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

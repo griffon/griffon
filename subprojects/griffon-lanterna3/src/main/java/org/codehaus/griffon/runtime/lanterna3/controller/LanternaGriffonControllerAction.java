@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.lanterna3.controller;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
@@ -24,8 +25,6 @@ import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.lanterna3.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

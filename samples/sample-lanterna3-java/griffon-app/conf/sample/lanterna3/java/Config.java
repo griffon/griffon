@@ -17,10 +17,10 @@
  */
 package sample.lanterna3.java;
 
+import griffon.annotations.core.Nonnull;
 import griffon.util.AbstractMapResourceBundle;
 import griffon.util.CollectionUtils;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;

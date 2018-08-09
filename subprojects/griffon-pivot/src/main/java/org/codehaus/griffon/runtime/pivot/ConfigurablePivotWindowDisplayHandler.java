@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.pivot.PivotWindowDisplayHandler;
@@ -25,7 +26,6 @@ import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 

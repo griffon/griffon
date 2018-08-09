@@ -17,11 +17,10 @@
  */
 package org.codehaus.griffon.runtime.groovy.i18n;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.i18n.MessageSource;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecorator;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

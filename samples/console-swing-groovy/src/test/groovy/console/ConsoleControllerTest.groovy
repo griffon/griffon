@@ -17,16 +17,16 @@
  */
 package console
 
+import griffon.annotations.core.Nonnull
 import griffon.core.artifact.ArtifactManager
 import griffon.core.injection.Module
+import griffon.inject.DependsOn
 import griffon.test.core.GriffonUnitRule
 import griffon.test.core.TestFor
-import griffon.inject.DependsOn
 import org.codehaus.griffon.test.core.injection.AbstractTestingModule
 import org.junit.Rule
 import org.junit.Test
 
-import javax.annotation.Nonnull
 import javax.inject.Inject
 
 import static java.util.concurrent.TimeUnit.SECONDS

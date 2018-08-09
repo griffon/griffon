@@ -17,11 +17,10 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.value.ChangeListener;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

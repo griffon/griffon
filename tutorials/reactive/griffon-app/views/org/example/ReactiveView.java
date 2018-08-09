@@ -38,7 +38,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.example.api.Repository;
 import org.reactfx.EventStreams;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.Collections;
 
 import static griffon.javafx.support.JavaFXUtils.createJavaFXThreadProxyList;

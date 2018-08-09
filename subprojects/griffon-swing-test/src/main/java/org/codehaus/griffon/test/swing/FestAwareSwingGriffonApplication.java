@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.test.swing;
 
+import griffon.annotations.core.Nonnull;
 import griffon.swing.SwingGriffonApplication;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

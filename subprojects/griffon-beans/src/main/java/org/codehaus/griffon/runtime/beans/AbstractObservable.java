@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.beans;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.beans.Observable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.groovy;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
@@ -26,7 +27,6 @@ import griffon.core.mvc.MVCGroupConfiguration;
 import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
-import javax.annotation.Nonnull;
 import javax.inject.Named;
 import java.util.Map;
 

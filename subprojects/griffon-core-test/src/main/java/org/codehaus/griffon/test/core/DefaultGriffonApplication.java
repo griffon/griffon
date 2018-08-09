@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.test.core;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.CallableWithArgs;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 /**

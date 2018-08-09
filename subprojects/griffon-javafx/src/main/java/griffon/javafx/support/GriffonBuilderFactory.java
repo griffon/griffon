@@ -17,6 +17,7 @@
  */
 package griffon.javafx.support;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
@@ -25,7 +26,6 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.util.Builder;
 import javafx.util.BuilderFactory;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

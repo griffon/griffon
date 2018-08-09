@@ -18,13 +18,13 @@
 package org.codehaus.griffon.runtime.lanterna.groovy;
 
 import com.googlecode.lanterna.gui.Window;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import groovy.lang.Closure;
 import org.codehaus.griffon.runtime.lanterna.ConfigurableLanternaWindowDisplayHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 

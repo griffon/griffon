@@ -17,10 +17,10 @@
  */
 package griffon.swing.support;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;

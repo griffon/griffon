@@ -29,7 +29,7 @@ import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 @ArtifactProviderFor(GriffonView.class)
 public class Tab2View extends AbstractJavaFXGriffonView {

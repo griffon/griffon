@@ -54,37 +54,37 @@ public interface ObservableConstants extends BaseConstants {
         method(
             type(VOID),
             METHOD_ADD_PROPERTY_CHANGE_LISTENER,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
+            args(annotatedType(annotations(ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_ADD_PROPERTY_CHANGE_LISTENER,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_REMOVE_PROPERTY_CHANGE_LISTENER,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
+            args(annotatedType(annotations(ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_REMOVE_PROPERTY_CHANGE_LISTENER,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NULLABLE), PROPERTY_CHANGE_LISTENER_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(PROPERTY_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_PROPERTY_CHANGE_LISTENERS
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(PROPERTY_CHANGE_LISTENER_TYPE, 1),
             METHOD_GET_PROPERTY_CHANGE_LISTENERS,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+            args(annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         )
     };
 
@@ -93,16 +93,16 @@ public interface ObservableConstants extends BaseConstants {
             Modifier.PROTECTED,
             type(VOID),
             METHOD_FIRE_PROPERTY_CHANGE,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), PROPERTY_CHANGE_EVENT_TYPE))
+            args(annotatedType(annotations(ANNOTATION_NONNULL), PROPERTY_CHANGE_EVENT_TYPE))
         ),
         method(
             Modifier.PROTECTED,
             type(VOID),
             METHOD_FIRE_PROPERTY_CHANGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         )
     };
 }

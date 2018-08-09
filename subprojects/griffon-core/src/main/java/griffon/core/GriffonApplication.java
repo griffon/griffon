@@ -17,6 +17,8 @@
  */
 package griffon.core;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.configuration.ConfigurationManager;
@@ -34,8 +36,6 @@ import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
 import org.slf4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 

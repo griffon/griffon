@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.i18n;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.i18n.MessageSource;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

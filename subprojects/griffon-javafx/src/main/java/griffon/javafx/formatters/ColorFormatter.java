@@ -17,12 +17,12 @@
  */
 package griffon.javafx.formatters;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.scene.paint.Color;
 import org.kordamp.jsr377.formatter.AbstractFormatter;
 import org.kordamp.jsr377.formatter.ParseException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 

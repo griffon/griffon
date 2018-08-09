@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.controller;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.GriffonApplication;
@@ -41,8 +43,6 @@ import griffon.exceptions.InstanceMethodInvocationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.application.threading.Threading;
 import javax.inject.Inject;
 import java.lang.ref.WeakReference;

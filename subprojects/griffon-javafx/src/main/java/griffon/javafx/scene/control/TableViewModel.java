@@ -17,11 +17,10 @@
  */
 package griffon.javafx.scene.control;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

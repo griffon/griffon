@@ -17,12 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core.properties;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.properties.PropertyChangeListener;
 import griffon.core.properties.PropertySource;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Andres Almiray

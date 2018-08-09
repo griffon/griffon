@@ -17,12 +17,12 @@
  */
 package sample.swing.java;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonView;
 import griffon.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
-import javax.annotation.Nonnull;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;

@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core.i18n;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.util.CompositeResourceBundle;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

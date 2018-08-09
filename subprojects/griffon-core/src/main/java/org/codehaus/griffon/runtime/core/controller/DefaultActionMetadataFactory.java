@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core.controller;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.controller.ActionMetadataFactory;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 
 /**

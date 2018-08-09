@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.core.mvc;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupConfigurationFactory;
 import griffon.core.mvc.MVCGroupManager;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Map;
 

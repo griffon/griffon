@@ -20,6 +20,8 @@ package org.codehaus.griffon.runtime.core.i18n
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
+import griffon.annotations.core.Nonnull
+import griffon.annotations.core.Nullable
 import griffon.core.ApplicationClassLoader
 import griffon.core.CallableWithArgs
 import griffon.core.i18n.MessageSource
@@ -38,8 +40,6 @@ import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
 import org.junit.Before
 import org.junit.Rule
 
-import javax.annotation.Nonnull
-import javax.annotation.Nullable
 import javax.application.i18n.tck.MessageSourceTest
 import javax.inject.Inject
 import javax.inject.Named

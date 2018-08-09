@@ -17,12 +17,12 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.exceptions.InstanceNotFoundException;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.lang.reflect.Constructor;

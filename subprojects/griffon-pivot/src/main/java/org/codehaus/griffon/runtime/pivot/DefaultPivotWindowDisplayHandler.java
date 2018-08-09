@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
+import griffon.annotations.core.Nonnull;
 import griffon.pivot.PivotWindowDisplayHandler;
 import org.apache.pivot.wtk.Display;
 import org.apache.pivot.wtk.Window;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;

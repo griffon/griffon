@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.configuration;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationEvent;
 import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
@@ -27,8 +29,6 @@ import org.kordamp.jsr377.converter.FormattingConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.application.configuration.Configured;
 import javax.application.converter.Converter;

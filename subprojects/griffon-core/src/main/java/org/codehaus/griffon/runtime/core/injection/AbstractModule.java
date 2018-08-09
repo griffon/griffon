@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.injection;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Module;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

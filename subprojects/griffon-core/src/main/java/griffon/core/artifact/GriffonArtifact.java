@@ -17,13 +17,12 @@
  */
 package griffon.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.mvc.MVCHandler;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.threading.ThreadingHandler;
 import org.slf4j.Logger;
-
-import javax.annotation.Nonnull;
 
 /**
  * Identifies an object as a Griffon artifact.<p>

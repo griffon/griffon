@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.runtime.pivot;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.injection.Module;
 import org.apache.pivot.wtk.Display;
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**

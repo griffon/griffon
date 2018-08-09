@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.runtime.swing.groovy;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.swing.SwingWindowDisplayHandler;
 import groovy.lang.Closure;
 import org.codehaus.griffon.runtime.swing.ConfigurableSwingWindowDisplayHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.awt.Window;

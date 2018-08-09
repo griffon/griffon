@@ -17,13 +17,12 @@
  */
 package org.codehaus.griffon.runtime.lanterna.artifact;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.lanterna.support.LanternaAction;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Lanterna-friendly implementation of the GriffonView interface.

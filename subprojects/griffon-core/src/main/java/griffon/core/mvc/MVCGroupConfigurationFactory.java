@@ -17,7 +17,8 @@
  */
 package griffon.core.mvc;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
+
 import java.util.Map;
 
 /**

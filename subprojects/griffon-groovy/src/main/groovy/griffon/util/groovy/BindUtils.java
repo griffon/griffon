@@ -17,12 +17,12 @@
  */
 package griffon.util.groovy;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.CallableWithArgs;
 import groovy.lang.Closure;
 import groovy.util.FactoryBuilderSupport;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

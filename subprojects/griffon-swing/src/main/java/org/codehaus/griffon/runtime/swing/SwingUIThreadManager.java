@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.runtime.swing;
 
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
-import javax.annotation.Nonnull;
 import javax.swing.SwingUtilities;
 import java.lang.reflect.InvocationTargetException;
 

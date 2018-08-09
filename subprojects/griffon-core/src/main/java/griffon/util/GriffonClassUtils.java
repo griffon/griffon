@@ -17,6 +17,8 @@
  */
 package griffon.util;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.event.EventPublisher;
@@ -31,8 +33,6 @@ import griffon.exceptions.InstanceMethodInvocationException;
 import griffon.exceptions.PropertyException;
 import griffon.exceptions.StaticMethodInvocationException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;

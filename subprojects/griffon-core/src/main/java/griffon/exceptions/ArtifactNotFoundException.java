@@ -17,10 +17,9 @@
  */
 package griffon.exceptions;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

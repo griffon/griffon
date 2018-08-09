@@ -17,12 +17,12 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.CallableWithArgs;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.application.converter.Converter;
 import javax.application.converter.ConverterRegistry;
 import java.text.MessageFormat;

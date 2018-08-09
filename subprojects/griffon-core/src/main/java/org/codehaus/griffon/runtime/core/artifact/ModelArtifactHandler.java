@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonModelClass;
 import griffon.inject.Typed;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 
 import static java.util.Objects.requireNonNull;

@@ -17,12 +17,12 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.Context;
 import griffon.core.ObservableContext;
 import griffon.util.TypeUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.application.converter.ConverterRegistry;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

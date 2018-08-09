@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.configuration;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.util.AbstractMapResourceBundle;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.application.converter.ConverterRegistry;
 import java.util.Collections;
 import java.util.Map;

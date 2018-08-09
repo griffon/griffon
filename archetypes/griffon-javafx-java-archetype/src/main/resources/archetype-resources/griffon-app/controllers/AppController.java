@@ -7,7 +7,7 @@ import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import javax.application.threading.Threading;
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 @ArtifactProviderFor(GriffonController.class)
 public class AppController extends AbstractGriffonController {

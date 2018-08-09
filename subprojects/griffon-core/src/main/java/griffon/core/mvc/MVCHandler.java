@@ -17,12 +17,12 @@
  */
 package griffon.core.mvc;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 

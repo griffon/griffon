@@ -17,9 +17,9 @@
  */
 package griffon.javafx.beans.property;
 
+import griffon.annotations.core.Nonnull;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.hamcrest.CoreMatchers.equalTo;

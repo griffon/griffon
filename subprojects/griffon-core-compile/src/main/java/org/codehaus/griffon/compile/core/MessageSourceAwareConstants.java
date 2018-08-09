@@ -38,187 +38,187 @@ public interface MessageSourceAwareConstants extends BaseConstants {
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_RESOLVE_MESSAGE_VALUE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING)),
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_MESSAGE_EXCEPTION_TYPE))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
+            annotations(ANNOTATION_NULLABLE),
             type(JAVA_LANG_STRING),
             METHOD_GET_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_STRING))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_MESSAGE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         )
     };
 }

@@ -17,13 +17,13 @@
  */
 package org.codehaus.griffon.runtime.core.threading;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.GriffonException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.concurrent.Callable;

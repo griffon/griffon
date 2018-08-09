@@ -17,10 +17,10 @@
  */
 package griffon.core.i18n.groovy;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

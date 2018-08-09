@@ -24,7 +24,7 @@ import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 import org.opendolphin.core.client.ClientDolphin;
 import org.opendolphin.core.client.ClientPresentationModel;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 import javax.swing.Action;
 import javax.swing.JButton;

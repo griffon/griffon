@@ -17,12 +17,12 @@
  */
 package org.codehaus.griffon.runtime.groovy.view;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.util.groovy.BuilderCustomizer;
 import groovy.lang.Closure;
 import groovy.util.Factory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

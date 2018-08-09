@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core.addon;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.addon.GriffonAddon;
 import griffon.core.artifact.GriffonController;
@@ -27,7 +28,6 @@ import griffon.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;

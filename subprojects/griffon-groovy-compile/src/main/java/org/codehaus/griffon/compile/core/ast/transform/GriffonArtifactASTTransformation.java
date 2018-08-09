@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.compile.core.BaseConstants;
 import org.codehaus.griffon.compile.core.ast.SourceUnitCollector;
@@ -31,7 +32,6 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;

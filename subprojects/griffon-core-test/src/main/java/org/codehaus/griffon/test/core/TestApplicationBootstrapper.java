@@ -17,14 +17,15 @@
  */
 package org.codehaus.griffon.test.core;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.injection.Module;
+import griffon.inject.BindTo;
 import griffon.test.core.TestCaseAware;
 import griffon.test.core.TestModuleAware;
 import griffon.test.core.TestModuleOverrides;
 import griffon.test.core.TestModules;
 import griffon.test.core.injection.TestingModule;
-import griffon.inject.BindTo;
 import griffon.util.AnnotationUtils;
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper;
 import org.codehaus.griffon.runtime.core.injection.AnnotatedBindingBuilder;
@@ -34,7 +35,6 @@ import org.codehaus.griffon.test.core.injection.AbstractTestingModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Qualifier;
@@ -53,7 +53,6 @@ import java.util.Map;
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.isBlank;
-import static org.codehaus.griffon.runtime.core.injection.Bindings.bind;
 
 /**
  * @author Andres Almiray

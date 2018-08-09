@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.ResourceResolver;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

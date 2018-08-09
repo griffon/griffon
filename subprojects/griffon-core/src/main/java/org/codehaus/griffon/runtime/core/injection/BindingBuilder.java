@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.injection;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.injection.Binding;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

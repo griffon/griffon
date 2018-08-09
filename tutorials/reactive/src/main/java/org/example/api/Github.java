@@ -17,7 +17,7 @@ package org.example.api;
 
 import rx.Observable;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 public interface Github {
     @Nonnull

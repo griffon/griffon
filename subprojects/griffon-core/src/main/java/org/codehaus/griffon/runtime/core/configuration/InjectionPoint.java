@@ -17,7 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.configuration;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
+
 import javax.application.converter.Converter;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;

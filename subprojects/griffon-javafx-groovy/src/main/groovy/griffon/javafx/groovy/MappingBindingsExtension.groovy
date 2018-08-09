@@ -17,6 +17,8 @@
  */
 package griffon.javafx.groovy
 
+import griffon.annotations.core.Nonnull
+import griffon.annotations.core.Nullable
 import griffon.javafx.beans.binding.MappingBindings
 import groovy.transform.CompileStatic
 import javafx.beans.binding.BooleanBinding
@@ -36,8 +38,6 @@ import javafx.beans.value.ObservableStringValue
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 
-import javax.annotation.Nonnull
-import javax.annotation.Nullable
 import java.util.function.BiFunction
 import java.util.function.Function
 import java.util.function.Supplier

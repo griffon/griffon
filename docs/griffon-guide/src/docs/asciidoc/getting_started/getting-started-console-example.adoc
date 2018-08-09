@@ -266,7 +266,7 @@ include::{console-swing-groovy}/griffon-app/controllers/console/ConsoleControlle
 The Griffon framework will inject references to the other portions of the MVC triad if fields
 named `model`, `view`, and `controller` are present in the Model, Controller or View. This allows
 us to access the view widgets and the model data if needed. These properties are annotated with
-`@griffon.inject.MVCMember` and `@javax.annotation.Nonnull` as hints to the Griffon runtime, enabling
+`@griffon.inject.MVCMember` and `@griffon.annotations.core.Nonnull` as hints to the Griffon runtime, enabling
 additional checks. Any other class members annotated with `@javax.inject.Inject` participate in
 dependency injection as laid out by JSR 330, in this case the controller will get an instance of
 `Evaluator` if a suitable implementation is bound.

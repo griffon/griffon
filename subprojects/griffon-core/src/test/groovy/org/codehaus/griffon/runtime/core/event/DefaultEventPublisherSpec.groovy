@@ -20,6 +20,7 @@ package org.codehaus.griffon.runtime.core.event
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
+import griffon.annotations.core.Nullable
 import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
 import griffon.core.RunnableWithArgs
@@ -35,7 +36,6 @@ import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
 import org.junit.Rule
 import spock.lang.Specification
 
-import javax.annotation.Nullable
 import javax.inject.Inject
 import java.util.concurrent.ExecutorService
 

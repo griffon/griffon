@@ -19,6 +19,7 @@ package org.codehaus.griffon.runtime.lanterna;
 
 import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.listener.WindowAdapter;
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
@@ -26,7 +27,6 @@ import griffon.lanterna.LanternaWindowDisplayHandler;
 import griffon.lanterna.LanternaWindowManager;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 

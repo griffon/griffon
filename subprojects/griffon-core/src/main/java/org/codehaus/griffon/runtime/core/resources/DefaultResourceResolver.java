@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.resources;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.util.CompositeResourceBundleBuilder;
 
-import javax.annotation.Nonnull;
 import javax.application.converter.ConverterRegistry;
 import java.util.Locale;
 import java.util.Map;

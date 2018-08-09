@@ -17,7 +17,7 @@
  */
 package griffon.core;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * A <code>PlatformHandler</code> is capable of tweaking the application

@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
@@ -33,9 +35,6 @@ import griffon.core.mvc.TypedMVCGroupConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
 import java.io.InputStream;
 import java.net.URL;
@@ -57,7 +56,7 @@ public abstract class AbstractGriffonArtifact implements GriffonArtifact {
     private final Object lock = new Object[0];
     @Inject
     protected GriffonApplication application;
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private GriffonClass griffonClass;
 
     public AbstractGriffonArtifact() {

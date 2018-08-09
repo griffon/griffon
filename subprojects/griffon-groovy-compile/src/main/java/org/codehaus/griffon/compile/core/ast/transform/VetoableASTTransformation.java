@@ -18,9 +18,9 @@
 package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.beans.Vetoable;
+import org.codehaus.griffon.compile.beans.VetoableConstants;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
-import org.codehaus.griffon.compile.beans.VetoableConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;

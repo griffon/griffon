@@ -17,8 +17,8 @@
  */
 package griffon.core.artifact;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 
 /**
  * Represents a Model class in Griffon.<p>

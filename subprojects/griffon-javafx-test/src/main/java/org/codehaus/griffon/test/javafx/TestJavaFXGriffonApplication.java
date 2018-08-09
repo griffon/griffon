@@ -17,11 +17,10 @@
  */
 package org.codehaus.griffon.test.javafx;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
-import griffon.test.core.TestCaseAware;
 import griffon.javafx.JavaFXGriffonApplication;
-
-import javax.annotation.Nonnull;
+import griffon.test.core.TestCaseAware;
 
 import static griffon.test.javafx.TestContext.getTestContext;
 

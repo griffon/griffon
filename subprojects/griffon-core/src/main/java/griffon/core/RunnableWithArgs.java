@@ -17,7 +17,7 @@
  */
 package griffon.core;
 
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nullable;
 
 /**
  * A Runnable that can have arguments.

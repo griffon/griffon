@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core.artifact
 
+import griffon.annotations.core.Nullable
 import griffon.core.ApplicationBootstrapper
 import griffon.core.GriffonApplication
 import griffon.core.artifact.GriffonArtifact
@@ -35,7 +36,6 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import javax.annotation.Nullable
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 

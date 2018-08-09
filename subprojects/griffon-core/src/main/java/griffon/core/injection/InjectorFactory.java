@@ -17,9 +17,8 @@
  */
 package griffon.core.injection;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

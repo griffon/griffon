@@ -17,10 +17,10 @@
  */
 package griffon.core.injection;
 
+import griffon.annotations.core.Nonnull;
 import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 

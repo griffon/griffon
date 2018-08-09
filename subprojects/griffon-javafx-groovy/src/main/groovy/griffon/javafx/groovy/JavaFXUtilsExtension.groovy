@@ -17,6 +17,8 @@
  */
 package griffon.javafx.groovy
 
+import griffon.annotations.core.Nonnull
+import griffon.annotations.core.Nullable
 import griffon.javafx.support.JavaFXAction
 import griffon.javafx.support.JavaFXUtils
 import groovy.transform.CompileStatic
@@ -34,9 +36,6 @@ import javafx.scene.control.Tab
 import javafx.scene.control.TableColumn
 import javafx.scene.control.ToggleButton
 import javafx.scene.image.Image
-
-import javax.annotation.Nonnull
-import javax.annotation.Nullable
 
 /**
  * @author Andres Almiray
