@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import static org.awaitility.Awaitility.await;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.greatherThan;
 
 @TestFor(${project_class_name}Controller.class)
 public class ${project_class_name}ControllerTest {
@@ -34,7 +35,7 @@ public class ${project_class_name}ControllerTest {
 
         // when:
         controller.invokeAction("click");
-        await().atMost(2, SECONDS);
+        await().atMost(2, SECONDS).until(() -> model.getClickCount(), greaterThan(0));
 
         // then:
         assertEquals(1, model.getClickCount());

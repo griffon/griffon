@@ -32,7 +32,7 @@ class AppControllerTest {
 
         // when:
         controller.invokeAction('click')
-        await().atMost(2, SECONDS)
+        await().atMost(2, SECONDS).until({ -> model.getClickCount()}, greaterThan(0))
 
         // then:
         assert 1 == controller.model.clickCount
