@@ -10,6 +10,7 @@ import javax.inject.Inject
 
 import static org.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
+import static org.hamcrest.Matchers.greatherThan
 
 @TestFor(AppController)
 class AppControllerTest {
