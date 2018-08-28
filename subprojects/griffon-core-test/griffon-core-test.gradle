@@ -29,4 +29,8 @@ dependencies {
         exclude group: 'org.hamcrest', module: 'hamcrest-library'
     }
     compile "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    compile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    compile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+        exclude module: 'junit', group: 'junit'
+    }
 }

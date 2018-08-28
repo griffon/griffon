@@ -26,12 +26,19 @@ configurations {
 }
 
 dependencies {
-    functionalTestCompile "junit:junit:$junitVersion"
-    functionalTestCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    // functionalTestCompile "junit:junit:$junitVersion"
+    functionalTestCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    functionalTestCompile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    functionalTestCompile "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    functionalTestCompile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+        exclude module: 'junit', group: 'junit'
+    }
     functionalTestCompile("org.spockframework:spock-core:$spockVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    functionalTestCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    functionalTestCompile("org.codehaus.groovy:groovy-all:$groovyVersion") {
+        exclude module: 'junit', group: 'junit'
+    }
 }
 
 sourceSets {
@@ -63,6 +70,12 @@ task functionalTest(type: Test, dependsOn: jar) {
     classpath = sourceSets.functionalTest.runtimeClasspath
     reports.html.enabled = false
     ignoreFailures = !rootProject.fullBuild
+
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 task functionalTestReport(type: TestReport) {

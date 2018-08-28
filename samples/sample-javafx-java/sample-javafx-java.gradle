@@ -51,7 +51,26 @@ dependencies {
     testCompile project(':griffon-core-test')
     testCompile project(':griffon-javafx-test')
 
+    testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    testCompile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    testCompile "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    testCompile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+        exclude module: 'junit', group: 'junit'
+    }
+
     functionalTestCompile project(':griffon-javafx-test')
+}
+
+test {
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    reports {
+        html.enabled = true
+    }
 }
 
 sourceSets {
