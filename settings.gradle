@@ -20,6 +20,10 @@ def includeProject = { String projectDirName, String projectName ->
 
 rootProject.name = 'griffon'
 
+includeBuild '../jsr377-api'
+includeBuild '../jsr377-tck'
+includeBuild '../jsr377-converters'
+
 includeProject 'subprojects', 'griffon-core'
 includeProject 'subprojects', 'griffon-core-compile'
 includeProject 'subprojects', 'griffon-core-test'
