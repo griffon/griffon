@@ -55,6 +55,12 @@ task integrationTest(type: Test, dependsOn: jar) {
     reports.html.enabled = false
     ignoreFailures = !rootProject.fullBuild
     forkEvery = Runtime.runtime.availableProcessors()
+
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 task integrationTestReport(type: TestReport) {

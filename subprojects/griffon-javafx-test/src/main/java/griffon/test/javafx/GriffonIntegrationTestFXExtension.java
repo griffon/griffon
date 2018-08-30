@@ -28,13 +28,10 @@ import javafx.stage.Window;
 import org.awaitility.Duration;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
 import org.codehaus.griffon.test.javafx.TestJavaFXGriffonApplication;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.testfx.api.FxToolkit;
 
@@ -51,15 +48,11 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.create;
  * @author Andres Almiray
  * @since 3.0.0
  */
-public class GriffonFunctionalTestFXExtension extends TestFX
-    implements TestInstancePostProcessor, BeforeAllCallback, AfterAllCallback, TestExecutionExceptionHandler, ExecutionCondition {
+public class GriffonIntegrationTestFXExtension extends TestFX
+    implements TestInstancePostProcessor, BeforeTestExecutionCallback, AfterTestExecutionCallback {
     private final static Namespace GRIFFON = create("griffon");
     private final static String TEST_INSTANCE = "testInstance";
     private final static String APPLICATION = "application";
-    private final static String FAILURES = "failures";
-
-    private static final ConditionEvaluationResult ENABLED = ConditionEvaluationResult.enabled("Execution was successful");
-    private static final ConditionEvaluationResult DISABLED = ConditionEvaluationResult.disabled("Execution failure");
 
     public static class Builder {
         private String windowName = "mainWindow";
@@ -95,8 +88,8 @@ public class GriffonFunctionalTestFXExtension extends TestFX
             return this;
         }
 
-        public GriffonFunctionalTestFXExtension build() {
-            return new GriffonFunctionalTestFXExtension(applicationClass, windowName, timeout, startupArgs);
+        public GriffonIntegrationTestFXExtension build() {
+            return new GriffonIntegrationTestFXExtension(applicationClass, windowName, timeout, startupArgs);
         }
     }
 
@@ -111,10 +104,10 @@ public class GriffonFunctionalTestFXExtension extends TestFX
 
     private JavaFXGriffonApplication application;
 
-    private GriffonFunctionalTestFXExtension(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass,
-                                             @Nonnull String windowName,
-                                             @Nonnull Duration timeout,
-                                             @Nonnull String[] startupArgs) {
+    private GriffonIntegrationTestFXExtension(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass,
+                                              @Nonnull String windowName,
+                                              @Nonnull Duration timeout,
+                                              @Nonnull String[] startupArgs) {
         this.applicationClass = requireNonNull(applicationClass, "Argument 'applicationClass' must not be null");
         this.windowName = requireNonBlank(windowName, "Argument 'windowName' cannot be blank");
         this.timeout = requireNonNull(timeout, "Argument 'timeout' cannot be blank");
@@ -132,7 +125,7 @@ public class GriffonFunctionalTestFXExtension extends TestFX
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
+    public void beforeTestExecution(ExtensionContext context) throws Exception {
         try {
             FxToolkit.registerPrimaryStage();
 
@@ -152,18 +145,7 @@ public class GriffonFunctionalTestFXExtension extends TestFX
     }
 
     @Override
-    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        context.getStore(GRIFFON).put(FAILURES, true);
-    }
-
-    @Override
-    public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
-        Boolean failures = (Boolean) context.getStore(GRIFFON).get(FAILURES);
-        return failures != null && failures ? DISABLED : ENABLED;
-    }
-
-    @Override
-    public void afterAll(ExtensionContext context) throws Exception {
+    public void afterTestExecution(ExtensionContext context) throws Exception {
         if (application != null) {
             application.shutdown();
             try {
