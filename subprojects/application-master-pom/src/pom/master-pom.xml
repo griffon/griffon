@@ -52,7 +52,7 @@
         <slf4j.version>@slf4j.version@</slf4j.version>
         <spock.version>@spock.version@</spock.version>
         <codenarc.version>0.21</codenarc.version>
-        <spotbugs.version>3.1.0-RC3</spotbugs.version>
+        <spotbugs.version>3.1.6</spotbugs.version>
         <izpack-standalone.version>4.3.5</izpack-standalone.version>
         <izpack.staging.dir>${project.build.directory}/izpack</izpack.staging.dir>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -68,10 +68,11 @@
         <plugin.compiler.version>3.7.0</plugin.compiler.version>
         <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
         <plugin.dependency.version>3.0.1</plugin.dependency.version>
+        <plugin.enforcer.version>3.0.0-M2</plugin.enforcer.version>
         <plugin.exec.version>1.6.0</plugin.exec.version>
         <plugin.findbugs.version>3.0.5</plugin.findbugs.version>
         <plugin.git.commit.version>2.2.3</plugin.git.commit.version>
-        <plugin.gmavenplus.version>1.6</plugin.gmavenplus.version>
+        <plugin.gmavenplus.version>1.6.1</plugin.gmavenplus.version>
         <plugin.javadoc.version>2.10.4</plugin.javadoc.version>
         <plugin.javafx.version>8.8.3</plugin.javafx.version>
         <plugin.jacoco.version>0.7.9</plugin.jacoco.version>
@@ -85,8 +86,8 @@
         <plugin.shade.version>3.1.0</plugin.shade.version>
         <plugin.shade_ext_transformers.version>1.0.3</plugin.shade_ext_transformers.version>
         <plugin.site.version>3.6</plugin.site.version>
-        <plugin.surefire.version>2.20</plugin.surefire.version>
-        <plugin.versions.version>2.4</plugin.versions.version>
+        <plugin.surefire.version>2.22.0</plugin.surefire.version>
+        <plugin.versions.version>2.6</plugin.versions.version>
         <maven-checkstyle-plugin.configLocation>${project.basedir}/config/checkstyle/checkstyle.xml</maven-checkstyle-plugin.configLocation>
         <!-- javafx signing -->
         <keystore.alias>example-user</keystore.alias>
@@ -99,10 +100,6 @@
         <jacoco.skip>false</jacoco.skip>
         <pmd.skip>false</pmd.skip>
     </properties>
-
-    <prerequisites>
-        <maven>3.5.0</maven>
-    </prerequisites>
 
     <!-- tag::dependencyManagement[] -->
     <dependencyManagement>
@@ -259,6 +256,35 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${plugin.enforcer.version}</version>
+                    <inherited>true</inherited>
+                    <executions>
+                        <execution>
+                            <id>enforce-maven</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <rules>
+                            <requireMavenVersion>
+                                <version>3.5</version>
+                            </requireMavenVersion>
+                            <requireJavaVersion>
+                                <version>1.8</version>
+                            </requireJavaVersion>
+                            <reactorModuleConvergence>
+                                <message>The reactor is not valid</message>
+                                <ignoreModuleDependencies>true</ignoreModuleDependencies>
+                            </reactorModuleConvergence>
+                            <requireUpperBoundDeps/>
+                        </rules>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
@@ -765,6 +791,10 @@
 
         <!-- tag::plugins[] -->
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
