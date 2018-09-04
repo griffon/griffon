@@ -23,6 +23,7 @@ import griffon.core.ExecutorServiceManager
 import griffon.core.GriffonExceptionHandler
 import griffon.core.threading.UIThreadManager
 import javafx.application.Platform
+import javafx.embed.swing.JFXPanel
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
@@ -40,6 +41,11 @@ import static griffon.util.AnnotationUtils.named
 @ExtendWith(GuiceExtension)
 @IncludeModule(TestModule)
 class JavaFXUIThreadManagerTest extends ThreadingHandlerTest {
+    static {
+        // initialize UI toolkit
+        new JFXPanel()
+    }
+
     @Inject private UIThreadManager uiThreadManager
 
     @Override

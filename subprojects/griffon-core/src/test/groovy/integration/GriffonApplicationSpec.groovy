@@ -41,9 +41,12 @@ import griffon.core.mvc.MVCConsumer
 import griffon.core.mvc.MVCGroup
 import griffon.exceptions.InstanceNotFoundException
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
+import org.codehaus.groovy.runtime.DateGroovyMethods
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
+
+import java.text.SimpleDateFormat
 
 import static griffon.util.AnnotationUtils.named
 import static griffon.util.AnnotationUtils.typed
@@ -1011,7 +1014,7 @@ class GriffonApplicationSpec extends Specification {
         then:
         bean.pstring == 'value1'
         bean.pboolean
-        bean.pdate.clearTime() == Date.parse('yyyy/MM/dd', '2000/01/01').clearTime()
+        DateGroovyMethods.clearTime(bean.pdate) == DateGroovyMethods.clearTime(new SimpleDateFormat('yyyy/MM/dd').parse('2000/01/01'))
         bean.customString == 'custom'
     }
 

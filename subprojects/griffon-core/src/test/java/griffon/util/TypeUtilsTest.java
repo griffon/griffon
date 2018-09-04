@@ -301,14 +301,14 @@ public class TypeUtilsTest {
 
     @Test
     public void convertNumbersIntoPrimitiveFloat() {
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Byte.valueOf("10")), 0);
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Short.valueOf("10")), 0);
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Integer.valueOf("10")), 0);
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Long.valueOf("10")), 0);
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Float.valueOf("10")), 0);
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Double.valueOf("10")), 0);
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, new BigInteger("10")), 0);
-        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, new BigDecimal("10")), 0);
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Byte.valueOf("10")));
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Short.valueOf("10")));
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Integer.valueOf("10")));
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Long.valueOf("10")));
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Float.valueOf("10")));
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, Double.valueOf("10")));
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, new BigInteger("10")));
+        assertEquals((float) 10, (float) TypeUtils.convertValue(Float.TYPE, new BigDecimal("10")));
     }
 
     @Test
@@ -325,14 +325,14 @@ public class TypeUtilsTest {
 
     @Test
     public void convertNumbersIntoPrimitiveDouble() {
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Byte.valueOf("10")), 0);
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Short.valueOf("10")), 0);
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Integer.valueOf("10")), 0);
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Long.valueOf("10")), 0);
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Float.valueOf("10")), 0);
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Double.valueOf("10")), 0);
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, new BigInteger("10")), 0);
-        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, new BigDecimal("10")), 0);
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Byte.valueOf("10")));
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Short.valueOf("10")));
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Integer.valueOf("10")));
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Long.valueOf("10")));
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Float.valueOf("10")));
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, Double.valueOf("10")));
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, new BigInteger("10")));
+        assertEquals((double) 10, (double) TypeUtils.convertValue(Double.TYPE, new BigDecimal("10")));
     }
 
     @Test
@@ -431,20 +431,20 @@ public class TypeUtilsTest {
 
     @Test
     public void castToFloat() {
-        assertEquals(10f, TypeUtils.castToFloat(Integer.valueOf("10")), 0f);
-        assertEquals(10f, TypeUtils.castToFloat(Float.valueOf("10")), 0f);
-        assertEquals(10f, TypeUtils.castToFloat("10"), 0f);
-        assertEquals(10f, TypeUtils.castToFloat("10", 10f), 0f);
-        assertEquals(10f, TypeUtils.castToFloat(null, 10f), 0f);
+        assertEquals(10f, TypeUtils.castToFloat(Integer.valueOf("10")));
+        assertEquals(10f, TypeUtils.castToFloat(Float.valueOf("10")));
+        assertEquals(10f, TypeUtils.castToFloat("10"));
+        assertEquals(10f, TypeUtils.castToFloat("10", 10f));
+        assertEquals(10f, TypeUtils.castToFloat(null, 10f));
     }
 
     @Test
     public void castToDouble() {
-        assertEquals(10d, TypeUtils.castToDouble(Integer.valueOf("10")), 0d);
-        assertEquals(10d, TypeUtils.castToDouble(Double.valueOf("10")), 0d);
-        assertEquals(10d, TypeUtils.castToDouble("10"), 0d);
-        assertEquals(10d, TypeUtils.castToDouble("10", 10d), 0d);
-        assertEquals(10d, TypeUtils.castToDouble(null, 10d), 0d);
+        assertEquals(10d, TypeUtils.castToDouble(Integer.valueOf("10")));
+        assertEquals(10d, TypeUtils.castToDouble(Double.valueOf("10")));
+        assertEquals(10d, TypeUtils.castToDouble("10"));
+        assertEquals(10d, TypeUtils.castToDouble("10", 10d));
+        assertEquals(10d, TypeUtils.castToDouble(null, 10d));
     }
 
     @Test

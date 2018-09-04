@@ -18,6 +18,7 @@
 package griffon.javafx.groovy
 
 import groovy.transform.Canonical
+import groovy.transform.Sortable
 import javafx.beans.binding.BooleanBinding
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -1075,6 +1076,7 @@ class MatchingBindingsExtensionSpec extends Specification {
     }
 
     @Canonical
+    @Sortable
     private static class Box {
         int id
     }

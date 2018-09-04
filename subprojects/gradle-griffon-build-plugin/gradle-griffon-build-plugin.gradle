@@ -24,7 +24,7 @@ apply from: rootProject.file('gradle/coverage.gradle')
 dependencies {
     compile gradleApi()
 
-    testCompile("org.spockframework:spock-core:$spockVersion") {
+    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile 'xmlunit:xmlunit:1.6'

@@ -39,7 +39,7 @@ buildscript {
         classpath 'com.gradle.publish:plugin-publish-plugin:0.10.0'
         classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.1.1'
         classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.3.0'
-        classpath 'com.gradle:build-scan-plugin:1.15.1'
+        classpath 'com.gradle:build-scan-plugin:1.16'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
         classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.3.0'
@@ -147,6 +147,9 @@ subprojects { subproj ->
             testCompile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
             testCompile "org.junit.jupiter:junit-jupiter-params:$junit5Version"
             testCompile "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+            testCompile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+                exclude group: 'junit', module: 'junit'
+            }
             testCompile("junit:junit:$junitVersion") {
                 exclude group: 'org.hamcrest', module: 'hamcrest-core'
             }
@@ -164,8 +167,16 @@ subprojects { subproj ->
                     exclude group: 'junit', module: 'junit'
                 }
                 testCompile("org.spockframework:spock-core:$spockVersion") {
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-all'
                     exclude group: 'junit', module: 'junit'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-groovysh'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-nio'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-macro'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-templates'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-test'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-sql'
+                    exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
                 }
 
                 testCompile "javax.application:jsr377-tck:$jsr377TckVersion"
@@ -218,15 +229,13 @@ subprojects { subproj ->
             useJUnitPlatform()
 
             testLogging {
-                events 'passed', 'skipped', 'failed'
+                events 'skipped', 'failed'
             }
 
             reports {
                 html.enabled = true
             }
         }
-
-        subproj.test.doFirst { t -> println t.includes }
 
         tasks.withType(AbstractCompile) {
             if (rootProject.hasProperty('lint') && rootProject.lint.toBoolean()) {

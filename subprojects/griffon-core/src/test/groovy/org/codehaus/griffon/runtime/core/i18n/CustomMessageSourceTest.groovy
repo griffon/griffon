@@ -26,6 +26,7 @@ import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.function.ThrowingSupplier
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,7 +42,7 @@ class CustomMessageSourceTest {
     @Test
     void invalidKeysInResourceBundle() {
         ResourceBundle resourceBundle = messageSource.asResourceBundle()
-        assertThrows(MissingResourceException, { !resourceBundle.getString('healthy.proverb.bogus') })
+        assertThrows(MissingResourceException, { !resourceBundle.getString('healthy.proverb.bogus') } as ThrowingSupplier)
     }
 
     @Test
