@@ -47,7 +47,7 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class CompositeResourceResolverTests {
+class CompositeResourceResolverTest {
     @Rule
     public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 

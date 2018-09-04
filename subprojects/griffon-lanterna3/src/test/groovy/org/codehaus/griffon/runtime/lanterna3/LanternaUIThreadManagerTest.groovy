@@ -24,14 +24,16 @@ import com.googlecode.lanterna.gui2.WindowBasedTextGUI
 import com.googlecode.lanterna.gui2.WindowPostRenderer
 import com.googlecode.lanterna.screen.Screen
 import com.googlecode.lanterna.terminal.TerminalFactory
+import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
+import griffon.core.GriffonExceptionHandler
 import griffon.core.threading.UIThreadManager
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
-import org.jukito.JukitoRunner
-import org.jukito.UseModules
-import org.junit.Ignore
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.extension.ExtendWith
 
 import javax.application.threading.ThreadingHandler
 import javax.application.threading.tck.ThreadingHandlerTest
@@ -41,9 +43,9 @@ import java.util.concurrent.ExecutorService
 
 import static griffon.util.AnnotationUtils.named
 
-@RunWith(JukitoRunner)
-@UseModules(TestModule)
-@Ignore('The test Thread is also the UI thread')
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
+@Disabled('The test Thread is also the UI thread')
 class LanternaUIThreadManagerTest extends ThreadingHandlerTest {
     @Inject private UIThreadManager uiThreadManager
     @Inject private WindowBasedTextGUI windowBasedTextGUI
@@ -101,6 +103,10 @@ class LanternaUIThreadManagerTest extends ThreadingHandlerTest {
 
             bind(WindowBasedTextGUI)
                 .toProvider(WindowBasedTextGUIProvider)
+                .in(Singleton)
+
+            bind(ExceptionHandler)
+                .to(GriffonExceptionHandler)
                 .in(Singleton)
         }
     }

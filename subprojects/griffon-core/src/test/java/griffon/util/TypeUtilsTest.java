@@ -17,7 +17,7 @@
  */
 package griffon.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,9 +28,10 @@ import java.util.Set;
 import static griffon.util.CollectionUtils.newList;
 import static griffon.util.CollectionUtils.newSet;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TypeUtilsTest {
     @Test
@@ -165,16 +166,16 @@ public class TypeUtilsTest {
         assertTrue(TypeUtils.equals((Object) lintegers, (Object) ints1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void castToNumberCantHandleNonNumberValues() {
         assertEquals(1, TypeUtils.castToNumber(1));
-        TypeUtils.castToNumber(new Object());
+        assertThrows(IllegalArgumentException.class, () -> TypeUtils.castToNumber(new Object()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void castToNumberWithDefaultCantHandleNonNumberValues() {
         assertEquals(1, TypeUtils.castToNumber(null, 1));
-        TypeUtils.castToNumber(new Object(), 1);
+        assertThrows(IllegalArgumentException.class, () -> TypeUtils.castToNumber(new Object(), 1));
     }
 
     /*

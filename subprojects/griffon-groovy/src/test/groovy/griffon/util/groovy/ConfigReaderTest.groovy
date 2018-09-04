@@ -19,7 +19,7 @@ package griffon.util.groovy
 
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 
-class ConfigReaderTests extends GroovyTestCase {
+class ConfigReaderTest extends GroovyTestCase {
     void testConsecutiveReaderValues() {
         def config = new ConfigReader(new DefaultApplicationClassLoader()).parse('''
 grails.views.default.codec="none"
@@ -457,7 +457,7 @@ log4j {
 
     void testNotProperlyNestedPropertiesArePreserved() throws IOException {
         Properties props = new Properties()
-        props.load(ConfigReaderTests.class.getResourceAsStream("/griffon/util/groovy/system.properties"))
+        props.load(ConfigReaderTest.class.getResourceAsStream("/griffon/util/groovy/system.properties"))
         assertEquals("false", props.get("catalog.prov"))
         assertEquals("sa", props.get("catalog.prov.db.user"))
 

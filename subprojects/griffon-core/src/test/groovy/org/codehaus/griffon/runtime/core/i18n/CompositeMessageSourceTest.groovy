@@ -17,8 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core.i18n
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
+
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.i18n.MessageSource
@@ -28,14 +27,16 @@ import griffon.util.AnnotationUtils
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.Instantiator
 import griffon.util.ResourceBundleLoader
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 import javax.inject.Inject
 import javax.inject.Named
@@ -43,18 +44,19 @@ import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
+import static org.junit.jupiter.api.Assertions.assertThrows
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class CompositeMessageSourceTests {
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
+class CompositeMessageSourceTest {
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
-    @Before
+    @BeforeEach
     void setup() {
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
     }
@@ -125,15 +127,14 @@ class CompositeMessageSourceTests {
         assert resourceBundle.containsKey('healthy.proverb2.map')
     }
 
-    @Test(expected = IllegalStateException)
+    @Test
     void cantCreateBundleWithEmptyBundleList() {
-        new CompositeMessageSource([])
+        assertThrows(IllegalStateException, { new CompositeMessageSource([]) })
     }
 
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)

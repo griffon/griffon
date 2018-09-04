@@ -17,8 +17,8 @@
  */
 package org.codehaus.griffon.compile.core.processor.annotation;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.kordamp.jipsy.processor.testutils.NoOutputTestBase;
 import org.kordamp.jipsy.processor.testutils.TestInitializer;
 import org.kordamp.jipsy.processor.testutils.TestLogger;
@@ -28,12 +28,13 @@ import java.util.Map;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AnnotationHandlerCollectorTest extends NoOutputTestBase {
     private TestLogger logger;
     private AnnotationHandlerCollector collector;
 
-    @Before
+    @BeforeEach
     public void loadFrameWork() {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("annotation1", "type1=provider1\n");
@@ -44,9 +45,9 @@ public class AnnotationHandlerCollectorTest extends NoOutputTestBase {
         collector = new AnnotationHandlerCollector(initializer, logger);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testGetAnnotationHandlerNull() {
-        collector.getAnnotationHandler(null, null);
+        assertThrows(NullPointerException.class, () -> collector.getAnnotationHandler(null, null));
     }
 
     @Test
@@ -93,9 +94,9 @@ public class AnnotationHandlerCollectorTest extends NoOutputTestBase {
         assertTrue(handlers.containsKey("annotation2"));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testRemoveAnnotationHandlerNull() {
-        collector.removeAnnotationHandler(null);
+        assertThrows(NullPointerException.class, () -> collector.removeAnnotationHandler(null));
     }
 
     @Test

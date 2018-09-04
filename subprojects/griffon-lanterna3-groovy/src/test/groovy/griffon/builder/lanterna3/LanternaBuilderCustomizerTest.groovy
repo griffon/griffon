@@ -17,7 +17,7 @@
  */
 package griffon.builder.lanterna3
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 /**
  * @author Andres Almiray

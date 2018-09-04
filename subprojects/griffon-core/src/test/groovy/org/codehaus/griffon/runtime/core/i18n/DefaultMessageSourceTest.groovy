@@ -17,8 +17,6 @@
  */
 package org.codehaus.griffon.runtime.core.i18n
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.annotations.core.Nonnull
 import griffon.annotations.core.Nullable
@@ -32,13 +30,15 @@ import griffon.util.AnnotationUtils
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.Instantiator
 import griffon.util.ResourceBundleLoader
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
-import org.junit.Before
-import org.junit.Rule
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
 
 import javax.application.i18n.tck.MessageSourceTest
 import javax.inject.Inject
@@ -50,21 +50,20 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class DefaultMessageSourceTests extends MessageSourceTest {
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
+class DefaultMessageSourceTest extends MessageSourceTest {
     private static final String KEY_PROVERB_MAP = 'key.proverb.map'
     private static final List TWO_ARGS_LIST = ['apple', 'doctor']
     private static final Map TWO_ARGS_MAP = [fruit: 'apple', occupation: 'doctor']
     private static final String PROVERB_FORMAT_MAP = 'An {:fruit} a day keeps the {:occupation} away'
-
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private MessageSource messageSource
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
-    @Before
+    @BeforeEach
     void setup() {
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
         super.setup()
@@ -227,7 +226,6 @@ class DefaultMessageSourceTests extends MessageSourceTest {
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)

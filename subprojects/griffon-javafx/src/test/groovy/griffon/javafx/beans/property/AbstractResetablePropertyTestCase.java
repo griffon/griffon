@@ -18,7 +18,7 @@
 package griffon.javafx.beans.property;
 
 import griffon.annotations.core.Nonnull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

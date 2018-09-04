@@ -17,8 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core.resources
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
+
 import com.google.inject.AbstractModule
 import griffon.annotations.core.Nonnull
 import griffon.annotations.core.Nullable
@@ -32,13 +31,16 @@ import griffon.util.AnnotationUtils
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.Instantiator
 import griffon.util.ResourceBundleLoader
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.function.Executable
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import org.kordamp.jsr377.converter.IntegerConverter
 
@@ -50,17 +52,20 @@ import javax.inject.Provider
 import javax.inject.Singleton
 
 import static com.google.inject.util.Providers.guicify
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.equalTo
+import static org.junit.jupiter.api.Assertions.assertAll
+import static org.junit.jupiter.api.Assertions.assertThrows
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class DefaultResourceResolverTests extends ResourceResolverTest {
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
+class DefaultResourceResolverTest extends ResourceResolverTest {
     private static final String KEY_PROVERB_MAP = 'key.proverb.map'
     private static final List TWO_ARGS_LIST = ['apple', 'doctor']
     private static final Map TWO_ARGS_MAP = [fruit: 'apple', occupation: 'doctor']
     private static final String PROVERB_FORMAT_MAP = 'An {:fruit} a day keeps the {:occupation} away'
-
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private ResourceResolver resourceResolver
@@ -68,7 +73,7 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
-    @Before
+    @BeforeEach
     void setup() {
         converterRegistry.clear()
         converterRegistry.registerConverter(Integer, IntegerConverter)
@@ -87,16 +92,28 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
         def resourceResolver = resolveResourceResolver();
 
         // expect:
-        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB_MAP))
-            .isEqualTo(PROVERB_FORMAT_MAP)
-        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB, TWO_ARGS_LIST))
-            .isEqualTo(PROVERB_TEXT)
-        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB, TWO_ARGS_LIST, Locale.default))
-            .isEqualTo(PROVERB_TEXT)
-        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB_MAP, TWO_ARGS_MAP))
-            .isEqualTo(PROVERB_TEXT)
-        t.assertThat((Object) resourceResolver.resolveResource(KEY_PROVERB_MAP, TWO_ARGS_MAP, Locale.default))
-            .isEqualTo(PROVERB_TEXT)
+        assertAll(
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB_MAP),
+                    equalTo(PROVERB_FORMAT_MAP))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB, TWO_ARGS_LIST),
+                    equalTo(PROVERB_TEXT))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB, TWO_ARGS_LIST, Locale.default),
+                    equalTo(PROVERB_TEXT))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB_MAP, TWO_ARGS_MAP),
+                    equalTo(PROVERB_TEXT))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB_MAP, TWO_ARGS_MAP, Locale.default),
+                    equalTo(PROVERB_TEXT))
+            } as Executable
+        )
     }
 
     @Test
@@ -105,14 +122,23 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
         def resourceResolver = resolveResourceResolver()
 
         // expect:
-        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_LIST, DEFAULT_VALUE))
-            .isEqualTo(DEFAULT_VALUE)
-        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_LIST, Locale.default, DEFAULT_VALUE))
-            .isEqualTo(DEFAULT_VALUE)
-        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_MAP, DEFAULT_VALUE))
-            .isEqualTo(DEFAULT_VALUE)
-        t.assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_MAP, Locale.default, DEFAULT_VALUE))
-            .isEqualTo(DEFAULT_VALUE)
+        assertAll(
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_LIST, DEFAULT_VALUE),
+                    equalTo(DEFAULT_VALUE))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_LIST, Locale.default, DEFAULT_VALUE),
+                    equalTo(DEFAULT_VALUE))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_MAP, DEFAULT_VALUE),
+                    equalTo(DEFAULT_VALUE))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResource(KEY_PROVERB_BOGUS, TWO_ARGS_MAP, Locale.default, DEFAULT_VALUE),
+                    equalTo(DEFAULT_VALUE))
+            } as Executable)
     }
 
     @Test
@@ -122,14 +148,24 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
 
         // expect:
         int value = 42
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_LIST, Integer))
-            .isEqualTo(value)
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_LIST, Locale.default, Integer))
-            .isEqualTo(value)
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_MAP, Integer))
-            .isEqualTo(value)
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_MAP, Locale.default, Integer))
-            .isEqualTo(value)
+        assertAll(
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_LIST, Integer),
+                    equalTo(value))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_LIST, Locale.default, Integer),
+                    equalTo(value))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_MAP, Integer),
+                    equalTo(value))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_INTEGER, TWO_ARGS_MAP, Locale.default, Integer),
+                    equalTo(value))
+            } as Executable
+        )
     }
 
     @Test
@@ -139,14 +175,24 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
 
         // expect:
         int defaultValue = 21
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, defaultValue, Integer))
-            .isEqualTo(defaultValue)
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Locale.default, defaultValue, Integer))
-            .isEqualTo(defaultValue)
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, defaultValue, Integer))
-            .isEqualTo(defaultValue)
-        t.assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Locale.default, defaultValue, Integer))
-            .isEqualTo(defaultValue)
+        assertAll(
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, defaultValue, Integer),
+                    equalTo(defaultValue))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Locale.default, defaultValue, Integer),
+                    equalTo(defaultValue))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, defaultValue, Integer),
+                    equalTo(defaultValue))
+            } as Executable,
+            { ->
+                assertThat(resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Locale.default, defaultValue, Integer),
+                    equalTo(defaultValue))
+            } as Executable
+        )
     }
 
     @Test
@@ -155,14 +201,24 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
         def resourceResolver = resolveResourceResolver()
 
         // expect:
-        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_LIST) })
-            .isInstanceOf(NoSuchResourceException)
-        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_LIST, Locale.default) })
-            .isInstanceOf(NoSuchResourceException)
-        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_MAP) })
-            .isInstanceOf(NoSuchResourceException)
-        t.assertThatThrownBy({ resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_MAP, Locale.default) })
-            .isInstanceOf(NoSuchResourceException)
+        assertAll(
+            { ->
+                assertThrows(NoSuchResourceException,
+                    { -> resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_LIST) } as Executable)
+            } as Executable,
+            { ->
+                assertThrows(NoSuchResourceException,
+                    { -> resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_LIST, Locale.default) } as Executable)
+            } as Executable,
+            { ->
+                assertThrows(NoSuchResourceException,
+                    { -> resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_MAP) } as Executable)
+            } as Executable,
+            { ->
+                assertThrows(NoSuchResourceException,
+                    { -> resourceResolver.resolveResource(KEY_BOGUS, TWO_ARGS_MAP, Locale.default) } as Executable)
+            } as Executable
+        )
     }
 
     @Test
@@ -171,18 +227,28 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
         def resourceResolver = resolveResourceResolver()
 
         // expect:
-        t.assertThatThrownBy({ resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Integer) })
-            .isInstanceOf(NoSuchResourceException)
-        t.assertThatThrownBy({
-            resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Locale.default, Integer)
-        })
-            .isInstanceOf(NoSuchResourceException)
-        t.assertThatThrownBy({ resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Integer) })
-            .isInstanceOf(NoSuchResourceException)
-        t.assertThatThrownBy({
-            resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Locale.default, Integer)
-        })
-            .isInstanceOf(NoSuchResourceException)
+        assertAll(
+            { ->
+                assertThrows(NoSuchResourceException, { ->
+                    resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Integer)
+                } as Executable)
+            } as Executable,
+            { ->
+                assertThrows(NoSuchResourceException, { ->
+                    resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_LIST, Locale.default, Integer)
+                } as Executable)
+            } as Executable,
+            { ->
+                assertThrows(NoSuchResourceException, { ->
+                    resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Integer)
+                } as Executable)
+            } as Executable,
+            { ->
+                assertThrows(NoSuchResourceException, { ->
+                    resourceResolver.resolveResourceConverted(KEY_BOGUS, TWO_ARGS_MAP, Locale.default, Integer)
+                } as Executable)
+            } as Executable
+        )
     }
 
     /*
@@ -375,7 +441,6 @@ class DefaultResourceResolverTests extends ResourceResolverTest {
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)

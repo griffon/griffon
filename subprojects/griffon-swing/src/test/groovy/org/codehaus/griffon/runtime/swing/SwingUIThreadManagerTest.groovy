@@ -18,13 +18,15 @@
 package org.codehaus.griffon.runtime.swing
 
 import com.google.inject.AbstractModule
+import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
+import griffon.core.GriffonExceptionHandler
 import griffon.core.threading.UIThreadManager
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
-import org.jukito.JukitoRunner
-import org.jukito.UseModules
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.extension.ExtendWith
 
 import javax.application.threading.ThreadingHandler
 import javax.application.threading.tck.ThreadingHandlerTest
@@ -35,8 +37,8 @@ import java.util.concurrent.ExecutorService
 
 import static griffon.util.AnnotationUtils.named
 
-@RunWith(JukitoRunner)
-@UseModules(TestModule)
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
 class SwingUIThreadManagerTest extends ThreadingHandlerTest {
     @Inject private UIThreadManager uiThreadManager
 
@@ -64,6 +66,10 @@ class SwingUIThreadManagerTest extends ThreadingHandlerTest {
 
             bind(UIThreadManager)
                 .to(SwingUIThreadManager)
+                .in(Singleton)
+
+            bind(ExceptionHandler)
+                .to(GriffonExceptionHandler)
                 .in(Singleton)
         }
     }

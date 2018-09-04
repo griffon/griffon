@@ -17,30 +17,31 @@
  */
 package org.codehaus.griffon.runtime.core.i18n
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
-import com.google.inject.Inject
 import griffon.annotations.core.Nonnull
 import griffon.core.i18n.MessageSource
 import griffon.core.i18n.NoSuchMessageException
 import griffon.util.AbstractMapResourceBundle
-import org.junit.Rule
-import org.junit.Test
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+import javax.inject.Inject
 import javax.inject.Singleton
 
-class CustomMessageSourceTests {
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+import static org.junit.jupiter.api.Assertions.assertThrows
 
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
+class CustomMessageSourceTest {
     @Inject
     private MessageSource messageSource
 
-    @Test(expected = MissingResourceException)
+    @Test
     void invalidKeysInResourceBundle() {
         ResourceBundle resourceBundle = messageSource.asResourceBundle()
-        assert !resourceBundle.getString('healthy.proverb.bogus')
+        assertThrows(MissingResourceException, { !resourceBundle.getString('healthy.proverb.bogus') })
     }
 
     @Test
@@ -154,7 +155,6 @@ class CustomMessageSourceTests {
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(MessageSource).to(CustomMessageSource).in(Singleton)
         }
     }

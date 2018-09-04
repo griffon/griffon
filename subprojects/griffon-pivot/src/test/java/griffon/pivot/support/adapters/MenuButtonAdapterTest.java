@@ -18,7 +18,7 @@
 package griffon.pivot.support.adapters;
 
 import griffon.core.CallableWithArgs;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;

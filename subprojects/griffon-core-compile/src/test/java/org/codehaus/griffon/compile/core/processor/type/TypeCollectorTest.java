@@ -18,8 +18,8 @@
 package org.codehaus.griffon.compile.core.processor.type;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.kordamp.jipsy.processor.testutils.NoOutputTestBase;
 import org.kordamp.jipsy.processor.testutils.TestInitializer;
 import org.kordamp.jipsy.processor.testutils.TestLogger;
@@ -29,12 +29,13 @@ import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TypeCollectorTest extends NoOutputTestBase {
     private TestLogger logger;
     private TypeCollector collector;
 
-    @Before
+    @BeforeEach
     public void loadFrameWork() {
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("type1", "provider1\n");
@@ -45,9 +46,9 @@ public class TypeCollectorTest extends NoOutputTestBase {
         collector = new TypeCollector(initializer, logger);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testGetTypeNull() {
-        collector.getType(null);
+        assertThrows(NullPointerException.class, () -> collector.getType(null));
     }
 
     @Test
@@ -133,9 +134,9 @@ public class TypeCollectorTest extends NoOutputTestBase {
         assertTrue(types.contains(type1));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testRemoveProviderNull() {
-        collector.removeProvider(null);
+        assertThrows(NullPointerException.class, () -> collector.removeProvider(null));
     }
 
     @Test

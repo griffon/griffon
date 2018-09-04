@@ -17,8 +17,6 @@
  */
 package org.codehaus.griffon.runtime.groovy.i18n
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.i18n.MessageSource
@@ -28,6 +26,8 @@ import griffon.util.AnnotationUtils
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.Instantiator
 import griffon.util.ResourceBundleLoader
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider
@@ -35,9 +35,9 @@ import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 
 import javax.application.converter.ConverterRegistry
@@ -50,16 +50,16 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
 class DefaultGroovyAwareMessageSourceTest {
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private MessageSource messageSource
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
-    @Before
+    @BeforeEach
     void setup() {
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
     }
@@ -77,7 +77,6 @@ class DefaultGroovyAwareMessageSourceTest {
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)

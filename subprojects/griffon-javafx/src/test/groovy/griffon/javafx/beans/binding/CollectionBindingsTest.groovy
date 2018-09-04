@@ -26,7 +26,7 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 import java.util.function.Function
 

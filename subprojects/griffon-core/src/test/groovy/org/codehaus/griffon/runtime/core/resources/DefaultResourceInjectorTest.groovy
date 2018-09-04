@@ -17,8 +17,6 @@
  */
 package org.codehaus.griffon.runtime.core.resources
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.injection.Injector
@@ -28,13 +26,15 @@ import griffon.util.AnnotationUtils
 import griffon.util.CompositeResourceBundleBuilder
 import griffon.util.Instantiator
 import griffon.util.ResourceBundleLoader
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import org.kordamp.jsr377.converter.IntegerConverter
 import org.kordamp.jsr377.converter.StringConverter
@@ -50,10 +50,9 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-class DefaultResourceInjectorTests extends ResourceInjectorTest {
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
-
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
+class DefaultResourceInjectorTest extends ResourceInjectorTest {
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private ConverterRegistry converterRegistry
     @Inject private Provider<Injector> injector
@@ -65,7 +64,7 @@ class DefaultResourceInjectorTests extends ResourceInjectorTest {
         new DefaultResourceInjector(converterRegistry, resourceResolver)
     }
 
-    @Before
+    @BeforeEach
     void setup() {
         converterRegistry.clear()
         converterRegistry.registerConverter(String, StringConverter)
@@ -74,7 +73,7 @@ class DefaultResourceInjectorTests extends ResourceInjectorTest {
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
     }
 
-    @After
+    @AfterEach
     void cleanup() {
         converterRegistry.clear()
     }
@@ -82,7 +81,6 @@ class DefaultResourceInjectorTests extends ResourceInjectorTest {
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)

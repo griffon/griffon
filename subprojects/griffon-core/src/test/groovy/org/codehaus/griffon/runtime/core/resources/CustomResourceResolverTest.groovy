@@ -17,15 +17,16 @@
  */
 package org.codehaus.griffon.runtime.core.resources
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
+
 import com.google.inject.AbstractModule
 import griffon.annotations.core.Nonnull
 import griffon.core.resources.NoSuchResourceException
 import griffon.core.resources.ResourceResolver
 import griffon.util.AbstractMapResourceBundle
-import org.junit.Rule
-import org.junit.Test
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.kordamp.jsr377.converter.DefaultConverterRegistry
 import org.kordamp.jsr377.converter.IntegerConverter
 
@@ -33,9 +34,9 @@ import javax.application.converter.ConverterRegistry
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class CustomResourceResolverTests {
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
+class CustomResourceResolverTest {
 
     @Inject
     private ResourceResolver resourceResolver
@@ -192,7 +193,6 @@ class CustomResourceResolverTests {
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(ResourceResolver).to(CustomResourceResolver).in(Singleton)
             bind(ConverterRegistry).to(DefaultConverterRegistry).in(Singleton)
         }
@@ -219,7 +219,7 @@ class CustomResourceResolverTests {
     static class CustomResourceResolver extends AbstractResourceResolver {
         private ResourceBundle bundle = new MapResourceBundle()
 
-        @javax.inject.Inject
+        @Inject
         protected CustomResourceResolver(@Nonnull ConverterRegistry converterRegistry) {
             super(converterRegistry)
         }

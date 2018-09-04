@@ -144,11 +144,17 @@ subprojects { subproj ->
         }
 
         dependencies {
+            testCompile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+            testCompile "org.junit.jupiter:junit-jupiter-params:$junit5Version"
+            testCompile "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
             testCompile("junit:junit:$junitVersion") {
                 exclude group: 'org.hamcrest', module: 'hamcrest-core'
             }
             testCompile('com.google.guiceberry:guiceberry:3.3.1') {
                 exclude group: 'junit', module: 'junit'
+            }
+            testCompile('name.falgout.jeffrey.testing.junit5:guice-extension:1.0.2') {
+                transitive = false
             }
             testCompile("com.google.inject:guice:$guiceVersion") {
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
@@ -163,17 +169,6 @@ subprojects { subproj ->
                 }
 
                 testCompile "javax.application:jsr377-tck:$jsr377TckVersion"
-                testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
-                testCompile("org.awaitility:awaitility:$awaitilityVersion") {
-                    exclude group: 'org.hamcrest', module: 'hamcrest-core'
-                    exclude group: 'org.hamcrest', module: 'hamcrest-library'
-                }
-                testCompile "org.assertj:assertj-core:$assertjVersion"
-                testCompile("org.jukito:jukito:$jukitoVersion") {
-                    exclude group: 'junit', module: 'junit'
-                    exclude group: 'com.google.inject', module: 'guice'
-                    exclude group: 'org.mockito', module: 'mockito-core'
-                }
                 testCompile "org.mockito:mockito-core:$mockitoVersion"
             }
             testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
@@ -218,6 +213,20 @@ subprojects { subproj ->
             classifier 'javadoc'
             from javadoc.destinationDir
         }
+
+        test {
+            useJUnitPlatform()
+
+            testLogging {
+                events 'passed', 'skipped', 'failed'
+            }
+
+            reports {
+                html.enabled = true
+            }
+        }
+
+        subproj.test.doFirst { t -> println t.includes }
 
         tasks.withType(AbstractCompile) {
             if (rootProject.hasProperty('lint') && rootProject.lint.toBoolean()) {
@@ -327,6 +336,7 @@ subprojects { subproj ->
     task allDeps(type: DependencyReportTask) {}
     configurations.all {
         resolutionStrategy.force  "com.google.guava:guava:$guavaVersion",
+            "jline:jline:$jlineVersion",
             "junit:junit:$junitVersion",
             "cglib:cglib-nodep:$cglibVersion",
             "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
@@ -344,7 +354,7 @@ subprojects { subproj ->
             "org.objenesis:objenesis:$objenesisVersion",
             "net.bytebuddy:byte-buddy:$bytebuddyVersion"
 
-        resolutionStrategy.failOnVersionConflict()
+        //resolutionStrategy.failOnVersionConflict()
     }
 }
 

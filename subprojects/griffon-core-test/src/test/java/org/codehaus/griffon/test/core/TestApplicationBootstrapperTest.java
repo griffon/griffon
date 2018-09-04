@@ -27,7 +27,7 @@ import griffon.core.injection.Module;
 import griffon.core.injection.ProviderBinding;
 import griffon.core.injection.ProviderTypeBinding;
 import griffon.core.injection.TargetBinding;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.inject.Named;
 import javax.inject.Provider;
