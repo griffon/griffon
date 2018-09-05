@@ -100,7 +100,7 @@ allprojects {
     apply plugin: 'base'
     apply plugin: 'idea'
     apply plugin: 'com.github.ben-manes.versions'
-    apply plugin: 'net.ossindex.audit'
+    if (rootProject.fullBuild) apply plugin: 'net.ossindex.audit'
 
     repositories {
         jcenter()
@@ -126,8 +126,10 @@ allprojects {
         }
     }
 
-    audit {
-        failOnError = false
+    if (rootProject.fullBuild) {
+        audit {
+            failOnError = false
+        }
     }
 }
 
@@ -252,14 +254,16 @@ subprojects { subproj ->
         }
 
         if (subproj.publishJars.toBoolean()) {
-            subproj.apply plugin: 'org.jonnyzzz.java9c'
+            if (fullBuild) subproj.apply plugin: 'org.jonnyzzz.java9c'
             subproj.apply from: rootProject.file('gradle/publish.gradle')
 
-            java9c {
-                failOnCollision = false
+            if (rootProject.fullBuild) {
+                java9c {
+                    failOnCollision = false
+                }
             }
 
-            if (subproj.name.startsWith('griffon-')) {
+            if (subproj.name.startsWith('griffon-') && rootProject.fullBuild) {
                 subproj.apply plugin: 'org.kordamp.gradle.clirr'
                 subproj.apply plugin: 'org.kordamp.jdeps'
                 subproj.apply from: rootProject.file('gradle/bintray.gradle')
@@ -363,7 +367,7 @@ subprojects { subproj ->
             "org.objenesis:objenesis:$objenesisVersion",
             "net.bytebuddy:byte-buddy:$bytebuddyVersion"
 
-        //resolutionStrategy.failOnVersionConflict()
+        resolutionStrategy.failOnVersionConflict()
     }
 }
 
