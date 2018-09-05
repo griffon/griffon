@@ -1212,10 +1212,10 @@ class FilteringBindingsSpec extends Specification {
         ObservableMap<String, Box> items = FXCollections.observableMap([:])
         ObjectProperty<Function<Box, Integer>> mapper = new SimpleObjectProperty<>(function1 as Function)
         ObjectProperty<Predicate<Integer>> filter = new SimpleObjectProperty<>(predicate1 as Predicate)
-        Binding binding = FilteringBindings."mapTo${type}ThenFilterThenFindFirst"(items, defaultValue, mapper, filter)
+        Binding binding = FilteringBindings."mapTo${type}ThenFilterThenFindFirst"(items, defaultvalue, mapper, filter)
 
         expect:
-        defaultValue == binding.get()
+        defaultvalue == binding.get()
 
         when:
         items.putAll(toMap([new Box(1), new Box(2), new Box(3), new Box(4)]))
@@ -1236,13 +1236,13 @@ class FilteringBindingsSpec extends Specification {
         result3 == binding.get()
 
         where:
-        type      | defaultValue | function1            | function2                  | predicate1             | predicate2                  | result1 | result2 | result3
+        type      | defaultvalue | function1            | function2                  | predicate1             | predicate2                  | result1 | result2 | result3
         'Boolean' | true         | { it.id % 2 == 0 }   | { it.id % 2 != 0 }         | { it }                 | { !it }                     | true    | true    | false
         'Integer' | 6            | { it.id }            | { it.id * 2 }              | { it > 2 }             | { it % 2 == 0 }             | 3       | 4       | 2
         'Long'    | 6L           | { it.id as long }    | { (it.id * 2) as long }    | { it > 2 }             | { it % 2 == 0 }             | 3L      | 4L      | 2L
         'Float'   | 6f           | { it.id as float }   | { (it.id * 2) as float }   | { it > 2 }             | { it % 2 == 0 }             | 3f      | 4f      | 2f
         'Double'  | 6d           | { it.id as double }  | { (it.id * 2) as double }  | { it > 2 }             | { it % 2 == 0 }             | 3d      | 4d      | 2d
-        // 'String'  | '6'          | { it.id.toString() } | { (it.id * 2).toString() } | { it.toInteger() > 2 } | { it.toInteger() % 2 == 0 } | '3'     | '4'     | '2'
+        'String'  | '6'          | { it.id.toString() } | { (it.id * 2).toString() } | { it.toInteger() > 2 } | { it.toInteger() % 2 == 0 } | '3'     | '4'     | '2'
     }
 
     def "Map then findFirst #type in map with supplier (observables)"() {
