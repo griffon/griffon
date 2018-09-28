@@ -73,33 +73,29 @@ publishing {
 
 task generateMinPom {
     doLast {
-        String pomHeader = """<?xml version="1.0" encoding="UTF-8"?>
-            <project xmlns="http://maven.apache.org/POM/4.0.0"
-                     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                <modelVersion>4.0.0</modelVersion>
-                <groupId>${project.group}</groupId>
-                <artifactId>${project.name}</artifactId>
-                <version>${project.version}</version>
-        """.stripIndent(12)
+        String pomHeader = """|<?xml version="1.0" encoding="UTF-8"?>
+            |<project xmlns="http://maven.apache.org/POM/4.0.0"
+            |         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+            |         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            |    <modelVersion>4.0.0</modelVersion>
+            |    <groupId>${project.group}</groupId>
+            |    <artifactId>${project.name}</artifactId>
+            |    <version>${project.version}</version>
+            |""".stripMargin('|')
 
-        def dependencyTemplate = { dep -> """
-            <dependency>
-                <groupId>$dep.group</groupId>
-                <artifactId>$dep.name</artifactId>
-                <version>$dep.version</version>
-            </dependency>
-        """.stripIndent(4)
+        def dependencyTemplate = { dep -> """|        <dependency>
+                                             |            <groupId>$dep.group</groupId>
+                                             |            <artifactId>$dep.name</artifactId>
+                                             |            <version>$dep.version</version>
+                                             |        </dependency>""".stripMargin('|')
         }
 
-        def optionalDependencyTemplate = { dep -> """
-            <dependency>
-                <groupId>$dep.group</groupId>
-                <artifactId>$dep.name</artifactId>
-                <version>$dep.version</version>
-                <optional>true</optional>
-            </dependency>
-        """.stripIndent(4)
+        def optionalDependencyTemplate = { dep -> """|        <dependency>
+                                                     |            <groupId>$dep.group</groupId>
+                                                     |            <artifactId>$dep.name</artifactId>
+                                                     |            <version>$dep.version</version>
+                                                     |            <optional>true</optional>
+                                                     |        </dependency>""".stripMargin('|')
         }
 
         def dependencyEntry = { dep ->
@@ -107,7 +103,7 @@ task generateMinPom {
         }
 
         String deps = configurations.runtime.allDependencies.findAll({it.name!= 'unspecified'})
-            .collect({ dep -> dependencyEntry(dep)}).join('')
+            .collect({ dep -> dependencyEntry(dep)}).join('\n')
 
         String pom = pomHeader
         if (deps) {
@@ -125,10 +121,11 @@ jar {
     manifest {
         attributes(
             'Created-By': buildCreatedBy,
-            'X-Built-By': buildBy,
-            'X-Build-Date': buildDate,
-            'X-Build-Time': buildTime,
-            'X-Build-Revision': buildRevision,
+            'x-Built-By': buildBy,
+            'x-Build-Jdk': buildJdk,
+            'x-Build-Date': buildDate,
+            'x-Build-Time': buildTime,
+            'x-Build-Revision': buildRevision,
             'Specification-Title': project.name,
             'Specification-Version': project.version,
             'Specification-Vendor': 'griffon-framework.org',
@@ -151,7 +148,7 @@ jar {
                 'project_name': project.name,
             )
         }
-        from(rootProject.file("$buildDir/tmp/maven")) {
+        from(file("$buildDir/tmp/maven")) {
             into "maven/${project.group}/${project.name}"
         }
     }
