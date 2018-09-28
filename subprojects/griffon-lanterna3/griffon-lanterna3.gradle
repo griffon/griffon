@@ -24,6 +24,10 @@ dependencies {
     compile "com.googlecode.lanterna:lanterna:$lanterna3Version"
 }
 
-clirr {
-    enabled = false
+afterEvaluate {
+    if (rootProject.fullBuild) {
+        clirr {
+            enabled = false
+        }
+    }
 }

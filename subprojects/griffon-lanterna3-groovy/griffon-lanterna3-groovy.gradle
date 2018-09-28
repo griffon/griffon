@@ -26,6 +26,10 @@ dependencies {
     compileOnly project(':griffon-core-compile')
 }
 
-clirr {
-    enabled = false
+afterEvaluate {
+    if (rootProject.fullBuild) {
+        clirr {
+            enabled = false
+        }
+    }
 }

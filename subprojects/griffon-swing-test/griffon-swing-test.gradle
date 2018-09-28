@@ -35,6 +35,10 @@ dependencies {
     compile project(':griffon-core-test')
 }
 
-clirr {
-    enabled = false
+afterEvaluate {
+    if (rootProject.fullBuild) {
+        clirr {
+            enabled = false
+        }
+    }
 }
