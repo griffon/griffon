@@ -41,8 +41,7 @@ buildscript {
         classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.3.0'
         classpath 'com.gradle:build-scan-plugin:1.16'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
-        classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
-        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:3.3.0'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:4.0.1'
         classpath 'gradle.plugin.gradle-java9-collision:plugin:0.2.3'
     }
 }
@@ -52,7 +51,6 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'org.sonarqube'
-apply plugin: 'org.standardout.versioneye'
 
 buildScan {
     licenseAgreementUrl = 'https://gradle.com/terms-of-service'
@@ -225,6 +223,7 @@ subprojects { subproj ->
             group 'Build'
             description 'An archive of the Javadocs'
             classifier 'javadoc'
+            dependsOn javadoc
             from javadoc.destinationDir
         }
 
@@ -366,7 +365,10 @@ subprojects { subproj ->
             "org.ow2.asm:asm-commons:$asmVersion",
             "org.ow2.asm:asm-tree:$asmVersion",
             "org.objenesis:objenesis:$objenesisVersion",
-            "net.bytebuddy:byte-buddy:$bytebuddyVersion"
+            "net.bytebuddy:byte-buddy:$bytebuddyVersion",
+            "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
+            "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
+            "org.apache.ant:ant:$antVersion"
 
         resolutionStrategy.failOnVersionConflict()
     }
@@ -405,10 +407,6 @@ sonarqube {
     properties {
         property 'sonar.jacoco.reportPath', file(jacocoMergeExecFile).absolutePath
     }
-}
-
-versioneye {
-    includeSubProjects = true
 }
 
 coveralls {

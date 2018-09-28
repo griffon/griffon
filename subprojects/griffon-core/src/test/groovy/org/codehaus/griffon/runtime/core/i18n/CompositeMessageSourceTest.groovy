@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.runtime.core.i18n
 
-
 import com.google.inject.AbstractModule
 import griffon.core.ApplicationClassLoader
 import griffon.core.i18n.MessageSource
@@ -37,7 +36,6 @@ import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.ThrowingSupplier
 
 import javax.inject.Inject
 import javax.inject.Named
@@ -130,7 +128,7 @@ class CompositeMessageSourceTest {
 
     @Test
     void cantCreateBundleWithEmptyBundleList() {
-        assertThrows(IllegalStateException, { new CompositeMessageSource([]) } as ThrowingSupplier)
+        assertThrows(IllegalStateException, { new CompositeMessageSource([]) })
     }
 
     static final class TestModule extends AbstractModule {
