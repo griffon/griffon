@@ -49,8 +49,7 @@ before_script:
   - git clone --depth=50 --branch=master https://github.com/jsr377/jsr377-api.git jsr377-api
   - git clone --depth=50 --branch=master https://github.com/jsr377/jsr377-converters.git jsr377-converters
   - cd griffon
-script: travis_wait 30 ./gradlew --console=plain --no-daemon -S testClasses --build-cache
-#script: travis_wait 30 ./gradlew --console=plain --no-daemon -S --scan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-java:jfxJar -x :griffon-javafx:test
+script: travis_wait 30 ./gradlew --console=plain --no-daemon -S --scan check test integrationTest functionalTest jacocoTestReport jacocoIntegrationTestReport jacocoFunctionalTestReport jacocoRootReport -x :sample-javafx-groovy:jfxJar -x :sample-javafx-java:jfxJar -x :griffon-javafx:test
 after_success:
   - ./update-gh-pages.sh
   - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done
