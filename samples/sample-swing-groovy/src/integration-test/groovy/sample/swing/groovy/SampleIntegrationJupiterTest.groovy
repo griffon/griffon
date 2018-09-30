@@ -3,7 +3,7 @@
  *
  * Copyright 2008-2018 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -17,42 +17,42 @@
  */
 package sample.swing.groovy
 
-import griffon.test.swing.GriffonFestRule
-import org.fest.swing.fixture.FrameFixture
-import org.junit.Rule
-import org.junit.Test
+import griffon.test.swing.GriffonFestExtension
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.RegisterExtension
 
-class SampleIntegrationTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class SampleIntegrationJupiterTest {
     static {
         System.setProperty('org.slf4j.simpleLogger.defaultLogLevel', 'trace')
     }
 
-    @Rule
-    public final GriffonFestRule fest = new GriffonFestRule()
-
-    private FrameFixture window
+    @RegisterExtension
+    public static final GriffonFestExtension FEST = GriffonFestExtension.builder()
+        .build()
 
     @Test
     void typeNameAndClickButton() {
         // given:
-        window.textBox('inputField').enterText('Griffon')
+        FEST.window.textBox('inputField').enterText('Griffon')
 
         // when:
-        window.button('sayHelloButton').click()
+        FEST.window.button('sayHelloButton').click()
 
         // then:
-        window.label('outputLabel').requireText('Hello Griffon')
+        FEST.window.label('outputLabel').requireText('Hello Griffon')
     }
 
     @Test
     void doNotTypeNameAndClickButton() {
         // given:
-        window.textBox('inputField').enterText('')
+        FEST.window.textBox('inputField').enterText('')
 
         // when:
-        window.button('sayHelloButton').click()
+        FEST.window.button('sayHelloButton').click()
 
         // then:
-        window.label('outputLabel').requireText('Howdy stranger!')
+        FEST.window.label('outputLabel').requireText('Howdy stranger!')
     }
 }

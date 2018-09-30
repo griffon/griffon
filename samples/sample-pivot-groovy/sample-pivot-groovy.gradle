@@ -38,7 +38,9 @@ ext.depProjects.each { evaluationDependsOn it }
 apply from: rootProject.file('gradle/coverage-samples.gradle')
 
 dependencies {
-    compileOnly project(':griffon-groovy-compile')
+    compileOnly(project(':griffon-groovy-compile')) {
+        exclude module: 'griffon-javafx-compile'
+    }
 
     compile project(':griffon-groovy')
     compile project(':griffon-guice')

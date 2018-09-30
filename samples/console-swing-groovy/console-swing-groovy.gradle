@@ -22,7 +22,9 @@ apply plugin: 'application'
 mainClassName = 'console.Launcher'
 
 dependencies {
-    compileOnly project(':griffon-groovy-compile')
+    compileOnly(project(':griffon-groovy-compile')) {
+        exclude module: 'griffon-javafx-compile'
+    }
 
     compile project(':griffon-groovy')
     compile project(':griffon-swing')

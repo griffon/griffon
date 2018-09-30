@@ -25,8 +25,6 @@ import org.junit.Test;
 public class SampleIntegrationTest {
     static {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-        System.setProperty("griffon.swing.edt.violations.check", "true");
-        System.setProperty("griffon.swing.edt.hang.monitor", "true");
     }
 
     @Rule

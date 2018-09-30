@@ -22,7 +22,9 @@ apply plugin: 'application'
 mainClassName = 'editor.Launcher'
 
 dependencies {
-    compileOnly project(':griffon-groovy-compile')
+    compileOnly(project(':griffon-groovy-compile')) {
+        exclude module: 'griffon-javafx-compile'
+    }
     compileOnly project(':griffon-beans-compile')
 
     compile project(':griffon-beans')
