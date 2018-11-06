@@ -116,7 +116,8 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
             applicationExpression(classNode);
         } catch (IllegalStateException iae) {
             FieldNode fieldNode = injectField(classNode, PROPERTY_APPLICATION, PRIVATE, GRIFFON_APPLICATION_TYPE, null, false);
-            if (fieldNode.getAnnotations(INJECT_TYPE) == null) {
+            List<AnnotationNode> annotations = fieldNode.getAnnotations(INJECT_TYPE);
+            if (annotations == null || annotations.isEmpty()) {
                 fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
             }
         }
@@ -151,7 +152,8 @@ public abstract class AbstractASTTransformation implements ASTTransformation {
 
     public static FieldExpression injectedField(@Nonnull ClassNode owner, @Nonnull ClassNode type, @Nonnull String name, @Nullable String qualifierName) {
         FieldNode fieldNode = GriffonASTUtils.injectField(owner, name, Modifier.PRIVATE, type, null, false);
-        if (fieldNode.getAnnotations(INJECT_TYPE) == null) {
+        List<AnnotationNode> annotations = fieldNode.getAnnotations(INJECT_TYPE);
+        if (annotations == null || annotations.isEmpty()) {
             fieldNode.addAnnotation(new AnnotationNode(INJECT_TYPE));
         }
         if (isNotBlank(qualifierName)) {

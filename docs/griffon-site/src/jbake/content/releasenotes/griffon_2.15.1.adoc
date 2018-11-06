@@ -1,0 +1,24 @@
+= Griffon 2.15.1 Release Notes
+Andres Almiray
+2018-11-06
+:jbake-type: post
+:jbake-status: published
+:category: releasenotes
+:idprefix:
+:linkattrs:
+:path-griffon-core: /guide/2.15.1/api/griffon/core
+
+=== Compiletime
+
+==== AST Transformations
+
+Bug link:https://github.com/griffon/griffon/issues/303[303] prevented AST transformations from adding the `@Inject` annotation
+on certain fields. This omission causes NPEs at runtime as the enhanced class would not be properly initialized.
+
+=== Compatibility
+
+Full binary compatibility report between Griffon 2.15.1 and 2.15.0 can be found
+link:../reports/2.15.0/compatibility-report.html[here].
+
+A list of fixed issues can be found at the
+link:https://github.com/griffon/griffon/issues?q=milestone%3A2.15.0+is%3Aclosed[2.15.1 milestone] page.

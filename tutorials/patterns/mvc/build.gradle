@@ -22,7 +22,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.15.0'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.15.1'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
@@ -35,7 +35,7 @@ apply plugin: 'org.codehaus.griffon.griffon'
 griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = false
-    version = '2.15.0'
+    version = '2.15.1'
     toolkit = 'javafx'
 }
 
@@ -72,7 +72,7 @@ dependencies {
 
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile 'pl.pragmatists:JUnitParams:1.1.1'
-    testCompile 'org.mockito:mockito-core:2.15.0'
+    testCompile 'org.mockito:mockito-core:2.15.1'
 
     functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
 }
