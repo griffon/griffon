@@ -37,7 +37,7 @@ buildscript {
         classpath 'net.nemerosa:versioning:2.7.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.gradle.publish:plugin-publish-plugin:0.10.0'
-        classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.1.1'
+        classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.3.21'
         classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.4.1'
         classpath 'com.gradle:build-scan-plugin:1.16'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
@@ -354,6 +354,11 @@ subprojects { subproj ->
             "cglib:cglib-nodep:$cglibVersion",
             "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
             "org.codehau.groovy:groovy-all:$groovyVersion",
+            "org.codehau.groovy:groovy-templates:$groovyVersion",
+            "org.codehau.groovy:groovy-json:$groovyVersion",
+            "org.codehau.groovy:groovy-macro:$groovyVersion",
+            "org.codehau.groovy:groovy-nio:$groovyVersion",
+            "org.codehau.groovy:groovy-templates:$groovyVersion",
             "org.slf4j:slf4j-api:$slf4jVersion",
             "org.slf4j:slf4j-simple:$slf4jVersion",
             "org.easytesting:fest-util:$festUtilVersion",
@@ -368,7 +373,11 @@ subprojects { subproj ->
             "net.bytebuddy:byte-buddy:$bytebuddyVersion",
             "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
             "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
-            "org.apache.ant:ant:$antVersion"
+            "org.apache.ant:ant:$antVersion",
+            "commons-collections:commons-collections:$commonsCollectionsVersion",
+            "com.vladsch.flexmark:flexmark:$flexmarkVersion",
+            "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion",
+            "org.apache.ant:ant-launcher:1.9.13"
 
         resolutionStrategy.failOnVersionConflict()
     }

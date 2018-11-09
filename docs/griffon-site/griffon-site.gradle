@@ -16,8 +16,6 @@
 
 import groovy.json.JsonParserType
 import groovy.json.JsonSlurper
-import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.webapp.WebAppContext
 
 buildscript {
     repositories {
@@ -26,9 +24,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.jbake:jbake-gradle-plugin:1.2.0'
-        classpath "org.eclipse.jetty:jetty-webapp:$jettyVersion"
-        classpath "org.eclipse.jetty:jetty-annotations:$jettyVersion"
+        classpath 'org.jbake:jbake-gradle-plugin:1.4.0'
     }
 }
 
@@ -85,13 +81,13 @@ jbake {
     configuration['project-build-dir'] = project.buildDir.absolutePath
     configuration['project-rootdir'] = rootProject.projectDir.absolutePath
 
-    version = '2.6.1'
-    asciidoctorjVersion = '1.5.6'
-    freemarkerVersion = '2.3.28'
-    groovyTemplatesVersion = groovyVersion
-    thymeleafVersion = '3.0.9.RELEASE'
-    jade4jVersion = '1.2.7'
-    flexmarkVersion = '0.34.24'
+    // version = '2.6.1'
+    // asciidoctorjVersion = '1.5.7'
+    // freemarkerVersion = '2.3.28'
+    // groovyTemplatesVersion = groovyVersion
+    // thymeleafVersion = '3.0.9.RELEASE'
+    // jade4jVersion = '1.2.7'
+    // flexmarkVersion = '0.34.24'
 }
 
 task(guide, dependsOn: [':griffon-guide:guide']) {
@@ -120,20 +116,9 @@ task(site, type: Copy, dependsOn: [bake, copyGuide]) {
     }
 }
 
-task(siteRun) {
+bakePreview {
     dependsOn site
-    doLast {
-        Server server = new Server(8080)
-        String wardir = site.destinationDir.absolutePath
-        WebAppContext context = new WebAppContext()
-        context.setResourceBase(wardir)
-        context.setDescriptor(wardir + 'WEB-INF/web.xml')
-        context.setContextPath('/')
-        context.setParentLoaderPriority(true)
-        server.setHandler(context)
-        server.start()
-        server.join()
-    }
+    input = site.destinationDir
 }
 
 task(siteZip, type: Zip, dependsOn: site) {
