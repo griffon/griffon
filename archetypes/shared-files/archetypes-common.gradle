@@ -19,10 +19,23 @@
 apply plugin: 'java'
 apply from: rootProject.file('gradle/publish.gradle')
 apply from: rootProject.file('gradle/bintray.gradle')
-apply from: rootProject.file('archetypes/shared-files/shared.gradle')
 
 bintray {
     pkg {
         repo = 'griffon-archetypes'
     }
 }
+
+task copyResources(type: Copy) {
+    destinationDir = project.file("${buildDir}/resources/main/archetype-resources")
+    from(rootProject.file('archetypes/shared-files/sources'))
+    from(rootProject.file('src/media')) {
+        include 'griffon*'
+        into 'src/media'
+    }
+    from(rootProject.file('src/javadoc')) {
+        into 'src/javadoc'
+    }
+}
+
+processResources.finalizedBy copyResources
