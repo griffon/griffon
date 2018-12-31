@@ -18,9 +18,6 @@
 
 apply plugin: 'uk.co.cacoethes.lazybones-templates'
 
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
-
 lazybones {
     repositoryName = 'griffon/griffon-lazybones-templates'
     repositoryUsername = project.bintrayUsername
@@ -74,4 +71,21 @@ tasks.withType(Zip) { task ->
             }
         }
     }
+}
+
+config {
+    info {
+        specification { enabled = false }
+        implementation { enabled = false }
+    }
+
+    license { enabled = false }
+    publishing { enabled = false }
+    bintray { enabled = false }
+    minpom { enabled = false }
+    javadoc { enabled = false }
+    jacoco { enabled = false }
+    sourceHtml { enabled = false}
+    sourceXref { enabled = false }
+    stats { enabled = false }
 }

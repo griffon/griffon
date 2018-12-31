@@ -17,10 +17,8 @@
  */
 
 apply plugin: 'groovy'
-apply plugin: 'application'
+apply from: rootProject.file('samples/shared-files/samples-common-java.gradle')
 apply from: rootProject.file('gradle/javafx-plugin.gradle')
-apply from: rootProject.file('gradle/integration-test.gradle')
-apply from: rootProject.file('gradle/functional-test.gradle')
 
 mainClassName = 'sample.javafx.java.Launcher'
 
@@ -35,20 +33,23 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
+/*
 apply from: rootProject.file('gradle/coverage-samples.gradle')
+*/
+
+config {
+    jacoco {
+        additionalSourceDirs.from project.files(depProjects.collect{project(it)}.sourceSets.main.allSource.srcDirs.flatten())
+        additionalClassDirs.from depProjects.collect{project(it)}.sourceSets.main.output.classesDirs.flatten()
+    }
+}
 
 dependencies {
-    compileOnly project(':griffon-core-compile')
-
     compile project(':griffon-javafx')
-    compile project(':griffon-guice')
     compile "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
     compile "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
     compile "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
 
-    runtime "org.slf4j:slf4j-simple:$slf4jVersion"
-
-    testCompile project(':griffon-core-test')
     testCompile project(':griffon-javafx-test')
 
     testCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
@@ -59,41 +60,6 @@ dependencies {
     }
 
     functionalTestCompile project(':griffon-javafx-test')
-}
-
-test {
-    useJUnitPlatform()
-
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-    }
-
-    reports {
-        html.enabled = true
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs = [
-                'griffon-app/conf',
-                'griffon-app/controllers',
-                'griffon-app/models',
-                'griffon-app/views',
-                'griffon-app/services',
-                'griffon-app/lifecycle',
-                'src/main/java'
-            ]
-        }
-        resources {
-            srcDirs = [
-                'griffon-app/resources',
-                'griffon-app/i18n',
-                'src/main/resources'
-            ]
-        }
-    }
 }
 
 jfx {

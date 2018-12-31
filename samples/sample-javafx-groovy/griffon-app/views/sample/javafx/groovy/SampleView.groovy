@@ -34,7 +34,7 @@ class SampleView extends AbstractJavaFXGriffonView {
         builder.application(title: application.configuration['application.title'],
             name: 'mainWindow', sizeToScene: true, centerOnScreen: true) {                     //<2>
             scene(fill: WHITE, width: 400, height: 120,
-                stylesheets: ['/bootstrapfx.css', '/sample/javafx/groovy/sample.css']) {
+                stylesheets: ['/org/kordamp/bootstrapfx/bootstrapfx.css', '/sample/javafx/groovy/sample.css']) {
                 anchorPane {
                     label(leftAnchor: 14, topAnchor: 11,
                           text: application.messageSource.getMessage('name.label'))

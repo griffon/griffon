@@ -50,7 +50,7 @@ public class AppView extends AbstractJavaFXGriffonView {
         stage.setTitle(getApplication().getConfiguration().getAsString("application.title"));
         tabPane = new TabPane();
         Scene scene = new Scene(tabPane);
-        scene.getStylesheets().add("bootstrapfx.css");
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
         stage.setScene(scene);
         stage.sizeToScene();
         getApplication().getWindowManager().attach("mainWindow", stage);

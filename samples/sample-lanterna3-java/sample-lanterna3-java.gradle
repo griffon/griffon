@@ -17,10 +17,11 @@
  */
 
 apply plugin: 'java'
-apply plugin: 'application'
+apply from: rootProject.file('samples/shared-files/samples-common-java.gradle')
 
 mainClassName = 'sample.lanterna3.java.Launcher'
 
+/*
 ext.hasIntegrationTests = false
 ext.hasFunctionalTests = false
 ext.depProjects = [
@@ -32,37 +33,11 @@ ext.depProjects = [
 
 ext.depProjects.each { evaluationDependsOn it }
 apply from: rootProject.file('gradle/coverage-samples.gradle')
+*/
 
 dependencies {
-    compileOnly project(':griffon-core-compile')
-
     compile project(':griffon-lanterna3')
-    compile project(':griffon-guice')
-
-    runtime "org.slf4j:slf4j-simple:$slf4jVersion"
-
-    testCompile project(':griffon-core-test')
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = [
-                'griffon-app/conf',
-                'griffon-app/controllers',
-                'griffon-app/models',
-                'griffon-app/views',
-                'griffon-app/services',
-                'griffon-app/lifecycle',
-                'src/main/java'
-            ]
-        }
-        resources {
-            srcDirs = [
-                'griffon-app/resources',
-                'griffon-app/i18n',
-                'src/main/resources'
-            ]
-        }
-    }
-}
+integrationTest.enabled = false
+functionalTest.enabled = false

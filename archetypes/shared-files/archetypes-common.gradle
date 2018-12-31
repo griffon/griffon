@@ -17,8 +17,21 @@
  */
 
 apply plugin: 'java'
-apply from: rootProject.file('gradle/publish.gradle')
-apply from: rootProject.file('gradle/bintray.gradle')
+// apply from: rootProject.file('gradle/publish.gradle')
+// apply from: rootProject.file('gradle/bintray.gradle')
+
+config {
+    info {
+        specification { enabled = false }
+        implementation { enabled = false }
+    }
+
+    javadoc { enabled = false }
+    jacoco { enabled = false }
+    sourceHtml { enabled = false}
+    sourceXref { enabled = false }
+    stats { enabled = false }
+}
 
 bintray {
     pkg {

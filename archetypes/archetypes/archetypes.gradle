@@ -18,6 +18,23 @@
 
 apply plugin: 'java'
 
+config {
+    info {
+        specification { enabled = false }
+        implementation { enabled = false }
+    }
+
+    license { enabled = false }
+    publishing { enabled = false }
+    bintray { enabled = false }
+    minpom { enabled = false }
+    javadoc { enabled = false }
+    jacoco { enabled = false }
+    sourceHtml { enabled = false}
+    sourceXref { enabled = false }
+    stats { enabled = false }
+}
+
 dependencies {
     compile project(':griffon-javafx-java-archetype')
     compile project(':griffon-javafx-groovy-archetype')

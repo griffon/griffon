@@ -17,9 +17,9 @@
  */
 
 apply plugin: 'groovy'
-apply plugin: 'com.jfrog.bintray'
+// apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.gradle.plugin-publish'
-apply from: rootProject.file('gradle/coverage.gradle')
+// apply from: rootProject.file('gradle/coverage.gradle')
 
 dependencies {
     compile gradleApi()
@@ -27,25 +27,26 @@ dependencies {
     testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
+    
     testCompile 'xmlunit:xmlunit:1.6'
 }
 
 bintray {
-    user = project.bintrayUsername
-    key = project.bintrayApiKey
-    publications = ['mavenCustom']
+    // user = project.bintrayUsername
+    // key = project.bintrayApiKey
+    // publications = ['mavenCustom']
     pkg {
-        repo = 'griffon'
-        userOrg = 'griffon'
-        name = project.name
-        desc = project.pomDescription
-        licenses = ['Apache-2.0']
-        labels = ['griffon']
-        websiteUrl = project.project_website_url
-        issueTrackerUrl = project.project_issues_url
-        vcsUrl = project.project_vcs_url
-        publicDownloadNumbers = true
-        githubRepo = 'griffon/griffon'
+        // repo = 'griffon'
+        // userOrg = 'griffon'
+        // name = project.name
+        // desc = project.project_description
+        // licenses = ['Apache-2.0']
+        // labels = ['griffon']
+        // websiteUrl = project.project_website_url
+        // issueTrackerUrl = project.project_issues_url
+        // vcsUrl = project.project_vcs_url
+        // publicDownloadNumbers = true
+        // githubRepo = 'griffon/griffon'
         version {
             vcsTag = project.version
             attributes = [
@@ -58,13 +59,13 @@ bintray {
 pluginBundle {
     website = project.project_website_url
     vcsUrl = project.project_vcs_url
-    description = project.pomDescription
+    description = project.project_description
     tags = ['griffon']
 
     plugins {
-        statsPlugin {
+        griffonBuildPlugin {
             id = 'org.codehaus.griffon.griffon-build'
-            displayName = project.pomDescription
+            displayName = project.project_description
         }
     }
 

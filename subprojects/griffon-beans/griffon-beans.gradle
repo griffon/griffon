@@ -17,7 +17,6 @@
  */
 
 apply plugin: 'groovy'
-apply from: rootProject.file('gradle/coverage.gradle')
 
 dependencies {
     compile project(':griffon-core')
@@ -25,10 +24,8 @@ dependencies {
     testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
 }
 
-afterEvaluate {
-    if (rootProject.fullBuild) {
-        clirr {
-            enabled = false
-        }
+config {
+    clirr {
+        enabled = !rootProject.fullBuild
     }
 }

@@ -1,13 +1,10 @@
 pluginManagement {
     repositories {
         jcenter()
-        maven { url 'https://plugins.gradle.org/m2/' }
+        gradlePluginPortal()
         maven { url 'http://dl.bintray.com/pledbrook/plugins' }
     }
 }
-
-enableFeaturePreview('IMPROVED_POM_SUPPORT')
-enableFeaturePreview('STABLE_PUBLISHING')
 
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
@@ -74,7 +71,7 @@ if (!appveyor) {
 
 if (fullBuild) {
     includeProject 'subprojects', 'application-master-pom'
-    includeProject 'samples', 'editor-swing-groovy'
+    // includeProject 'samples', 'editor-swing-groovy'
     includeProject 'samples', 'editor-swing-java'
     includeProject 'samples', 'editor-javafx-java'
     includeProject 'samples', 'browser-javafx-groovy'

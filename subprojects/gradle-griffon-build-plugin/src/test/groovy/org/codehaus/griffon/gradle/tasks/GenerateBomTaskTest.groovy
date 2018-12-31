@@ -22,10 +22,12 @@ import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual
 
+@Ignore
 class GenerateBomTaskTest {
     private File taskOutputDir = new File('build/test-output')
 

@@ -17,13 +17,12 @@
  */
 
 apply plugin: 'groovy'
-apply plugin: 'application'
+apply from: rootProject.file('samples/shared-files/samples-common-groovy.gradle')
 apply from: rootProject.file('gradle/javafx-plugin.gradle')
-apply from: rootProject.file('gradle/integration-test.gradle')
-apply from: rootProject.file('gradle/functional-test.gradle')
 
 mainClassName = 'sample.javafx.groovy.Launcher'
 
+/*
 ext.hasIntegrationTests = true
 ext.hasFunctionalTests = true
 ext.depProjects = [
@@ -36,46 +35,18 @@ ext.depProjects = [
 
 ext.depProjects.each { evaluationDependsOn it }
 apply from: rootProject.file('gradle/coverage-samples.gradle')
+*/
 
 dependencies {
-    compileOnly project(':griffon-groovy-compile')
-
     compile project(':griffon-groovy')
     compile project(':griffon-javafx-groovy')
-    compile project(':griffon-guice')
     compile "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
     compile "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
     compile "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
 
-    runtime "org.slf4j:slf4j-simple:$slf4jVersion"
-
-    testCompile project(':griffon-core-test')
     testCompile project(':griffon-javafx-test')
 
     functionalTestCompile project(':griffon-javafx-test')
-}
-
-sourceSets {
-    main {
-        groovy {
-            srcDirs = [
-                'griffon-app/conf',
-                'griffon-app/controllers',
-                'griffon-app/models',
-                'griffon-app/views',
-                'griffon-app/services',
-                'griffon-app/lifecycle',
-                'src/main/groovy'
-            ]
-        }
-        resources {
-            srcDirs = [
-                'griffon-app/resources',
-                'griffon-app/i18n',
-                'src/main/resources'
-            ]
-        }
-    }
 }
 
 jfx {

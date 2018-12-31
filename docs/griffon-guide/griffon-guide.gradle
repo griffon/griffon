@@ -16,19 +16,7 @@
  * limitations under the License.
  */
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.9.2'
-        classpath 'com.bmuschko:gradle-java2html-plugin:2.0.2'
-    }
-}
-
-apply plugin: 'org.asciidoctor.convert'
-apply plugin: 'com.bmuschko.java2html'
+apply plugin: 'org.kordamp.gradle.guide'
 
 ext.childProjects = [
     ':griffon-core',
@@ -55,138 +43,44 @@ ext.childProjects = [
     ':griffon-pivot-test'
 ]
 
-def sampleApps = []
+ext.sampleProjects = []
 for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna', 'lanterna3']) {
     for (lang in ['groovy', 'java']) {
-        sampleApps << ":sample-${toolkit}-${lang}".toString()
+        sampleProjects << ":sample-${toolkit}-${lang}".toString()
     }
 }
-(ext.childProjects + sampleApps).each { evaluationDependsOn it }
+(ext.childProjects + ext.sampleProjects).each { evaluationDependsOn it }
 
-dependencies {
-    java2html 'de.java2html:java2html:5.0'
-}
+config {
+    info {
+        specification { enabled = false }
+        implementation { enabled = false }
+    }
 
-task copyDocs(type: Copy) {
-    destinationDir = "${buildDir}/sources" as File
-    project.ext.childProjects.each { projectName ->
-        if (projectName.endsWith('-compile')) {
-            from(project(projectName).sourceSets.main.allSource) {
-                include 'griffon/transform/**/*'
-                include 'griffon/metadata/**/*'
-            }
-        } else {
-            from(project(projectName).sourceSets.main.allSource) {
-                exclude 'gdsl/*'
-                exclude 'dsld/*'
-            }
+    license { enabled = false }
+    publishing { enabled = false }
+    bintray { enabled = false }
+    minpom { enabled = false }
+    javadoc { enabled = false }
+    jacoco { enabled = false }
+    sourceHtml { enabled = false }
+    sourceXref { enabled = false }
+    stats { enabled = false }
+
+    whenRootProjectReady { Project rp ->
+        project(':griffon-guide').tasks.findByName('createGuide').with {
+            dependsOn rp.tasks.findByName('aggregateSourceJar')
+            dependsOn rp.tasks.findByName('aggregateJavadocsJar')
+            dependsOn rp.tasks.findByName('aggregateSourceHtmlJar')
+            from(rp.tasks.findByName('aggregateSourceJar').destinationDir)
+            from(rp.tasks.findByName('aggregateJavadocsJar').destinationDir)
+            from(rp.tasks.findByName('aggregateSourceHtmlJar').destinationDir)
         }
     }
 }
 
-task apiDocs(type: Javadoc, dependsOn: copyDocs) {
-    source          = copyDocs.destinationDir
-    destinationDir  = file("$buildDir/api")
-    title           = "Griffon $version"
-    classpath       = project.ext.childProjects.collect { projectName ->
-        [project(projectName).sourceSets.main.output,
-         project(projectName).configurations.compile,
-         project(projectName).configurations.compileOnly]
-    }.flatten().sum() as FileCollection
-
-    excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
-
-    options.addBooleanOption('javafx', true)
-
-    options.use         = true
-    options.splitIndex  = true
-    options.encoding    = 'UTF-8'
-    options.author      = true
-    options.version     = true
-    options.source      = project.sourceCompatibility
-    options.overview    = file('src/javadoc/overview.html')
-    options.windowTitle = "Griffon $version"
-    options.docTitle    = "Griffon $version"
-    options.footer      = project.javadocFooter
-    options.links 'https://www.slf4j.org/apidocs/'
-    options.links 'https://junit.org/junit4/javadoc/latest/'
-    options.links 'https://aalmiray.github.io/jsr-305/apidocs/'
-    options.links 'https://javax-inject.github.io/javax-inject/api/'
-    options.links 'https://docs.oracle.com/javase/8/docs/api/'
-    options.links 'https://docs.oracle.com/javase/8/javafx/api/'
-    options.links 'https://google.github.io/guice/api-docs/4.1/javadoc/'
-    options.links 'https://mabe02.github.io/lanterna/apidocs/2.1/'
-    options.links 'https://pivot.apache.org/2.0.5/docs/api/'
-    options.links 'http://docs.groovy-lang.org/latest/html/api/'
-    options.links 'https://aalmiray.github.io/jipsy/apidocs/'
-    options.links 'https://aalmiray.github.io/gipsy/apidocs/'
-
-    doLast { task ->
-        copy {
-            into task.destinationDir
-            from rootProject.file('src/javadoc/resources/img/griffon.ico'),
-                rootProject.file('src/javadoc/resources/css/stylesheet.css')
-        }
-        copy {
-            into file("${task.destinationDir}/resources")
-            from rootProject.file('src/javadoc/resources/img/')
-        }
-        copy {
-            into file("${task.destinationDir}/images/")
-            from rootProject.file('src/media/banners/medium.png')
-            rename '.*', 'griffon-banner-medium.png'
-        }
-    }
-}
-
-task generateJava2html {
-    dependsOn apiDocs
-    dependsOn "java2htmlGenerateOverview"
-    dependsOn java2htmlConvertCode
-}
-
-task sourceJar(type: Jar, dependsOn: copyDocs) {
-    archiveName    = "griffon-${project.version}-sources.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from copyDocs.destinationDir
-}
-
-task javadocJar(type: Jar, dependsOn: apiDocs) {
-    archiveName    = "griffon-${project.version}-javadoc.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from apiDocs.destinationDir
-}
-
-task sourceHtmlJar(type: Jar, dependsOn: generateJava2html) {
-    archiveName    = "griffon-${project.version}-sources-html.jar"
-    destinationDir = "$buildDir/assemble/jars" as File
-    from java2htmlConvertCode.destDir
-}
-
-task docsJar(dependsOn: [sourceJar, javadocJar, sourceHtmlJar]) { }
-
-java2html {
-    conversion {
-        srcDirs = files(copyDocs.destinationDir)
-        tabs = 4
-        style = 'kawa'
-        addLineAnchors = true
-        showFileName = true
-        useShortFileName = true
-        overwrite = true
-        showDefaultTitle = true
-    }
-
-    overview {
-        windowTitle = "Griffon $version"
-        docTitle = "Griffon $version"
-        docDescription = """Griffon is a Grails like application framework for developing desktop
-                            applications in Groovy. Inspired by Grails, Griffon follows the Convention over
-                            Configuration paradigm, paired with an intuitive MVC architecture and a command
-                            line interface."""
-        icon = rootProject.file('src/javadoc/resources/img/griffon.ico')
-        stylesheet = rootProject.file('src/javadoc/resources/css/stylesheet.css')
-    }
+task sampleStats() {
+    dependsOn sampleProjects.collect { project(it).tasks.findByName('sourceStats') }
 }
 
 def loadProperties(File file) {
@@ -195,17 +89,8 @@ def loadProperties(File file) {
     props
 }
 
-task sampleStats() {
-    doLast {
-        sampleApps.each { p -> project(p).tasks.findByName('stats').computeLoc() }
-    }
-}
-
-asciidoctorj {
-    version = asciidoctorjVersion
-}
-
 asciidoctor {
+    dependsOn sampleStats
     attributes = [
         toc                     : 'left',
         doctype                 : 'book',
@@ -243,17 +128,7 @@ asciidoctor {
         }
     }
 }
-asciidoctor.dependsOn sampleStats
 
-task guide(type: Copy, dependsOn: [apiDocs, generateJava2html, asciidoctor, docsJar]) {
-    destinationDir = "$buildDir/guide" as File
-    from(apiDocs.destinationDir)       { into 'api' }
-    from(java2htmlConvertCode.destDir) { into 'api-src'}
-    from("${asciidoctor.outputDir}/html5")
-    from("$buildDir/assemble/jars")
-}
-
-task guideZip(type: Zip, dependsOn: guide) {
-    baseName = 'griffon-guide'
-    from guide.destinationDir
+guide {
+    sourceHtmlDir = 'api-src'
 }

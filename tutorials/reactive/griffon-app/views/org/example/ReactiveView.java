@@ -85,7 +85,7 @@ public class ReactiveView extends AbstractJavaFXGriffonView {
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
-        scene.getStylesheets().add("bootstrapfx.css");
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
 
         Node node = loadFromFXML();
         connectActions(node, controller);

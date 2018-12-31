@@ -16,31 +16,20 @@
  * limitations under the License.
  */
 
-apply plugin: 'groovy'
-apply from: rootProject.file('samples/shared-files/samples-common-java.gradle')
+apply from: rootProject.file('samples/shared-files/samples-common.gradle')
 
-mainClassName = 'sample.pivot.java.Launcher'
-
-/*
-ext.hasIntegrationTests = true
-ext.hasFunctionalTests = false
-ext.depProjects = [
-    ':griffon-core',
-    ':griffon-pivot',
-    ':griffon-guice',
-    ':griffon-core-test',
-    ':griffon-pivot-test'
-]
-
-ext.depProjects.each { evaluationDependsOn it }
-apply from: rootProject.file('gradle/coverage-samples.gradle')
-*/
-
-dependencies {
-    compile project(':griffon-pivot')
-    testCompile project(':griffon-pivot-test')
+sourceSets {
+    main {
+        java {
+            srcDirs = [
+                'griffon-app/conf',
+                'griffon-app/controllers',
+                'griffon-app/models',
+                'griffon-app/views',
+                'griffon-app/services',
+                'griffon-app/lifecycle',
+                'src/main/java',
+            ]
+        }
+    }
 }
-
-functionalTest.enabled = false
-
-compileGroovy.enabled = false

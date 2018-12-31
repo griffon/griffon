@@ -17,7 +17,18 @@
  */
 
 apply plugin: 'maven-publish'
-apply from: rootProject.file('gradle/bintray.gradle')
+// apply from: rootProject.file('gradle/bintray.gradle')
+
+config {
+    license { enabled = false }
+    minpom { enabled = false }
+    source { enabled = false }
+    javadoc { enabled = false }
+    jacoco { enabled = false }
+    sourceHtml { enabled = false}
+    sourceXref { enabled = false }
+    stats { enabled = false }
+}
 
 ext.pomFile = "${project.name}-${project.version}.xml".toString()
 
@@ -37,7 +48,7 @@ task copyPom(type: Copy) {
 
 publishing {
     publications {
-        mavenCustom(MavenPublication) {
+        mainPublication(MavenPublication) {
             artifacts = []
             pom.withXml {
                 def root = asNode()

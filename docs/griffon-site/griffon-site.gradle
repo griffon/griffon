@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-import groovy.json.JsonParserType
-import groovy.json.JsonSlurper
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://plugins.gradle.org/m2/' }
-    }
-
-    dependencies {
-        classpath 'org.jbake:jbake-gradle-plugin:1.4.0'
-    }
-}
-
-apply plugin: 'base'
 apply plugin: 'org.jbake.site'
 
 configurations {
@@ -39,41 +24,24 @@ dependencies {
     docs project(':griffon-guide')
 }
 
-task pluginList() {}
-pluginList.doLast {
-    URL url = 'https://api.github.com/users/griffon-plugins/repos?sort=full_name'.toURL()
-    def json = new JsonSlurper().setType(JsonParserType.LAX).parse(url)
-
-    String content = '''
-        :linkattrs:
-        :icons: 'font'
-
-        [cols="2,5*^"]
-        |====
-    '''.stripIndent(8)
-
-    json.each { repo ->
-        content += """| link:${repo.html_url}[${repo.name}, window="_blank"]"""
-        content += """pass:[<ul class="list-inline">
-        <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe></li>
-        <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe></li></ul>]""".stripIndent(8)
-        content += """| image:https://api.bintray.com/packages/griffon/griffon-plugins/${repo.name}/images/download.svg[link="https://bintray.com/griffon/griffon-plugins/${repo.name}/_latestVersion"]"""
-        content += """| image:http://img.shields.io/badge/docs-api-blue.svg[API, link="http://griffon-plugins.github.io/${repo.name}/"] """
-        content += """| image:http://img.shields.io/travis/griffon-plugins/${repo.name}/master.svg[Build Status, link="https://travis-ci.org/griffon-plugins/${repo.name}/"] """
-        content += """| image:http://img.shields.io/coveralls/griffon-plugins/${repo.name}/master.svg[Coverage Status, link="https://coveralls.io/r/griffon-plugins/${repo.name}/"] """
-        content += """| image:http://img.shields.io/github/issues/${repo.full_name}.svg[Open Issues, link="https://github.com/griffon-plugins/${repo.name}/issues"]"""
-        content += '\n'
+config {
+    info {
+        specification { enabled = false }
+        implementation { enabled = false }
     }
 
-    content += '|====\n'
-
-    File pluginFile = new File("${buildDir}/tmp/plugins.adoc")
-    pluginFile.parentFile.mkdirs()
-    pluginFile.text = content
+    license { enabled = false }
+    publishing { enabled = false }
+    bintray { enabled = false }
+    minpom { enabled = false }
+    javadoc { enabled = false }
+    jacoco { enabled = false }
+    sourceHtml { enabled = false}
+    sourceXref { enabled = false }
+    stats { enabled = false }
 }
 
 jbake {
-    // dependsOn pluginList
     configuration['asciidoctor.attributes.export'] = true
     configuration['asciidoctor.attributes.export.prefix'] = 'jbake-'
     configuration['griffon.version.current'] = project.version
@@ -81,27 +49,27 @@ jbake {
     configuration['project-build-dir'] = project.buildDir.absolutePath
     configuration['project-rootdir'] = rootProject.projectDir.absolutePath
 
-    // version = '2.6.1'
+    version = '2.6.3'
     // asciidoctorjVersion = '1.5.7'
     // freemarkerVersion = '2.3.28'
-    // groovyTemplatesVersion = groovyVersion
-    // thymeleafVersion = '3.0.9.RELEASE'
+    groovyTemplatesVersion = groovyVersion
+    thymeleafVersion = '3.0.11.RELEASE'
     // jade4jVersion = '1.2.7'
     // flexmarkVersion = '0.34.24'
 }
 
-task(guide, dependsOn: [':griffon-guide:guide']) {
+task(guide, dependsOn: [':griffon-guide:createGuide']) {
     // generates guide on the spot
 }
 
 task(copyGuide, type: Copy) {
     destinationDir = file("$buildDir/guide")
-    from(tasks.getByPath(':griffon-guide:guide').destinationDir) {
+    from(tasks.getByPath(':griffon-guide:createGuide').destinationDir) {
         into project.version
     }
 }
 
-task(site, type: Copy, dependsOn: [bake, copyGuide]) {
+task(site, type: Copy, dependsOn: [bake, copyGuide, project(':').aggregateClirr]) {
     destinationDir = file("$buildDir/site")
     from file(bake.output)
     from(copyGuide.destinationDir) {
@@ -111,7 +79,8 @@ task(site, type: Copy, dependsOn: [bake, copyGuide]) {
     doLast {
         copy {
             into file("${destinationDir}/reports/${project.version}")
-            from(rootProject.tasks.binaryReport.reportsDir)
+            from(rootProject.tasks.aggregateClirr.reportFile.parentFile)
+            rename(rootProject.tasks.aggregateClirr.reportFile.name, 'compatibility-report.html')
         }
     }
 }

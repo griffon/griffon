@@ -18,8 +18,6 @@
 
 apply plugin: 'checkstyle'
 apply plugin: 'codenarc'
-// apply plugin: 'findbugs'
-apply plugin: 'com.github.hierynomus.license'
 
 def configDir = new File(buildscript.sourceFile.parentFile.parentFile, 'config')
 ext.checkstyleConfigDir = "$configDir/checkstyle"
@@ -40,21 +38,7 @@ codenarc {
     configFile = file("$configDir/codenarc/codenarc.groovy")
 }
 
-/*
-findbugs {
-    toolVersion = '3.0.0'
-    sourceSets = [sourceSets.main]
-    ignoreFailures = true
-    reportsDir = file("$project.buildDir/reports/findbugs")
-    effort = 'max'
-    reportLevel = 'high'
-}
-*/
-
 license {
-    header = rootProject.file('config/HEADER')
-    strictCheck = true
-    ignoreFailures = true
     mapping {
         kt     = 'SLASHSTAR_STYLE'
         java   = 'SLASHSTAR_STYLE'
@@ -63,7 +47,6 @@ license {
         dsld   = 'SLASHSTAR_STYLE'
         fxml   = 'XML_STYLE'
     }
-    ext.year = '2008-2018'
     exclude '**/*.png'
     exclude '**/griffon/util/MethodUtils.java'
     exclude '**/griffon/util/application.groovy'
