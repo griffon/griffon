@@ -58,7 +58,7 @@ buildScan {
     publishAlways()
     buildFinished { buildResult ->
         buildScanPublished { scan ->
-            ['curl', '-s', '-d', """message="Build scan: ${scan.buildScanUri}""", 'https://webhooks.gitter.im/e/9c3ecf139048ea1d3ce5'].execute()
+            ['curl', '-s', '-d', "message=Build scan: ${scan.buildScanUri}", 'https://webhooks.gitter.im/e/9c3ecf139048ea1d3ce5'].execute()
         }
 
     }
