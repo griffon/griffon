@@ -53,8 +53,15 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'org.sonarqube'
 
 buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceUrl   = 'https://gradle.com/terms-of-service'
     termsOfServiceAgree = 'yes'
+    publishAlways()
+    buildFinished { buildResult ->
+        buildScanPublished { scan ->
+            ['curl', '-s', '-d', """message="Build scan: ${scan.buildScanUri}""", 'https://webhooks.gitter.im/e/9c3ecf139048ea1d3ce5'].execute()
+        }
+
+    }
 }
 
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
