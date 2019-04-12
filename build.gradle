@@ -77,10 +77,10 @@ ext {
     nonCoreProjects = subprojects.findAll { !it.projectDir.absolutePath.contains('subprojects') }
 }
 
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = '**undefined**'
-if (!project.hasProperty('bintrayApiKey'))   ext.bintrayApiKey   = '**undefined**'
-if (!project.hasProperty('mavenUsername'))   ext.mavenUsername   = '**undefined**'
-if (!project.hasProperty('mavenPassword'))   ext.mavenPassword   = '**undefined**'
+if (!project.hasProperty('bintrayUsername'))  ext.bintrayUsername  = '**undefined**'
+if (!project.hasProperty('bintrayApiKey'))    ext.bintrayApiKey    = '**undefined**'
+if (!project.hasProperty('sonatypeUsername')) ext.sonatypeUsername = '**undefined**'
+if (!project.hasProperty('sonatypePassword')) ext.sonatypePassword = '**undefined**'
 
 config {
     release = (rootProject.findProperty('release') ?: false).toBoolean()
