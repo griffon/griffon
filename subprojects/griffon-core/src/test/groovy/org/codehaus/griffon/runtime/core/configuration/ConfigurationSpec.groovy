@@ -31,6 +31,8 @@ import spock.lang.Unroll
 
 import javax.application.converter.ConverterRegistry
 import javax.inject.Inject
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 import static com.google.inject.util.Providers.guicify
 import static griffon.util.AnnotationUtils.named
@@ -95,7 +97,7 @@ class ConfigurationSpec extends Specification {
 
         where:
         key               || expectedValue
-        'key.date.string' || Date.parse('YYYY-MM-dd', '1970-12-24')
+        'key.date.string' || new SimpleDateFormat('YYYY-MM-dd').parse('1970-12-24')
     }
 
     def 'Calling configuration.getAsString(#key, #defaultValue) returns #expectedValue'() {

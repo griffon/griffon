@@ -32,7 +32,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
   - sleep 3
 before_script:
-  - ./gradlew --no-daemon --version
+  - ./gradlew --version
   - sudo service mysql stop
   - sudo service postgresql stop
   - sudo service acpid stop

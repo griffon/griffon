@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,18 +25,18 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.kordamp.gradle:project-gradle-plugin:0.14.0'
-        classpath 'org.kordamp.gradle:guide-gradle-plugin:0.14.0'
+        classpath 'org.kordamp.gradle:project-gradle-plugin:0.17.0'
+        classpath 'org.kordamp.gradle:guide-gradle-plugin:0.17.0'
         classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.6.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath 'org.ajoberstar:gradle-git:1.7.2'
         classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.gradle.publish:plugin-publish-plugin:0.10.1'
-        classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.4.8'
-        classpath 'com.gradle:build-scan-plugin:2.2'
+        classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.4.11'
+        classpath 'com.gradle:build-scan-plugin:2.2.1'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622'
-        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:5.0.0'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:5.0.2'
         classpath 'gradle.plugin.gradle-java9-collision:plugin:0.2.3'
         classpath 'org.jbake:jbake-gradle-plugin:5.0.0'
     }
@@ -53,7 +53,7 @@ apply plugin: 'org.sonarqube'
 buildScan {
     termsOfServiceUrl   = 'https://gradle.com/terms-of-service'
     termsOfServiceAgree = 'yes'
-    publishAlways()
+
     buildFinished { buildResult ->
         buildScanPublished { scan ->
             ['curl', '-s', '-d', "message=Build scan: ${scan.buildScanUri}", 'https://webhooks.gitter.im/e/9c3ecf139048ea1d3ce5'].execute()
@@ -77,10 +77,10 @@ ext {
     nonCoreProjects = subprojects.findAll { !it.projectDir.absolutePath.contains('subprojects') }
 }
 
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
-if (!project.hasProperty('mavenUsername')) ext.mavenUsername = ''
-if (!project.hasProperty('mavenPassword')) ext.mavenPassword = ''
+if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = '**undefined**'
+if (!project.hasProperty('bintrayApiKey'))   ext.bintrayApiKey   = '**undefined**'
+if (!project.hasProperty('mavenUsername'))   ext.mavenUsername   = '**undefined**'
+if (!project.hasProperty('mavenPassword'))   ext.mavenPassword   = '**undefined**'
 
 config {
     release = (rootProject.findProperty('release') ?: false).toBoolean()
@@ -162,7 +162,7 @@ config {
         }
     }
 
-    license {
+    licensing {
         licenses {
             license {
                 id = 'Apache-2.0'
@@ -178,6 +178,7 @@ config {
         userOrg = 'griffon'
         name    = 'griffon'
     }
+
     stats {
         formats = ['xml', 'txt']
         paths = [
@@ -354,6 +355,10 @@ subprojects { Project subproj ->
             enabled = isCoreProject && !isGradlePlugin && !isPomProject
             baseline = [subproj.group, subproj.name, subproj.previousVersion].join(':')
         }
+
+        jacoco {
+            enabled = subproj.file('src/test').exists()
+        }
     }
 
     plugins.withType(GroovyPlugin) {
@@ -516,11 +521,14 @@ subprojects { Project subproj ->
             "cglib:cglib-nodep:$cglibVersion",
             "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
             "org.codehau.groovy:groovy-all:$groovyVersion",
-            "org.codehau.groovy:groovy-templates:$groovyVersion",
-            "org.codehau.groovy:groovy-json:$groovyVersion",
-            "org.codehau.groovy:groovy-macro:$groovyVersion",
-            "org.codehau.groovy:groovy-nio:$groovyVersion",
-            "org.codehau.groovy:groovy-templates:$groovyVersion",
+            "org.codehaus.groovy:groovy:$groovyVersion",
+            "org.codehaus.groovy:groovy-json:$groovyVersion",
+            "org.codehaus.groovy:groovy-macro:$groovyVersion",
+            "org.codehaus.groovy:groovy-nio:$groovyVersion",
+            "org.codehaus.groovy:groovy-sql:$groovyVersion",
+            "org.codehaus.groovy:groovy-templates:$groovyVersion",
+            "org.codehaus.groovy:groovy-test:$groovyVersion",
+            "org.codehaus.groovy:groovy-xml:$groovyVersion",
             "org.slf4j:slf4j-api:$slf4jVersion",
             "org.slf4j:slf4j-simple:$slf4jVersion",
             "org.easytesting:fest-util:$festUtilVersion",
@@ -533,6 +541,7 @@ subprojects { Project subproj ->
             "org.ow2.asm:asm-tree:$asmVersion",
             "org.objenesis:objenesis:$objenesisVersion",
             "net.bytebuddy:byte-buddy:$bytebuddyVersion",
+            "net.bytebuddy:byte-buddy-agent:$bytebuddyVersion",
             "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
             "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
             "org.apache.ant:ant:$antVersion",
@@ -579,6 +588,5 @@ project.gradle.addBuildListener(new BuildAdapter() {
                 property 'sonar.jacoco.reportPath', effectiveConfig.jacoco.mergeExecFile.absolutePath
             }
         }
-
     }
 })

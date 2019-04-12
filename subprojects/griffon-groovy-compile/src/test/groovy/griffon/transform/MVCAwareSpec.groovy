@@ -33,6 +33,8 @@ class MVCAwareSpec extends Specification {
             class Bean { }
             new Bean()
             ''')
+        println bean.class
+        bean.class.interfaces.each{println(it)}
 
         then:
         bean instanceof MVCHandler
