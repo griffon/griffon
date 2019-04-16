@@ -2,7 +2,7 @@ language: java
 sudo: required
 dist: trusty
 install: true
-jdk: oraclejdk8
+jdk: openjdk8
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
@@ -17,8 +17,6 @@ env:
     secure: LRj23pXG7ikrc/eJ/lcrl+KZ5R7iR1XQVlax7HI/9j6U8abYuIRi0IT34DQwcQSgZB3kXs0bWHxsIR7iz/nCH4S6bDRvImFPKwg20XMdRTbZaREx1eYPy+odXdBf/3BGbmBQ8HLrdxOVTltFWZGvvR49jScQd3z/O8k2FZln43c=
 addons:
   apt:
-    packages:
-    - oracle-java8-installer
     organization:
     - griffon
   sonarcloud:
@@ -28,6 +26,7 @@ addons:
     token:
       secure: pJj2PwFEUGR6kNW5o2zuCmY+U+Yre66ft+G1MU4IoFGDb4nwlCYwdA2doKhHdo7vnZt1zSCf2xFm/2rt1yDVNt3peK/YQv+JiOUMBzUpicP3/Cy3juPea6MLNPNl74NxqDyQylV9lU5D8H7CfelgJ8yUe+EvEB+oWsPOma9/uts=
 before_install:
+  - sudo apt install -y openjfx
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - sleep 3
