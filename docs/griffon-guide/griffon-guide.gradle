@@ -17,6 +17,7 @@
  */
 
 apply plugin: 'org.kordamp.gradle.guide'
+apply plugin: 'org.ajoberstar.git-publish'
 
 ext.childProjects = [
     ':griffon-core',
@@ -131,4 +132,19 @@ asciidoctor {
 
 guide {
     sourceHtmlDir = 'api-src'
+}
+
+afterEvaluate {
+    project.tasks.findByName('createGuide')
+
+    gitPublish {
+        repoUri = rootProject.extensions.findByName('config').info.links.scm
+        branch  = 'gh-pages'
+        contents {
+            from project.tasks.findByName('createGuide').outputs.files
+        }
+        commitMessage = "Publish guide for $version"
+    }
+
+    gitPublishCommit.dependsOn(project.tasks.findByName('createGuide'))
 }
