@@ -18,7 +18,6 @@
 
 apply plugin: 'groovy'
 apply from: rootProject.file('samples/shared-files/samples-common-groovy.gradle')
-apply from: rootProject.file('gradle/javafx-plugin.gradle')
 
 mainClassName = 'sample.javafx.groovy.Launcher'
 
@@ -47,14 +46,4 @@ dependencies {
     testCompile project(':griffon-javafx-test')
 
     functionalTestCompile project(':griffon-javafx-test')
-}
-
-jfx {
-    mainClass         = mainClassName
-    allPermissions    = true
-    keyStoreAlias     = 'example-user'
-    keyStorePassword  = 'example-password'
-    jfxMainAppJarName = jar.archiveName
-    appName           = project.name
-    vendor            = project.name
 }

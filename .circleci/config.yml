@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+      - run:
+          name: Header
+          command: ./gradlew --version
+
+      - run:
+          name: Running X virtual framebuffer
+          command: |
+            sudo apt-get install xvfb
+            xvfb -ac :99 -screen 0 1280x1024x16 +extension RANDR > /dev/null 2>&1
+          background: true
+          
+      - run:
+          name: Build
+          command: |
+            export DISPLAY=:99
+            ./gradlew --console=plain -S --scan check test jacocoRootReport
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}

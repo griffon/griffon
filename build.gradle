@@ -206,6 +206,11 @@ config {
         exclude 'META-INF/**'
         exclude '**/*.groovy'
 
+        autoLinks {
+            exclude 'griffon.*'
+            exclude 'pivot.*'
+        }
+
         options {
             addBooleanOption('javafx', true)
             links 'https://www.slf4j.org/apidocs/'

@@ -18,7 +18,6 @@
 
 apply plugin: 'groovy'
 apply plugin: 'application'
-apply from: rootProject.file('gradle/javafx-plugin.gradle')
 
 mainClassName = 'browser.Launcher'
 
@@ -65,14 +64,4 @@ sourceSets {
             ]
         }
     }
-}
-
-jfx {
-    mainClass         = mainClassName
-    allPermissions    = true
-    keyStoreAlias     = 'example-user'
-    keyStorePassword  = 'example-password'
-    jfxMainAppJarName = jar.archiveName
-    appName           = project.name
-    vendor            = project.name
 }
