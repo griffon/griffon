@@ -271,9 +271,9 @@ config {
     }
 
     jacoco {
-        mergeExecFile       = "${buildDir}/jacoco/test.exec"
-        mergeReportHtmlFile = "${buildDir}/reports/jacoco/test/html"
-        mergeReportXmlFile  = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        mergeExecFile       = project.file("${project.buildDir}/jacoco/test.exec")
+        mergeReportHtmlFile = project.file("${project.buildDir}/reports/jacoco/test/html")
+        mergeReportXmlFile  = project.file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
