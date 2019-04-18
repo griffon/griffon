@@ -38,7 +38,7 @@ jobs:
           name: Build
           command: |
             export DISPLAY=:99
-            ./gradlew --console=plain -S --scan check test jacocoRootReport
+            ./gradlew --console=verbose -S -Dorg.gradle.parallel=false --scan check test jacocoRootReport
 
       - run:
           name: Code Coverage
