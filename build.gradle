@@ -269,6 +269,12 @@ config {
                 !(difference.classname =~ /griffon/)
         }
     }
+
+    jacoco {
+        mergeExecFile       = "${buildDir}/jacoco/test.exec"
+        mergeReportHtmlFile = "${buildDir}/reports/jacoco/test/html"
+        mergeReportXmlFile  = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+    }
 }
 
 aggregateJavadocs {

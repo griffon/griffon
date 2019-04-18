@@ -31,7 +31,7 @@ jobs:
 
       - run:
           name: Build
-          command: xvfb-run -a ./gradlew --console=plain -S -Dorg.gradle.parallel=false --scan build
+          command: xvfb-run -a ./gradlew --console=plain -S -Dorg.gradle.parallel=false --scan build jacocoRootReport
 
       - run:
           name: Code Coverage
