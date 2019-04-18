@@ -17,7 +17,7 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "build.gradle" }}
       - run:
-          name: Header
+          name: Gradle Version
           command: ./gradlew --version
 
       - run:
@@ -30,7 +30,7 @@ jobs:
             cd -
 
       - run:
-          name: Running X virtual framebuffer
+          name: Run xvfb
           command: xvfb -ac :99 -screen 0 1280x1024x16 +extension RANDR > /dev/null 2>&1
           background: true
 
