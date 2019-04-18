@@ -29,7 +29,6 @@ buildscript {
 }
 
 plugins {
-    id 'groovy'
     id 'idea'
     id 'org.kordamp.gradle.project'          version '0.17.0'
     id 'org.kordamp.gradle.build-scan'       version '0.17.0'
@@ -55,7 +54,6 @@ buildScan {
         buildScanPublished { scan ->
             ['curl', '-s', '-d', "message=Build scan: ${scan.buildScanUri}", 'https://webhooks.gitter.im/e/9c3ecf139048ea1d3ce5'].execute()
         }
-
     }
 }
 
@@ -254,6 +252,7 @@ config {
     }
 
     clirr {
+        enabled = false
         failOnErrors = false
         filter = { difference ->
             difference.message =~ /field __timeStamp/ ||

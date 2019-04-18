@@ -68,20 +68,22 @@ test {
 }
 
 integrationTest {
+    enabled = false
     useJUnitPlatform()
-    
+
     ignoreFailures = !rootProject.fullBuild
-    
+
     jacoco {
         excludes = ['sample.**']
     }
 }
 
 functionalTest {
+    enabled = false
     useJUnitPlatform()
-    
+
     ignoreFailures = !rootProject.fullBuild
-    
+
     jacoco {
         excludes = ['sample.**']
     }
