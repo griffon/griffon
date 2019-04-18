@@ -27,6 +27,7 @@ buildscript {
     dependencies {
         classpath 'org.kordamp.gradle:project-gradle-plugin:0.17.0'
         classpath 'org.kordamp.gradle:guide-gradle-plugin:0.17.0'
+        classpath 'org.kordamp.gradle:plugin-gradle-plugin:0.17.0'
         classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.6.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath 'org.ajoberstar:gradle-git:1.7.2'
@@ -368,7 +369,7 @@ subprojects { Project subproj ->
     }
 
     plugins.withType(GroovyPlugin) {
-        if (isCoreProject && !isGroovyProject) {
+        if (isCoreProject && !isGroovyProject && !isGradlePlugin) {
             compileGroovy.enabled = false
             groovydoc.enabled = false
         }

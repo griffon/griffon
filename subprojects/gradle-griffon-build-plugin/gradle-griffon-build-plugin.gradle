@@ -17,61 +17,24 @@
  */
 
 apply plugin: 'groovy'
-// apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.gradle.plugin-publish'
-// apply from: rootProject.file('gradle/coverage.gradle')
+apply plugin: 'org.kordamp.gradle.plugin'
+
+config {
+    info {
+        tags = ['griffon', 'plugin']
+    }
+
+    plugin {
+        enabled             = true
+        id                  = 'org.codehaus.griffon.griffon-build'
+        implementationClass = 'org.codehaus.griffon.gradle.GriffonBuildPlugin'
+    }
+}
 
 dependencies {
     compile gradleApi()
 
     testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-    }
-    
-    testCompile 'xmlunit:xmlunit:1.6'
-}
-
-bintray {
-    // user = project.bintrayUsername
-    // key = project.bintrayApiKey
-    // publications = ['mavenCustom']
-    pkg {
-        // repo = 'griffon'
-        // userOrg = 'griffon'
-        // name = project.name
-        // desc = project.project_description
-        // licenses = ['Apache-2.0']
-        // labels = ['griffon']
-        // websiteUrl = project.project_website_url
-        // issueTrackerUrl = project.project_issues_url
-        // vcsUrl = project.project_vcs_url
-        // publicDownloadNumbers = true
-        // githubRepo = 'griffon/griffon'
-        version {
-            vcsTag = project.version
-            attributes = [
-                'gradle-plugin': ['org.codehaus.griffon.griffon-build', project.group, project.name].join(':')
-            ]
-        }
-    }
-}
-
-pluginBundle {
-    website = project.project_website_url
-    vcsUrl = project.project_vcs_url
-    description = project.project_description
-    tags = ['griffon']
-
-    plugins {
-        griffonBuildPlugin {
-            id = 'org.codehaus.griffon.griffon-build'
-            displayName = project.project_description
-        }
-    }
-
-    mavenCoordinates {
-        groupId = project.group
-        artifactId = project.name
-        version = project.version
     }
 }
