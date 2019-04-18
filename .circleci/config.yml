@@ -21,17 +21,32 @@ jobs:
           command: ./gradlew --version
 
       - run:
+          name: Checkout JSR-377
+          command: |
+            cd ..
+            git clone --depth=50 --branch=master https://github.com/jsr377/jsr377-tck.git jsr377-tck
+            git clone --depth=50 --branch=master https://github.com/jsr377/jsr377-api.git jsr377-api
+            git clone --depth=50 --branch=master https://github.com/jsr377/jsr377-converters.git jsr377-converters
+            cd -
+
+      - run:
           name: Running X virtual framebuffer
           command: |
             sudo apt-get install xvfb
             xvfb -ac :99 -screen 0 1280x1024x16 +extension RANDR > /dev/null 2>&1
           background: true
-          
+
       - run:
           name: Build
           command: |
             export DISPLAY=:99
             ./gradlew --console=plain -S --scan check test jacocoRootReport
+
+      - run:
+          name: Code Coverage
+          command: |
+            ./gradlew coveralls
+            bash <(curl -s https://codecov.io/bash)
 
       - save_cache:
           paths:

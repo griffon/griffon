@@ -63,10 +63,11 @@ buildScan {
 }
 
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
+boolean circleci = (System.env['CIRCLECI'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 ext {
     depProjects = []
-    fullBuild = !travis && !appveyor
+    fullBuild = !travis && !appveyor && !circleci
     resourceFilePatterns = [
         '**/*.properties',
         '**/*.groovy',

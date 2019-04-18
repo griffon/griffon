@@ -8,7 +8,8 @@ pluginManagement {
 
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
-boolean fullBuild = !travis && !appveyor
+boolean circleci = (System.env['CIRCLECI'] ?: false) as boolean
+boolean fullBuild = !travis && !appveyor && !circleci
 
 def includeProject = { String projectDirName, String projectName ->
     File baseDir = new File(settingsDir, projectDirName)
