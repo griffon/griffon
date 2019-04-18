@@ -30,15 +30,8 @@ jobs:
             cd -
 
       - run:
-          name: Run xvfb
-          command: xvfb -ac :99 -screen 0 1280x1024x16 +extension RANDR > /dev/null 2>&1
-          background: true
-
-      - run:
           name: Build
-          command: |
-            export DISPLAY=:99
-            ./gradlew --console=verbose -S -Dorg.gradle.parallel=false --scan check test jacocoRootReport
+          command: xvfb-run -a ./gradlew --console=plain -S -Dorg.gradle.parallel=false --scan build
 
       - run:
           name: Code Coverage
