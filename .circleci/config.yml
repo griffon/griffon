@@ -31,7 +31,7 @@ jobs:
 
       - run:
           name: Build
-          command: xvfb-run -a ./gradlew --console=plain -S --scan build jacocoRootReport
+          command: xvfb-run -a ./gradlew --console=plain -S --scan check test jacocoRootReport
 
       - run:
           name: Code Coverage
