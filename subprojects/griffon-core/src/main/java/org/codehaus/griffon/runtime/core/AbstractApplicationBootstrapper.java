@@ -31,8 +31,8 @@ import griffon.core.injection.InjectorFactory;
 import griffon.core.injection.Key;
 import griffon.core.injection.Module;
 import griffon.util.GriffonClassUtils;
-import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
+import org.kordamp.jipsy.util.TypeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,9 +46,9 @@ import java.util.ServiceLoader;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.sortByDependencies;
-import static griffon.util.ServiceLoaderUtils.load;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
+import static org.kordamp.jipsy.util.TypeLoader.load;
 
 /**
  * @author Andres Almiray
@@ -117,7 +117,7 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
         modules.add(new AbstractModule() {
             @Override
             protected void doConfigure() {
-                ServiceLoaderUtils.LineProcessor lineProcessor = (cl, type, line) -> {
+                TypeLoader.LineProcessor lineProcessor = (cl, type, line) -> {
                     line = line.trim();
                     try {
                         bind(cl.loadClass(line));

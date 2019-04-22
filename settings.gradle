@@ -24,23 +24,22 @@ pluginManagement {
     }
 }
 
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'org.kordamp.gradle:settings-gradle-plugin:0.18.0'
+    }
+}
+apply plugin: 'org.kordamp.gradle.settings'
+
+import static org.kordamp.gradle.plugin.settings.SettingsPlugin.includeProject
+
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean circleci = (System.env['CIRCLECI'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 boolean fullBuild = !travis && !appveyor && !circleci
-
-def includeProject = { String projectDirName, String projectName ->
-    File baseDir = new File(settingsDir, projectDirName)
-    File projectDir = new File(baseDir, projectName)
-    String buildFileName = "${projectName}.gradle"
-
-    assert projectDir.isDirectory()
-    assert new File(projectDir, buildFileName).isFile()
-
-    include projectName
-    project(":${projectName}").projectDir    = projectDir
-    project(":${projectName}").buildFileName = buildFileName
-}
 
 rootProject.name = 'griffon'
 
@@ -48,76 +47,80 @@ includeBuild '../jsr377-api'
 includeBuild '../jsr377-tck'
 includeBuild '../jsr377-converters'
 
-includeProject 'subprojects', 'griffon-core'
-includeProject 'subprojects', 'griffon-core-compile'
-includeProject 'subprojects', 'griffon-core-test'
-includeProject 'subprojects', 'griffon-beans'
-includeProject 'subprojects', 'griffon-beans-compile'
-includeProject 'subprojects', 'griffon-guice'
-includeProject 'subprojects', 'griffon-groovy'
-includeProject 'subprojects', 'griffon-groovy-compile'
-includeProject 'subprojects', 'griffon-swing'
-includeProject 'subprojects', 'griffon-swing-groovy'
-includeProject 'subprojects', 'griffon-javafx'
-includeProject 'subprojects', 'griffon-javafx-compile'
-includeProject 'subprojects', 'griffon-javafx-groovy'
-includeProject 'subprojects', 'griffon-javafx-kotlin'
-includeProject 'subprojects', 'griffon-lanterna'
-includeProject 'subprojects', 'griffon-lanterna-groovy'
-includeProject 'subprojects', 'griffon-lanterna3'
-includeProject 'subprojects', 'griffon-lanterna3-groovy'
-includeProject 'subprojects', 'griffon-pivot'
-includeProject 'subprojects', 'griffon-pivot-groovy'
-includeProject 'subprojects', 'griffon-swing-test'
-includeProject 'subprojects', 'griffon-pivot-test'
-includeProject 'subprojects', 'griffon-javafx-test'
-includeProject 'subprojects', 'gradle-griffon-plugin'
-includeProject 'subprojects', 'gradle-griffon-build-plugin'
+projects {
+    layout = 'multi-level'
+}
+
+includeProject settings, 'subprojects/griffon-core'
+includeProject settings, 'subprojects/griffon-core-compile'
+includeProject settings, 'subprojects/griffon-core-test'
+includeProject settings, 'subprojects/griffon-beans'
+includeProject settings, 'subprojects/griffon-beans-compile'
+includeProject settings, 'subprojects/griffon-guice'
+includeProject settings, 'subprojects/griffon-groovy'
+includeProject settings, 'subprojects/griffon-groovy-compile'
+includeProject settings, 'subprojects/griffon-swing'
+includeProject settings, 'subprojects/griffon-swing-groovy'
+includeProject settings, 'subprojects/griffon-javafx'
+includeProject settings, 'subprojects/griffon-javafx-compile'
+includeProject settings, 'subprojects/griffon-javafx-groovy'
+includeProject settings, 'subprojects/griffon-javafx-kotlin'
+includeProject settings, 'subprojects/griffon-lanterna'
+includeProject settings, 'subprojects/griffon-lanterna-groovy'
+includeProject settings, 'subprojects/griffon-lanterna3'
+includeProject settings, 'subprojects/griffon-lanterna3-groovy'
+includeProject settings, 'subprojects/griffon-pivot'
+includeProject settings, 'subprojects/griffon-pivot-groovy'
+includeProject settings, 'subprojects/griffon-swing-test'
+includeProject settings, 'subprojects/griffon-pivot-test'
+includeProject settings, 'subprojects/griffon-javafx-test'
+includeProject settings, 'subprojects/gradle-griffon-plugin'
+includeProject settings, 'subprojects/gradle-griffon-build-plugin'
 
 if (!appveyor) {
-    includeProject 'samples', 'sample-swing-java'
-    includeProject 'samples', 'sample-swing-groovy'
-    includeProject 'samples', 'sample-javafx-java'
-    includeProject 'samples', 'sample-javafx-groovy'
-    includeProject 'samples', 'sample-lanterna-java'
-    includeProject 'samples', 'sample-lanterna-groovy'
-    includeProject 'samples', 'sample-lanterna3-java'
-    includeProject 'samples', 'sample-lanterna3-groovy'
-    includeProject 'samples', 'sample-javafx-kotlin'
-    includeProject 'samples', 'sample-pivot-java'
-    includeProject 'samples', 'sample-pivot-groovy'
+    includeProject settings, 'samples/sample-swing-java'
+    includeProject settings, 'samples/sample-swing-groovy'
+    includeProject settings, 'samples/sample-javafx-java'
+    includeProject settings, 'samples/sample-javafx-groovy'
+    includeProject settings, 'samples/sample-lanterna-java'
+    includeProject settings, 'samples/sample-lanterna-groovy'
+    includeProject settings, 'samples/sample-lanterna3-java'
+    includeProject settings, 'samples/sample-lanterna3-groovy'
+    includeProject settings, 'samples/sample-javafx-kotlin'
+    includeProject settings, 'samples/sample-pivot-java'
+    includeProject settings, 'samples/sample-pivot-groovy'
 }
 
 if (fullBuild) {
-    includeProject 'subprojects', 'application-master-pom'
-    // includeProject 'samples', 'editor-swing-groovy'
-    includeProject 'samples', 'editor-swing-java'
-    includeProject 'samples', 'editor-javafx-java'
-    includeProject 'samples', 'browser-javafx-groovy'
-    includeProject 'samples', 'console-swing-groovy'
-    includeProject 'templates', 'griffon-swing-java-templates'
-    includeProject 'templates', 'griffon-swing-groovy-templates'
-    includeProject 'templates', 'griffon-javafx-java-templates'
-    includeProject 'templates', 'griffon-javafx-groovy-templates'
-    includeProject 'templates', 'griffon-javafx-kotlin-templates'
-    includeProject 'templates', 'griffon-pivot-java-templates'
-    includeProject 'templates', 'griffon-pivot-groovy-templates'
-    includeProject 'templates', 'griffon-lanterna-java-templates'
-    includeProject 'templates', 'griffon-lanterna-groovy-templates'
-    includeProject 'templates', 'griffon-lanterna3-java-templates'
-    includeProject 'templates', 'griffon-lanterna3-groovy-templates'
-    includeProject 'templates', 'griffon-standard-templates'
-    includeProject 'docs', 'griffon-guide'
-    includeProject 'docs', 'griffon-site'
-    includeProject 'archetypes', 'griffon-javafx-java-archetype'
-    includeProject 'archetypes', 'griffon-javafx-groovy-archetype'
-    includeProject 'archetypes', 'griffon-lanterna-java-archetype'
-    includeProject 'archetypes', 'griffon-lanterna-groovy-archetype'
-    includeProject 'archetypes', 'griffon-lanterna3-java-archetype'
-    includeProject 'archetypes', 'griffon-lanterna3-groovy-archetype'
-    includeProject 'archetypes', 'griffon-pivot-java-archetype'
-    includeProject 'archetypes', 'griffon-pivot-groovy-archetype'
-    includeProject 'archetypes', 'griffon-swing-java-archetype'
-    includeProject 'archetypes', 'griffon-swing-groovy-archetype'
-    includeProject 'archetypes', 'archetypes'
+    includeProject settings, 'subprojects/application-master-pom'
+    // includeProject settings 'samples/editor-swing-groovy'
+    includeProject settings, 'samples/editor-swing-java'
+    includeProject settings, 'samples/editor-javafx-java'
+    includeProject settings, 'samples/browser-javafx-groovy'
+    includeProject settings, 'samples/console-swing-groovy'
+    includeProject settings, 'templates/griffon-swing-java-templates'
+    includeProject settings, 'templates/griffon-swing-groovy-templates'
+    includeProject settings, 'templates/griffon-javafx-java-templates'
+    includeProject settings, 'templates/griffon-javafx-groovy-templates'
+    includeProject settings, 'templates/griffon-javafx-kotlin-templates'
+    includeProject settings, 'templates/griffon-pivot-java-templates'
+    includeProject settings, 'templates/griffon-pivot-groovy-templates'
+    includeProject settings, 'templates/griffon-lanterna-java-templates'
+    includeProject settings, 'templates/griffon-lanterna-groovy-templates'
+    includeProject settings, 'templates/griffon-lanterna3-java-templates'
+    includeProject settings, 'templates/griffon-lanterna3-groovy-templates'
+    includeProject settings, 'templates/griffon-standard-templates'
+    includeProject settings, 'docs/griffon-guide'
+    includeProject settings, 'docs/griffon-site'
+    includeProject settings, 'archetypes/griffon-javafx-java-archetype'
+    includeProject settings, 'archetypes/griffon-javafx-groovy-archetype'
+    includeProject settings, 'archetypes/griffon-lanterna-java-archetype'
+    includeProject settings, 'archetypes/griffon-lanterna-groovy-archetype'
+    includeProject settings, 'archetypes/griffon-lanterna3-java-archetype'
+    includeProject settings, 'archetypes/griffon-lanterna3-groovy-archetype'
+    includeProject settings, 'archetypes/griffon-pivot-java-archetype'
+    includeProject settings, 'archetypes/griffon-pivot-groovy-archetype'
+    includeProject settings, 'archetypes/griffon-swing-java-archetype'
+    includeProject settings, 'archetypes/griffon-swing-groovy-archetype'
+    includeProject settings, 'archetypes/archetypes'
 }

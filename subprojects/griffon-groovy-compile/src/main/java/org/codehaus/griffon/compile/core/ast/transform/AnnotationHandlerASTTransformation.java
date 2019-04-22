@@ -17,8 +17,6 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.annotations.core.Nonnull;
-import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -33,6 +31,7 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.util.TypeLoader;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -88,19 +87,15 @@ public class AnnotationHandlerASTTransformation extends AbstractASTTransformatio
     }
 
     private void initialize(final SourceUnit source) {
-        ServiceLoaderUtils.load(getClass().getClassLoader(), "META-INF/annotations/", AnnotationHandler.class, new ServiceLoaderUtils.LineProcessor() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line) {
-                String[] parts = line.trim().split("=");
-                String annotationClassName = parts[0].trim();
-                String transformationClassName = parts[1].trim();
-                try {
-                    Class<?> transformationClass = classLoader.loadClass(transformationClassName);
-                    transformations.put(annotationClassName, (Class<? extends ASTTransformation>) transformationClass);
-                } catch (Exception e) {
-                    source.addException(e);
-                }
+        TypeLoader.load(getClass().getClassLoader(), "META-INF/annotations/", AnnotationHandler.class, (classLoader, type, line) -> {
+            String[] parts = line.trim().split("=");
+            String annotationClassName = parts[0].trim();
+            String transformationClassName = parts[1].trim();
+            try {
+                Class<?> transformationClass = classLoader.loadClass(transformationClassName);
+                transformations.put(annotationClassName, (Class<? extends ASTTransformation>) transformationClass);
+            } catch (Exception e) {
+                source.addException(e);
             }
         });
     }
