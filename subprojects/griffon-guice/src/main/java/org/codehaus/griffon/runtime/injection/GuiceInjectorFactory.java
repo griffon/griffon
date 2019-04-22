@@ -29,11 +29,11 @@ import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.Contextual;
-import griffon.core.ApplicationEvent;
 import griffon.core.Context;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.events.NewInstanceEvent;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
@@ -70,7 +70,6 @@ import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
 import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
 import static griffon.util.GriffonClassUtils.invokeAnnotatedMethod;
 import static griffon.util.GriffonClassUtils.setFieldValue;
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.injection.GuiceInjector.moduleFromBindings;
 
@@ -94,10 +93,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
     }
 
     private GuiceInjector createModules(@Nonnull final GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable<Binding<?>> bindings) {
-        final InjectionListener<GriffonArtifact> injectionListener = injectee -> application.getEventRouter().publishEvent(
-            ApplicationEvent.NEW_INSTANCE.getName(),
-            asList(injectee.getClass(), injectee)
-        );
+        final InjectionListener<GriffonArtifact> injectionListener = injectee -> application.getEventRouter()
+            .publishEvent(NewInstanceEvent.of((Class<GriffonArtifact>) injectee.getClass(), injectee));
 
         final InjectionListener<Object> postConstructorInjectorListener = injectee -> {
             resolveContextualInjections(injectee, application);

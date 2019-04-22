@@ -21,7 +21,6 @@ import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
-import griffon.core.ApplicationEvent;
 import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ExecutorServiceManager;
@@ -34,7 +33,15 @@ import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
 import griffon.core.env.Lifecycle;
+import griffon.core.event.Event;
 import griffon.core.event.EventRouter;
+import griffon.core.events.ReadyEndEvent;
+import griffon.core.events.ReadyStartEvent;
+import griffon.core.events.ShutdownAbortedEvent;
+import griffon.core.events.ShutdownRequestedEvent;
+import griffon.core.events.ShutdownStartEvent;
+import griffon.core.events.StartupEndEvent;
+import griffon.core.events.StartupStartEvent;
 import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
@@ -53,17 +60,18 @@ import org.codehaus.griffon.runtime.core.properties.PropertyChangeSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.application.event.EventHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.GriffonApplicationUtils.parseLocale;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -321,10 +329,10 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         showStartingWindow();
 
         setPhase(ApplicationPhase.READY);
-        event(ApplicationEvent.READY_START, singletonList(this));
+        event(ReadyStartEvent.of(this));
 
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.READY);
-        event(ApplicationEvent.READY_END, singletonList(this));
+        event(ReadyEndEvent.of(this));
 
         setPhase(ApplicationPhase.MAIN);
     }
@@ -337,11 +345,11 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     public boolean canShutdown() {
-        event(ApplicationEvent.SHUTDOWN_REQUESTED, singletonList(this));
+        event(ShutdownRequestedEvent.of(this));
         synchronized (shutdownLock) {
             for (ShutdownHandler handler : shutdownHandlers) {
                 if (!handler.canShutdown(this)) {
-                    event(ApplicationEvent.SHUTDOWN_ABORTED, singletonList(this));
+                    event(ShutdownAbortedEvent.of(this));
                     if (log.isDebugEnabled()) {
                         try {
                             log.debug("Shutdown aborted by " + handler);
@@ -366,6 +374,13 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         return true;
     }
 
+    private AtomicReference<CountDownLatch> latch = new AtomicReference<>();
+
+    @EventHandler
+    public void onShutdownStartEvent(ShutdownStartEvent event) {
+        latch.get().countDown();
+    }
+
     protected boolean doShutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
@@ -383,11 +398,11 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         // the ui thread
         log.debug("Shutdown stage 1: notify all event listeners");
         if (getEventRouter().isEventPublishingEnabled()) {
-            final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
-            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), (Object... args) -> latch.countDown());
-            event(ApplicationEvent.SHUTDOWN_START, singletonList(this));
+            getEventRouter().subscribe(this);
+            latch.set(new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0));
+            event(ShutdownStartEvent.of(this));
             try {
-                latch.await();
+                latch.get().await();
             } catch (InterruptedException e) {
                 // ignore
             }
@@ -423,7 +438,7 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         if (getPhase() != ApplicationPhase.INITIALIZE) { return; }
 
         setPhase(ApplicationPhase.STARTUP);
-        event(ApplicationEvent.STARTUP_START, singletonList(this));
+        event(StartupStartEvent.of(this));
 
         Object startupGroups = getConfiguration().get("application.startupGroups", null);
         if (startupGroups instanceof List) {
@@ -464,10 +479,10 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.STARTUP);
 
-        event(ApplicationEvent.STARTUP_END, singletonList(this));
+        event(StartupEndEvent.of(this));
     }
 
-    protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
-        getEventRouter().publishEvent(event.getName(), args);
+    protected <E extends Event> void event(@Nonnull E event) {
+        getEventRouter().publishEvent(event);
     }
 }

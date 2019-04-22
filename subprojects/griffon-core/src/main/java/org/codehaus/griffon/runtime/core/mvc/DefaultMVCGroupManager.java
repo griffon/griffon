@@ -22,7 +22,6 @@ import griffon.annotations.core.Nullable;
 import griffon.annotations.inject.Contextual;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.ApplicationClassLoader;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonArtifact;
@@ -30,6 +29,10 @@ import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
+import griffon.core.events.CreateMVCGroupEvent;
+import griffon.core.events.DestroyInstanceEvent;
+import griffon.core.events.DestroyMVCGroupEvent;
+import griffon.core.events.InitializeMVCGroupEvent;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.FieldException;
@@ -72,8 +75,6 @@ import static griffon.util.GriffonClassUtils.setPropertiesOrFieldsNoException;
 import static griffon.util.GriffonClassUtils.setPropertyOrFieldValueNoException;
 import static griffon.util.GriffonNameUtils.capitalize;
 import static griffon.util.GriffonNameUtils.isBlank;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -158,14 +159,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);
         if (fireEvents) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));
+            getApplication().getEventRouter().publishEvent(InitializeMVCGroupEvent.of(configuration, group));
         }
 
         // special case -- controllers are added as application listeners
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
             GriffonController controller = group.getController();
             if (controller != null) {
-                getApplication().getEventRouter().addEventListener(controller);
+                getApplication().getEventRouter().subscribe(controller);
             }
         }
 
@@ -180,7 +181,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
 
         if (fireEvents) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.CREATE_MVC_GROUP.getName(), singletonList(group));
+            getApplication().getEventRouter().publishEvent(CreateMVCGroupEvent.of(group));
         }
 
         return group;
@@ -616,7 +617,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
             GriffonController controller = group.getController();
             if (controller != null) {
-                getApplication().getEventRouter().removeEventListener(controller);
+                getApplication().getEventRouter().unsubscribe(controller);
             }
         }
 
@@ -628,7 +629,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         group.destroy();
 
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LIFECYCLE)) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_MVC_GROUP.getName(), singletonList(group));
+            getApplication().getEventRouter().publishEvent(DestroyMVCGroupEvent.of(group));
         }
     }
 
@@ -656,7 +657,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (member instanceof GriffonMvcArtifact) {
             final GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
             if (fireDestructionEvents) {
-                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(artifact.getTypeClass(), artifact));
+                getApplication().getEventRouter().publishEvent(DestroyInstanceEvent.of((Class<GriffonMvcArtifact>) artifact.getTypeClass(), artifact));
             }
 
             if (artifact instanceof GriffonView) {

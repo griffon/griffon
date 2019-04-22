@@ -18,10 +18,8 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
@@ -30,10 +28,13 @@ import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionHandler;
 import griffon.core.env.Lifecycle;
+import griffon.core.event.Event;
 import griffon.core.event.EventHandler;
+import griffon.core.events.BootstrapEndEvent;
+import griffon.core.events.BootstrapStartEvent;
+import griffon.core.events.NewInstanceEvent;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.core.resources.ResourceInjector;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,6 @@ import java.util.Map;
 
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.AnnotationUtils.sortByDependencies;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -108,9 +108,8 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     protected void doInitialize() {
         initializeEventHandler();
 
-        event(ApplicationEvent.BOOTSTRAP_START, singletonList(application));
+        event(BootstrapStartEvent.of(application));
 
-        initializeResourcesInjector();
         initializeConfigurationManager();
         runLifecycleHandler(Lifecycle.INITIALIZE);
         applyPlatformTweaks();
@@ -119,24 +118,29 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         initializeActionManager();
         initializeArtifactManager();
 
-        event(ApplicationEvent.BOOTSTRAP_END, singletonList(application));
+        event(BootstrapEndEvent.of(application));
     }
 
     protected void initializeEventHandler() {
         Collection<EventHandler> handlerInstances = application.getInjector().getInstances(EventHandler.class);
         Map<String, EventHandler> sortedHandlers = sortByDependencies(handlerInstances, "EventHandler", "handler");
         for (EventHandler handler : sortedHandlers.values()) {
-            application.getEventRouter().addEventListener(handler);
+            application.getEventRouter().subscribe(handler);
         }
+        application.getEventRouter().subscribe(this);
     }
 
-    protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
-        application.getEventRouter().publishEvent(event.getName(), args);
+    protected <E extends Event> void event(@Nonnull E event) {
+        application.getEventRouter().publishEvent(event);
     }
 
-    protected void initializeResourcesInjector() {
-        final ResourceInjector injector = application.getResourceInjector();
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> injector.injectResources(args[1]));
+    @javax.application.event.EventHandler
+    public void handleNewInstanceEvent(NewInstanceEvent event) {
+        application.getResourceInjector().injectResources(event.getInstance());
+
+        if (GriffonController.class.isAssignableFrom(event.getType())) {
+            application.getActionManager().createActions((GriffonController) event.getInstance());
+        }
     }
 
     protected void initializeArtifactManager() {
@@ -191,13 +195,6 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         if (application.getActionManager() instanceof NoopActionManager) {
             return;
         }
-
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
-            Class<?> klass = (Class) args[0];
-            if (GriffonController.class.isAssignableFrom(klass)) {
-                application.getActionManager().createActions((GriffonController) args[1]);
-            }
-        });
 
         Injector<?> injector = application.getInjector();
         Collection<ActionHandler> handlerInstances = injector.getInstances(ActionHandler.class);

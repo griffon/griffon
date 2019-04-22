@@ -20,6 +20,7 @@ package griffon.util
 import griffon.core.addon.GriffonAddon
 import griffon.core.artifact.GriffonArtifact
 import griffon.core.artifact.GriffonMvcArtifact
+import griffon.core.event.Event
 import griffon.core.event.EventPublisher
 import griffon.core.i18n.MessageSource
 import griffon.core.mvc.MVCHandler
@@ -32,6 +33,7 @@ import spock.lang.Unroll
 
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
+import javax.application.event.EventHandler
 import java.lang.reflect.Method
 
 @Unroll
@@ -42,14 +44,6 @@ class GriffonClassUtilsSpec extends Specification {
 
         where:
         [result, method] << [[true, 'withSomething'], [false, 'something']]
-    }
-
-    void "isEventHandler() returns #result for '#method' (name)"() {
-        expect:
-        assert result == GriffonClassUtils.isEventHandler(method)
-
-        where:
-        [result, method] << [[true, 'onSomething'], [false, 'something'], [false, 'onShutdown']]
     }
 
     void "isSetterMethod() returns #result for '#method' (java.lang.reflect.Method)"() {
@@ -537,7 +531,8 @@ class GriffonClassUtilsSpec extends Specification {
     }
 
     static interface MyEventHandler {
-        void onMyEvent()
+        @EventHandler
+        void handleMyEvent(MyEvent event)
     }
 
     static interface MyContributor {
@@ -555,6 +550,10 @@ class GriffonClassUtilsSpec extends Specification {
     static interface MySetter {
         void setSomething(String s)
     }
+}
+
+class MyEvent extends Event {
+
 }
 
 class ValidBean {

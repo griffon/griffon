@@ -20,9 +20,10 @@ package org.codehaus.griffon.runtime.lanterna;
 import com.googlecode.lanterna.gui.Window;
 import com.googlecode.lanterna.gui.listener.WindowAdapter;
 import griffon.annotations.core.Nonnull;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.events.WindowHiddenEvent;
+import griffon.core.events.WindowShownEvent;
 import griffon.lanterna.LanternaWindowDisplayHandler;
 import griffon.lanterna.LanternaWindowManager;
 import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
@@ -30,7 +31,6 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -84,14 +84,14 @@ public class DefaultLanternaWindowManager extends AbstractWindowManager<Window> 
         @Override
         public void onWindowClosed(@Nonnull Window window) {
             super.onWindowClosed(window);
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
+            event(WindowHiddenEvent.of(findWindowName(window), window));
             handleClose(window);
         }
 
         @Override
         public void onWindowShown(Window window) {
             super.onWindowShown(window);
-            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
+            event(WindowShownEvent.of(findWindowName(window), window));
         }
     }
 }

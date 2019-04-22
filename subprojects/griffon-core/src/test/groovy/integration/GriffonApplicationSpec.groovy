@@ -20,7 +20,6 @@ package integration
 import griffon.annotations.core.Nonnull
 import griffon.annotations.core.Nullable
 import griffon.core.ApplicationBootstrapper
-import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.LifecycleHandler
 import griffon.core.ShutdownHandler
@@ -37,6 +36,7 @@ import griffon.core.controller.ActionHandler
 import griffon.core.controller.ActionManager
 import griffon.core.env.ApplicationPhase
 import griffon.core.env.Lifecycle
+import griffon.core.events.NewInstanceEvent
 import griffon.core.mvc.MVCConsumer
 import griffon.core.mvc.MVCGroup
 import griffon.exceptions.InstanceNotFoundException
@@ -142,11 +142,11 @@ class GriffonApplicationSpec extends Specification {
         viewClass.resetCaches()
 
         expect:
-        viewClass.eventNames == ['RandomEvent']
+        viewClass.eventNames == ['griffon.core.events.RandomEvent']
     }
 
     def "Check groups"() {
-        // given:
+        given:
         InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
         assert handler.configure
         assert ['foo', 'bar'] == application.startupArgs
@@ -1009,7 +1009,7 @@ class GriffonApplicationSpec extends Specification {
         ConfigurableBean bean = new ConfigurableBean()
 
         when:
-        application.eventRouter.publishEvent(ApplicationEvent.NEW_INSTANCE.name, [ConfigurableBean, bean])
+        application.eventRouter.publishEvent(NewInstanceEvent.of(ConfigurableBean, bean))
 
         then:
         bean.pstring == 'value1'

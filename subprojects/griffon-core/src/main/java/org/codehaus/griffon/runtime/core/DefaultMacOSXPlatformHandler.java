@@ -19,14 +19,15 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
+import griffon.core.events.OSXAboutEvent;
+import griffon.core.events.OSXPrefsEvent;
+import griffon.core.events.OSXQuitEvent;
 import griffon.util.GriffonApplicationUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import static java.util.Collections.singletonList;
 
 /**
  * Handles OSX integration.
@@ -103,14 +104,14 @@ public class DefaultMacOSXPlatformHandler extends DefaultPlatformHandler {
 
             if ("handleQuitRequestWith".equals(method.getName())) {
                 if (skipQuit) {
-                    application.getEventRouter().publishEvent("OSXQuit", singletonList(application));
+                    application.getEventRouter().publishEvent(OSXQuitEvent.of(application));
                 } else {
                     application.shutdown();
                 }
             } else if ("handleAbout".equals(method.getName())) {
-                application.getEventRouter().publishEvent("OSXAbout", singletonList(application));
+                application.getEventRouter().publishEvent(OSXAboutEvent.of(application));
             } else if ("handlePreferences".equals(method.getName())) {
-                application.getEventRouter().publishEvent("OSXPrefs", singletonList(application));
+                application.getEventRouter().publishEvent(OSXPrefsEvent.of(application));
             }
             return null;
         }

@@ -19,10 +19,11 @@ package org.codehaus.griffon.runtime.core.view;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
-import griffon.core.event.EventRouter;
+import griffon.core.event.Event;
+import griffon.core.events.WindowAttachedEvent;
+import griffon.core.events.WindowDetachedEvent;
 import griffon.core.view.WindowDisplayHandler;
 import griffon.core.view.WindowManager;
 import griffon.exceptions.InstanceNotFoundException;
@@ -33,12 +34,10 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
@@ -187,7 +186,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
         LOG.debug("Attaching window with name: '{}' at index {} {}", name, windows.size(), window);
         windows.put(name, window);
-        event(ApplicationEvent.WINDOW_ATTACHED, asList(name, window));
+        event(WindowAttachedEvent.of(name, window));
     }
 
     protected abstract void doAttach(@Nonnull W window);
@@ -202,7 +201,7 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
 
             LOG.debug("Detaching window with name: '{}' {}", name, window);
             windows.remove(name);
-            event(ApplicationEvent.WINDOW_DETACHED, asList(name, window));
+            event(WindowDetachedEvent.of(name, window));
         }
     }
 
@@ -323,14 +322,9 @@ public abstract class AbstractWindowManager<W> implements WindowManager<W> {
         return application.getConfiguration().getAsBoolean("application.autoShutdown", true);
     }
 
-    protected void event(@Nonnull ApplicationEvent evt, @Nonnull List<?> args) {
-        event(evt.getName(), args);
-    }
-
-    protected void event(@Nonnull String evt, @Nonnull List<?> args) {
+    protected <E extends Event> void event(@Nonnull E event) {
         try {
-            EventRouter eventRouter = getApplication().getEventRouter();
-            eventRouter.publishEvent(evt, args);
+            getApplication().getEventRouter().publishEvent(event);
         } catch (InstanceNotFoundException infe) {
             if (getApplication().getPhase() != ApplicationPhase.SHUTDOWN) {
                 throw infe;

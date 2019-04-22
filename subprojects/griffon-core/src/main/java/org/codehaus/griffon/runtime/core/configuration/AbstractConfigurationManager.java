@@ -19,10 +19,10 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.ApplicationEvent;
 import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
 import griffon.core.configuration.ConfigurationManager;
+import griffon.core.events.NewInstanceEvent;
 import griffon.exceptions.GriffonException;
 import griffon.util.GriffonClassUtils;
 import org.kordamp.jsr377.converter.FormattingConverter;
@@ -34,6 +34,7 @@ import javax.application.configuration.Configured;
 import javax.application.converter.Converter;
 import javax.application.converter.ConverterRegistry;
 import javax.application.converter.NoopConverter;
+import javax.application.event.EventHandler;
 import javax.inject.Inject;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
@@ -65,11 +66,12 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     @PostConstruct
     private void initialize() {
         requireNonNull(application, "Argument 'application' cannot ne null");
+        application.getEventRouter().subscribe(this);
+    }
 
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
-            Object instance = args[1];
-            injectConfiguration(instance);
-        });
+    @EventHandler
+    public void handleNewInstanceEvent(NewInstanceEvent event) {
+        injectConfiguration(event.getInstance());
     }
 
     @Override

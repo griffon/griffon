@@ -19,7 +19,10 @@ package griffon.pivot;
 
 import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
+import griffon.core.event.Event;
 import griffon.exceptions.InstanceNotFoundException;
+import griffon.pivot.events.AppResumeEvent;
+import griffon.pivot.events.AppSuspendEvent;
 import org.apache.pivot.wtk.Application;
 import org.apache.pivot.wtk.ApplicationContext;
 import org.apache.pivot.wtk.Display;
@@ -27,11 +30,9 @@ import org.apache.pivot.wtk.Window;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 import org.codehaus.griffon.runtime.pivot.PivotApplicationBootstrapper;
 
-import java.util.List;
 import java.util.Map;
 
 import static griffon.util.GriffonClassUtils.setPropertiesNoException;
-import static java.util.Collections.singletonList;
 import static org.apache.pivot.wtk.ApplicationContext.queueCallback;
 import static org.apache.pivot.wtk.ApplicationContext.scheduleCallback;
 import static org.apache.pivot.wtk.ApplicationContext.scheduleRecurringCallback;
@@ -94,11 +95,11 @@ public abstract class AbstractPivotGriffonApplication extends AbstractGriffonApp
     }
 
     public void suspend() {
-        event("AppSuspend", singletonList(this));
+        event(AppSuspendEvent.of(this));
     }
 
     public void resume() {
-        event("AppResume", singletonList(this));
+        event(AppResumeEvent.of(this));
     }
 
     public void schedule(long delay, Runnable callback) {
@@ -125,9 +126,9 @@ public abstract class AbstractPivotGriffonApplication extends AbstractGriffonApp
         return ApplicationContext.getResourceCache();
     }
 
-    private void event(@Nonnull String eventName, @Nonnull List<?> args) {
+    protected <E extends Event> void event(@Nonnull E event) {
         try {
-            getEventRouter().publishEvent(eventName, args);
+            getEventRouter().publishEvent(event);
         } catch (InstanceNotFoundException infe) {
             // ignore
         }

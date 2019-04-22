@@ -19,9 +19,8 @@ package griffon.test.javafx;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.ApplicationEvent;
-import griffon.core.RunnableWithArgs;
 import griffon.core.env.Environment;
+import griffon.core.events.WindowShownEvent;
 import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
 import javafx.stage.Window;
@@ -33,6 +32,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.testfx.api.FxToolkit;
 
+import javax.application.event.EventHandler;
 import java.util.concurrent.TimeoutException;
 
 import static griffon.test.javafx.TestContext.getTestContext;
@@ -97,7 +97,7 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
 
             application = (JavaFXGriffonApplication) FxToolkit.setupApplication(applicationClass);
             WindowShownHandler startingWindow = new WindowShownHandler(windowName);
-            application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
+            application.getEventRouter().subscribe(startingWindow);
 
             await().timeout(timeout).until(startingWindow::isShowing);
         } catch (TimeoutException e) {
@@ -155,7 +155,7 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
         getTestContext().setWindowName(windowName);
     }
 
-    private static class WindowShownHandler implements RunnableWithArgs {
+    private static class WindowShownHandler {
         private final String windowName;
         private boolean showing;
 
@@ -167,11 +167,9 @@ public class GriffonTestFXClassRule extends TestFX implements TestRule {
             return showing;
         }
 
-        @Override
-        public void run(Object... args) {
-            if (args != null && args.length > 0 && args[0] instanceof CharSequence) {
-                showing = windowName.equals(String.valueOf(args[0]));
-            }
+        @EventHandler
+        public void handleWindowShownEvent(@Nonnull WindowShownEvent event) {
+            showing = windowName.equals(String.valueOf(event.getName()));
         }
     }
 }

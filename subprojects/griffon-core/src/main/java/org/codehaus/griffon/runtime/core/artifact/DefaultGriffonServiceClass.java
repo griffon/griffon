@@ -50,7 +50,7 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
                 String methodName = method.getName();
                 if (!serviceCache.contains(methodName) &&
                     GriffonClassUtils.isPlainMethod(method) &&
-                    !GriffonClassUtils.isEventHandler(methodName)) {
+                    !GriffonClassUtils.isEventHandler(method)) {
                     serviceCache.add(methodName);
                 }
             }

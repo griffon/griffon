@@ -29,7 +29,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static griffon.util.GriffonClassUtils.isEventHandler;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
@@ -60,7 +59,6 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
         if (propertiesCache.isEmpty()) {
             for (String propertyName : getPropertiesWithFields()) {
                 if (!propertiesCache.contains(propertyName) &&
-                    !isEventHandler(propertyName) &&
                     !STANDARD_PROPERTIES.contains(propertyName) &&
                     !BINDABLE_PROPERTIES.contains(propertyName)) {
                     propertiesCache.add(propertyName);

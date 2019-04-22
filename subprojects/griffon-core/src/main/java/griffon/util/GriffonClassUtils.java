@@ -33,6 +33,7 @@ import griffon.exceptions.InstanceMethodInvocationException;
 import griffon.exceptions.PropertyException;
 import griffon.exceptions.StaticMethodInvocationException;
 
+import javax.application.event.EventHandler;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -58,6 +59,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static griffon.util.MethodUtils.invokeExactMethod;
 import static griffon.util.MethodUtils.invokeMethod;
@@ -666,28 +668,6 @@ public class GriffonClassUtils {
     }
 
     /**
-     * Finds out if the given string represents the name of an
-     * event handler by matching against the following pattern:
-     * "^on[A-Z][\\w]*$"<p>
-     * <p>
-     * <pre>
-     * isEventHandler("onBootstrapEnd") = true
-     * isEventHandler("mvcGroupInit")   = false
-     * isEventHandler("online")         = false
-     * </pre>
-     *
-     * @param name the name of a possible event handler
-     *
-     * @return true if the name matches the given event handler
-     * pattern, false otherwise.
-     */
-    public static boolean isEventHandler(@Nonnull String name) {
-        requireNonBlank(name, ERROR_NAME_BLANK);
-        return EVENT_HANDLER_PATTERN.matcher(name).matches() &&
-            !ON_SHUTDOWN_METHOD_NAME.equals(name);
-    }
-
-    /**
      * Finds out if the given Method represents an event handler
      * by matching its name against the following pattern:
      * "^on[A-Z][\\w]*$"<p>
@@ -747,7 +727,8 @@ public class GriffonClassUtils {
     public static boolean isEventHandler(@Nonnull MethodDescriptor method) {
         requireNonNull(method, ERROR_METHOD_NULL);
         return isInstanceMethod(method) &&
-            isEventHandler(method.getName());
+            findAnnotation(method.getAnnotations(), EventHandler.class) != null &&
+            method.getParameterTypes().length == 1;
     }
 
     /**

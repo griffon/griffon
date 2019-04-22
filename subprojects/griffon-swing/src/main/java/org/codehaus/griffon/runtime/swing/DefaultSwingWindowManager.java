@@ -19,9 +19,12 @@ package org.codehaus.griffon.runtime.swing;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.events.WindowAttachedEvent;
+import griffon.core.events.WindowDetachedEvent;
+import griffon.core.events.WindowHiddenEvent;
+import griffon.core.events.WindowShownEvent;
 import griffon.swing.SwingWindowDisplayHandler;
 import griffon.swing.SwingWindowManager;
 import griffon.util.GriffonNameUtils;
@@ -47,7 +50,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
@@ -157,7 +159,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
 
         LOG.debug("Attaching internal frame with name: '{}' at index {} {}", name, internalFrames.size(), internalFrame);
         internalFrames.put(name, internalFrame);
-        event(ApplicationEvent.WINDOW_ATTACHED, asList(name, internalFrame));
+        event(WindowAttachedEvent.of(name, internalFrame));
     }
 
     protected void doAttach(@Nonnull JInternalFrame internalFrame) {
@@ -183,7 +185,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
 
             LOG.debug("Detaching internalFrame with name: '{}' {}", name, window);
             internalFrames.remove(name);
-            event(ApplicationEvent.WINDOW_DETACHED, asList(name, window));
+            event(WindowDetachedEvent.of(name, window));
         }
     }
 
@@ -346,7 +348,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         @Override
         public void componentShown(ComponentEvent event) {
             Window window = (Window) event.getSource();
-            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
+            event(WindowShownEvent.of(findWindowName(window), window));
         }
 
         /**
@@ -355,7 +357,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         @Override
         public void componentHidden(ComponentEvent event) {
             Window window = (Window) event.getSource();
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
+            event(WindowHiddenEvent.of(findWindowName(window), window));
         }
     }
 
@@ -377,7 +379,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         @Override
         public void internalFrameOpened(InternalFrameEvent event) {
             JInternalFrame window = (JInternalFrame) event.getSource();
-            event(ApplicationEvent.WINDOW_SHOWN, asList(findInternalWindowName(window), window));
+            event(WindowShownEvent.of(findInternalWindowName(window), window));
 
         }
 
@@ -387,7 +389,7 @@ public class DefaultSwingWindowManager extends AbstractWindowManager<Window> imp
         @Override
         public void internalFrameClosed(InternalFrameEvent event) {
             JInternalFrame window = (JInternalFrame) event.getSource();
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(findInternalWindowName(window), window));
+            event(WindowHiddenEvent.of(findInternalWindowName(window), window));
         }
     }
 }

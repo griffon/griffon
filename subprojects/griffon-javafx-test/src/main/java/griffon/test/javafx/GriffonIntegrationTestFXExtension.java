@@ -19,9 +19,8 @@ package griffon.test.javafx;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.ApplicationEvent;
-import griffon.core.RunnableWithArgs;
 import griffon.core.env.Environment;
+import griffon.core.events.WindowShownEvent;
 import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
 import javafx.stage.Window;
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.testfx.api.FxToolkit;
 
+import javax.application.event.EventHandler;
 import java.util.concurrent.TimeoutException;
 
 import static griffon.util.GriffonNameUtils.isBlank;
@@ -136,7 +136,7 @@ public class GriffonIntegrationTestFXExtension extends TestFX
             injectMembers(target);
 
             WindowShownHandler startingWindow = new WindowShownHandler(windowName);
-            application.getEventRouter().addEventListener(ApplicationEvent.WINDOW_SHOWN.getName(), startingWindow);
+            application.getEventRouter().subscribe(startingWindow);
 
             await().timeout(timeout).until(startingWindow::isShowing);
         } catch (TimeoutException e) {
@@ -168,7 +168,7 @@ public class GriffonIntegrationTestFXExtension extends TestFX
         return (W) application.getWindowManager().findWindow(name);
     }
 
-    private static class WindowShownHandler implements RunnableWithArgs {
+    private static class WindowShownHandler {
         private final String windowName;
         private boolean showing;
 
@@ -180,11 +180,9 @@ public class GriffonIntegrationTestFXExtension extends TestFX
             return showing;
         }
 
-        @Override
-        public void run(Object... args) {
-            if (args != null && args.length > 0 && args[0] instanceof CharSequence) {
-                showing = windowName.equals(String.valueOf(args[0]));
-            }
+        @EventHandler
+        public void handleWindowShownEvent(@Nonnull WindowShownEvent event) {
+            showing = windowName.equals(String.valueOf(event.getName()));
         }
     }
 }

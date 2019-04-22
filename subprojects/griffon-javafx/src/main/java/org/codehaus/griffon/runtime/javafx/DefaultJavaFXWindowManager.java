@@ -18,9 +18,10 @@
 package org.codehaus.griffon.runtime.javafx;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.events.WindowHiddenEvent;
+import griffon.core.events.WindowShownEvent;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import griffon.javafx.JavaFXWindowManager;
 import javafx.event.EventHandler;
@@ -33,7 +34,6 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -131,7 +131,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          */
         public void handle(WindowEvent windowEvent) {
             Window window = (Window) windowEvent.getSource();
-            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
+            event(WindowShownEvent.of(findWindowName(window), window));
         }
     }
 
@@ -146,7 +146,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
          */
         public void handle(WindowEvent windowEvent) {
             Window window = (Window) windowEvent.getSource();
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
+            event(WindowHiddenEvent.of(findWindowName(window), window));
         }
     }
 }

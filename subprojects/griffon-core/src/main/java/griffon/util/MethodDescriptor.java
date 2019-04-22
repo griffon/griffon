@@ -20,9 +20,11 @@ package griffon.util;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Comparator;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -35,6 +37,7 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
     private final String[] paramTypes;
     private final int hashCode;
     private final int modifiers;
+    private final Annotation[] annotations;
 
     private static final String[] EMPTY_CLASS_PARAMETERS = new String[0];
 
@@ -50,7 +53,7 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
         if (removeAbstractModifier) {
             modifiers -= Modifier.ABSTRACT;
         }
-        return new MethodDescriptor(method.getName(), method.getParameterTypes(), modifiers);
+        return new MethodDescriptor(method.getName(), method.getParameterTypes(), modifiers, method.getDeclaredAnnotations());
     }
 
     private static boolean areParametersCompatible(String[] params1, String[] params2) {
@@ -74,20 +77,25 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
     }
 
     public MethodDescriptor(@Nonnull String methodName, int modifiers) {
-        this(methodName, EMPTY_CLASS_PARAMETERS, modifiers);
+        this(methodName, EMPTY_CLASS_PARAMETERS, modifiers, new Annotation[0]);
     }
 
     public MethodDescriptor(@Nonnull String methodName, @Nonnull Class<?>[] paramTypes) {
-        this(methodName, paramTypes, Modifier.PUBLIC);
+        this(methodName, paramTypes, Modifier.PUBLIC, new Annotation[0]);
     }
 
     public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes) {
-        this(methodName, paramTypes, Modifier.PUBLIC);
+        this(methodName, paramTypes, Modifier.PUBLIC, new Annotation[0]);
     }
 
     public MethodDescriptor(@Nonnull String methodName, @Nonnull Class<?>[] paramTypes, int modifiers) {
+        this(methodName, paramTypes, Modifier.PUBLIC, new Annotation[0]);
+    }
+
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull Class<?>[] paramTypes, int modifiers, @Nonnull Annotation[] annotations) {
         this.methodName = requireNonBlank(methodName, "Argment 'methodName' must not be blank");
         requireNonNull(paramTypes, "Argument 'paramTypes' must not be null");
+        requireNonNull(annotations, "Argument 'annotations' must not be null");
 
         this.paramTypes = new String[paramTypes.length];
         for (int i = 0; i < paramTypes.length; i++) {
@@ -95,16 +103,27 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
         }
 
         this.modifiers = modifiers;
+        this.annotations = Arrays.copyOf(annotations, annotations.length);
+        Arrays.sort(this.annotations, Comparator.comparing(o -> o.getClass().getName()));
+
         this.hashCode = 31 * methodName.hashCode() + modifiers;
     }
 
     public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes, int modifiers) {
+        this(methodName, paramTypes, modifiers, new Annotation[0]);
+    }
+
+    public MethodDescriptor(@Nonnull String methodName, @Nonnull String[] paramTypes, int modifiers, @Nonnull Annotation[] annotations) {
         this.methodName = requireNonBlank(methodName, "Argment 'methodName' must not be blank");
         requireNonNull(paramTypes, "Argument 'paramTypes' must not be null");
+        requireNonNull(annotations, "Argument 'annotations' must not be null");
 
         this.paramTypes = Arrays.copyOf(paramTypes, paramTypes.length);
 
         this.modifiers = modifiers;
+        this.annotations = Arrays.copyOf(annotations, annotations.length);
+        Arrays.sort(this.annotations, Comparator.comparing(o -> o.getClass().getName()));
+
         this.hashCode = 31 * methodName.hashCode() + modifiers;
     }
 
@@ -116,6 +135,11 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
     @Nonnull
     public String[] getParameterTypes() {
         return paramTypes;
+    }
+
+    @Nonnull
+    public Annotation[] getAnnotations() {
+        return annotations;
     }
 
     public int getModifiers() {
@@ -130,7 +154,8 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
 
         return methodName.equals(md.methodName) &&
             modifiers == md.modifiers &&
-            areParametersCompatible(paramTypes, md.paramTypes);
+            areParametersCompatible(paramTypes, md.paramTypes) &&
+            Arrays.equals(annotations, md.annotations);
     }
 
     public int hashCode() {
@@ -138,11 +163,12 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
     }
 
     public String toString() {
-        StringBuilder b = new StringBuilder();
+        String a = Arrays.toString(annotations);
+        StringBuilder b = new StringBuilder(a.substring(1, a.length() - 1));
         b.append(Modifier.toString(modifiers)).append(" ");
         b.append(methodName).append("(");
         for (int i = 0; i < paramTypes.length; i++) {
-            if (i != 0) b.append(", ");
+            if (i != 0) { b.append(", "); }
             b.append(paramTypes[i]);
         }
         b.append(")");
@@ -151,14 +177,14 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
 
     public int compareTo(MethodDescriptor md) {
         int c = methodName.compareTo(md.methodName);
-        if (c != 0) return c;
+        if (c != 0) { return c; }
         c = modifiers - md.modifiers;
-        if (c != 0) return c;
+        if (c != 0) { return c; }
         c = paramTypes.length - md.paramTypes.length;
-        if (c != 0) return c;
+        if (c != 0) { return c; }
         for (int i = 0; i < paramTypes.length; i++) {
             c = paramTypes[i].compareTo(md.paramTypes[i]);
-            if (c != 0) return c;
+            if (c != 0) { return c; }
         }
 
         return 0;
@@ -168,13 +194,28 @@ public class MethodDescriptor implements Comparable<MethodDescriptor> {
         requireNonNull(md, "Argument 'methodDescriptor' must not be null");
         if (!methodName.equals(md.methodName) ||
             modifiers != md.modifiers ||
-            paramTypes.length != md.paramTypes.length) {
+            paramTypes.length != md.paramTypes.length ||
+            annotations.length != md.annotations.length) {
             return false;
         }
 
         for (int i = 0; i < paramTypes.length; i++) {
             Class<?> param1 = loadClass(paramTypes[i]);
             Class<?> param2 = loadClass(md.paramTypes[i]);
+            if (param1 != null && param2 != null && !GriffonClassUtils.isAssignableOrConvertibleFrom(param1, param2)) {
+                return false;
+            }
+        }
+
+        return Arrays.equals(annotations, md.annotations);
+    }
+
+    public boolean matches(@Nonnull Class[] otherParamTypes) {
+        requireNonNull(otherParamTypes, "Argument 'otherParamTypes' must not be null");
+
+        for (int i = 0; i < paramTypes.length; i++) {
+            Class<?> param1 = loadClass(paramTypes[i]);
+            Class<?> param2 = otherParamTypes[i];
             if (param1 != null && param2 != null && !GriffonClassUtils.isAssignableOrConvertibleFrom(param1, param2)) {
                 return false;
             }

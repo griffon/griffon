@@ -31,7 +31,6 @@ import spock.lang.Unroll
 
 import javax.application.converter.ConverterRegistry
 import javax.inject.Inject
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 import static com.google.inject.util.Providers.guicify

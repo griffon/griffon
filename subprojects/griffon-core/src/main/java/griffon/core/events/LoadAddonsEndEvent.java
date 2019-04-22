@@ -15,10 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Event publishing implementation <strong>[INTERNAL USE]</strong>.
- *
- * @since 2.5.0
- */
+package griffon.core.events;
 
-package org.codehaus.griffon.runtime.groovy.event;
+import griffon.annotations.core.Nonnull;
+import griffon.core.event.Event;
+
+/**
+ * @author Andres Almiray
+ * @since 3.0.0
+ */
+public class LoadAddonsEndEvent extends Event {
+    @Nonnull
+    public static LoadAddonsEndEvent of() {
+        return new LoadAddonsEndEvent();
+    }
+}

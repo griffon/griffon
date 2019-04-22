@@ -18,9 +18,12 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
-import griffon.core.RunnableWithArgs;
+import griffon.core.events.UncaughtExceptionThrownEvent;
+import griffon.exceptions.MVCGroupConfigurationException;
+import griffon.exceptions.MVCGroupInstantiationException;
+
+import javax.application.event.EventHandler;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,9 +31,7 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 2.0.0
  */
-public final class MVCGroupExceptionHandler implements RunnableWithArgs {
-    private static final String UNCAUGHT_MVC_GROUP_CONFIGURATION_EXCEPTION = "UncaughtMVCGroupConfigurationException";
-    private static final String UNCAUGHT_MVC_GROUP_INSTANTIATION_EXCEPTION = "UncaughtMVCGroupInstantiationException";
+public final class MVCGroupExceptionHandler {
     private static MVCGroupExceptionHandler instance;
 
     private final GriffonApplication application;
@@ -38,14 +39,12 @@ public final class MVCGroupExceptionHandler implements RunnableWithArgs {
     private MVCGroupExceptionHandler(@Nonnull GriffonApplication application) {
         this.application = requireNonNull(application, "Argument 'application' must not be null");
 
-        application.getEventRouter().addEventListener(UNCAUGHT_MVC_GROUP_CONFIGURATION_EXCEPTION, this);
-        application.getEventRouter().addEventListener(UNCAUGHT_MVC_GROUP_INSTANTIATION_EXCEPTION, this);
+        application.getEventRouter().subscribe(this);
     }
 
     private void unregister(@Nonnull GriffonApplication application) {
         if (this.application == application) {
-            application.getEventRouter().removeEventListener(UNCAUGHT_MVC_GROUP_CONFIGURATION_EXCEPTION, this);
-            application.getEventRouter().removeEventListener(UNCAUGHT_MVC_GROUP_INSTANTIATION_EXCEPTION, this);
+            application.getEventRouter().unsubscribe(this);
         }
     }
 
@@ -62,10 +61,12 @@ public final class MVCGroupExceptionHandler implements RunnableWithArgs {
         }
     }
 
-    public void run(@Nullable Object... args) {
-        if (args != null && args.length > 0) {
-            Exception exception = (Exception) args[0];
-            application.getLog().error("Unrecoverable error", exception);
+    @EventHandler
+    public void handleUncaughtExceptionThrownEvent(@Nonnull UncaughtExceptionThrownEvent event) {
+        if (event.getThrowable() instanceof MVCGroupInstantiationException ||
+            event.getThrowable() instanceof MVCGroupConfigurationException) {
+            Throwable throwable = event.getThrowable();
+            application.getLog().error("Unrecoverable error", throwable);
             // exception.printStackTrace();
             System.exit(1);
         }

@@ -20,8 +20,11 @@ package integration;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
+import griffon.core.events.RandomEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 import org.kordamp.jipsy.ServiceProviderFor;
+
+import javax.application.event.EventHandler;
 
 @ServiceProviderFor(GriffonView.class)
 public class IntegrationView extends AbstractGriffonView implements Invokable {
@@ -48,7 +51,8 @@ public class IntegrationView extends AbstractGriffonView implements Invokable {
         return invoked;
     }
 
-    public void onRandomEvent() {
+    @EventHandler
+    public void handleRandomEvent(RandomEvent event) {
 
     }
 }

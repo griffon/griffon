@@ -21,6 +21,7 @@ import griffon.annotations.core.Nonnull
 import griffon.core.Configuration
 import griffon.core.GriffonApplication
 import griffon.core.event.EventRouter
+import griffon.core.events.RandomEvent
 import griffon.core.storage.ObjectFactory
 import griffon.util.AbstractMapResourceBundle
 import griffon.util.ExpandableResourceBundle
@@ -43,7 +44,7 @@ class DefaultObjectFactorySpec extends Specification {
         factory.singleKey = singleKey
         factory.pluralKey = pluralKey
         String actual = factory.create(key)
-        factory.event('RandomEvent', [])
+        factory.event(new RandomEvent())
 
         then:
         actual == expected

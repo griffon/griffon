@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static griffon.util.GriffonClassUtils.isEventHandler;
-import static griffon.util.GriffonClassUtils.isPlainMethod;
 import static griffon.util.GriffonNameUtils.getPropertyNameRepresentation;
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
@@ -173,10 +172,9 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     public boolean equals(@Nullable Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!obj.getClass().getName().equals(getClass().getName()))
-            return false;
+        if (this == obj) { return true; }
+        if (obj == null) { return false; }
+        if (!obj.getClass().getName().equals(getClass().getName())) { return false; }
 
         GriffonClass gc = (GriffonClass) obj;
         return clazz.getName().equals(gc.getClazz().getName());
@@ -196,9 +194,8 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             for (Method method : getClazz().getMethods()) {
                 String methodName = method.getName();
                 if (!eventsCache.contains(methodName) &&
-                    isPlainMethod(method) &&
-                    isEventHandler(methodName)) {
-                    eventsCache.add(methodName.substring(2));
+                    isEventHandler(method)) {
+                    eventsCache.add(method.getParameterTypes()[0].getName());
                 }
             }
         }

@@ -19,10 +19,14 @@ package org.codehaus.griffon.runtime.core.addon;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.addon.AddonManager;
 import griffon.core.addon.GriffonAddon;
+import griffon.core.event.Event;
+import griffon.core.events.LoadAddonEndEvent;
+import griffon.core.events.LoadAddonStartEvent;
+import griffon.core.events.LoadAddonsEndEvent;
+import griffon.core.events.LoadAddonsStartEvent;
 import griffon.core.mvc.MVCGroupConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +35,12 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import static griffon.util.AnnotationUtils.sortByDependencies;
 import static griffon.util.CollectionUtils.reverse;
 import static griffon.util.GriffonNameUtils.getPropertyName;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -96,20 +97,20 @@ public abstract class AbstractAddonManager implements AddonManager {
         LOG.debug("Loading addons [START]");
 
         Map<String, GriffonAddon> addons = preloadAddons();
-        event(ApplicationEvent.LOAD_ADDONS_START);
+        event(LoadAddonsStartEvent.of());
 
         for (Map.Entry<String, GriffonAddon> entry : addons.entrySet()) {
             String name = entry.getKey();
             GriffonAddon addon = entry.getValue();
             LOG.debug("Loading addon {} with class {}", name, addon.getClass().getName());
-            event(ApplicationEvent.LOAD_ADDON_START, asList(getApplication(), name, addon));
+            event(LoadAddonStartEvent.of(getApplication(), name, addon));
 
-            getApplication().getEventRouter().addEventListener(addon);
+            getApplication().getEventRouter().subscribe(addon);
             addMVCGroups(addon);
             addon.init(getApplication());
 
             this.addons.put(name, addon);
-            event(ApplicationEvent.LOAD_ADDON_END, asList(getApplication(), name, addon));
+            event(LoadAddonEndEvent.of(getApplication(), name, addon));
             LOG.debug("Loaded addon {}", name);
         }
 
@@ -118,7 +119,7 @@ public abstract class AbstractAddonManager implements AddonManager {
         }
 
         LOG.debug("Loading addons [END]");
-        event(ApplicationEvent.LOAD_ADDONS_END);
+        event(LoadAddonsEndEvent.of());
     }
 
     @Nonnull
@@ -153,11 +154,7 @@ public abstract class AbstractAddonManager implements AddonManager {
         return addons;
     }
 
-    protected void event(@Nonnull ApplicationEvent evt) {
-        event(evt, singletonList(getApplication()));
-    }
-
-    protected void event(@Nonnull ApplicationEvent evt, @Nonnull List<?> args) {
-        getApplication().getEventRouter().publishEvent(evt.getName(), args);
+    protected <E extends Event> void event(@Nonnull E event) {
+        getApplication().getEventRouter().publishEvent(event);
     }
 }

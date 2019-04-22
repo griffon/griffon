@@ -18,9 +18,10 @@
 package org.codehaus.griffon.runtime.pivot;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.events.WindowHiddenEvent;
+import griffon.core.events.WindowShownEvent;
 import griffon.pivot.PivotWindowDisplayHandler;
 import griffon.pivot.PivotWindowManager;
 import griffon.pivot.support.adapters.WindowStateAdapter;
@@ -32,7 +33,6 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -105,7 +105,7 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
          */
         @Override
         public void windowOpened(Window window) {
-            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
+            event(WindowShownEvent.of(findWindowName(window), window));
         }
 
         /**
@@ -113,7 +113,7 @@ public class DefaultPivotWindowManager extends AbstractWindowManager<Window> imp
          */
         @Override
         public void windowClosed(Window window, Display arg1, Window arg2) {
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
+            event(WindowHiddenEvent.of(findWindowName(window), window));
         }
     }
 }
