@@ -9,7 +9,6 @@ buildscript {
 
     dependencies {
         classpath "org.codehaus.griffon:gradle-griffon-plugin:$griffonVersion"
-        classpath "org.codehaus.griffon:gradle-griffon-build-plugin:$griffonVersion"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
@@ -26,7 +25,6 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'net.nemerosa.versioning'
 apply plugin: 'build-dashboard'
 apply from: 'gradle/idea.gradle'
-apply plugin: 'org.codehaus.griffon.griffon-build'
 apply from: 'gradle/bom.gradle'
 apply plugin: 'org.ajoberstar.github-pages'
 

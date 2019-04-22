@@ -125,43 +125,6 @@ Java projects that use {link_spock} for testing, as you need the `groovy` plugin
 order to compile Spock specifications but you wouldn't want Groovy dependencies to
 be pulled in for compilation.
 
-== The "griffon-build" Plugin
-
-The Griffon Build plugin enables useful tasks required for plugin authors, such as
-generation of a plugin BOM file and more.
-
-=== Usage
-
-To use the Griffon Build plugin, include the following in your build script:
-
-.build.gradle
-[source,groovy,linenums,options="nowrap"]
-[subs="attributes"]
-----
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-build-plugin:{gradle-griffon-version}'
-    }
-}
-
-apply plugin: 'org.codehaus.griffon.griffon-build'
-----
-
-=== Tasks
-
-The Griffon Build plugin adds a number of tasks to your project, as shown below.
-
-.Griffon Build plugin - tasks
-[cols="4*", options="header"]
-|===
-| Task name                | Depends on | Type                          | Description
-| GenerateBomTask          | -          | `GenerateBomTask`             | Generates a BOM file that includes all subprojects.
-|===
-
 == Dependencies
 
 Whether you're using the `griffon` plugin or not, it's very important that you take special
