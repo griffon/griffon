@@ -18,18 +18,23 @@
 package org.codehaus.griffon.runtime.core.event;
 
 import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
 import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
 import griffon.core.event.EventRouter;
+import griffon.util.Instantiator;
 import griffon.util.MethodDescriptor;
 import griffon.util.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.application.event.EventFilter;
+import javax.application.event.EventHandler;
+import javax.application.event.EventMetadata;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +44,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.GriffonClassUtils.isEventHandler;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -51,6 +57,8 @@ public abstract class AbstractEventRouter implements EventRouter {
     private static final String ERROR_MODE_BLANK = "Argument 'mode' must not be blank";
     private static final String ERROR_HANDLER_NULL = "Argument 'handler' must not be null";
     private static final String ERROR_EVENT_NULL = "Argument 'event' must not be null";
+    private static final String ERROR_EVENT_METADATA_NULL = "Argument 'metadata' must not be null";
+    private static final String ERROR_METHOD_NULL = "Argument 'method' must not be null";
     private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
     private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEventRouter.class);
@@ -65,7 +73,9 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected final int eventRouterId;
 
     @Inject
-    private ExceptionHandler exceptionHandler;
+    protected ExceptionHandler exceptionHandler;
+    @Inject
+    protected Instantiator instantiator;
 
     public AbstractEventRouter() {
         eventRouterId = EVENT_ROUTER_ID.getAndIncrement();
@@ -187,15 +197,40 @@ public abstract class AbstractEventRouter implements EventRouter {
 
     protected abstract void doPublishAsync(@Nonnull Runnable publisher);
 
-    protected <E> void fireEvent(@Nonnull Object instance, @Nonnull E event) {
+    protected <E> void fireEvent(@Nonnull E event, @Nonnull EventPair pair) {
+        requireNonNull(event, ERROR_EVENT_NULL);
+        requireNonNull(pair, "Argument 'pair' must not be null\"");
+
+        MethodUtils.invokeUnwrapping(pair.method, pair.instance, new Object[]{event});
+    }
+
+    @Nonnull
+    protected <E> Collection<Method> findEventHandlers(@Nonnull Object instance, @Nonnull E event) {
         requireNonNull(instance, ERROR_INSTANCE_NULL);
         requireNonNull(event, ERROR_EVENT_NULL);
 
-        Method method = methodCache.findMatchingMethodFor(instance.getClass(), event.getClass());
+        return methodCache.findMatchingMethodsFor(instance.getClass(), event.getClass());
+    }
 
-        if (method != null) {
-            MethodUtils.invokeUnwrapping(method, instance, new Object[]{event});
+    @Nonnull
+    protected <E> boolean applyFilters(@Nonnull Method method, @Nonnull EventMetadata<E> metadata) {
+        requireNonNull(metadata, ERROR_EVENT_METADATA_NULL);
+
+        EventHandler annotation = findAnnotation(method, EventHandler.class);
+        for (Class<? extends EventFilter> filterClass : annotation.filters()) {
+            EventFilter<E> filter = instantiator.instantiate(filterClass);
+            if (!filter.apply(metadata)) {
+                return false;
+            }
         }
+
+        return true;
+    }
+
+    @Nonnull
+    protected <E> EventMetadata<E> createEventMetadata(@Nonnull E event) {
+        requireNonNull(event, ERROR_EVENT_NULL);
+        return new DefaultEventMetadata<>(event);
     }
 
     protected <E> Runnable buildPublisher(@Nonnull final E event, @Nonnull final String mode) {
@@ -211,8 +246,14 @@ public abstract class AbstractEventRouter implements EventRouter {
                 listenersCopy.addAll(instances);
             }
 
-            for (Object listener : listenersCopy) {
-                fireEvent(listener, event);
+            EventMetadata<E> metadata = createEventMetadata(event);
+            Collection<EventPair> eventHandlers = new ArrayList<>();
+            for (Object instance : listenersCopy) {
+                findEventHandlers(instance, event).stream()
+                    .filter(m -> applyFilters(m, metadata))
+                    .map(m -> new EventPair(instance, m))
+                    .sorted(Comparator.comparingInt(pair -> findAnnotation(pair.method, EventHandler.class).priority()))
+                    .forEach(pair -> fireEvent(event, pair));
             }
         };
     }
@@ -233,20 +274,22 @@ public abstract class AbstractEventRouter implements EventRouter {
             return methodMetadata != null;
         }
 
-        @Nullable
-        public Method findMatchingMethodFor(@Nonnull Class<?> klass, @Nonnull Class<?> eventType) {
+        @Nonnull
+        public Collection<Method> findMatchingMethodsFor(@Nonnull Class<?> klass, @Nonnull Class<?> eventType) {
             Map<String, List<MethodInfo>> methodMetadata = methodMap.get(klass);
+
+            List<Method> matches = new ArrayList<>();
 
             Class[] otherParamTypes = {eventType};
             for (List<MethodInfo> descriptors : methodMetadata.values()) {
                 for (MethodInfo info : descriptors) {
                     if (info.descriptor.matches(otherParamTypes)) {
-                        return info.method;
+                        matches.add(info.method);
                     }
                 }
             }
 
-            return null;
+            return matches;
         }
 
         private Map<String, List<MethodInfo>> fetchMethodMetadata(Class<?> klass) {
@@ -300,6 +343,16 @@ public abstract class AbstractEventRouter implements EventRouter {
             if (t.isDaemon()) { t.setDaemon(false); }
             if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
             return t;
+        }
+    }
+
+    protected static class EventPair {
+        private final Object instance;
+        private final Method method;
+
+        private EventPair(Object instance, Method method) {
+            this.instance = instance;
+            this.method = method;
         }
     }
 }

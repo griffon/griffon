@@ -27,14 +27,17 @@ import griffon.core.event.EventPublisher
 import griffon.core.event.EventRouter
 import griffon.core.threading.UIThreadManager
 import griffon.util.AnnotationUtils
+import griffon.util.Instantiator
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
 import org.codehaus.griffon.runtime.core.ExceptionHandlerProvider
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
+import org.codehaus.griffon.runtime.util.SimpleInstantiator
 import org.junit.Rule
 import spock.lang.Specification
 
 import javax.inject.Inject
+import javax.inject.Singleton
 import java.util.concurrent.ExecutorService
 
 class DefaultEventPublisherSpec extends Specification {
@@ -177,6 +180,7 @@ class DefaultEventPublisherSpec extends Specification {
             bind(EventPublisher).to(DefaultEventPublisher)
             bind(ExceptionHandler).toProvider(ExceptionHandlerProvider)
             bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider)
+            bind(Instantiator).to(SimpleInstantiator).in(Singleton)
         }
     }
 

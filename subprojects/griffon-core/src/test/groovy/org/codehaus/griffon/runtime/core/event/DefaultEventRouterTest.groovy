@@ -24,12 +24,14 @@ import griffon.core.ExecutorServiceManager
 import griffon.core.event.EventRouter
 import griffon.core.threading.UIThreadManager
 import griffon.util.AnnotationUtils
+import griffon.util.Instantiator
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
 import name.falgout.jeffrey.testing.junit.guice.IncludeModule
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
 import org.codehaus.griffon.runtime.core.ExceptionHandlerProvider
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
+import org.codehaus.griffon.runtime.util.SimpleInstantiator
 import org.junit.jupiter.api.extension.ExtendWith
 
 import javax.application.event.EventBus
@@ -141,6 +143,7 @@ class DefaultEventRouterTest extends EventBusTest {
             bind(EventRouter).to(DefaultEventRouter).in(Singleton)
             bind(ExceptionHandler).toProvider(ExceptionHandlerProvider).in(Singleton)
             bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider).in(Singleton)
+            bind(Instantiator).to(SimpleInstantiator).in(Singleton)
         }
     }
 }
