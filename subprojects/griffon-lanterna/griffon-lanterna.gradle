@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-core')
-    compile project(':griffon-beans')
+    api project(':griffon-core')
+    api project(':griffon-beans')
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')
-    compile "com.googlecode.lanterna:lanterna:$lanternaVersion"
+    api "com.googlecode.lanterna:lanterna:$lanternaVersion"
 }

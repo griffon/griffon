@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'application'
 
 mainClassName = 'editor.Launcher'
@@ -24,20 +24,20 @@ dependencies {
     compileOnly project(':griffon-core-compile')
     compileOnly project(':griffon-beans-compile')
 
-    compile project(':griffon-beans')
-    compile project(':griffon-swing')
-    compile project(':griffon-guice')
-    compile 'commons-io:commons-io:2.5'
+    api project(':griffon-beans')
+    api project(':griffon-swing')
+    api project(':griffon-guice')
+    api 'commons-io:commons-io:2.5'
 
-    runtime('log4j:log4j:1.2.17') {
+    runtimeOnly('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    runtimeOnly "org.slf4j:slf4j-log4j12:$slf4jVersion"
 
-    testCompile project(':griffon-core-test')
-    testCompile project(':griffon-swing-test')
+    testImplementation project(':griffon-core-test')
+    testImplementation project(':griffon-swing-test')
 }
 
 sourceSets {

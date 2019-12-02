@@ -31,14 +31,14 @@ repositories {
 dependencies {
     kapt project(':griffon-core-compile')
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    compile project(':griffon-javafx-kotlin')
-    compile "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
-    compile "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
-    compile "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
+    api project(':griffon-javafx-kotlin')
+    api "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
+    api "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
+    api "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
 
-    testCompile project(':griffon-javafx-test')
+    testImplementation project(':griffon-javafx-test')
 }
 
 compileGroovy.enabled = false

@@ -399,29 +399,29 @@ subprojects { Project subproj ->
             compileOnly "org.kordamp.jipsy:jipsy:${jipsyVersion}"
             annotationProcessor "org.kordamp.jipsy:jipsy:${jipsyVersion}"
 
-            testCompile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-            testCompile "org.junit.jupiter:junit-jupiter-params:$junit5Version"
-            testCompile "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-            testCompile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+            testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+            testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
+            testImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+            testImplementation("org.junit.vintage:junit-vintage-engine:$junit5Version") {
                 exclude group: 'junit', module: 'junit'
             }
-            testCompile("junit:junit:$junitVersion") {
+            testImplementation("junit:junit:$junitVersion") {
                 exclude group: 'org.hamcrest', module: 'hamcrest-core'
             }
-            testCompile("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
+            testImplementation("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
                 exclude group: 'junit', module: 'junit'
             }
-            testCompile("name.falgout.jeffrey.testing.junit5:guice-extension:$guiceExtensionVersion") {
+            testImplementation("name.falgout.jeffrey.testing.junit5:guice-extension:$guiceExtensionVersion") {
                 transitive = false
             }
-            testCompile("com.google.inject:guice:$guiceVersion") {
+            testImplementation("com.google.inject:guice:$guiceVersion") {
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
             }
             if (!subproj.name.startsWith('gradle-')) {
-                testCompile("org.codehaus.groovy:groovy-all:$groovyVersion") {
+                testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion") {
                     exclude group: 'junit', module: 'junit'
                 }
-                testCompile("org.spockframework:spock-core:$spockVersion") {
+                testImplementation("org.spockframework:spock-core:$spockVersion") {
                     exclude group: 'junit', module: 'junit'
                     exclude group: 'org.codehaus.groovy', module: 'groovy'
                     exclude group: 'org.codehaus.groovy', module: 'groovy-groovysh'
@@ -434,11 +434,11 @@ subprojects { Project subproj ->
                     exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
                 }
 
-                testCompile "javax.application:jsr377-tck:$jsr377TckVersion"
-                testCompile "org.mockito:mockito-core:$mockitoVersion"
+                testImplementation "javax.application:jsr377-tck:$jsr377TckVersion"
+                testImplementation "org.mockito:mockito-core:$mockitoVersion"
             }
-            testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
-            testCompile 'cglib:cglib-nodep:3.2.0'
+            testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
+            testImplementation 'cglib:cglib-nodep:3.2.0'
         }
 
         processTestResources {

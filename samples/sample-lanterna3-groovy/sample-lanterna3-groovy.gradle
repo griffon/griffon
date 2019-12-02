@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 apply plugin: 'groovy'
 apply from: rootProject.file('samples/shared-files/samples-common-groovy.gradle')
 
@@ -42,10 +41,10 @@ dependencies {
         exclude module: 'griffon-javafx-compile'
     }
 
-    compile project(':griffon-groovy')
-    compile project(':griffon-lanterna3')
-  
-    runtime project(':griffon-lanterna3-groovy')
+    api project(':griffon-groovy')
+    api project(':griffon-lanterna3')
+
+    runtimeOnly project(':griffon-lanterna3-groovy')
 }
 
 // integrationTest.enabled = false

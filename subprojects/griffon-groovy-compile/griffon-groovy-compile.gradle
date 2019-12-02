@@ -15,19 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
     annotationProcessor project(':griffon-core-compile')
-    compile project(':griffon-core')
-    compile project(':griffon-core-compile')
-    compile project(':griffon-beans-compile'), optional
-    compile project(':griffon-javafx-compile'), optional
-    compile project(':griffon-groovy')
-    compile("org.codehaus.groovy:groovy-all:$groovyVersion") {
+    api project(':griffon-core')
+    api project(':griffon-core-compile')
+    api project(':griffon-beans-compile'), optional
+    api project(':griffon-javafx-compile'), optional
+    api project(':griffon-groovy')
+    api("org.codehaus.groovy:groovy-all:$groovyVersion") {
         exclude group: 'junit', module: 'junit'
     }
-    compile("org.kordamp.gipsy:gipsy:${jipsyVersion}") {
+    api("org.kordamp.gipsy:gipsy:${jipsyVersion}") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }

@@ -15,20 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 dependencies {
-    compile project(':griffon-core')
-    compile("junit:junit:$junitVersion") {
+    api project(':griffon-core')
+    api("junit:junit:$junitVersion") {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
     }
-    compile "org.hamcrest:java-hamcrest:$hamcrestVersion"
-    compile("org.awaitility:awaitility:$awaitilityVersion") {
+    api "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    api("org.awaitility:awaitility:$awaitilityVersion") {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
         exclude group: 'org.hamcrest', module: 'hamcrest-library'
     }
-    compile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-    compile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+    api "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    api("org.junit.vintage:junit-vintage-engine:$junit5Version") {
         exclude module: 'junit', group: 'junit'
     }
 }

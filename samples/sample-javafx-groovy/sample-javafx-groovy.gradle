@@ -36,13 +36,13 @@ apply from: rootProject.file('gradle/coverage-samples.gradle')
 */
 
 dependencies {
-    compile project(':griffon-groovy')
-    compile project(':griffon-javafx-groovy')
-    compile "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
-    compile "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
-    compile "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
+    api project(':griffon-groovy')
+    api project(':griffon-javafx-groovy')
+    api "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
+    api "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
+    api "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
 
-    testCompile project(':griffon-javafx-test')
+    testImplementation project(':griffon-javafx-test')
 
     // functionalTestCompile project(':griffon-javafx-test')
 }

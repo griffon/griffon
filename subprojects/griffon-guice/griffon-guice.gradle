@@ -15,15 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-core')
-    compile("com.google.inject:guice:$guiceVersion") {
+    api project(':griffon-core')
+    api("com.google.inject:guice:$guiceVersion") {
         exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
     }
-    compile "com.google.guava:guava:$guavaVersion"
-    compile "com.google.code.findbugs:jsr305:$jsr305Version"
+    api "com.google.guava:guava:$guavaVersion"
+    api "com.google.code.findbugs:jsr305:$jsr305Version"
 
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')

@@ -15,16 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-core')
-    compile("org.codehaus.groovy:groovy-all:$groovyVersion") {
+    api project(':griffon-core')
+    api("org.codehaus.groovy:groovy-all:$groovyVersion") {
         exclude group: 'junit', module: 'junit'
     }
 
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')
 
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }

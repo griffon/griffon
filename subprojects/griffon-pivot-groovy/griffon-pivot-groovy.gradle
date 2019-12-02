@@ -15,22 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-groovy')
-    compile project(':griffon-pivot')
+    api project(':griffon-groovy')
+    api project(':griffon-pivot')
 
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')
 
-    testCompile project(':griffon-core-test')
-    testCompile project(':griffon-pivot-test')
-    testCompile("org.awaitility:awaitility-groovy:$awaitilityVersion") {
+    testImplementation project(':griffon-core-test')
+    testImplementation project(':griffon-pivot-test')
+    testImplementation("org.awaitility:awaitility-groovy:$awaitilityVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
         exclude group: 'org.hamcrest', module: 'hamcrest-library'
     }
 
-    testRuntime project(':griffon-guice')
+    testRuntimeOnly project(':griffon-guice')
 }

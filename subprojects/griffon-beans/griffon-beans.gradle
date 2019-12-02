@@ -15,12 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-core')
+    api project(':griffon-core')
 
-    testRuntime "org.slf4j:slf4j-simple:$slf4jVersion"
+    testRuntimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
 }
 
 config {

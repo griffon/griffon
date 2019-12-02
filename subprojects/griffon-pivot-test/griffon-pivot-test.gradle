@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-pivot')
-    compile project(':griffon-core-test')
+    api project(':griffon-pivot')
+    api project(':griffon-core-test')
 
-    testRuntime project(':griffon-guice')
+    testRuntimeOnly project(':griffon-guice')
 }

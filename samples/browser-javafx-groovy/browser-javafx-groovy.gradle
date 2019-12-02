@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 apply plugin: 'application'
 
@@ -23,19 +24,19 @@ mainClassName = 'browser.Launcher'
 dependencies {
     compileOnly project(':griffon-groovy-compile')
 
-    compile project(':griffon-groovy')
-    compile project(':griffon-javafx-groovy')
+    api project(':griffon-groovy')
+    api project(':griffon-javafx-groovy')
 
-    runtime project(':griffon-guice')
+    runtimeOnly project(':griffon-guice')
 
-    runtime "org.slf4j:slf4j-simple:$slf4jVersion"
+    runtimeOnly "org.slf4j:slf4j-simple:$slf4jVersion"
 
-    runtime('log4j:log4j:1.2.17') {
+    runtimeOnly('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime("org.slf4j:slf4j-log4j12:$slf4jVersion") {
+    runtimeOnly("org.slf4j:slf4j-log4j12:$slf4jVersion") {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'log4j',     module: 'log4j'
     }

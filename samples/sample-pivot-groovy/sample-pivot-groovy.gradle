@@ -42,10 +42,10 @@ dependencies {
         exclude module: 'griffon-javafx-compile'
     }
 
-    compile project(':griffon-groovy')
-    compile project(':griffon-pivot-groovy')
+    api project(':griffon-groovy')
+    api project(':griffon-pivot-groovy')
 
-    testCompile project(':griffon-pivot-test')
+    testImplementation project(':griffon-pivot-test')
 }
 
 // functionalTest.enabled = false

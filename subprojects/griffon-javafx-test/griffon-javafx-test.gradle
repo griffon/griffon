@@ -15,15 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-javafx')
-    compile project(':griffon-core-test')
-    compile("org.testfx:testfx-core:$testfxVersion") {
+    api project(':griffon-javafx')
+    api project(':griffon-core-test')
+    api("org.testfx:testfx-core:$testfxVersion") {
         transitive = false
     }
-    compile "com.google.guava:guava:$guavaVersion"
+    api "com.google.guava:guava:$guavaVersion"
 
-    testRuntime project(':griffon-guice')
+    testRuntimeOnly project(':griffon-guice')
 }

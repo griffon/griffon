@@ -15,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'java'
 apply from: rootProject.file('samples/shared-files/samples-common-java.gradle')
 
 mainClassName = 'sample.lanterna.java.Launcher'
@@ -35,7 +34,7 @@ apply from: rootProject.file('gradle/coverage-samples.gradle')
 */
 
 dependencies {
-    compile project(':griffon-lanterna')
+    api project(':griffon-lanterna')
 }
 
 // integrationTest.enabled = false

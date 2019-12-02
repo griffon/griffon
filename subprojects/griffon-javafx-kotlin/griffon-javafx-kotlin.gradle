@@ -15,19 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 apply plugin: 'kotlin'
 
 dependencies {
-    compile project(':griffon-javafx')
+    api project(':griffon-javafx')
     
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')
 
-    testCompile project(':griffon-core-test')
-    testRuntime project(':griffon-guice')
+    testImplementation project(':griffon-core-test')
+    testRuntimeOnly project(':griffon-guice')
 }
 
 compileGroovy.enabled = false

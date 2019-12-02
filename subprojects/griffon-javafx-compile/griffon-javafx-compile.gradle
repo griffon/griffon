@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
     annotationProcessor project(':griffon-core-compile')
-    compile project(':griffon-javafx')
-    compile project(':griffon-core-compile')
-    compile "org.kordamp.jipsy:jipsy:${jipsyVersion}"
+    api project(':griffon-javafx')
+    api project(':griffon-core-compile')
+    api "org.kordamp.jipsy:jipsy:${jipsyVersion}"
 }
 
 config {

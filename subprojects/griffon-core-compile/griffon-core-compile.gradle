@@ -15,9 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile project(':griffon-core')
-    compile "org.kordamp.jipsy:jipsy:${jipsyVersion}"
+    api project(':griffon-core')
+    api "org.kordamp.jipsy:jipsy:${jipsyVersion}"
 }

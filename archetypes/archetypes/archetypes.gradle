@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 config {
     info {
@@ -35,14 +35,14 @@ config {
 }
 
 dependencies {
-    compile project(':griffon-javafx-java-archetype')
-    compile project(':griffon-javafx-groovy-archetype')
-    compile project(':griffon-lanterna3-java-archetype')
-    compile project(':griffon-lanterna3-groovy-archetype')
-    compile project(':griffon-pivot-java-archetype')
-    compile project(':griffon-pivot-groovy-archetype')
-    compile project(':griffon-swing-java-archetype')
-    compile project(':griffon-swing-groovy-archetype')
+    implementation project(':griffon-javafx-java-archetype')
+    implementation project(':griffon-javafx-groovy-archetype')
+    implementation project(':griffon-lanterna3-java-archetype')
+    implementation project(':griffon-lanterna3-groovy-archetype')
+    implementation project(':griffon-pivot-java-archetype')
+    implementation project(':griffon-pivot-groovy-archetype')
+    implementation project(':griffon-swing-java-archetype')
+    implementation project(':griffon-swing-groovy-archetype')
 }
 
 evaluationDependsOnChildren()

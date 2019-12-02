@@ -41,10 +41,10 @@ dependencies {
         exclude module: 'griffon-javafx-compile'
     }
 
-    compile project(':griffon-groovy')
-    compile project(':griffon-lanterna')
+    api project(':griffon-groovy')
+    api project(':griffon-lanterna')
 
-    runtime project(':griffon-lanterna-groovy')
+    runtimeOnly project(':griffon-lanterna-groovy')
 }
 
 // integrationTest.enabled = false

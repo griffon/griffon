@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'application'
 
 mainClassName = 'editor.Launcher'
@@ -23,21 +23,21 @@ mainClassName = 'editor.Launcher'
 dependencies {
     compileOnly project(':griffon-core-compile')
 
-    compile project(':griffon-javafx')
-    compile project(':griffon-guice')
-    compile 'commons-io:commons-io:2.5'
-    compile "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
-    compile "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
-    compile "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
+    api project(':griffon-javafx')
+    api project(':griffon-guice')
+    api 'commons-io:commons-io:2.5'
+    api "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
+    api "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
+    api "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
 
-    runtime('log4j:log4j:1.2.17') {
+    runtimeOnly('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    runtimeOnly "org.slf4j:slf4j-log4j12:$slf4jVersion"
 
-    testCompile project(':griffon-core-test')
+    testImplementation project(':griffon-core-test')
 }
 
 sourceSets {

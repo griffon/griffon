@@ -15,22 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    compile("org.easytesting:fest-swing:$festVersion") {
+    api("org.easytesting:fest-swing:$festVersion") {
         exclude group: 'junit', module: 'junit'
     }
-    compile("org.easytesting:fest-swing-junit:$festVersion") {
+    api("org.easytesting:fest-swing-junit:$festVersion") {
         exclude group: 'junit', module: 'junit'
     }
-    compile("org.easytesting:fest-swing-junit-4.5:$festVersion") {
+    api("org.easytesting:fest-swing-junit-4.5:$festVersion") {
         exclude group: 'org.easytesting', module: 'fest-swing-junit'
         exclude group: 'junit', module: 'junit'
     }
 
-    compile project(':griffon-swing')
-    compile project(':griffon-core-test')
+    api project(':griffon-swing')
+    api project(':griffon-core-test')
 }
 
 config {
