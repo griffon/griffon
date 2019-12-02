@@ -1016,7 +1016,7 @@ public class MethodUtils {
      *
      * @param method The source arguments
      */
-    private static void setMethodAccessible(Method method) {
+    public static void setMethodAccessible(Method method) {
         try {
             //
             // XXX Default access superclass workaround

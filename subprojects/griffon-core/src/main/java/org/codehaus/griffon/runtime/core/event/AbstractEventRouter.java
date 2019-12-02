@@ -201,6 +201,7 @@ public abstract class AbstractEventRouter implements EventRouter {
         requireNonNull(event, ERROR_EVENT_NULL);
         requireNonNull(pair, "Argument 'pair' must not be null\"");
 
+        MethodUtils.setMethodAccessible(pair.method);
         MethodUtils.invokeUnwrapping(pair.method, pair.instance, new Object[]{event});
     }
 
@@ -247,7 +248,6 @@ public abstract class AbstractEventRouter implements EventRouter {
             }
 
             EventMetadata<E> metadata = createEventMetadata(event);
-            Collection<EventPair> eventHandlers = new ArrayList<>();
             for (Object instance : listenersCopy) {
                 findEventHandlers(instance, event).stream()
                     .filter(m -> applyFilters(m, metadata))

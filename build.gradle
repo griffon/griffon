@@ -82,6 +82,12 @@ config {
             scm          = 'https://github.com/griffon/griffon.git'
         }
 
+        scm {
+            url                 = 'https://github.com/griffon/griffon'
+            connection          = 'scm:git:https://github.com/griffon/griffon.git'
+            developerConnection = 'scm:git:git@github.com:griffon/griffon.git'
+        }
+
         people {
             person {
                 id    = 'aalmiray'
@@ -202,6 +208,7 @@ config {
         exclude '**/*.groovy'
 
         autoLinks {
+            enabled = false
             exclude 'griffon.*'
             exclude 'pivot.*'
             exclude 'jsr377.*'
