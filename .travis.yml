@@ -2,7 +2,7 @@ language: java
 sudo: required
 dist: trusty
 install: true
-jdk: oraclejdk8
+jdk: openjdk8
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
@@ -47,7 +47,7 @@ before_script:
   - git clone --depth=50 --branch=master https://github.com/jsr377/jsr377-api.git jsr377-api
   - git clone --depth=50 --branch=master https://github.com/jsr377/jsr377-converters.git jsr377-converters
   - cd griffon
-script: travis_wait 30 ./gradlew --console=plain -S --scan check test jacocoRootReport
+script: travis_wait 30 ./gradlew -S check test jacocoRootReport
 after_success:
   - ./update-gh-pages.sh
   - for report in `find ./subprojects -name "jacocoTestReport.xml" -print`; do rm -f $report ; done

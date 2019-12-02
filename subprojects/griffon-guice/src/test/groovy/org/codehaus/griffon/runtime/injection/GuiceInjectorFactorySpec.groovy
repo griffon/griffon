@@ -30,12 +30,14 @@ import griffon.core.threading.UIThreadManager
 import griffon.exceptions.ClosedInjectorException
 import griffon.exceptions.InstanceNotFoundException
 import griffon.exceptions.MembersInjectionException
+import griffon.util.Instantiator
 import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
 import org.codehaus.griffon.runtime.core.GriffonExceptionHandlerProvider
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager
+import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import spock.lang.Specification
 
 import javax.inject.Provider
@@ -232,6 +234,10 @@ class GuiceInjectorFactorySpec extends Specification {
 
                 bind(ExceptionHandler)
                     .toProvider(GriffonExceptionHandlerProvider)
+                    .asSingleton()
+
+                bind(Instantiator)
+                    .to(DefaultInstantiator)
                     .asSingleton()
 
                 bind(Animal).to(Dog).asSingleton()

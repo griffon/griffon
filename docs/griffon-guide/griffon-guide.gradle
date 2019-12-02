@@ -68,7 +68,7 @@ config {
     sourceXref { enabled = false }
     stats { enabled = false }
 
-    whenRootProjectReady { Project rp ->
+    /*whenRootProjectReady { Project rp ->
         project(':griffon-guide').tasks.findByName('createGuide').with {
             dependsOn rp.tasks.findByName('aggregateSourceJar')
             dependsOn rp.tasks.findByName('aggregateJavadocsJar')
@@ -77,7 +77,7 @@ config {
             from(rp.tasks.findByName('aggregateJavadocsJar').destinationDir)
             from(rp.tasks.findByName('aggregateSourceHtmlJar').destinationDir)
         }
-    }
+    }*/
 }
 
 task sampleStats() {
