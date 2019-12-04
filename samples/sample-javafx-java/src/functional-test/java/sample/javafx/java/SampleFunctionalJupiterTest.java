@@ -18,13 +18,16 @@
 package sample.javafx.java;
 
 import griffon.test.javafx.GriffonFunctionalTestFXExtension;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SampleFunctionalJupiterTest {
     static {
@@ -46,7 +49,7 @@ public class SampleFunctionalJupiterTest {
         // then:
         verifyThat("#output", hasText("Howdy stranger!"));
     }
-/*
+
     @Test
     public void _02_typeNameAndClickButton() {
         // given:
@@ -58,5 +61,4 @@ public class SampleFunctionalJupiterTest {
         // then:
         verifyThat("#output", hasText("Hello Griffon"));
     }
-    */
 }

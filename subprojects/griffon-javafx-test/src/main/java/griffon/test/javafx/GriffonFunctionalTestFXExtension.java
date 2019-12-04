@@ -23,6 +23,8 @@ import griffon.core.env.Environment;
 import griffon.core.events.WindowShownEvent;
 import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Window;
 import org.awaitility.Duration;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
@@ -36,6 +38,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.testfx.api.FxToolkit;
+import org.testfx.util.WaitForAsyncUtils;
 
 import javax.application.event.EventHandler;
 import java.util.concurrent.TimeoutException;
@@ -172,6 +175,10 @@ public class GriffonFunctionalTestFXExtension extends TestFX
                 throw new GriffonException("An error occurred while shutting down the application", e);
             } finally {
                 application = null;
+
+                release(new KeyCode[0]);
+                release(new MouseButton[0]);
+                WaitForAsyncUtils.waitForFxEvents();
             }
         }
     }

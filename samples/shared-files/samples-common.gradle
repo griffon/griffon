@@ -29,16 +29,16 @@ dependencies {
 
     testImplementation project(':griffon-core-test')
 
-    // functionalTestCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
-    // functionalTestCompile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-    // functionalTestCompile "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-    // functionalTestCompile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+    // functionalTestImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    // functionalTestImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    // functionalTestImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    // functionalTestImplementation("org.junit.vintage:junit-vintage-engine:$junit5Version") {
     //     exclude module: 'junit', group: 'junit'
     // }
-    // functionalTestCompile("org.spockframework:spock-core:$spockVersion") {
+    // functionalTestImplementation("org.spockframework:spock-core:$spockVersion") {
     //     exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     // }
-    // functionalTestCompile("org.codehaus.groovy:groovy-all:$groovyVersion") {
+    // functionalTestImplementation("org.codehaus.groovy:groovy-all:$groovyVersion") {
     //     exclude module: 'junit', group: 'junit'
     // }
 }
@@ -68,22 +68,22 @@ test {
 }
 
 // integrationTest {
-//     enabled = false
+//     // enabled = false
 //     useJUnitPlatform()
-// 
+//
 //     ignoreFailures = !rootProject.fullBuild
-// 
+//
 //     jacoco {
 //         excludes = ['sample.**']
 //     }
 // }
-// 
+//
 // functionalTest {
-//     enabled = false
+//     // enabled = false
 //     useJUnitPlatform()
-// 
+//
 //     ignoreFailures = !rootProject.fullBuild
-// 
+//
 //     jacoco {
 //         excludes = ['sample.**']
 //     }

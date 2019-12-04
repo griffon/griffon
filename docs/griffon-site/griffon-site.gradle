@@ -92,6 +92,6 @@ bakePreview {
 }
 
 task(siteZip, type: Zip, dependsOn: site) {
-    baseName = 'griffon-site'
+    archiveBaseName.set 'griffon-site'
     from site.destinationDir
 }
