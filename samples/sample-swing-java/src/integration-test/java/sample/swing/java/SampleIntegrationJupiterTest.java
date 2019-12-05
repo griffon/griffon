@@ -17,7 +17,7 @@
  */
 package sample.swing.java;
 
-import griffon.test.swing.GriffonFestExtension;
+import griffon.test.swing.GriffonAssertjExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -29,30 +29,30 @@ class SampleIntegrationJupiterTest {
     }
 
     @RegisterExtension
-    public static final GriffonFestExtension FEST = GriffonFestExtension.builder()
+    public static final GriffonAssertjExtension griffon = GriffonAssertjExtension.builder()
         .build();
 
     @Test
     void typeNameAndClickButton() {
         // given:
-        FEST.getWindow().textBox("inputField").enterText("Griffon");
+        griffon.getWindow().textBox("inputField").enterText("Griffon");
 
         // when:
-        FEST.getWindow().button("sayHelloButton").click();
+        griffon.getWindow().button("sayHelloButton").click();
 
         // then:
-        FEST.getWindow().label("outputLabel").requireText("Hello Griffon");
+        griffon.getWindow().label("outputLabel").requireText("Hello Griffon");
     }
 
     @Test
     void doNotTypeNameAndClickButton() {
         // given:
-        FEST.getWindow().textBox("inputField").enterText("");
+        griffon.getWindow().textBox("inputField").enterText("");
 
         // when:
-        FEST.getWindow().button("sayHelloButton").click();
+        griffon.getWindow().button("sayHelloButton").click();
 
         // then:
-        FEST.getWindow().label("outputLabel").requireText("Howdy stranger!");
+        griffon.getWindow().label("outputLabel").requireText("Howdy stranger!");
     }
 }

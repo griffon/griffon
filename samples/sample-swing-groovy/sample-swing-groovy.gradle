@@ -33,9 +33,7 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-/*
 apply from: rootProject.file('gradle/coverage-samples.gradle')
-*/
 
 dependencies {
     compileOnly(project(':griffon-groovy-compile')) {
@@ -48,4 +46,6 @@ dependencies {
     testCompile project(':griffon-swing-test')
 }
 
-// functionalTest.enabled = false
+afterEvaluate {
+    functionalTest.enabled = false
+}

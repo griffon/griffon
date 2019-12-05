@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 import static org.awaitility.Awaitility.await
 import static java.util.concurrent.TimeUnit.SECONDS
-import static org.hamcrest.Matchers.greatherThan
+import static org.hamcrest.Matchers.equalTo
+import static org.hamcrest.Matchers.not
 
 @TestFor(AppController)
 class AppControllerTest {
@@ -33,7 +34,7 @@ class AppControllerTest {
 
         // when:
         controller.invokeAction('click')
-        await().atMost(2, SECONDS).until({ -> model.getClickCount()}, greaterThan(0))
+        await().atMost(2, SECONDS).until({ -> model.getClickCount()}, not(equalTo('0')))
 
         // then:
         assert 1 == controller.model.clickCount

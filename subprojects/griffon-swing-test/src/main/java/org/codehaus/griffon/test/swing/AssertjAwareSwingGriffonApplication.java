@@ -22,13 +22,13 @@ import griffon.swing.SwingGriffonApplication;
 
 /**
  * @author Andres Almiray
- * @since 2.0.0
+ * @since 3.0.0
  */
-public class FestAwareSwingGriffonApplication extends SwingGriffonApplication {
-    public FestAwareSwingGriffonApplication() {
+public class AssertjAwareSwingGriffonApplication extends SwingGriffonApplication {
+    public AssertjAwareSwingGriffonApplication() {
     }
 
-    public FestAwareSwingGriffonApplication(@Nonnull String[] args) {
+    public AssertjAwareSwingGriffonApplication(@Nonnull String[] args) {
         super(args);
     }
 

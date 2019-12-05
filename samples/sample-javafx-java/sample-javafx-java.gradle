@@ -31,9 +31,7 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-/*
 apply from: rootProject.file('gradle/coverage-samples.gradle')
-*/
 
 config {
     jacoco {
@@ -44,6 +42,7 @@ config {
 
 dependencies {
     api project(':griffon-javafx')
+    compileOnly project(':griffon-javafx-compile')
     api "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
     api "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
     api "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
@@ -57,7 +56,7 @@ dependencies {
         exclude module: 'junit', group: 'junit'
     }
 
-    // functionalTestCompile project(':griffon-javafx-test')
+    functionalTestCompile project(':griffon-javafx-test')
 }
 
 compileGroovy.enabled = false

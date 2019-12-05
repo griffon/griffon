@@ -29,13 +29,13 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-/*
 apply from: rootProject.file('gradle/coverage-samples.gradle')
-*/
 
 dependencies {
     api project(':griffon-lanterna3')
 }
 
-// integrationTest.enabled = false
-// functionalTest.enabled = false
+afterEvaluate {
+    integrationTest.enabled = false
+    functionalTest.enabled = false
+}

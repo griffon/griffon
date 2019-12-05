@@ -17,8 +17,8 @@
  */
 package sample.swing.groovy
 
-import griffon.test.swing.GriffonFestRule
-import org.fest.swing.fixture.FrameFixture
+import griffon.test.swing.GriffonAssertjRule
+import org.assertj.swing.fixture.FrameFixture
 import org.junit.Rule
 import org.junit.Test
 
@@ -28,7 +28,7 @@ class SampleIntegrationTest {
     }
 
     @Rule
-    public final GriffonFestRule fest = new GriffonFestRule()
+    public final GriffonAssertjRule griffon = new GriffonAssertjRule()
 
     private FrameFixture window
 

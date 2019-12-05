@@ -17,8 +17,8 @@
  */
 apply plugin: 'java-library'
 apply plugin: 'application'
-// apply plugin: 'org.kordamp.gradle.integration-test'
-// apply plugin: 'org.kordamp.gradle.functional-test'
+apply plugin: 'org.kordamp.gradle.integration-test'
+apply plugin: 'org.kordamp.gradle.functional-test'
 
 dependencies {
     compileOnly project(':griffon-groovy-compile')
@@ -29,18 +29,18 @@ dependencies {
 
     testImplementation project(':griffon-core-test')
 
-    // functionalTestImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"
-    // functionalTestImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-    // functionalTestImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-    // functionalTestImplementation("org.junit.vintage:junit-vintage-engine:$junit5Version") {
-    //     exclude module: 'junit', group: 'junit'
-    // }
-    // functionalTestImplementation("org.spockframework:spock-core:$spockVersion") {
-    //     exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-    // }
-    // functionalTestImplementation("org.codehaus.groovy:groovy-all:$groovyVersion") {
-    //     exclude module: 'junit', group: 'junit'
-    // }
+    functionalTestImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    functionalTestImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    functionalTestRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    functionalTestRuntimeOnly("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+        exclude module: 'junit', group: 'junit'
+    }
+    functionalTestImplementation("org.spockframework:spock-core:$spockVersion") {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+    }
+    functionalTestImplementation("org.codehaus.groovy:groovy-all:$groovyVersion") {
+        exclude module: 'junit', group: 'junit'
+    }
 }
 
 sourceSets {
@@ -67,24 +67,24 @@ test {
     }
 }
 
-// integrationTest {
-//     // enabled = false
-//     useJUnitPlatform()
-//
-//     ignoreFailures = !rootProject.fullBuild
-//
-//     jacoco {
-//         excludes = ['sample.**']
-//     }
-// }
-//
-// functionalTest {
-//     // enabled = false
-//     useJUnitPlatform()
-//
-//     ignoreFailures = !rootProject.fullBuild
-//
-//     jacoco {
-//         excludes = ['sample.**']
-//     }
-// }
+integrationTest {
+    enabled = false
+    useJUnitPlatform()
+
+    ignoreFailures = !rootProject.fullBuild
+
+    jacoco {
+        excludes = ['sample.**']
+    }
+}
+
+functionalTest {
+    enabled = false
+    useJUnitPlatform()
+
+    ignoreFailures = !rootProject.fullBuild
+
+    jacoco {
+        excludes = ['sample.**']
+    }
+}

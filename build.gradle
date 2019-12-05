@@ -341,13 +341,25 @@ allprojects {
 
 subprojects { Project subproj ->
     boolean isCoreProject = subproj.projectDir.absolutePath.contains('subprojects')
+    boolean isSampleProject = subproj.projectDir.absolutePath.contains('samples')
+    boolean isDocProject = subproj.projectDir.absolutePath.contains('docs')
     boolean isArchetypeProject = subproj.name.endsWith('-archetype')
+    boolean isTemplateProject = subproj.name.endsWith('-templates')
     boolean isPomProject = subproj.name.endsWith('-pom')
     boolean isGroovyProject = subproj.name.endsWith('-groovy')
     boolean isGradlePlugin = subproj.name.startsWith('gradle-')
     boolean shouldPublish = isCoreProject || isArchetypeProject
 
     config {
+        info {
+            specification {
+                enabled = !isArchetypeProject && !isTemplateProject && !isDocProject
+            }
+            implementation {
+                enabled = !isArchetypeProject && !isTemplateProject && !isDocProject
+            }
+        }
+
         publishing {
             enabled = shouldPublish
         }
@@ -370,6 +382,26 @@ subprojects { Project subproj ->
 
         sourceXref {
             enabled = isCoreProject
+        }
+
+        minpom {
+            enabled = isCoreProject
+        }
+
+        testing {
+            enabled = isCoreProject || isSampleProject
+        }
+
+        jacoco {
+            enabled = isCoreProject || isSampleProject
+        }
+
+        licensing {
+            enabled = !isArchetypeProject && !isTemplateProject && !isDocProject
+        }
+
+        stats {
+            enabled = !isArchetypeProject && !isTemplateProject && !isDocProject
         }
 
         clirr {
@@ -545,7 +577,6 @@ subprojects { Project subproj ->
             "org.codehaus.groovy:groovy-xml:$groovyVersion",
             "org.slf4j:slf4j-api:$slf4jVersion",
             "org.slf4j:slf4j-simple:$slf4jVersion",
-            "org.easytesting:fest-util:$festUtilVersion",
             "com.google.code.findbugs:jsr305:$jsr305Version",
             "commons-io:commons-io:$commonsIoVersion",
             "org.apache.commons:commons-lang3:$commonsLang3Version",

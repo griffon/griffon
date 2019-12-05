@@ -21,25 +21,25 @@ import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
 import griffon.test.core.AbstractGriffonUnitExtension;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.FrameFixture;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
 import org.codehaus.griffon.test.core.TestApplicationBootstrapper;
-import org.codehaus.griffon.test.swing.FestAwareSwingGriffonApplication;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.FrameFixture;
+import org.codehaus.griffon.test.swing.AssertjAwareSwingGriffonApplication;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.awt.Frame;
 
-import static org.fest.swing.core.BasicRobot.robotWithNewAwtHierarchy;
+import static org.assertj.swing.core.BasicRobot.robotWithNewAwtHierarchy;
 
 /**
  * @author Andres Almiray
  * @since 3.0.0
  */
-public class GriffonFestExtension extends AbstractGriffonUnitExtension {
+public class GriffonAssertjExtension extends AbstractGriffonUnitExtension {
     public static class Builder {
         private String[] startupArgs = DefaultGriffonApplication.EMPTY_ARGS;
-        private Class<? extends GriffonApplication> applicationClass = FestAwareSwingGriffonApplication.class;
+        private Class<? extends GriffonApplication> applicationClass = AssertjAwareSwingGriffonApplication.class;
         private Class<? extends ApplicationBootstrapper> applicationBootstrapper = TestApplicationBootstrapper.class;
 
         public Builder setStartupArgs(String[] startupArgs) {
@@ -63,8 +63,8 @@ public class GriffonFestExtension extends AbstractGriffonUnitExtension {
             return this;
         }
 
-        public GriffonFestExtension build() {
-            return new GriffonFestExtension(startupArgs, applicationClass, applicationBootstrapper);
+        public GriffonAssertjExtension build() {
+            return new GriffonAssertjExtension(startupArgs, applicationClass, applicationBootstrapper);
         }
     }
 
@@ -74,9 +74,9 @@ public class GriffonFestExtension extends AbstractGriffonUnitExtension {
 
     private FrameFixture window;
 
-    private GriffonFestExtension(@Nonnull String[] startupArgs,
-                                 @Nonnull Class<? extends GriffonApplication> applicationClass,
-                                 @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+    private GriffonAssertjExtension(@Nonnull String[] startupArgs,
+                                    @Nonnull Class<? extends GriffonApplication> applicationClass,
+                                    @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
         super(startupArgs, applicationClass, applicationBootstrapper);
     }
 

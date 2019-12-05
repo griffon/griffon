@@ -17,60 +17,31 @@
  */
 apply plugin: 'java-library'
 
-config {
-    info {
-        specification { enabled = false }
-        implementation { enabled = false }
-    }
-
-    licensing { enabled = false }
-    publishing { enabled = false }
-    bintray { enabled = false }
-    //minpom { enabled = false }
-    javadoc { enabled = false }
-    jacoco { enabled = false }
-    sourceHtml { enabled = false}
-    sourceXref { enabled = false }
-    stats { enabled = false }
-}
+ext.archetypeProjects = [
+    ':griffon-javafx-java-archetype',
+    ':griffon-javafx-groovy-archetype',
+    ':griffon-lanterna3-java-archetype',
+    ':griffon-lanterna3-groovy-archetype',
+    ':griffon-pivot-java-archetype',
+    ':griffon-pivot-groovy-archetype',
+    ':griffon-swing-java-archetype',
+    ':griffon-swing-groovy-archetype'
+]
 
 dependencies {
-    implementation project(':griffon-javafx-java-archetype')
-    implementation project(':griffon-javafx-groovy-archetype')
-    implementation project(':griffon-lanterna3-java-archetype')
-    implementation project(':griffon-lanterna3-groovy-archetype')
-    implementation project(':griffon-pivot-java-archetype')
-    implementation project(':griffon-pivot-groovy-archetype')
-    implementation project(':griffon-swing-java-archetype')
-    implementation project(':griffon-swing-groovy-archetype')
+    implementation archetypeProjects.collect { project(it) }
 }
 
 evaluationDependsOnChildren()
 
-task installAllArchetypes(type: DefaultTask) {
-
+task packageAllArchetypes(type: DefaultTask) {
+    dependsOn archetypeProjects.collect { it + ':jar' }
 }
 
-installAllArchetypes.dependsOn([
-    ':griffon-javafx-java-archetype:publishToMavenLocal',
-    ':griffon-javafx-groovy-archetype:publishToMavenLocal',
-    ':griffon-lanterna3-java-archetype:publishToMavenLocal',
-    ':griffon-lanterna3-groovy-archetype:publishToMavenLocal',
-    ':griffon-pivot-java-archetype:publishToMavenLocal',
-    ':griffon-pivot-groovy-archetype:publishToMavenLocal',
-    ':griffon-swing-java-archetype:publishToMavenLocal',
-    ':griffon-swing-groovy-archetype:publishToMavenLocal'])
+task installAllArchetypes(type: DefaultTask) {
+    dependsOn archetypeProjects.collect { it + ':publishToMavenLocal' }
+}
 
 task publishAllArchetypes(type: DefaultTask) {
-
+    dependsOn archetypeProjects.collect { it + ':bintrayUpload' }
 }
-
-publishAllArchetypes.dependsOn([
-    ':griffon-javafx-java-archetype:bintrayUpload',
-    ':griffon-javafx-groovy-archetype:bintrayUpload',
-    ':griffon-lanterna3-java-archetype:bintrayUpload',
-    ':griffon-lanterna3-groovy-archetype:bintrayUpload',
-    ':griffon-pivot-java-archetype:bintrayUpload',
-    ':griffon-pivot-groovy-archetype:bintrayUpload',
-    ':griffon-swing-java-archetype:bintrayUpload',
-    ':griffon-swing-groovy-archetype:bintrayUpload'])

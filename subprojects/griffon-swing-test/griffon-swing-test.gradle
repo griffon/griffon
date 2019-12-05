@@ -19,14 +19,7 @@ apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 dependencies {
-    api("org.easytesting:fest-swing:$festVersion") {
-        exclude group: 'junit', module: 'junit'
-    }
-    api("org.easytesting:fest-swing-junit:$festVersion") {
-        exclude group: 'junit', module: 'junit'
-    }
-    api("org.easytesting:fest-swing-junit-4.5:$festVersion") {
-        exclude group: 'org.easytesting', module: 'fest-swing-junit'
+    api("org.assertj:assertj-swing-junit:$assertjVersion") {
         exclude group: 'junit', module: 'junit'
     }
 

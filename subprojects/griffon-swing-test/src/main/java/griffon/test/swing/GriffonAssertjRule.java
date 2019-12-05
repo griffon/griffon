@@ -21,37 +21,37 @@ import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.GriffonApplication;
 import griffon.test.core.GriffonUnitRule;
+import org.assertj.swing.core.Robot;
+import org.assertj.swing.fixture.FrameFixture;
 import org.codehaus.griffon.test.core.TestApplicationBootstrapper;
-import org.codehaus.griffon.test.swing.FestAwareSwingGriffonApplication;
-import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.FrameFixture;
+import org.codehaus.griffon.test.swing.AssertjAwareSwingGriffonApplication;
 
-import java.awt.Frame;
+import java.awt.*;
 import java.lang.reflect.Field;
 
-import static org.fest.swing.core.BasicRobot.robotWithNewAwtHierarchy;
+import static org.assertj.swing.core.BasicRobot.robotWithNewAwtHierarchy;
 
 /**
  * @author Andres Almiray
  * @since 2.0.0
  */
-public class GriffonFestRule extends GriffonUnitRule {
+public class GriffonAssertjRule extends GriffonUnitRule {
     protected FrameFixture window;
 
-    public GriffonFestRule() {
-        this(FestAwareSwingGriffonApplication.EMPTY_ARGS, TestApplicationBootstrapper.class);
+    public GriffonAssertjRule() {
+        this(AssertjAwareSwingGriffonApplication.EMPTY_ARGS, TestApplicationBootstrapper.class);
     }
 
-    public GriffonFestRule(@Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
-        this(FestAwareSwingGriffonApplication.EMPTY_ARGS, applicationBootstrapper);
+    public GriffonAssertjRule(@Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+        this(AssertjAwareSwingGriffonApplication.EMPTY_ARGS, applicationBootstrapper);
     }
 
-    public GriffonFestRule(@Nonnull String[] startupArgs) {
+    public GriffonAssertjRule(@Nonnull String[] startupArgs) {
         this(startupArgs, TestApplicationBootstrapper.class);
     }
 
-    public GriffonFestRule(@Nonnull String[] startupArgs, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
-        super(startupArgs, FestAwareSwingGriffonApplication.class, applicationBootstrapper);
+    public GriffonAssertjRule(@Nonnull String[] startupArgs, @Nonnull Class<? extends ApplicationBootstrapper> applicationBootstrapper) {
+        super(startupArgs, AssertjAwareSwingGriffonApplication.class, applicationBootstrapper);
     }
 
     @Override

@@ -31,15 +31,15 @@ ext.depProjects = [
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
-/*
 apply from: rootProject.file('gradle/coverage-samples.gradle')
-*/
 
 dependencies {
     api project(':griffon-pivot')
     testImplementation project(':griffon-pivot-test')
 }
 
-// functionalTest.enabled = false
-
 compileGroovy.enabled = false
+
+afterEvaluate {
+    functionalTest.enabled = false
+}

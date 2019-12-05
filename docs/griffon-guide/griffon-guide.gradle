@@ -52,21 +52,6 @@ for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna', 'lanterna3']) {
 (ext.childProjects + ext.sampleProjects).each { evaluationDependsOn it }
 
 config {
-    info {
-        specification { enabled = false }
-        implementation { enabled = false }
-    }
-
-    licensing { enabled = false }
-    publishing { enabled = false }
-    bintray { enabled = false }
-    minpom { enabled = false }
-    javadoc { enabled = false }
-    jacoco { enabled = false }
-    sourceHtml { enabled = false }
-    sourceXref { enabled = false }
-    stats { enabled = false }
-
     /*whenRootProjectReady { Project rp ->
         project(':griffon-guide').tasks.findByName('createGuide').with {
             dependsOn rp.tasks.findByName('aggregateSourceJar')

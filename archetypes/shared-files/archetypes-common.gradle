@@ -18,16 +18,9 @@
 apply plugin: 'java-library'
 
 config {
-    info {
-        specification { enabled = false }
-        implementation { enabled = false }
+    minpom {
+        enabled = true
     }
-
-    javadoc { enabled = false }
-    jacoco { enabled = false }
-    sourceHtml { enabled = false}
-    sourceXref { enabled = false }
-    stats { enabled = false }
 }
 
 bintray {

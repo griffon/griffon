@@ -1,4 +1,4 @@
-package \${groupId};
+package ${groupId};
 
 import javax.inject.Named;
 import griffon.core.mvc.MVCGroup;
