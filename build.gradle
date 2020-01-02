@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2019 the original author or authors.
+ * Copyright 2008-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,18 +29,17 @@ buildscript {
 
 plugins {
     id 'idea'
-    id 'org.kordamp.gradle.java-project'  version '0.30.4-SNAPSHOT'
-    id 'org.kordamp.gradle.clirr'         version '0.30.4-SNAPSHOT'
-    id 'org.kordamp.gradle.guide'         version '0.30.4-SNAPSHOT' apply false
-    id 'org.kordamp.gradle.plugin'        version '0.30.4-SNAPSHOT' apply false
-    id 'com.github.kt3k.coveralls'        version '2.8.4'
-    id 'org.sonarqube'                    version '2.8'
-    id 'org.kordamp.gradle.jdeps'         version '0.8.0'  apply false
-    id 'net.ossindex.audit'               version '0.4.11' apply false
-    id 'org.jonnyzzz.java9c'              version '0.2.3'  apply false
-    id 'nebula.optional-base'             version '5.0.3'  apply false
-    id 'org.ajoberstar.git-publish'       version '0.3.2'  apply false
-    id 'org.jbake.site'                   version '5.0.0'  apply false
+    id 'org.kordamp.gradle.java-project'
+    //id 'org.kordamp.gradle.source-html'
+    id 'org.kordamp.gradle.clirr'
+    id 'org.kordamp.gradle.coveralls'
+    id 'org.sonarqube'
+    id 'org.kordamp.gradle.jdeps'   version '0.8.0'  apply false
+    id 'net.ossindex.audit'         version '0.4.11' apply false
+    id 'org.jonnyzzz.java9c'        version '0.2.3'  apply false
+    id 'nebula.optional-base'       version '5.0.3'  apply false
+    id 'org.ajoberstar.git-publish' version '0.3.2'  apply false
+    id 'org.jbake.site'             version '5.0.0'  apply false
 }
 
 apply from: 'gradle/idea.gradle'
@@ -153,15 +152,17 @@ config {
 
         repositories {
             repository {
-                name = 'stagingRelease'
-                url  = "${project.rootProject.buildDir}/repos/staging/release"
+                name = 'localRelease'
+                url  = "${project.rootProject.buildDir}/repos/local/release"
             }
             repository {
-                name = 'stagingSnapshot'
-                url  = "${project.rootProject.buildDir}/repos/staging/snapshot"
+                name = 'localSnapshot'
+                url  = "${project.rootProject.buildDir}/repos/local/snapshot"
             }
         }
     }
+
+    buildInfo { enabled = false }
 
     licensing {
         licenses {
@@ -193,68 +194,75 @@ config {
         ]
     }
 
-    apidoc {
-        replaceJavadoc = true
-        excludedProjects.addAll nonCoreProjects
-    }
-
-    groovydoc {
-        enabled = false
-    }
-
-    javadoc {
-        exclude '**/*.html'
-        exclude 'META-INF/**'
-        exclude '**/*.groovy'
-
-        autoLinks {
+    docs {
+        groovydoc {
             enabled = false
-            exclude 'griffon.*'
-            exclude 'pivot.*'
-            exclude 'jsr377.*'
         }
 
-        options {
-            addBooleanOption('javafx', true)
-            links 'https://www.slf4j.org/apidocs/'
-            links 'https://junit.org/junit4/javadoc/latest/'
-            links 'https://aalmiray.github.io/jsr-305/apidocs/'
-            links 'https://javax-inject.github.io/javax-inject/api/'
-            links 'https://docs.oracle.com/javase/8/docs/api/'
-            links 'https://docs.oracle.com/javase/8/javafx/api/'
-            links 'https://google.github.io/guice/api-docs/4.1/javadoc/'
-            links 'https://mabe02.github.io/lanterna/apidocs/3.0/'
-            links 'https://pivot.apache.org/2.0.5/docs/api/'
-            links 'http://docs.groovy-lang.org/latest/html/api/'
-            links 'https://aalmiray.github.io/jipsy/apidocs/'
-            links 'https://aalmiray.github.io/gipsy/apidocs/'
+        javadoc {
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
+
+            exclude '**/*.html'
+            exclude 'META-INF/**'
+            exclude '**/*.groovy'
+
+            autoLinks {
+                enabled = false
+                exclude 'griffon.*'
+                exclude 'pivot.*'
+                exclude 'jsr377.*'
+            }
+
+            options {
+                addBooleanOption('javafx', true)
+                links 'https://www.slf4j.org/apidocs/'
+                links 'https://junit.org/junit4/javadoc/latest/'
+                links 'https://aalmiray.github.io/jsr-305/apidocs/'
+                links 'https://javax-inject.github.io/javax-inject/api/'
+                links 'https://docs.oracle.com/javase/8/docs/api/'
+                links 'https://docs.oracle.com/javase/8/javafx/api/'
+                links 'https://google.github.io/guice/api-docs/4.1/javadoc/'
+                links 'https://mabe02.github.io/lanterna/apidocs/3.0/'
+                links 'https://pivot.apache.org/2.0.5/docs/api/'
+                links 'http://docs.groovy-lang.org/latest/html/api/'
+                links 'https://aalmiray.github.io/jipsy/apidocs/'
+                links 'https://aalmiray.github.io/gipsy/apidocs/'
+            }
+        }
+
+        sourceHtml {
+            overview {
+                windowTitle = "Griffon $version"
+                docTitle = "Griffon $version"
+                docDescription = """Griffon is a Grails like application framework for developing desktop
+                                applications in Groovy. Inspired by Grails, Griffon follows the Convention over
+                                Configuration paradigm, paired with an intuitive MVC architecture and a command
+                                line interface."""
+                icon = rootProject.file('src/javadoc/resources/img/griffon.ico')
+                stylesheet = rootProject.file('src/javadoc/resources/css/stylesheet.css')
+            }
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
+        }
+
+        sourceXref {
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
+        }
+    }
+
+    source {
+        aggregate {
+            excludedProjects.addAll nonCoreProjects
         }
     }
 
     bom {
         enabled = false
-    }
-
-    sourceHtml {
-        overview {
-            windowTitle = "Griffon $version"
-            docTitle = "Griffon $version"
-            docDescription = """Griffon is a Grails like application framework for developing desktop
-                            applications in Groovy. Inspired by Grails, Griffon follows the Convention over
-                            Configuration paradigm, paired with an intuitive MVC architecture and a command
-                            line interface."""
-            icon = rootProject.file('src/javadoc/resources/img/griffon.ico')
-            stylesheet = rootProject.file('src/javadoc/resources/css/stylesheet.css')
-        }
-        excludedProjects.addAll nonCoreProjects
-    }
-
-    source {
-        excludedProjects.addAll nonCoreProjects
-    }
-
-    sourceXref {
-        excludedProjects.addAll nonCoreProjects
     }
 
     clirr {
@@ -275,35 +283,10 @@ config {
         }
     }
 
-    jacoco {
-        mergeExecFile       = project.file("${project.buildDir}/jacoco/test.exec")
-        mergeReportHtmlFile = project.file("${project.buildDir}/reports/jacoco/test/html")
-        mergeReportXmlFile  = project.file("${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-    }
-
     publishing {
         signing             = false
-        releasesRepository  = 'stagingRelease'
-        snapshotsRepository = 'stagingSnapshot'
-    }
-}
-
-aggregateJavadocs {
-    doLast { task ->
-        copy {
-            into task.destinationDir
-            from rootProject.file('src/javadoc/resources/img/griffon.ico'),
-                rootProject.file('src/javadoc/resources/css/stylesheet.css')
-        }
-        copy {
-            into file("${task.destinationDir}/resources")
-            from rootProject.file('src/javadoc/resources/img/')
-        }
-        copy {
-            into file("${task.destinationDir}/images/")
-            from rootProject.file('src/media/banners/medium.png')
-            rename '.*', 'griffon-banner-medium.png'
-        }
+        releasesRepository  = 'localRelease'
+        snapshotsRepository = 'localSnapshot'
     }
 }
 
@@ -368,32 +351,36 @@ subprojects { Project subproj ->
             enabled = shouldPublish
         }
 
-        javadoc {
-            enabled = shouldPublish
-        }
-
         source {
             enabled = shouldPublish
         }
 
-        sourceHtml {
-            enabled = isCoreProject
-        }
+        docs {
+            javadoc {
+                enabled = shouldPublish
+            }
 
-        sourceXref {
-            enabled = isCoreProject
+            sourceHtml {
+                enabled = isCoreProject
+            }
+
+            sourceXref {
+                enabled = isCoreProject
+            }
         }
 
         minpom {
-            enabled = isCoreProject
+            enabled = isCoreProject || isSampleProject
         }
 
         testing {
             enabled = isCoreProject || isSampleProject
         }
 
-        jacoco {
-            enabled = isCoreProject || isSampleProject
+        coverage {
+            jacoco {
+                enabled = isCoreProject || isSampleProject
+            }
         }
 
         licensing {
@@ -532,16 +519,6 @@ subprojects { Project subproj ->
                 subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
             }
 
-            test {
-                testLogging {
-                    afterSuite { desc, result ->
-                        if (!desc.parent) {
-                            println "Test results ${project.name}: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
-                        }
-                    }
-                }
-            }
-
             javadoc {
                 doLast { task ->
                     copy {
@@ -624,9 +601,23 @@ project.gradle.addBuildListener(new BuildAdapter() {
             }
         }
 
-        coveralls {
-            sourceDirs = effectiveConfig.jacoco.projects().sourceSets.main.allSource.srcDirs.flatten()
-            jacocoReportPath = effectiveConfig.jacoco.mergeReportXmlFile
+        rootProject.aggregateJavadoc {
+            doLast { task ->
+                copy {
+                    into task.destinationDir
+                    from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                        rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                }
+                copy {
+                    into file("${task.destinationDir}/resources")
+                    from rootProject.file('src/javadoc/resources/img/')
+                }
+                copy {
+                    into file("${task.destinationDir}/images/")
+                    from rootProject.file('src/media/banners/medium.png')
+                    rename '.*', 'griffon-banner-medium.png'
+                }
+            }
         }
 
         sonarqube {

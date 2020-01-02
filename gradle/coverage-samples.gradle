@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2019 the original author or authors.
+ * Copyright 2008-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,12 +65,12 @@ afterEvaluate {
                 _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
             }
 
-            additionalSourceDirs = project.files(_sourceDirectories)
-            sourceDirectories = project.files(_sourceDirectories)
-            classDirectories = project.files(_classDirectories)
+            additionalSourceDirs.from project.files(_sourceDirectories)
+            sourceDirectories.from project.files(_sourceDirectories)
+            classDirectories.from project.files(_classDirectories)
 
             afterEvaluate {
-                classDirectories = files(classDirectories.files.collect { d ->
+                classDirectories.from files(classDirectories.files.collect { d ->
                     fileTree(dir: d, exclude: 'sample/**')
                 })
             }
@@ -86,12 +86,12 @@ afterEvaluate {
                 _sourceDirectories << project(projectName).sourceSets.main.allSource.srcDirs
             }
 
-            additionalSourceDirs = project.files(_sourceDirectories)
-            sourceDirectories = project.files(_sourceDirectories)
-            classDirectories = project.files(_classDirectories)
+            additionalSourceDirs.from project.files(_sourceDirectories)
+            sourceDirectories.from project.files(_sourceDirectories)
+            classDirectories.from project.files(_classDirectories)
 
             afterEvaluate {
-                classDirectories = files(classDirectories.files.collect { d ->
+                classDirectories.from files(classDirectories.files.collect { d ->
                     fileTree(dir: d, exclude: 'sample/**')
                 })
             }

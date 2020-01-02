@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2019 the original author or authors.
+ * Copyright 2008-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'org.kordamp.gradle.guide'
-apply plugin: 'org.ajoberstar.git-publish'
+plugins {
+    id 'org.kordamp.gradle.guide'
+    id 'org.ajoberstar.git-publish'
+}
 
 ext.childProjects = [
     ':griffon-core',
@@ -51,19 +53,6 @@ for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna', 'lanterna3']) {
 }
 (ext.childProjects + ext.sampleProjects).each { evaluationDependsOn it }
 
-config {
-    /*whenRootProjectReady { Project rp ->
-        project(':griffon-guide').tasks.findByName('createGuide').with {
-            dependsOn rp.tasks.findByName('aggregateSourceJar')
-            dependsOn rp.tasks.findByName('aggregateJavadocsJar')
-            dependsOn rp.tasks.findByName('aggregateSourceHtmlJar')
-            from(rp.tasks.findByName('aggregateSourceJar').destinationDir)
-            from(rp.tasks.findByName('aggregateJavadocsJar').destinationDir)
-            from(rp.tasks.findByName('aggregateSourceHtmlJar').destinationDir)
-        }
-    }*/
-}
-
 task sampleStats() {
     dependsOn sampleProjects.collect { project(it).tasks.findByName('sourceStats') }
 }
@@ -76,6 +65,7 @@ def loadProperties(File file) {
 
 asciidoctor {
     dependsOn sampleStats
+    baseDirFollowsSourceDir()
     attributes = [
         toc                     : 'left',
         doctype                 : 'book',
@@ -116,19 +106,4 @@ asciidoctor {
 
 guide {
     sourceHtmlDir = 'api-src'
-}
-
-afterEvaluate {
-    project.tasks.findByName('createGuide')
-
-    gitPublish {
-        repoUri = rootProject.extensions.findByName('config').info.links.scm
-        branch  = 'gh-pages'
-        contents {
-            from project.tasks.findByName('createGuide').outputs.files
-        }
-        commitMessage = "Publish guide for $version"
-    }
-
-    gitPublishCommit.dependsOn(project.tasks.findByName('createGuide'))
 }
