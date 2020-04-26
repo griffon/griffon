@@ -38,7 +38,7 @@ import griffon.exceptions.InstanceNotFoundException;
 import griffon.exceptions.MembersInjectionException;
 import griffon.util.AnnotationUtils;
 
-import javax.annotation.concurrent.GuardedBy;
+// import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import static java.util.Objects.requireNonNull;
 public class GuiceInjector implements Injector<com.google.inject.Injector> {
     private final com.google.inject.Injector delegate;
     private final Object lock = new Object[0];
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private boolean closed;
 
     public GuiceInjector(@Nonnull com.google.inject.Injector delegate) {

@@ -21,9 +21,15 @@ plugins {
 
 config {
     licensing { enabled = false }
-    minpom { enabled = false }
-    source { enabled = false }
-    coverage { jacoco { enabled = false } }
+    publishing { enabled = false }
+    bintray { enabled = true }
+    artifacts {
+        minpom { enabled = false }
+        source { enabled = false }
+    }
+    coverage {
+        jacoco { enabled = false }
+    }
     docs {
         javadoc { enabled = false }
         sourceHtml { enabled = false}
@@ -50,7 +56,7 @@ task copyPom(type: Copy) {
 
 publishing {
     publications {
-        mainPublication(MavenPublication) {
+        main(MavenPublication) {
             artifacts = []
             pom.withXml {
                 def root = asNode()

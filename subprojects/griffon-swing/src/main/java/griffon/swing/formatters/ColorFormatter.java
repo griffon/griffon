@@ -173,14 +173,14 @@ public class ColorFormatter extends AbstractFormatter<Color> {
      * </ul>
      * </p>
      * The input string may also be any of the Color constants identified by
-     * {@code griffon.pivot.support.Colors}.
+     * {@code griffon.swing.support.Colors}.
      *
      * @param str the string representation of a {@code java.awt.Color}
      *
      * @return a {@code java.awt.Color} instance matching the supplied RGBA color components
      *
      * @throws ParseException if the string cannot be parsed by the chosen pattern
-     * @see griffon.pivot.support.Colors
+     * @see griffon.swing.support.Colors
      */
     @Nonnull
     @SuppressWarnings("ConstantConditions")

@@ -23,7 +23,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.codehaus.griffon:gradle-griffon-plugin:$griffonVersion"
+        classpath "org.codehaus.griffon:griffon-gradle-plugin:$griffonVersion"
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
@@ -36,7 +36,7 @@ buildscript {
 }
 
 apply plugin: 'groovy'
-apply plugin: 'org.codehaus.griffon.griffon'
+apply plugin: 'org.codehaus.griffon.project'
 apply plugin: 'net.nemerosa.versioning'
 
 Date buildTimeAndDate = new Date()

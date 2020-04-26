@@ -31,11 +31,11 @@ class GriffonPluginResolutionStrategy {
     private static final String PLUGIN_SUFFIX = '-plugin'
     private static final String GRIFFON_CONFIGURATION = 'griffon'
     private static final List<String> CONFIGURATION_NAMES = [
-        'compile',
+        'api',
         'compileOnly',
         'testCompileOnly',
-        'testCompile',
-        'runtime',
+        'testImplementation',
+        'runtimeOnly',
         'annotationProcessor',
         'testAnnotationProcessor'
     ]
@@ -49,13 +49,12 @@ class GriffonPluginResolutionStrategy {
         griffonConfiguration.incoming.beforeResolve(resolver)
         griffonConfiguration.resolve()
 
-        CONFIGURATION_NAMES.each { String configurationName ->
-            if (project.extensions.getByName(GRIFFON_CONFIGURATION).disableDependencyResolution) {
-                return
-            }
-            DEPENDENCY_MAP.get(project.name, [:])[configurationName].each { String dependency ->
-                project.logger.info("Adding {} to '{}' configuration of {}", dependency, configurationName, project.name)
-                resolver.project.dependencies.add(configurationName, dependency)
+        if (!project.extensions.getByType(GriffonExtension).disableDependencyResolution.get()) {
+            CONFIGURATION_NAMES.each { String configurationName ->
+                DEPENDENCY_MAP.get(project.name, [:])[configurationName].each { String dependency ->
+                    project.logger.info("Adding {} to '{}' configuration of {}", dependency, configurationName, project.name)
+                    resolver.project.dependencies.add(configurationName, dependency)
+                }
             }
         }
     }
@@ -69,16 +68,16 @@ class GriffonPluginResolutionStrategy {
 
         @Override
         void execute(ResolvableDependencies resolvableDependencies) {
-            if (griffonExtension.disableDependencyResolution) {
+            if (griffonExtension.disableDependencyResolution.get()) {
                 return
             }
 
-            String toolkit = griffonExtension.toolkit
+            String toolkit = griffonExtension.toolkit.orNull
             project.logger.info("UI toolkit for project {} is {}", project.name, toolkit)
             String toolkitRegex = (GriffonExtension.TOOLKIT_NAMES - toolkit).join('|')
 
-            boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies?.toBoolean() ||
-                (project.plugins.hasPlugin('groovy') && griffonExtension.includeGroovyDependencies == null)
+            boolean groovyDependenciesEnabled = griffonExtension.includeGroovyDependencies.get() ||
+                (project.pluginManager.hasPlugin('groovy') && griffonExtension.includeGroovyDependencies.get())
             project.logger.info("Groovy dependencies are {}enabled in project {}", (groovyDependenciesEnabled ? '' : 'NOT '), project.name)
 
             resolvableDependencies.dependencies.each { Dependency dependency ->
@@ -126,7 +125,7 @@ class GriffonPluginResolutionStrategy {
         }
 
         private GriffonExtension getGriffonExtension() {
-            project.extensions.getByName(GRIFFON_CONFIGURATION)
+            project.extensions.getByType(GriffonExtension)
         }
 
         private boolean maybeIncludeGroovyDependency(boolean groovyDependenciesEnabled, String artifactId, String scope, String dependencyCoordinates) {
@@ -145,14 +144,10 @@ class GriffonPluginResolutionStrategy {
                 projectDependencyMap.get('compileOnly', []) << dependencyCoordinates
                 projectDependencyMap.get('testCompileOnly', []) << dependencyCoordinates
                 ['annotationProcessor', 'testAnnotationProcessor'].each { conf ->
-                    if (!project.configurations.findByName(conf)) {
-                        project.logger.info("Configuration '{}' does not exist. Apply the 'gradle-apt-plugin' version 0.14 or greater and try again", conf)
-                        return
-                    }
                     projectDependencyMap.get(conf, []) << dependencyCoordinates
                 }
             } else if (scope == 'test' && artifactId.endsWith('-test')) {
-                projectDependencyMap.get('testCompile', []) << dependencyCoordinates
+                projectDependencyMap.get('testImplementation', []) << dependencyCoordinates
             } else {
                 projectDependencyMap.get(scope, []) << dependencyCoordinates
             }

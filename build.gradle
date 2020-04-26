@@ -18,7 +18,7 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://plugins.gradle.org/m2/' }
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -30,16 +30,14 @@ buildscript {
 plugins {
     id 'idea'
     id 'org.kordamp.gradle.java-project'
-    //id 'org.kordamp.gradle.source-html'
     id 'org.kordamp.gradle.clirr'
     id 'org.kordamp.gradle.coveralls'
-    id 'org.sonarqube'
-    id 'org.kordamp.gradle.jdeps'   version '0.8.0'  apply false
-    id 'net.ossindex.audit'         version '0.4.11' apply false
-    id 'org.jonnyzzz.java9c'        version '0.2.3'  apply false
-    id 'nebula.optional-base'       version '5.0.3'  apply false
-    id 'org.ajoberstar.git-publish' version '0.3.2'  apply false
-    id 'org.jbake.site'             version '5.0.0'  apply false
+    id 'org.kordamp.gradle.jdeps'   apply false
+    id 'net.ossindex.audit'         apply false
+    id 'org.jonnyzzz.java9c'        apply false
+    id 'nebula.optional-base'       apply false
+    id 'org.ajoberstar.git-publish' apply false
+    id 'org.jbake.site'             apply false
 }
 
 apply from: 'gradle/idea.gradle'
@@ -91,56 +89,56 @@ config {
             person {
                 id    = 'aalmiray'
                 name  = 'Andres Almiray'
-                roles = [ 'Developer']
+                roles = ['Developer']
             }
             person {
                 id    = 'shemnon'
                 name  = 'Danno Ferrin'
-                roles = [ 'Developer']
+                roles = ['Developer']
             }
             person {
                 id    = 'jwill'
                 name  = 'James Williams'
-                roles = [ 'Developer']
+                roles = ['Developer']
             }
             person {
                 id    = 'aklein'
                 name  = 'Alexander Klein'
-                roles = [ 'Developer']
+                roles = ['Developer']
             }
             person {
                 id    = 'rgroeschke'
                 name  = 'Rene Groeschke'
-                roles = [ 'Developer']
+                roles = ['Developer']
             }
             person {
                 id    = 'rgroeschke'
                 name  = 'Rene Groeschke'
-                roles = [ 'Developer']
+                roles = ['Developer']
             }
             person {
                 id    = 'rgroeschke'
                 name  = 'Rene Groeschke'
-                roles = [ 'Developer']
+                roles = ['Developer']
             }
             person {
                 name  = 'Dierk Koenig'
-                roles = [ 'Contributor']
+                roles = ['Contributor']
             }
             person {
                 name  = 'Guillaume Laforge'
-                roles = [ 'Contributor']
+                roles = ['Contributor']
             }
             person {
                 name  = 'Dean Iverson'
-                roles = [ 'Contributor']
+                roles = ['Contributor']
             }
         }
 
         specification {
             title   = 'JSR-377 API'
             vendor  = 'JSR-377'
-            version = '1.0.0'
+            version = '1.0'
         }
 
         credentials {
@@ -161,8 +159,6 @@ config {
             }
         }
     }
-
-    buildInfo { enabled = false }
 
     licensing {
         licenses {
@@ -227,8 +223,8 @@ config {
                 links 'https://mabe02.github.io/lanterna/apidocs/3.0/'
                 links 'https://pivot.apache.org/2.0.5/docs/api/'
                 links 'http://docs.groovy-lang.org/latest/html/api/'
-                links 'https://aalmiray.github.io/jipsy/apidocs/'
-                links 'https://aalmiray.github.io/gipsy/apidocs/'
+                links 'http://kordamp.org/jipsy/apidocs/'
+                links 'http://kordamp.org/gipsy/apidocs/'
             }
         }
 
@@ -255,9 +251,11 @@ config {
         }
     }
 
-    source {
-        aggregate {
-            excludedProjects.addAll nonCoreProjects
+    artifacts {
+        source {
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
         }
     }
 
@@ -288,6 +286,12 @@ config {
         releasesRepository  = 'localRelease'
         snapshotsRepository = 'localSnapshot'
     }
+
+    coverage {
+        jacoco {
+            toolVersion = jacocoVersion
+        }
+    }
 }
 
 allprojects {
@@ -296,6 +300,8 @@ allprojects {
 
     repositories {
         jcenter()
+        gradlePluginPortal()
+        mavenLocal()
     }
 
     dependencyUpdates.resolutionStrategy = {
@@ -316,10 +322,6 @@ allprojects {
             failOnError = false
         }
     }
-
-    jacoco {
-        toolVersion = jacocoVersion
-    }
 }
 
 subprojects { Project subproj ->
@@ -330,7 +332,7 @@ subprojects { Project subproj ->
     boolean isTemplateProject = subproj.name.endsWith('-templates')
     boolean isPomProject = subproj.name.endsWith('-pom')
     boolean isGroovyProject = subproj.name.endsWith('-groovy')
-    boolean isGradlePlugin = subproj.name.startsWith('gradle-')
+    boolean isGradlePlugin = subproj.name.endsWith('-gradle-plugin')
     boolean shouldPublish = isCoreProject || isArchetypeProject
 
     config {
@@ -351,8 +353,14 @@ subprojects { Project subproj ->
             enabled = shouldPublish
         }
 
-        source {
-            enabled = shouldPublish
+        artifacts {
+            source {
+                enabled = shouldPublish
+            }
+
+            minpom {
+                enabled = isCoreProject || isSampleProject
+            }
         }
 
         docs {
@@ -367,10 +375,6 @@ subprojects { Project subproj ->
             sourceXref {
                 enabled = isCoreProject
             }
-        }
-
-        minpom {
-            enabled = isCoreProject || isSampleProject
         }
 
         testing {
@@ -443,7 +447,7 @@ subprojects { Project subproj ->
             testImplementation("com.google.inject:guice:$guiceVersion") {
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
             }
-            if (!subproj.name.startsWith('gradle-')) {
+            if (!subproj.name.endsWith('-gradle-plugin')) {
                 testImplementation("org.codehaus.groovy:groovy-all:$groovyVersion") {
                     exclude group: 'junit', module: 'junit'
                 }
@@ -499,9 +503,9 @@ subprojects { Project subproj ->
 
         subproj.apply from: rootProject.file('gradle/code-quality.gradle')
 
-        sonarqube {
-            skipProject = !shouldPublish
-        }
+        // sonarqube {
+        //     skipProject = !shouldPublish
+        // }
 
         if (shouldPublish) {
             subproj.apply plugin: 'nebula.optional-base'
@@ -514,9 +518,19 @@ subprojects { Project subproj ->
                 }
             }
 
+            if (isCoreProject) {
+                jar {
+                    manifest {
+                        attributes(
+                            'Automatic-Module-Name': 'org.codehaus.' + subproj.name.replaceAll('-', '.')
+                        )
+                    }
+                }
+            }
+
             if (isCoreProject && rootProject.fullBuild) {
-                //subproj.apply plugin: 'org.kordamp.gradle.jdeps'
-                subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
+                // subproj.apply plugin: 'org.kordamp.gradle.jdeps'
+                // subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
             }
 
             javadoc {
@@ -533,48 +547,6 @@ subprojects { Project subproj ->
                 }
             }
         }
-    }
-
-    task allDeps(type: DependencyReportTask) {}
-
-    configurations.all {
-        resolutionStrategy.force  "com.google.guava:guava:$guavaVersion",
-            "jline:jline:$jlineVersion",
-            "junit:junit:$junitVersion",
-            "cglib:cglib-nodep:$cglibVersion",
-            "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
-            "org.codehau.groovy:groovy-all:$groovyVersion",
-            "org.codehaus.groovy:groovy:$groovyVersion",
-            "org.codehaus.groovy:groovy-json:$groovyVersion",
-            "org.codehaus.groovy:groovy-macro:$groovyVersion",
-            "org.codehaus.groovy:groovy-nio:$groovyVersion",
-            "org.codehaus.groovy:groovy-sql:$groovyVersion",
-            "org.codehaus.groovy:groovy-templates:$groovyVersion",
-            "org.codehaus.groovy:groovy-test:$groovyVersion",
-            "org.codehaus.groovy:groovy-xml:$groovyVersion",
-            "org.slf4j:slf4j-api:$slf4jVersion",
-            "org.slf4j:slf4j-simple:$slf4jVersion",
-            "com.google.code.findbugs:jsr305:$jsr305Version",
-            "commons-io:commons-io:$commonsIoVersion",
-            "org.apache.commons:commons-lang3:$commonsLang3Version",
-            "com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:$concurrentLHMVersion",
-            "org.ow2.asm:asm:$asmVersion",
-            "org.ow2.asm:asm-commons:$asmVersion",
-            "org.ow2.asm:asm-tree:$asmVersion",
-            "org.objenesis:objenesis:$objenesisVersion",
-            "net.bytebuddy:byte-buddy:$bytebuddyVersion",
-            "net.bytebuddy:byte-buddy-agent:$bytebuddyVersion",
-            "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
-            "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
-            "org.apiguardian:apiguardian-api:$apiguardianVersion",
-            "org.apache.ant:ant:$antVersion",
-            "commons-collections:commons-collections:$commonsCollectionsVersion",
-            "com.vladsch.flexmark:flexmark:$flexmarkVersion",
-            "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion",
-            "org.apache.ant:ant-launcher:1.9.13",
-            "org.jruby:jruby-complete:$jrubyVersion"
-
-        resolutionStrategy.failOnVersionConflict()
     }
 }
 
@@ -617,12 +589,6 @@ project.gradle.addBuildListener(new BuildAdapter() {
                     from rootProject.file('src/media/banners/medium.png')
                     rename '.*', 'griffon-banner-medium.png'
                 }
-            }
-        }
-
-        sonarqube {
-            properties {
-                property 'sonar.jacoco.reportPath', effectiveConfig.jacoco.mergeExecFile.absolutePath
             }
         }
     }

@@ -57,12 +57,6 @@ task sampleStats() {
     dependsOn sampleProjects.collect { project(it).tasks.findByName('sourceStats') }
 }
 
-def loadProperties(File file) {
-    Properties props = new Properties()
-    file.withReader { Reader reader -> props.load(reader) }
-    props
-}
-
 asciidoctor {
     dependsOn sampleStats
     baseDirFollowsSourceDir()
@@ -87,8 +81,8 @@ asciidoctor {
         'griffon-group'         : project.group,
         'griffon-source-url'    : project_vcs_url,
         'rootprojectdir'        : rootProject.projectDir.absolutePath,
-        'gradle-griffon-version': loadProperties(project(':gradle-griffon-plugin').file('gradle.properties')).version,
-        'application-master-pom': loadProperties(project(':application-master-pom').file('gradle.properties')).version
+        'gradle-griffon-version': project.version,
+        'griffon-pom'           : project.version
     ]
 
     sources {

@@ -20,39 +20,26 @@ package org.codehaus.griffon.gradle
 import spock.lang.Ignore
 import spock.lang.Unroll
 
+@Ignore
 @Unroll
-class GriffonPluginWithAppliedGroovyPluginSpecification extends AbstractPluginSpecification {
+class GriffonPluginWithAppliedEclipsePluginSpecification extends AbstractPluginSpecification {
     def setupSpec() {
         project {
-            apply plugin: 'groovy'
-            apply plugin: 'org.codehaus.griffon.griffon'
+            apply plugin: 'org.codehaus.griffon.project'
+            apply plugin: 'eclipse'
             project.griffon {
                 version = '3.0.0-SNAPSHOT'
             }
         }
     }
 
-    @Ignore
-    def 'sourceSets.main.groovy contains griffon-app/#srcDir'() {
-        given:
-        project.afterEvaluate {
-            assert project.sourceSets.main.groovy.srcDirs.contains(project.file("griffon-app/${srcDir}"))
-        }
-
-        when:
-        project.evaluate()
-
-        then:
-        true
+    def 'eclipse classpath plusConfigurations contains #configuration'() {
+        expect:
+        project.eclipse.classpath.plusConfigurations.contains configuration
 
         where:
-        srcDir << [
-            'models',
-            'views',
-            'controllers',
-            'services',
-            'conf',
-            'lifecycle'
-        ]
+        configuration                          | _
+        project.configurations.compileOnly     | _
+        project.configurations.testCompileOnly | _
     }
 }

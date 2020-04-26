@@ -27,13 +27,16 @@ config {
 
     plugin {
         enabled             = true
-        id                  = 'org.codehaus.griffon.griffon'
+        id                  = 'org.codehaus.griffon.project'
         implementationClass = 'org.codehaus.griffon.gradle.GriffonPlugin'
     }
 }
 
 dependencies {
     compileOnly gradleApi()
+
+    api "org.kordamp.gradle:java-project-gradle-plugin:$kordampPluginVersion"
+    compileOnly 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
 
     testImplementation('org.spockframework:spock-core:1.3-groovy-2.5') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'

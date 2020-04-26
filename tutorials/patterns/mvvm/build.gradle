@@ -23,7 +23,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:3.0.0-SNAPSHOT'
+        classpath 'org.codehaus.griffon:griffon-gradle-plugin:3.0.0-SNAPSHOT'
         classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
         classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
@@ -31,7 +31,7 @@ buildscript {
 }
 
 apply plugin: 'groovy'
-apply plugin: 'org.codehaus.griffon.griffon'
+apply plugin: 'org.codehaus.griffon.project'
 
 griffon {
     disableDependencyResolution = false
