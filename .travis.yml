@@ -1,8 +1,9 @@
 language: java
 sudo: required
+# to make the build work with oraclejdk8: https://travis-ci.community/t/solved-oraclejdk8-installation-failing-still-again/3428
 dist: trusty
+jdk: oraclejdk8
 install: true
-jdk: openjdk8
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 cache:
