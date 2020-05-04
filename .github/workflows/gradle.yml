@@ -47,5 +47,7 @@ jobs:
             ${{ runner.os }}-gradlew-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+        working-directory: ./main
       - name: Build with Gradle
         run: ./gradlew build -S
+        working-directory: ./main
