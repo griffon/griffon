@@ -9,7 +9,7 @@
 
     <parent>
         <groupId>org.codehaus.griffon</groupId>
-        <artifactId>griffon-pom</artifactId>
+        <artifactId>griffon-parent</artifactId>
         <version>3.0.0-SNAPSHOT</version>
     </parent>
 
@@ -47,10 +47,12 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-groovy-compile</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-beans-compile</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
@@ -68,6 +70,7 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-guice</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -79,10 +82,12 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

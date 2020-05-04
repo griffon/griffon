@@ -15,10 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'groovy'
+
 apply from: rootProject.file('samples/shared-files/samples-common-java.gradle')
 
-mainClassName = 'sample.swing.java.Launcher'
+application {
+    mainClassName = project.name.replace('-', '.') + '.Launcher'
+}
 
 ext.hasIntegrationTests = true
 ext.hasFunctionalTests = false

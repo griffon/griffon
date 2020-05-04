@@ -15,9 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 apply from: rootProject.file('samples/shared-files/samples-common-java.gradle')
 
-mainClassName = 'sample.lanterna3.java.Launcher'
+application {
+    mainClassName = project.name.replace('-', '.') + '.Launcher'
+}
 
 ext.hasIntegrationTests = false
 ext.hasFunctionalTests = false

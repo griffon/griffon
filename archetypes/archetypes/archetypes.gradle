@@ -19,6 +19,14 @@ plugins {
     id 'base'
 }
 
+config {
+    artifacts {
+        jar {
+            enabled = false
+        }
+    }
+}
+
 ext.archetypeProjects = [
     ':griffon-javafx-java-archetype',
     ':griffon-javafx-groovy-archetype',

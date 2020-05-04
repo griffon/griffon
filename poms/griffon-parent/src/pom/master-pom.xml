@@ -47,7 +47,7 @@
         <plugin.enforcer.version>3.0.0-M3</plugin.enforcer.version>
         <plugin.exec.version>1.6.0</plugin.exec.version>
         <plugin.git.commit.version>4.0.0</plugin.git.commit.version>
-        <plugin.gmavenplus.version>1.8.1</plugin.gmavenplus.version>
+        <plugin.gmavenplus.version>1.9.0</plugin.gmavenplus.version>
         <plugin.javadoc.version>3.1.1</plugin.javadoc.version>
         <plugin.javafx.version>0.0.4</plugin.javafx.version>
         <plugin.jacoco.version>0.8.5</plugin.jacoco.version>
@@ -58,7 +58,7 @@
         <plugin.release.version>2.5.3</plugin.release.version>
         <plugin.resources.version>3.1.0</plugin.resources.version>
         <plugin.shade.version>3.2.1</plugin.shade.version>
-        <plugin.shade_ext_transformers.version>1.0.3</plugin.shade_ext_transformers.version>
+        <plugin.shade_ext_transformers.version>1.2.0</plugin.shade_ext_transformers.version>
         <plugin.site.version>3.8.2</plugin.site.version>
         <plugin.surefire.version>3.0.0-M4</plugin.surefire.version>
         <plugin.versions.version>2.7</plugin.versions.version>
@@ -71,6 +71,14 @@
     <!-- tag::dependencyManagement[] -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.codehaus.griffon</groupId>
+                <artifactId>griffon-bom</artifactId>
+                <version>${griffon.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <!--
             <dependency>
                 <groupId>org.codehaus.griffon</groupId>
                 <artifactId>griffon-core</artifactId>
@@ -215,6 +223,7 @@
                 <version>${spock.version}</version>
                 <scope>test</scope>
             </dependency>
+            -->
         </dependencies>
     </dependencyManagement>
     <!-- end::dependencyManagement[] -->

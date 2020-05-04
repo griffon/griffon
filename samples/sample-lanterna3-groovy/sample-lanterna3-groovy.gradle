@@ -15,10 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'groovy'
+
 apply from: rootProject.file('samples/shared-files/samples-common-groovy.gradle')
 
-mainClassName = 'sample.lanterna3.groovy.Launcher'
+application {
+    mainClassName = project.name.replace('-', '.') + '.Launcher'
+}
 
 ext.hasIntegrationTests = false
 ext.hasFunctionalTests = false

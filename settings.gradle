@@ -15,46 +15,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-pluginManagement {
-    repositories {
-        jcenter()
-        gradlePluginPortal()
-        maven { url 'http://dl.bintray.com/pledbrook/plugins' }
-        mavenLocal()
-    }
-    plugins {
-        id 'org.kordamp.gradle.java-project'     version kordampPluginVersion
-        id 'org.kordamp.gradle.source-html'      version kordampPluginVersion
-        id 'org.kordamp.gradle.coveralls'        version kordampPluginVersion
-        id 'org.kordamp.gradle.bintray'          version kordampPluginVersion
-        id 'org.kordamp.gradle.clirr'            version kordampPluginVersion
-        id 'org.kordamp.gradle.guide'            version kordampPluginVersion
-        id 'org.kordamp.gradle.plugin'           version kordampPluginVersion
-        id 'org.kordamp.gradle.integration-test' version kordampPluginVersion
-        id 'org.kordamp.gradle.functional-test'  version kordampPluginVersion
-        id 'org.kordamp.gradle.jdeps'            version '0.9.0'
-        id 'net.ossindex.audit'                  version '0.4.11'
-        id 'org.jonnyzzz.java9c'                 version '0.2.3'
-        id 'nebula.optional-base'                version '5.0.3'
-        id 'org.ajoberstar.git-publish'          version '2.1.3'
-        id 'org.jbake.site'                      version '5.0.0'
-    }
-}
-
 buildscript {
     repositories {
-        gradlePluginPortal()
         mavenLocal()
+        gradlePluginPortal()
+        jcenter()
+        maven { url 'http://dl.bintray.com/pledbrook/plugins' }
     }
     dependencies {
+        classpath 'org.jbake:jbake-gradle-plugin:5.1.0'
+        classpath 'org.ajoberstar:gradle-git-publish:2.1.3'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:5.0.3'
+        classpath 'gradle.plugin.gradle-java9-collision:plugin:0.2.3'
+        classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.4.11'
+        classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.kordamp.gradle:jdeps-gradle-plugin:0.10.0"
+        classpath "org.kordamp.gradle:java-project-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:guide-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:plugin-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:sonar-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:settings-gradle-plugin:$kordampPluginVersion"
-        classpath "org.kordamp.gradle:enforcer-gradle-plugin:$enforcerPluginVersion"
+        classpath "org.kordamp.gradle:enforcer-gradle-plugin:0.2.0-SNAPSHOT"
+        classpath "org.kordamp.gradle:kordamp-parentbuild:$kordampBuildVersion"
     }
 }
-apply plugin: 'org.kordamp.gradle.settings'
-apply plugin: 'org.kordamp.gradle.enforcer'
-
-import static org.kordamp.gradle.plugin.settings.SettingsPlugin.includeProject
+apply plugin: 'org.kordamp.gradle.kordamp-parentbuild'
 
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean circleci = (System.env['CIRCLECI'] ?: false) as boolean
@@ -68,96 +54,64 @@ includeBuild '../jsr377-tck'
 includeBuild '../jsr377-converters'
 
 projects {
-    layout = 'multi-level'
-}
+    layout = 'explicit'
 
-includeProject settings, 'subprojects/griffon-core'
-includeProject settings, 'subprojects/griffon-core-compile'
-includeProject settings, 'subprojects/griffon-core-test'
-includeProject settings, 'subprojects/griffon-beans'
-includeProject settings, 'subprojects/griffon-beans-compile'
-includeProject settings, 'subprojects/griffon-guice'
-includeProject settings, 'subprojects/griffon-groovy'
-includeProject settings, 'subprojects/griffon-groovy-compile'
-includeProject settings, 'subprojects/griffon-swing'
-includeProject settings, 'subprojects/griffon-swing-groovy'
-includeProject settings, 'subprojects/griffon-javafx'
-includeProject settings, 'subprojects/griffon-javafx-compile'
-includeProject settings, 'subprojects/griffon-javafx-groovy'
-includeProject settings, 'subprojects/griffon-javafx-kotlin'
-includeProject settings, 'subprojects/griffon-lanterna'
-includeProject settings, 'subprojects/griffon-lanterna-groovy'
-includeProject settings, 'subprojects/griffon-lanterna3'
-includeProject settings, 'subprojects/griffon-lanterna3-groovy'
-includeProject settings, 'subprojects/griffon-pivot'
-includeProject settings, 'subprojects/griffon-pivot-groovy'
-includeProject settings, 'subprojects/griffon-swing-test'
-includeProject settings, 'subprojects/griffon-pivot-test'
-includeProject settings, 'subprojects/griffon-javafx-test'
-includeProject settings, 'subprojects/griffon-gradle-plugin'
+    includeFromDir('subprojects')
+    includeFromDir('plugins')
+    includeFromDir('samples')
+        .exclude('editor-swing-groovy')
+        .when(!appveyor)
+    includeFromDir('poms').when(fullBuild)
+    includeFromDir('templates').when(fullBuild)
+    includeFromDir('docs').when(fullBuild)
+    includeFromDir('archetypes').when(fullBuild)
 
-if (!appveyor) {
-    includeProject settings, 'samples/sample-swing-java'
-    includeProject settings, 'samples/sample-swing-groovy'
-    includeProject settings, 'samples/sample-javafx-java'
-    includeProject settings, 'samples/sample-javafx-groovy'
-    includeProject settings, 'samples/sample-lanterna-java'
-    includeProject settings, 'samples/sample-lanterna-groovy'
-    includeProject settings, 'samples/sample-lanterna3-java'
-    includeProject settings, 'samples/sample-lanterna3-groovy'
-    includeProject settings, 'samples/sample-javafx-kotlin'
-    includeProject settings, 'samples/sample-pivot-java'
-    includeProject settings, 'samples/sample-pivot-groovy'
-}
-
-if (fullBuild) {
-    includeProject settings, 'subprojects/griffon-pom'
-    // includeProject settings 'samples/editor-swing-groovy'
-    includeProject settings, 'samples/editor-swing-java'
-    includeProject settings, 'samples/editor-javafx-java'
-    includeProject settings, 'samples/browser-javafx-groovy'
-    includeProject settings, 'samples/console-swing-groovy'
-    includeProject settings, 'templates/griffon-swing-java-templates'
-    includeProject settings, 'templates/griffon-swing-groovy-templates'
-    includeProject settings, 'templates/griffon-javafx-java-templates'
-    includeProject settings, 'templates/griffon-javafx-groovy-templates'
-    includeProject settings, 'templates/griffon-javafx-kotlin-templates'
-    includeProject settings, 'templates/griffon-pivot-java-templates'
-    includeProject settings, 'templates/griffon-pivot-groovy-templates'
-    includeProject settings, 'templates/griffon-lanterna-java-templates'
-    includeProject settings, 'templates/griffon-lanterna-groovy-templates'
-    includeProject settings, 'templates/griffon-lanterna3-java-templates'
-    includeProject settings, 'templates/griffon-lanterna3-groovy-templates'
-    includeProject settings, 'templates/griffon-standard-templates'
-    includeProject settings, 'docs/griffon-guide'
-    includeProject settings, 'docs/griffon-site'
-    includeProject settings, 'archetypes/griffon-javafx-java-archetype'
-    includeProject settings, 'archetypes/griffon-javafx-groovy-archetype'
-    includeProject settings, 'archetypes/griffon-lanterna-java-archetype'
-    includeProject settings, 'archetypes/griffon-lanterna-groovy-archetype'
-    includeProject settings, 'archetypes/griffon-lanterna3-java-archetype'
-    includeProject settings, 'archetypes/griffon-lanterna3-groovy-archetype'
-    includeProject settings, 'archetypes/griffon-pivot-java-archetype'
-    includeProject settings, 'archetypes/griffon-pivot-groovy-archetype'
-    includeProject settings, 'archetypes/griffon-swing-java-archetype'
-    includeProject settings, 'archetypes/griffon-swing-groovy-archetype'
-    includeProject settings, 'archetypes/archetypes'
-}
-
-ExtraPropertiesExtension ext = settings.extensions.findByType(ExtraPropertiesExtension)
-String scompat = ext.has('sourceCompatibility') ? ext.get('sourceCompatibility') : ''
-String tcompat = ext.has('targetCompatibility') ? ext.get('targetCompatibility') : ''
-String javaVersion = scompat ?: tcompat
-
-enforce {
-    if (javaVersion) {
-        rule(enforcer.rules.EnforceBytecodeVersion) { r ->
-            r.maxJdkVersion.set(javaVersion)
+    plugins {
+        all {
+            id 'idea'
+            id('net.ossindex.audit').when(fullBuild)
         }
-        rule(enforcer.rules.RequireJavaVersion) { r ->
-            r.version.set(javaVersion)
+        path(':') {
+            id 'org.kordamp.gradle.java-project'
+            id 'org.kordamp.gradle.clirr'
+            id 'org.kordamp.gradle.coveralls'
+        }
+        dir('subprojects') {
+            id 'java-library'
+            id 'groovy'
+            id('nebula.optional-base')
+            id('org.kordamp.gradle.jdeps').when({-> false && fullBuild})
+            id('org.jonnyzzz.java9c').when(fullBuild)
+        }
+        dir('archetypes') {
+            exclude('archetypes')
+            id 'java-library'
+        }
+        dir('plugins') {
+            id 'java-library'
+            id 'groovy'
+            id 'org.kordamp.gradle.plugin'
+        }
+        dir('samples') {
+            id 'java-library'
+            id 'application'
+        }
+        path(':sample-*') {
+            id 'groovy'
+            id 'org.kordamp.gradle.integration-test'
+            id 'org.kordamp.gradle.functional-test'
+        }
+        path('*-groovy') {
+            id 'groovy'
+        }
+        path('*-kotlin') {
+            id 'kotlin'
         }
     }
+}
+
+enforce {
+    mergeStrategy = 'override'
     rule(enforcer.rules.DependencyConvergence)
     rule(enforcer.rules.BanDuplicateClasses) { r ->
         r.enabled = false
@@ -169,56 +123,68 @@ enforce {
     }
     rule(enforcer.rules.ForceDependencies) { r ->
         r.dependencies.addAll "com.google.guava:guava:$guavaVersion",
-        "jline:jline:$jlineVersion",
-        "junit:junit:$junitVersion",
-        "cglib:cglib-nodep:$cglibVersion",
-        "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
-        "org.codehau.groovy:groovy-all:$groovyVersion",
-        "org.codehaus.groovy:groovy:$groovyVersion",
-        "org.codehaus.groovy:groovy-json:$groovyVersion",
-        "org.codehaus.groovy:groovy-macro:$groovyVersion",
-        "org.codehaus.groovy:groovy-nio:$groovyVersion",
-        "org.codehaus.groovy:groovy-sql:$groovyVersion",
-        "org.codehaus.groovy:groovy-templates:$groovyVersion",
-        "org.codehaus.groovy:groovy-test:$groovyVersion",
-        "org.codehaus.groovy:groovy-xml:$groovyVersion",
-        "org.slf4j:slf4j-api:$slf4jVersion",
-        "org.slf4j:slf4j-simple:$slf4jVersion",
-        "com.google.code.findbugs:jsr305:$jsr305Version",
-        "commons-io:commons-io:$commonsIoVersion",
-        "commons-lang:commons-lang:$commonsLangVersion",
-        "commons-logging:commons-logging:$commonsLoggingVersion",
-        "org.apache.commons:commons-lang3:$commonsLang3Version",
-        "com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:$concurrentLHMVersion",
-        "org.ow2.asm:asm:$asmVersion",
-        "org.ow2.asm:asm-commons:$asmVersion",
-        "org.ow2.asm:asm-tree:$asmVersion",
-        "org.objenesis:objenesis:$objenesisVersion",
-        "net.bytebuddy:byte-buddy:$bytebuddyVersion",
-        "net.bytebuddy:byte-buddy-agent:$bytebuddyVersion",
-        "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
-        "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
-        "org.junit.platform:junit-platform-launcher:$junitPlatformVersion",
-        "org.apiguardian:apiguardian-api:$apiguardianVersion",
-        "org.apache.ant:ant:$antVersion",
-        "commons-collections:commons-collections:$commonsCollectionsVersion",
-        "com.vladsch.flexmark:flexmark:$flexmarkVersion",
-        "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion",
-        "org.jruby:jruby-complete:$jrubyVersion",
-        "org.eclipse.jgit:org.eclipse.jgit.ui:$jgitVersion",
-        "org.eclipse.jgit:org.eclipse.jgit:$jgitVersion",
-        "com.jcraft:jsch.agentproxy.pageant:$jschAgentproxyVersion",
-        "com.jcraft:jsch.agentproxy.sshagent:$jschAgentproxyVersion",
-        "com.jcraft:jsch.agentproxy.usocket-jna:$jschAgentproxyVersion",
-        "com.jcraft:jsch.agentproxy.usocket-nc:$jschAgentproxyVersion",
-        "com.jcraft:jsch.agentproxy.core:$jschAgentproxyVersion",
-        "com.jcraft:jsch:$jschVersion",
-        "org.codehaus.plexus:plexus-utils:3.1.0",
-        "org.codehaus.plexus:plexus-interpolation:1.14",
-        "org.apache.ant:ant-launcher:1.9.13",
-        "org.apache.maven:maven-settings:3.0.4",
-        "org.codehaus.groovy.modules.http-builder:http-builder:0.7.2",
-        "org.apache.httpcomponents:httpclient:4.3.6",
-        "com.trilead:trilead-ssh2:1.0.0-build220"
+            "jline:jline:$jlineVersion",
+            "junit:junit:$junitVersion",
+            "cglib:cglib-nodep:$cglibVersion",
+            "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
+            "org.codehau.groovy:groovy-all:$groovyVersion",
+            "org.codehaus.groovy:groovy:$groovyVersion",
+            "org.codehaus.groovy:groovy-json:$groovyVersion",
+            "org.codehaus.groovy:groovy-macro:$groovyVersion",
+            "org.codehaus.groovy:groovy-nio:$groovyVersion",
+            "org.codehaus.groovy:groovy-sql:$groovyVersion",
+            "org.codehaus.groovy:groovy-templates:$groovyVersion",
+            "org.codehaus.groovy:groovy-test:$groovyVersion",
+            "org.codehaus.groovy:groovy-xml:$groovyVersion",
+            "org.slf4j:slf4j-api:$slf4jVersion",
+            "org.slf4j:slf4j-simple:$slf4jVersion",
+            "com.google.code.findbugs:jsr305:$jsr305Version",
+            "commons-io:commons-io:$commonsIoVersion",
+            "commons-lang:commons-lang:$commonsLangVersion",
+            "commons-logging:commons-logging:$commonsLoggingVersion",
+            "org.apache.commons:commons-lang3:$commonsLang3Version",
+            "com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:$concurrentLHMVersion",
+            "org.ow2.asm:asm:$asmVersion",
+            "org.ow2.asm:asm-commons:$asmVersion",
+            "org.ow2.asm:asm-tree:$asmVersion",
+            "org.objenesis:objenesis:$objenesisVersion",
+            "net.bytebuddy:byte-buddy:$bytebuddyVersion",
+            "net.bytebuddy:byte-buddy-agent:$bytebuddyVersion",
+            "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
+            "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
+            "org.junit.platform:junit-platform-launcher:$junitPlatformVersion",
+            "org.apiguardian:apiguardian-api:$apiguardianVersion",
+            "org.apache.ant:ant:$antVersion",
+            "commons-collections:commons-collections:$commonsCollectionsVersion",
+            "com.vladsch.flexmark:flexmark:$flexmarkVersion",
+            "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion",
+            "org.jruby:jruby-complete:$jrubyVersion",
+            "org.eclipse.jgit:org.eclipse.jgit.ui:$jgitVersion",
+            "org.eclipse.jgit:org.eclipse.jgit:$jgitVersion",
+            "com.jcraft:jsch.agentproxy.pageant:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.sshagent:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.usocket-jna:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.usocket-nc:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.core:$jschAgentproxyVersion",
+            "com.jcraft:jsch:$jschVersion",
+            "org.codehaus.plexus:plexus-utils:3.3.0",
+            "org.codehaus.plexus:plexus-interpolation:1.26",
+            "org.apache.ant:ant-launcher:1.9.13",
+            "org.apache.maven:maven-settings:$mavenVersion",
+            "org.apache.maven:maven-settings-builder:$mavenVersion",
+            "org.codehaus.groovy.modules.http-builder:http-builder:0.7.2",
+            "org.apache.httpcomponents:httpclient:4.5.12",
+            "com.trilead:trilead-ssh2:1.0.0-build220",
+            "org.apache.httpcomponents:httpcore:4.4.13",
+            "org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.4",
+            "org.codehaus.plexus:plexus-component-annotations:2.1.0",
+            "org.apache.maven.resolver:maven-resolver-api:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-util:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-impl:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-connector-basic:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-transport-classpath:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-transport-file:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-transport-http:1.4.1",
+            "org.apache.maven:maven-resolver-provider:3.6.3"
     }
 }

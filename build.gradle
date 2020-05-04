@@ -15,30 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-buildscript {
-    repositories {
-        jcenter()
-        gradlePluginPortal()
-    }
-
-    dependencies {
-        classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    }
-}
-
-plugins {
-    id 'idea'
-    id 'org.kordamp.gradle.java-project'
-    id 'org.kordamp.gradle.clirr'
-    id 'org.kordamp.gradle.coveralls'
-    id 'org.kordamp.gradle.jdeps'   apply false
-    id 'net.ossindex.audit'         apply false
-    id 'org.jonnyzzz.java9c'        apply false
-    id 'nebula.optional-base'       apply false
-    id 'org.ajoberstar.git-publish' apply false
-    id 'org.jbake.site'             apply false
-}
 
 apply from: 'gradle/idea.gradle'
 
@@ -56,16 +32,10 @@ ext {
         '**/*.txt'
     ]
     nonCoreProjects = subprojects.findAll { !it.projectDir.absolutePath.contains('subprojects') }
+    coreProjects = subprojects.findAll { it.projectDir.absolutePath.contains('subprojects') }
 }
 
-if (!project.hasProperty('bintrayUsername'))  ext.bintrayUsername  = '**undefined**'
-if (!project.hasProperty('bintrayApiKey'))    ext.bintrayApiKey    = '**undefined**'
-if (!project.hasProperty('sonatypeUsername')) ext.sonatypeUsername = '**undefined**'
-if (!project.hasProperty('sonatypePassword')) ext.sonatypePassword = '**undefined**'
-
 config {
-    release = (rootProject.findProperty('release') ?: false).toBoolean()
-
     info {
         name          = 'griffon'
         vendor        = 'Griffon'
@@ -86,11 +56,6 @@ config {
         }
 
         people {
-            person {
-                id    = 'aalmiray'
-                name  = 'Andres Almiray'
-                roles = ['Developer']
-            }
             person {
                 id    = 'shemnon'
                 name  = 'Danno Ferrin'
@@ -140,39 +105,9 @@ config {
             vendor  = 'JSR-377'
             version = '1.0'
         }
-
-        credentials {
-            sonatype {
-                username = project.sonatypeUsername
-                password = project.sonatypePassword
-            }
-        }
-
-        repositories {
-            repository {
-                name = 'localRelease'
-                url  = "${project.rootProject.buildDir}/repos/local/release"
-            }
-            repository {
-                name = 'localSnapshot'
-                url  = "${project.rootProject.buildDir}/repos/local/snapshot"
-            }
-        }
-    }
-
-    licensing {
-        licenses {
-            license {
-                id = 'Apache-2.0'
-            }
-        }
     }
 
     bintray {
-        credentials {
-            username = project.bintrayUsername
-            password = project.bintrayApiKey
-        }
         userOrg = 'griffon'
         name    = 'griffon'
     }
@@ -281,12 +216,6 @@ config {
         }
     }
 
-    publishing {
-        signing             = false
-        releasesRepository  = 'localRelease'
-        snapshotsRepository = 'localSnapshot'
-    }
-
     coverage {
         jacoco {
             toolVersion = jacocoVersion
@@ -295,26 +224,9 @@ config {
 }
 
 allprojects {
-    apply plugin: 'idea'
-    if (rootProject.fullBuild) apply plugin: 'net.ossindex.audit'
-
     repositories {
-        jcenter()
         gradlePluginPortal()
         mavenLocal()
-    }
-
-    dependencyUpdates.resolutionStrategy = {
-        componentSelection { rules ->
-            rules.all { selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Release candidate')
-                }
-            }
-        }
     }
 
     if (rootProject.fullBuild) {
@@ -330,13 +242,15 @@ subprojects { Project subproj ->
     boolean isDocProject = subproj.projectDir.absolutePath.contains('docs')
     boolean isArchetypeProject = subproj.name.endsWith('-archetype')
     boolean isTemplateProject = subproj.name.endsWith('-templates')
-    boolean isPomProject = subproj.name.endsWith('-pom')
+    boolean isPomProject = subproj.projectDir.absolutePath.contains('poms')
     boolean isGroovyProject = subproj.name.endsWith('-groovy')
-    boolean isGradlePlugin = subproj.name.endsWith('-gradle-plugin')
+    boolean isGradlePlugin = subproj.projectDir.absolutePath.contains('plugins')
     boolean shouldPublish = isCoreProject || isArchetypeProject
 
     config {
         info {
+            name        = subproj.name
+            description = subproj.project_description
             specification {
                 enabled = !isArchetypeProject && !isTemplateProject && !isDocProject
             }
@@ -378,12 +292,12 @@ subprojects { Project subproj ->
         }
 
         testing {
-            enabled = isCoreProject || isSampleProject
+            enabled = isCoreProject || isSampleProject || isGradlePlugin
         }
 
         coverage {
             jacoco {
-                enabled = isCoreProject || isSampleProject
+                enabled = isCoreProject || isSampleProject || isGradlePlugin
             }
         }
 
@@ -507,46 +421,40 @@ subprojects { Project subproj ->
         //     skipProject = !shouldPublish
         // }
 
-        if (shouldPublish) {
-            subproj.apply plugin: 'nebula.optional-base'
-
+        if (isCoreProject) {
             if (rootProject.fullBuild) {
-                subproj.apply plugin: 'org.jonnyzzz.java9c'
-
                 java9c {
                     failOnCollision = false
                 }
             }
 
-            if (isCoreProject) {
-                jar {
-                    manifest {
-                        attributes(
-                            'Automatic-Module-Name': 'org.codehaus.' + subproj.name.replaceAll('-', '.')
-                        )
-                    }
-                }
-            }
-
-            if (isCoreProject && rootProject.fullBuild) {
-                // subproj.apply plugin: 'org.kordamp.gradle.jdeps'
-                // subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
-            }
-
-            javadoc {
-                doLast { task ->
-                    copy {
-                        into task.destinationDir
-                        from rootProject.file('src/javadoc/resources/img/griffon.ico'),
-                             rootProject.file('src/javadoc/resources/css/stylesheet.css')
-                    }
-                    copy {
-                        into file("${task.destinationDir}/resources")
-                        from rootProject.file('src/javadoc/resources/img/')
-                    }
+            jar {
+                manifest {
+                    attributes(
+                        'Automatic-Module-Name': 'org.codehaus.' + subproj.name.replaceAll('-', '.')
+                    )
                 }
             }
         }
+
+        if (isCoreProject && rootProject.fullBuild) {
+            // subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
+        }
+
+        javadoc {
+            doLast { task ->
+                copy {
+                    into task.destinationDir
+                    from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                        rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                }
+                copy {
+                    into file("${task.destinationDir}/resources")
+                    from rootProject.file('src/javadoc/resources/img/')
+                }
+            }
+        }
+
     }
 }
 

@@ -9,7 +9,7 @@
 
     <parent>
         <groupId>org.codehaus.griffon</groupId>
-        <artifactId>griffon-pom</artifactId>
+        <artifactId>griffon-parent</artifactId>
         <version>${griffon_version}</version>
     </parent>
 
@@ -42,6 +42,7 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-compile</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
@@ -50,11 +51,13 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-javafx-compile</artifactId>
+            <scope>provided</scope>
         </dependency>
         <!-- runtime -->
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-guice</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -66,10 +69,12 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-javafx-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
