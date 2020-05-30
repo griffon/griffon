@@ -19,13 +19,13 @@
 dependencies {
     api project(':griffon-javafx')
     api project(':griffon-core-test')
-    api("org.testfx:testfx-core:$testfxVersion") {
+    api(config.dependencies.gav('testfx', 'testfx-core')) {
         transitive = false
     }
-    api("org.testfx:testfx-junit5:$testfxVersion") {
+    api(config.dependencies.gav('testfx', 'testfx-junit5')) {
         transitive = false
     }
-    api "com.google.guava:guava:$guavaVersion"
+    api config.dependencies.gav('guava')
 
     testRuntimeOnly project(':griffon-guice')
 }

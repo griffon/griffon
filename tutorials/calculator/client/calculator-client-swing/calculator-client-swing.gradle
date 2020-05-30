@@ -45,8 +45,8 @@ apply from: rootProject.file('client/calculator-client-common/gradle/package.gra
 apply from: rootProject.file('client/calculator-client-common/gradle/docs.gradle')
 
 dependencies {
-    compile project(':calculator-component-swing')
-    compile project(':calculator-client-common')
+    implementation project(':calculator-component-swing')
+    implementation project(':calculator-client-common')
 
     griffon "org.codehaus.griffon.plugins:griffon-miglayout-plugin:${miglayoutVersion}"
 

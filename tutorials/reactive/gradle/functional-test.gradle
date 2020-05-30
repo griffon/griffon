@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 configurations {
-    functionalTestCompile {
+    functionalTestImplementation {
         extendsFrom compile
     }
     functionalTestRuntime {
@@ -25,12 +25,12 @@ configurations {
 }
 
 dependencies {
-    functionalTestCompile 'junit:junit:4.12'
+    functionalTestImplementation 'junit:junit:4.12'
 
-    functionalTestCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
-    functionalTestCompile  "org.mockito:mockito-core:$mockitoVersion"
-    functionalTestCompile "org.awaitility:awaitility:$awaitilityVersion"
-    functionalTestCompile "com.github.tomakehurst:wiremock:$wiremockVersion"
+    functionalTestImplementation "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
+    functionalTestImplementation  "org.mockito:mockito-core:$mockitoVersion"
+    functionalTestImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    functionalTestImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
 }
 
 sourceSets {
@@ -48,7 +48,7 @@ sourceSets {
 
 idea {
     module {
-        scopes.TEST.plus += [configurations.functionalTestCompile]
+        scopes.TEST.plus += [configurations.functionalTestImplementation]
         scopes.TEST.plus += [configurations.functionalTestRuntime]
         testSourceDirs += sourceSets.functionalTest.allSource.srcDirs
     }

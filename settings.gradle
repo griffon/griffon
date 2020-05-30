@@ -20,23 +20,24 @@ buildscript {
         mavenLocal()
         gradlePluginPortal()
         jcenter()
-        maven { url 'http://dl.bintray.com/pledbrook/plugins' }
+        maven { url 'https://dl.bintray.com/pledbrook/plugins' }
     }
     dependencies {
-        classpath 'org.jbake:jbake-gradle-plugin:5.1.0'
+        classpath 'org.jbake:jbake-gradle-plugin:5.2.0'
         classpath 'org.ajoberstar:gradle-git-publish:2.1.3'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:5.0.3'
         classpath 'gradle.plugin.gradle-java9-collision:plugin:0.2.3'
         classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.4.11'
         classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.kordamp.gradle:jdeps-gradle-plugin:0.10.0"
+        classpath "org.kordamp.gradle:jdeps-gradle-plugin:0.11.0"
         classpath "org.kordamp.gradle:java-project-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:groovy-project-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:guide-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:plugin-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:sonar-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:settings-gradle-plugin:$kordampPluginVersion"
-        classpath "org.kordamp.gradle:enforcer-gradle-plugin:0.2.0-SNAPSHOT"
+        classpath "org.kordamp.gradle:enforcer-gradle-plugin:0.3.0"
         classpath "org.kordamp.gradle:kordamp-parentbuild:$kordampBuildVersion"
     }
 }
@@ -90,6 +91,7 @@ projects {
         dir('plugins') {
             id 'java-library'
             id 'groovy'
+            id 'org.kordamp.gradle.groovy-project'
             id 'org.kordamp.gradle.plugin'
         }
         dir('samples') {
@@ -111,6 +113,7 @@ projects {
 }
 
 enforce {
+    enabled = false
     mergeStrategy = 'override'
     rule(enforcer.rules.DependencyConvergence)
     rule(enforcer.rules.BanDuplicateClasses) { r ->

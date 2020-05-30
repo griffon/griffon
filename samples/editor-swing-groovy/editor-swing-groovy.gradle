@@ -39,7 +39,7 @@ dependencies {
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtimeOnly "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    runtimeOnly config.dependencies.gav('slf4j', 'slf4j-log4j12')
 }
 
 sourceSets {

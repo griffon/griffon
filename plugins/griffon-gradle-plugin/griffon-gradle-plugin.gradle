@@ -21,6 +21,15 @@ config {
         tags = ['griffon', 'plugin']
     }
 
+    docs {
+        groovydoc {
+            replaceJavadoc = true
+            options {
+                link 'https://docs.gradle.org/5.0/javadoc/', 'org.gradle.'
+            }
+        }
+    }
+
     plugin {
         enabled             = true
         id                  = 'org.codehaus.griffon.project'

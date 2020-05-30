@@ -88,8 +88,8 @@ dependencies {
     testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
     testCompile  "org.mockito:mockito-core:$mockitoVersion"
 
-    integrationTestCompile "org.awaitility:awaitility:$awaitilityVersion"
-    integrationTestCompile "com.github.tomakehurst:wiremock:$wiremockVersion"
+    functionalTestImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    functionalTestImplementation "com.github.tomakehurst:wiremock:$wiremockVersion"
 }
 
 tasks.withType(JavaCompile) {

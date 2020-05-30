@@ -221,6 +221,53 @@ config {
             toolVersion = jacocoVersion
         }
     }
+
+    dependencies {
+        dependency('jsr377') {
+            groupId    = 'javax.application'
+            artifactId = 'jsr377-api'
+            version    = '1.0.0-SNAPSHOT'
+            modules    = ['jsr377-tck']
+        }
+        dependency("org.kordamp.gipsy:gipsy:$jipsyVersion")
+        dependency("org.kordamp.jipsy:jipsy:$jipsyVersion") {
+            modules    = ['jipsy-util']
+        }
+        dependency('slf4j') {
+            groupId    = 'org.slf4j'
+            artifactId = 'slf4j-api'
+            version    = slf4jVersion
+            modules    = ['slf4j-simple', 'slf4j-log4j12']
+        }
+        dependency("junit:junit:$junitVersion")
+        dependency('junit5') {
+            groupId    = 'org.junit.jupiter'
+            artifactId = 'junit-jupiter-api'
+            version    = junit5Version
+            modules    = [
+                'junit-jupiter-params',
+                'junit-jupiter-engine'
+            ]
+        }
+        dependency('junit5v') {
+            groupId    = 'org.junit.vintage'
+            artifactId = 'junit-vintage-engine'
+            version    = junit5Version
+        }
+        dependency('testfx') {
+            groupId    = 'org.testfx'
+            artifactId = 'testfx-core'
+            version    = testfxVersion
+            modules    = ['testfx-junit5', 'testfx-junit']
+        }
+        dependency("com.google.guava:guava:$guavaVersion")
+        dependency('cglib') {
+            groupId    = 'cglib'
+            artifactId = 'cglib'
+            version    = cglibVersion
+            modules    = ['cglib-nodep']
+        }
+    }
 }
 
 allprojects {
@@ -340,16 +387,18 @@ subprojects { Project subproj ->
         }
 
         dependencies {
-            compileOnly "org.kordamp.jipsy:jipsy:${jipsyVersion}"
-            annotationProcessor "org.kordamp.jipsy:jipsy:${jipsyVersion}"
+            // if (isCoreProject) cfg.platform('griffon', 'api')
 
-            testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-            testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
-            testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-            testRuntimeOnly("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+            compileOnly config.dependencies.gav('jipsy')
+            annotationProcessor config.dependencies.gav('jipsy')
+
+            testImplementation config.dependencies.gav('junit5', 'junit-jupiter-api')
+            testImplementation config.dependencies.gav('junit5', 'junit-jupiter-params')
+            testRuntimeOnly config.dependencies.gav('junit5', 'junit-jupiter-engine')
+            testRuntimeOnly(config.dependencies.gav('junit5v', 'junit-vintage-engine')) {
                 exclude group: 'junit', module: 'junit'
             }
-            testImplementation("junit:junit:$junitVersion") {
+            testImplementation(config.dependencies.gav('junit')) {
                 exclude group: 'org.hamcrest', module: 'hamcrest-core'
             }
             testImplementation("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
@@ -378,11 +427,11 @@ subprojects { Project subproj ->
                     exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
                 }
 
-                testImplementation "javax.application:jsr377-tck:$jsr377TckVersion"
+                testImplementation config.dependencies.gav('jsr377', 'jsr377-tck')
                 testImplementation "org.mockito:mockito-core:$mockitoVersion"
             }
-            testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
-            testImplementation 'cglib:cglib-nodep:3.2.0'
+            testImplementation config.dependencies.gav('slf4j', 'slf4j-simple')
+            testImplementation config.dependencies.gav('cglib', 'cglib-nodep')
         }
 
         processTestResources {
@@ -461,7 +510,6 @@ subprojects { Project subproj ->
 project.gradle.addBuildListener(new BuildAdapter() {
     @Override
     void projectsEvaluated(Gradle gradle) {
-        def effectiveConfig = project.rootProject.extensions.findByName('effectiveConfig')
         project.subprojects.each { Project subprj ->
             subprj.plugins.withType(JavaPlugin) {
                 subprj.processResources {
@@ -470,11 +518,11 @@ project.gradle.addBuildListener(new BuildAdapter() {
                             'application_name': subprj.name,
                             'application_version': subprj.version,
                             'griffon_version': subprj.version,
-                            'built_by': effectiveConfig.buildInfo.buildBy,
-                            'created_by': effectiveConfig.buildInfo.buildCreatedBy,
-                            'build_date': effectiveConfig.buildInfo.buildDate,
-                            'build_time': effectiveConfig.buildInfo.buildTime,
-                            'build_revision': effectiveConfig.buildInfo.buildRevision
+                            'built_by': project.rootProject.config.buildInfo.buildBy,
+                            'created_by': project.rootProject.config.buildInfo.buildCreatedBy,
+                            'build_date': project.rootProject.config.buildInfo.buildDate,
+                            'build_time': project.rootProject.config.buildInfo.buildTime,
+                            'build_revision': project.rootProject.config.buildInfo.buildRevision
                         )
                     }
                 }

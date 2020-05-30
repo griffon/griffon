@@ -22,6 +22,6 @@ plugins {
 
 config {
     bom {
-        includes = coreProjects.collect { it.name }
+        includes = coreProjects*.name
     }
 }

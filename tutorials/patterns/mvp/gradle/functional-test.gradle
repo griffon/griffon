@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 configurations {
-    functionalTestCompile {
+    functionalTestImplementation {
         extendsFrom compile
     }
     functionalTestRuntime {
@@ -25,8 +25,8 @@ configurations {
 }
 
 dependencies {
-    functionalTestCompile 'junit:junit:4.12'
-    functionalTestCompile 'pl.pragmatists:JUnitParams:1.1.1'
+    functionalTestImplementation 'junit:junit:4.12'
+    functionalTestImplementation 'pl.pragmatists:JUnitParams:1.1.1'
 }
 
 sourceSets {
@@ -47,7 +47,7 @@ sourceSets {
 
 idea {
     module {
-        scopes.TEST.plus += [configurations.functionalTestCompile]
+        scopes.TEST.plus += [configurations.functionalTestImplementation]
         scopes.TEST.plus += [configurations.functionalTestRuntime]
         testSourceDirs += sourceSets.functionalTest.allSource.srcDirs
     }

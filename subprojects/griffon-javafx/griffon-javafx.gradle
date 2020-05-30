@@ -27,10 +27,10 @@ dependencies {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
         exclude group: 'org.hamcrest', module: 'hamcrest-library'
     }
-    testImplementation("org.testfx:testfx-core:$testfxVersion") {
+    testImplementation(config.dependencies.gav('testfx', 'testfx-core')) {
         transitive = false
     }
-    testImplementation("org.testfx:testfx-junit:$testfxVersion") {
+    testImplementation(config.dependencies.gav('testfx', 'testfx-junit')) {
         exclude group: 'org.testfx', module: 'testfx-core'
     }
 }

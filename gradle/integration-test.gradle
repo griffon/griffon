@@ -16,11 +16,11 @@
  * limitations under the License.
  */
 configurations {
-    integrationTestCompile {
+    functionalTestImplementation {
         extendsFrom testCompile
     }
     integrationTestRuntime {
-        extendsFrom integrationTestCompile, testRuntime
+        extendsFrom functionalTestImplementation, testRuntimeOnly
     }
 }
 
@@ -42,7 +42,7 @@ sourceSets {
 
 idea {
     module {
-        scopes.TEST.plus += [configurations.integrationTestCompile]
+        scopes.TEST.plus += [configurations.functionalTestImplementation]
         scopes.TEST.plus += [configurations.integrationTestRuntime]
         testSourceDirs += sourceSets.integrationTest.allSource.srcDirs
     }

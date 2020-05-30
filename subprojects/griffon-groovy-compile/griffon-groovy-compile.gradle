@@ -21,13 +21,15 @@ dependencies {
     api project(':griffon-core')
     api project(':griffon-core-compile')
     api project(':griffon-beans-compile'), optional
+
     compileOnly project(':griffon-javafx-compile'), optional
     testImplementation project(':griffon-javafx-compile'), optional
+
     api project(':griffon-groovy')
     api("org.codehaus.groovy:groovy-all:$groovyVersion") {
         exclude group: 'junit', module: 'junit'
     }
-    api("org.kordamp.gipsy:gipsy:${jipsyVersion}") {
+    api(config.dependencies.gav('gipsy')) {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }

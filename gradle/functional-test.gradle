@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 configurations {
-    functionalTestCompile {
+    functionalTestImplementation {
         extendsFrom compile
     }
     functionalTestRuntime {
@@ -25,17 +25,17 @@ configurations {
 }
 
 dependencies {
-    // functionalTestCompile "junit:junit:$junitVersion"
-    functionalTestCompile "org.hamcrest:java-hamcrest:$hamcrestVersion"
-    functionalTestCompile "org.junit.jupiter:junit-jupiter-api:$junit5Version"
-    functionalTestCompile "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
-    functionalTestCompile("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+    // functionalTestImplementation "junit:junit:$junitVersion"
+    functionalTestImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    functionalTestImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    functionalTestImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    functionalTestImplementation("org.junit.vintage:junit-vintage-engine:$junit5Version") {
         exclude module: 'junit', group: 'junit'
     }
-    functionalTestCompile("org.spockframework:spock-core:$spockVersion") {
+    functionalTestImplementation("org.spockframework:spock-core:$spockVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    functionalTestCompile("org.codehaus.groovy:groovy-all:$groovyVersion") {
+    functionalTestImplementation("org.codehaus.groovy:groovy-all:$groovyVersion") {
         exclude module: 'junit', group: 'junit'
     }
 }
@@ -58,7 +58,7 @@ sourceSets {
 
 idea {
     module {
-        scopes.TEST.plus += [configurations.functionalTestCompile]
+        scopes.TEST.plus += [configurations.functionalTestImplementation]
         scopes.TEST.plus += [configurations.functionalTestRuntime]
         testSourceDirs += sourceSets.functionalTest.allSource.srcDirs
     }
