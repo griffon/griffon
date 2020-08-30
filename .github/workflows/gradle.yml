@@ -55,5 +55,5 @@ jobs:
         run: chmod +x gradlew
         working-directory: ./main
       - name: Execute Gradle
-        run: ./gradlew build -S -x :griffon-javafx:test
+        run: ./gradlew build -S -x :griffon-javafx:test :griffon-javafx-compile:test :griffon-javafx-groovy:test :griffon-javafx-kotlin:test :griffon-javafx-test:test
         working-directory: ./main
