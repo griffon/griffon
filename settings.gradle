@@ -44,9 +44,9 @@ buildscript {
 apply plugin: 'org.kordamp.gradle.kordamp-parentbuild'
 
 boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
-boolean github   = (System.env['CI'] ?: false) as boolean
 boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
-boolean fullBuild = !travis && !appveyor && !github
+boolean github   = (System.env['CI'] ?: false) as boolean
+boolean fullBuild = !github && !travis && !appveyor
 
 rootProject.name = 'griffon'
 

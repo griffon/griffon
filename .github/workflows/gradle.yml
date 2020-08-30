@@ -5,7 +5,11 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     env:
       CI: true
     steps:
@@ -33,21 +37,23 @@ jobs:
         with:
           java-version: 1.8
           java-package: jdk+fx
-      - uses: actions/cache@v1
+      - name: Gradle caches
+        uses: actions/cache@v1
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/*.gradle') }}-${{ hashFiles('**/gradle.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - uses: actions/cache@v1
+      - name: Cache gradle wrapper
+        uses: actions/cache@v1
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradlew') }}
           restore-keys: |
             ${{ runner.os }}-gradlew-
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission to gradlew
         run: chmod +x gradlew
         working-directory: ./main
-      - name: Build with Gradle
-        run: ./gradlew build -S
+      - name: Execute Gradle
+        run: ./gradlew build -S -x :griffon-javafx:test
         working-directory: ./main

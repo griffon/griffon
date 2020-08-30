@@ -18,12 +18,12 @@
 
 apply from: 'gradle/idea.gradle'
 
-boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
+//boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean github   = (System.env['CI'] ?: false) as boolean
-boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
+//boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 ext {
     depProjects = []
-    fullBuild = !travis && !appveyor && !github
+    fullBuild = !github // && !travis && !appveyor
     resourceFilePatterns = [
         '**/*.properties',
         '**/*.groovy',
