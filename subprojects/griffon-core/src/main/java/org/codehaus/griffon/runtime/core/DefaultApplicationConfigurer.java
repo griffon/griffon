@@ -135,7 +135,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     }
 
     @javax.application.event.EventHandler
-    public void handleNewInstanceEvent(NewInstanceEvent event) {
+    public void handleNewInstanceEvent(@Nonnull NewInstanceEvent event) {
         application.getResourceInjector().injectResources(event.getInstance());
 
         if (GriffonController.class.isAssignableFrom(event.getType())) {

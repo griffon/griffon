@@ -70,7 +70,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     }
 
     @EventHandler
-    public void handleNewInstanceEvent(NewInstanceEvent event) {
+    public void handleNewInstanceEvent(@Nonnull NewInstanceEvent event) {
         injectConfiguration(event.getInstance());
     }
 
