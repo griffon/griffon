@@ -69,7 +69,7 @@ public interface PropertySource {
      * Returns an array of all the listeners that were added with addPropertyChangeListener().<p>
      *
      * @return all of the {@code PropertyChangeListeners} added or an empty array if no
-     *         listeners have been added.
+     * listeners have been added.
      */
     @Nonnull
     PropertyChangeListener[] getPropertyChangeListeners();
@@ -80,9 +80,9 @@ public interface PropertySource {
      *
      * @param propertyName The name of the property being listened to
      * @return all of the <code>PropertyChangeListeners</code> associated with
-     *         the named property.  If no such listeners have been added,
-     *         or if <code>propertyName</code> is null, an empty array is
-     *         returned.
+     * the named property.  If no such listeners have been added,
+     * or if <code>propertyName</code> is null, an empty array is
+     * returned.
      */
     @Nonnull
     PropertyChangeListener[] getPropertyChangeListeners(@Nullable String propertyName);

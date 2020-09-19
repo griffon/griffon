@@ -80,7 +80,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         return new JavaFXAction();
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
         if (KEY_NAME.equals(evt.getPropertyName())) {
             toolkitAction.setName(String.valueOf(evt.getNewValue()));
         } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {

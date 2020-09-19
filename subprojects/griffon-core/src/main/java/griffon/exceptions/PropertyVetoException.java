@@ -15,20 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.properties;
+package griffon.exceptions;
 
 import griffon.annotations.core.Nonnull;
+import griffon.core.properties.PropertyChangeEvent;
 
 /**
  * @author Andres Almiray
  * @since 3.0.0
  */
-public interface PropertyChangeListener {
-    /**
-     * This method gets called when a bound property is changed.
-     *
-     * @param evt A PropertyChangeEvent object describing the event source
-     *            and the property that has changed.
-     */
-    void propertyChange(@Nonnull PropertyChangeEvent evt);
+public class PropertyVetoException extends GriffonException {
+    private static final long serialVersionUID = -8110256773363790785L;
+    private PropertyChangeEvent event;
+
+    public PropertyVetoException(@Nonnull String message, @Nonnull PropertyChangeEvent event) {
+        super(message);
+        this.event = event;
+    }
+
+    @Nonnull
+    public PropertyChangeEvent getPropertyChangeEvent() {
+        return event;
+    }
 }

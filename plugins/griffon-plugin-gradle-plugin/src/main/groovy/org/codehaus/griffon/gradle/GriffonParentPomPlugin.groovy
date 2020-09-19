@@ -207,6 +207,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                         compileOnly sub.config.dependencies.gav('gipsy')
                         compileOnly sub.config.dependencies.gav('jipsy')
                         annotationProcessor sub.config.dependencies.gav('jipsy')
+                        testAnnotationProcessor sub.config.dependencies.gav('jipsy')
 
                         testImplementation sub.config.dependencies.gav('junit5', 'junit-jupiter-api')
                         testImplementation sub.config.dependencies.gav('junit5', 'junit-jupiter-params')
@@ -233,6 +234,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                         testCompileOnly "org.codehaus.griffon:griffon-core-compile:${sub.griffonVersion}"
                         testCompileOnly "org.codehaus.griffon:griffon-beans-compile:${sub.griffonVersion}"
                         testCompileOnly "org.codehaus.griffon:griffon-groovy-compile:${sub.griffonVersion}"
+                        testCompileOnly sub.config.dependencies.gav('jipsy')
                         testCompileOnly sub.config.dependencies.gav('gipsy')
 
                         testImplementation "org.codehaus.griffon:griffon-core-test:${sub.griffonVersion}"

@@ -15,20 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core.properties;
+package griffon.transform.beans;
 
-import griffon.annotations.core.Nonnull;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * <p>Annotates a class.</p>
+ *
  * @author Andres Almiray
+ * @see griffon.core.properties.VetoablePropertySource
  * @since 3.0.0
  */
-public interface PropertyChangeListener {
-    /**
-     * This method gets called when a bound property is changed.
-     *
-     * @param evt A PropertyChangeEvent object describing the event source
-     *            and the property that has changed.
-     */
-    void propertyChange(@Nonnull PropertyChangeEvent evt);
+@Documented
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.TYPE, ElementType.FIELD})
+public @interface VetoablePropertySource {
 }

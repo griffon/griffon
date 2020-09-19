@@ -74,7 +74,7 @@ public class SwingGriffonControllerAction extends AbstractAction {
         return new SwingAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
         if (KEY_NAME.equals(evt.getPropertyName())) {
             toolkitAction.putValue(Action.NAME, evt.getNewValue());
         } else if (KEY_COMMAND.equals(evt.getPropertyName())) {

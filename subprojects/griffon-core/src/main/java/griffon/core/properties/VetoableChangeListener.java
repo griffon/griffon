@@ -18,17 +18,20 @@
 package griffon.core.properties;
 
 import griffon.annotations.core.Nonnull;
+import griffon.exceptions.PropertyVetoException;
 
 /**
  * @author Andres Almiray
  * @since 3.0.0
  */
-public interface PropertyChangeListener {
+public interface VetoableChangeListener {
     /**
-     * This method gets called when a bound property is changed.
+     * This method gets called when a constrained property is changed.
      *
-     * @param evt A PropertyChangeEvent object describing the event source
-     *            and the property that has changed.
+     * @param evt a <code>PropertyChangeEvent</code> object describing the
+     *            event source and the property that has changed.
+     * @throws griffon.exceptions.PropertyVetoException if the recipient wishes the property
+     *                                                  change to be rolled back.
      */
-    void propertyChange(@Nonnull PropertyChangeEvent evt);
+    void vetoableChange(@Nonnull PropertyChangeEvent evt) throws PropertyVetoException;
 }

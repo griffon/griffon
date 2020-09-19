@@ -47,7 +47,7 @@ public class LanternaGriffonControllerAction extends AbstractAction {
         return new LanternaAction((Runnable) () -> actionManager.invokeAction(controller, actionName));
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
         toolkitAction.setName(String.valueOf(evt.getNewValue()));
     }
 

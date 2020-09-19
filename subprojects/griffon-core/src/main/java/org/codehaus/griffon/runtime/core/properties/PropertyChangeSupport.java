@@ -121,7 +121,7 @@ public class PropertyChangeSupport {
         return propertyChangeListeners.toArray(new PropertyChangeListener[propertyChangeListeners.size()]);
     }
 
-    public void firePropertyChange(@Nonnull PropertyChangeEvent<?> event) {
+    public void firePropertyChange(@Nonnull PropertyChangeEvent event) {
         requireNonNull(event, "Argument 'event' must not be null");
         fire(listeners.get(DEFAULT_KEY), event);
         fire(listeners.get(event.getPropertyName()), event);
@@ -129,16 +129,23 @@ public class PropertyChangeSupport {
 
     public <T> void firePropertyChange(@Nonnull String propertyName, @Nullable T oldValue, @Nullable T newValue) {
         requireNonBlank(propertyName, "Argument 'propertyName' must not be blank");
-        firePropertyChange(new PropertyChangeEvent<>(source, propertyName, oldValue, newValue));
+        firePropertyChange(new PropertyChangeEvent(source, propertyName, oldValue, newValue));
     }
 
-    private void fire(@Nullable List<PropertyChangeListener> listeners, @Nonnull PropertyChangeEvent<?> event) {
-        if (listeners == null || listeners.isEmpty()) {
+    private void fire(@Nullable List<PropertyChangeListener> listeners, @Nonnull PropertyChangeEvent event) {
+        if (listeners == null || listeners.isEmpty() || valuesAreEqual(event)) {
             return;
         }
 
-        for(PropertyChangeListener listener:listeners) {
+        for (PropertyChangeListener listener : listeners) {
             listener.propertyChange(event);
         }
+    }
+
+    private boolean valuesAreEqual(@Nonnull PropertyChangeEvent event) {
+        if (null == event) return true;
+        if (event.getOldValue() == event.getNewValue()) return true;
+        return (event.getOldValue() != null && event.getOldValue().equals(event.getNewValue())) ||
+            (event.getNewValue() != null && event.getNewValue().equals(event.getOldValue()));
     }
 }

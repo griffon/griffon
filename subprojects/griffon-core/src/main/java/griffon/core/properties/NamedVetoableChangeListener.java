@@ -19,6 +19,7 @@ package griffon.core.properties;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.exceptions.PropertyVetoException;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
@@ -27,11 +28,11 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 3.0.0
  */
-public class NamedPropertyChangeListener implements PropertyChangeListener {
+public class NamedVetoableChangeListener implements VetoableChangeListener {
     private final String propertyName;
-    private final PropertyChangeListener delegate;
+    private final VetoableChangeListener delegate;
 
-    public NamedPropertyChangeListener(@Nonnull String propertyName, @Nonnull PropertyChangeListener delegate) {
+    public NamedVetoableChangeListener(@Nonnull String propertyName, @Nonnull VetoableChangeListener delegate) {
         this.propertyName = requireNonBlank(propertyName, "Argument 'propertyName' must not be blank");
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
@@ -42,16 +43,16 @@ public class NamedPropertyChangeListener implements PropertyChangeListener {
     }
 
     @Nonnull
-    public PropertyChangeListener getDelegate() {
+    public VetoableChangeListener getDelegate() {
         return delegate;
     }
 
     @Override
-    public void propertyChange(@Nonnull PropertyChangeEvent evt) {
-        delegate.propertyChange(evt);
+    public void vetoableChange(@Nonnull PropertyChangeEvent evt) throws PropertyVetoException {
+        delegate.vetoableChange(evt);
     }
 
-    public static <T> boolean isWrappedBy(@Nullable PropertyChangeListener listener, @Nullable NamedPropertyChangeListener wrapper) {
+    public static <T> boolean isWrappedBy(@Nullable VetoableChangeListener listener, @Nullable NamedVetoableChangeListener wrapper) {
         if (listener == null || wrapper == null) {
             return false;
         }

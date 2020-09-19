@@ -122,7 +122,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
         if (parent instanceof FieldNode) {
             if ((((FieldNode) parent).getModifiers() & Modifier.FINAL) != 0) {
                 source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                    new SyntaxException("@griffon.transform.Observable cannot annotate a final property.",
+                    new SyntaxException("@griffon.transform.beans.Observable cannot annotate a final property.",
                         node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
                     source));
             }
@@ -171,7 +171,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
                 if (field.isStatic()) {
                     //noinspection ThrowableInstanceNeverThrown
                     source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                        new SyntaxException("@griffon.transform.Observable cannot annotate a static property.",
+                        new SyntaxException("@griffon.transform.beans.Observable cannot annotate a static property.",
                             annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
                         source));
                 } else {
@@ -186,7 +186,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
         }
         //noinspection ThrowableInstanceNeverThrown
         source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-            new SyntaxException("@griffon.transform.Observable must be on a property, not a field. Try removing the private, protected, or public modifier.",
+            new SyntaxException("@griffon.transform.beans.Observable must be on a property, not a field. Try removing the private, protected, or public modifier.",
                 annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
             source));
     }

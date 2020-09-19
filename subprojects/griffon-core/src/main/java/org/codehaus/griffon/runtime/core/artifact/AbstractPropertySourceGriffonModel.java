@@ -15,24 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.codehaus.griffon.runtime.core.properties;
+package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.core.artifact.GriffonModel;
+import griffon.core.artifact.GriffonModelClass;
 import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.properties.PropertyChangeListener;
 import griffon.core.properties.PropertySource;
+import org.codehaus.griffon.runtime.core.properties.PropertyChangeSupport;
 
 /**
+ * GriffonModel implementation that can trigger property change events.
+ *
  * @author Andres Almiray
  * @since 3.0.0
  */
-public class AbstractPropertySource implements PropertySource {
+public abstract class AbstractPropertySourceGriffonModel extends AbstractGriffonMvcArtifact implements GriffonModel, PropertySource {
     protected final PropertyChangeSupport pcs;
 
-    public AbstractPropertySource() {
+    public AbstractPropertySourceGriffonModel() {
         pcs = new PropertyChangeSupport(this);
     }
+
+    @Nonnull
+    @Override
+    protected String getArtifactType() {
+        return GriffonModelClass.TYPE;
+    }
+
 
     @Override
     public void addPropertyChangeListener(@Nullable PropertyChangeListener listener) {

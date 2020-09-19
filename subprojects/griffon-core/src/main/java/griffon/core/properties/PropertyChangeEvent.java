@@ -27,13 +27,13 @@ import static java.util.Objects.requireNonNull;
  * @author Andres Almiray
  * @since 3.0.0
  */
-public class PropertyChangeEvent<T> {
+public class PropertyChangeEvent {
     private final PropertySource source;
     private final String propertyName;
-    private final T oldValue;
-    private final T newValue;
+    private final Object oldValue;
+    private final Object newValue;
 
-    public PropertyChangeEvent(@Nonnull PropertySource source, @Nonnull String propertyName, @Nullable T oldValue, @Nullable T newValue) {
+    public PropertyChangeEvent(@Nonnull PropertySource source, @Nonnull String propertyName, @Nullable Object oldValue, @Nullable Object newValue) {
         this.source = requireNonNull(source, "Argument 'source' must not be null");
         this.propertyName = requireNonBlank(propertyName, "Argument 'propertyName' must not be blank");
         this.oldValue = oldValue;
@@ -51,12 +51,12 @@ public class PropertyChangeEvent<T> {
     }
 
     @Nullable
-    public T getOldValue() {
+    public Object getOldValue() {
         return oldValue;
     }
 
     @Nullable
-    public T getNewValue() {
+    public Object getNewValue() {
         return newValue;
     }
 

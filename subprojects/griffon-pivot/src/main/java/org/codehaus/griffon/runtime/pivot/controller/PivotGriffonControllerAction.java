@@ -53,7 +53,7 @@ public class PivotGriffonControllerAction extends AbstractAction {
         return new PivotAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
-    protected void handlePropertyChange(@Nonnull PropertyChangeEvent<?> evt) {
+    protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
         if (KEY_NAME.equals(evt.getPropertyName())) {
             toolkitAction.setName((String) evt.getNewValue());
         } else if (KEY_DESCRIPTION.equals(evt.getPropertyName())) {

@@ -17,10 +17,11 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.beans.Vetoable;
-import org.codehaus.griffon.compile.beans.VetoableConstants;
+import griffon.core.properties.PropertySource;
+import org.codehaus.griffon.compile.beans.PropertySourceConstants;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
+import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -30,10 +31,8 @@ import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.PropertyNode;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
-import org.codehaus.groovy.ast.expr.MethodCallExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
-import org.codehaus.groovy.ast.stmt.ExpressionStatement;
 import org.codehaus.groovy.ast.stmt.Statement;
 import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
@@ -44,8 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.beans.VetoableChangeSupport;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
 
 import static griffon.util.GriffonNameUtils.getGetterName;
@@ -69,38 +67,22 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.param;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.params;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.var;
-import static org.codehaus.griffon.compile.core.ast.transform.ObservableASTTransformation.hasObservableAnnotation;
+import static org.codehaus.griffon.compile.core.ast.transform.VetoableASTTransformation.hasVetoableAnnotation;
 import static org.codehaus.groovy.ast.ClassHelper.OBJECT_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.STRING_TYPE;
 import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
 
 /**
- * Handles generation of code for the {@code @Vetoable} annotation.
+ * Handles generation of code for the {@code @PropertySource} annotation.
  *
  * @author Andres Almiray
  */
-@AnnotationHandlerFor(griffon.transform.beans.Vetoable.class)
+@AnnotationHandlerFor(griffon.transform.beans.PropertySource.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class VetoableASTTransformation extends AbstractASTTransformation implements VetoableConstants, AnnotationHandler {
-    private static final Logger LOG = LoggerFactory.getLogger(VetoableASTTransformation.class);
-    private static final ClassNode VETOABLE_CNODE = makeClassSafe(Vetoable.class);
-    private static final ClassNode PROPERTY_VETO_EXCEPTION_CNODE = makeClassSafe(PropertyVetoException.class);
-    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.beans.Vetoable.class);
-
-    /**
-     * Convenience method to see if an annotated node is {@code @Vetoable}.
-     *
-     * @param node the node to check
-     * @return true if the node is an event publisher
-     */
-    public static boolean hasVetoableAnnotation(AnnotatedNode node) {
-        for (AnnotationNode annotation : node.getAnnotations()) {
-            if (VETOABLE_ANNOTATION_CNODE.equals(annotation.getClassNode())) {
-                return true;
-            }
-        }
-        return false;
-    }
+public class PropertySourceASTTransformation extends AbstractASTTransformation implements PropertySourceConstants, AnnotationHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(PropertySourceASTTransformation.class);
+    private static final ClassNode PROPERTY_SOURCE_CNODE = makeClassSafe(PropertySource.class);
+    private static final ClassNode PROPERTY_SOURCE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.beans.PropertySource.class);
 
     /**
      * Handles the bulk of the processing, mostly delegating to other methods.
@@ -110,102 +92,116 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
      */
     public void visit(ASTNode[] nodes, SourceUnit source) {
         if (!(nodes[0] instanceof AnnotationNode) || !(nodes[1] instanceof AnnotatedNode)) {
-            throw new RuntimeException("Internal error: wrong types: $node.class / $parent.class");
+            throw new IllegalArgumentException("Internal error: wrong types: "
+                + nodes[0].getClass().getName() + " / " + nodes[1].getClass().getName());
         }
         AnnotationNode node = (AnnotationNode) nodes[0];
+        AnnotatedNode parent = (AnnotatedNode) nodes[1];
 
-        if (nodes[1] instanceof ClassNode) {
-            addVetoableIfNeeded(source, (ClassNode) nodes[1]);
-        } else {
-            if ((((FieldNode) nodes[1]).getModifiers() & Modifier.FINAL) != 0) {
+        if (hasVetoableAnnotation(parent)) {
+            // VetoableASTTransformation will handle both @PropertySource and @VetoablePropertySource
+            return;
+        }
+
+        ClassNode declaringClass = parent.getDeclaringClass();
+        if (parent instanceof FieldNode) {
+            if ((((FieldNode) parent).getModifiers() & Modifier.FINAL) != 0) {
                 source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                    new SyntaxException("@griffon.transform.beans.Vetoable cannot annotate a final property.",
+                    new SyntaxException("@griffon.transform.beans.PropertySource cannot annotate a final property.",
                         node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
                     source));
             }
 
-            addVetoableIfNeeded(source, node, (AnnotatedNode) nodes[1]);
+            if (hasVetoableAnnotation(parent.getDeclaringClass())) {
+                // VetoableASTTransformation will handle both @PropertySource and @VetoablePropertySource
+                return;
+            }
+            addPropertySourceIfNeeded(source, node, declaringClass, (FieldNode) parent);
+        } else if (parent instanceof ClassNode) {
+            addPropertySourceIfNeeded(source, (ClassNode) parent);
         }
     }
 
-    public static boolean needsVetoableSupport(ClassNode classNode, SourceUnit source) {
-        return needsDelegate(classNode, source, VETOABLE_METHODS, "Vetoable", VETOABLE_TYPE);
+    /**
+     * Convenience method to see if an annotated node is {@code @PropertySource}.
+     *
+     * @param node the node to check
+     * @return true if the node is an event publisher
+     */
+    public static boolean hasPropertySourceAnnotation(AnnotatedNode node) {
+        for (AnnotationNode annotation : node.getAnnotations()) {
+            if (PROPERTY_SOURCE_ANNOTATION_CNODE.equals(annotation.getClassNode())) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public static void addVetoableIfNeeded(SourceUnit source, ClassNode classNode) {
-        if (needsVetoableSupport(classNode, source)) {
-            LOG.debug("Injecting {} into {}", VETOABLE_TYPE, classNode.getName());
+    public static boolean needsPropertySourceSupport(ClassNode classNode, SourceUnit source) {
+        return needsDelegate(classNode, source, OBSERVABLE_METHODS, "PropertySource", PROPERTY_SOURCE_TYPE);
+    }
+
+    public static void addPropertySourceIfNeeded(SourceUnit source, ClassNode classNode) {
+        if (needsPropertySourceSupport(classNode, source)) {
+            LOG.debug("Injecting {} into {}", PROPERTY_SOURCE_TYPE, classNode.getName());
             apply(classNode);
         }
 
-        boolean bindable = hasObservableAnnotation(classNode);
         for (PropertyNode propertyNode : classNode.getProperties()) {
-            if (!hasVetoableAnnotation(propertyNode.getField())
-                && ((propertyNode.getField().getModifiers() & Modifier.FINAL) == 0)
-                && !propertyNode.getField().isStatic()) {
-                createListenerSetter(source,
-                    bindable || hasObservableAnnotation(propertyNode.getField()),
-                    classNode, propertyNode);
+            FieldNode field = propertyNode.getField();
+            // look to see if per-field handlers will catch this one...
+            if (hasPropertySourceAnnotation(field)
+                || ((field.getModifiers() & Modifier.FINAL) != 0)
+                || field.isStatic()
+                || hasVetoableAnnotation(field)) {
+                // explicitly labeled properties are already handled,
+                // don't transform final properties
+                // don't transform static properties
+                // VetoablePropertySourceASTTransformation will handle both @PropertySource and @VetoablePropertySource
+                continue;
             }
+            createListenerSetter(classNode, propertyNode);
         }
     }
 
-    private void addVetoableIfNeeded(SourceUnit source, AnnotationNode node, AnnotatedNode parent) {
-        ClassNode declaringClass = parent.getDeclaringClass();
-        FieldNode field = ((FieldNode) parent);
+    public static void addPropertySourceIfNeeded(SourceUnit source, AnnotationNode annotationNode, ClassNode classNode, FieldNode field) {
         String fieldName = field.getName();
-        for (PropertyNode propertyNode : declaringClass.getProperties()) {
-            boolean bindable = hasObservableAnnotation(parent)
-                || hasObservableAnnotation(parent.getDeclaringClass());
-
+        for (PropertyNode propertyNode : classNode.getProperties()) {
             if (propertyNode.getName().equals(fieldName)) {
                 if (field.isStatic()) {
+                    //noinspection ThrowableInstanceNeverThrown
                     source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                        new SyntaxException("@griffon.transform.beans.Vetoable cannot annotate a static property.",
-                            node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
+                        new SyntaxException("@griffon.transform.PropertySource cannot annotate a static property.",
+                            annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
                         source));
                 } else {
-                    createListenerSetter(source, bindable, declaringClass, propertyNode);
+                    if (needsPropertySourceSupport(classNode, source)) {
+                        LOG.debug("Injecting {} into {}", PROPERTY_SOURCE_TYPE, classNode.getName());
+                        apply(classNode);
+                    }
+                    createListenerSetter(classNode, propertyNode);
                 }
                 return;
             }
         }
+        //noinspection ThrowableInstanceNeverThrown
         source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-            new SyntaxException("@griffon.transform.beans.Vetoable must be on a property, not a field.  Try removing the private, protected, or public modifier.",
-                node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
+            new SyntaxException("@griffon.transform.PropertySource must be on a property, not a field. Try removing the private, protected, or public modifier.",
+                annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
             source));
     }
 
-    private static void createListenerSetter(SourceUnit source, boolean bindable, ClassNode declaringClass, PropertyNode propertyNode) {
-        //if (bindable || needsObservableSupport(declaringClass, source)) {
-        //    ObservableASTTransformation.apply(declaringClass);
-        //}
-        if (needsVetoableSupport(declaringClass, source)) {
-            apply(declaringClass);
-        }
+    private static void createListenerSetter(ClassNode classNode, PropertyNode propertyNode) {
         String setterName = getSetterName(propertyNode.getName());
-        if (declaringClass.getMethods(setterName).isEmpty()) {
+        if (classNode.getMethods(setterName).isEmpty()) {
             Expression fieldExpression = new FieldExpression(propertyNode.getField());
-            BlockStatement setterBlock = new BlockStatement();
-            setterBlock.addStatement(createConstrainedStatement(propertyNode, fieldExpression));
-            // if (bindable) {
-            setterBlock.addStatement(createBindableStatement(propertyNode, fieldExpression));
-            // } else {
-            //    setterBlock.addStatement(assigns(fieldExpression, var(VALUE)));
-            // }
+            Statement setterBlock = createBindableStatement(propertyNode, fieldExpression);
 
             // create method void <setter>(<type> fieldName)
-            createSetterMethod(declaringClass, propertyNode, setterName, setterBlock);
+            createSetterMethod(classNode, propertyNode, setterName, setterBlock);
         } else {
-            wrapSetterMethod(declaringClass, bindable, propertyNode.getName());
+            wrapSetterMethod(classNode, propertyNode.getName());
         }
-    }
-
-    private static Statement createConstrainedStatement(PropertyNode propertyNode, Expression fieldExpression) {
-        return stmnt(call(
-            THIS,
-            METHOD_FIRE_VETOABLE_CHANGE,
-            args(constx(propertyNode.getName()), fieldExpression, var(VALUE))));
     }
 
     private static Statement createBindableStatement(PropertyNode propertyNode, Expression fieldExpression) {
@@ -225,14 +221,14 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
             propertyNode.getModifiers(),
             VOID_TYPE,
             params(param(propertyNode.getType(), VALUE)),
-            new ClassNode[]{PROPERTY_VETO_EXCEPTION_CNODE},
+            NO_EXCEPTIONS,
             setterBlock);
         setter.setSynthetic(true);
         // add it to the class
         declaringClass.addMethod(setter);
     }
 
-    private static void wrapSetterMethod(ClassNode classNode, boolean bindable, String propertyName) {
+    private static void wrapSetterMethod(ClassNode classNode, String propertyName) {
         String getterName = getGetterName(propertyName);
         MethodNode setter = classNode.getSetterMethod(getSetterName(propertyName));
 
@@ -242,31 +238,22 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
 
             VariableExpression oldValue = new VariableExpression("$oldValue");
             VariableExpression newValue = new VariableExpression("$newValue");
-            VariableExpression proposedValue = new VariableExpression(setter.getParameters()[0].getName());
             BlockStatement block = new BlockStatement();
 
             // create a local variable to hold the old value from the getter
             block.addStatement(decls(oldValue, call(THIS, getterName, NO_ARGS)));
 
-            // add the fireVetoableChange method call
-            block.addStatement(new ExpressionStatement(new MethodCallExpression(
-                THIS,
-                METHOD_FIRE_VETOABLE_CHANGE,
-                args(constx(propertyName), oldValue, proposedValue))));
-
             // call the existing block, which will presumably set the value properly
             block.addStatement(code);
 
-            if (bindable) {
-                // get the new value to emit in the event
-                block.addStatement(decls(newValue, call(THIS, getterName, NO_ARGS)));
+            // get the new value to emit in the event
+            block.addStatement(decls(newValue, call(THIS, getterName, NO_ARGS)));
 
-                // add the firePropertyChange method call
-                block.addStatement(new ExpressionStatement(new MethodCallExpression(
-                    THIS,
-                    METHOD_FIRE_PROPERTY_CHANGE,
-                    args(constx(propertyName), oldValue, newValue))));
-            }
+            // add the firePropertyChange method call
+            block.addStatement(stmnt(call(
+                THIS,
+                METHOD_FIRE_PROPERTY_CHANGE,
+                args(constx(propertyName), oldValue, newValue))));
 
             // replace the existing code block with our new one
             setter.setCode(block);
@@ -279,31 +266,28 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
      * @param classNode the class to which we add the support field and methods
      */
     public static void apply(ClassNode classNode) {
-        if( ObservableASTTransformation.needsObservableSupport(classNode, classNode.getModule().getContext())) {
-            ObservableASTTransformation.apply(classNode);
-        }
-        injectInterface(classNode, VETOABLE_CNODE);
+        injectInterface(classNode, PROPERTY_SOURCE_CNODE);
 
-        ClassNode vcsClassNode = makeClassSafe(VetoableChangeSupport.class);
+        ClassNode pcsClassNode = makeClassSafe(PropertyChangeSupport.class);
         ClassNode pceClassNode = makeClassSafe(PropertyChangeEvent.class);
 
         // add field:
-        // protected final VetoableChangeSupport this$vetoableChangeSupport = new java.beans.VetoableChangeSupport(this)
-        FieldNode vcsField = injectField(classNode,
-            VETOABLE_CHANGE_SUPPORT_FIELD_NAME,
+        // protected final PropertyChangeSupport this$propertyChangeSupport = new java.beans.PropertyChangeSupport(this)
+        FieldNode pcsField = injectField(classNode,
+            PROPERTY_CHANGE_SUPPORT_FIELD_NAME,
             FINAL | PROTECTED,
-            vcsClassNode,
-            ctor(vcsClassNode, args(THIS)));
+            pcsClassNode,
+            ctor(pcsClassNode, args(GriffonASTUtils.THIS)));
 
-        addDelegateMethods(classNode, VETOABLE_CNODE, new FieldExpression(vcsField));
+        addDelegateMethods(classNode, PROPERTY_SOURCE_CNODE, new FieldExpression(pcsField));
 
         // add method:
         // void firePropertyChange(String name, Object oldValue, Object newValue) {
-        //     this$vetoableChangeSupport.firePropertyChange(name, oldValue, newValue)
+        //     this$propertyChangeSupport.firePropertyChange(name, oldValue, newValue)
         //  }
         injectMethod(classNode,
             new MethodNode(
-                METHOD_FIRE_VETOABLE_CHANGE,
+                METHOD_FIRE_PROPERTY_CHANGE,
                 PROTECTED,
                 VOID_TYPE,
                 params(
@@ -312,24 +296,24 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
                     param(OBJECT_TYPE, NEW_VALUE)),
                 NO_EXCEPTIONS,
                 stmnt(call(
-                    field(vcsField),
-                    METHOD_FIRE_VETOABLE_CHANGE,
+                    field(pcsField),
+                    METHOD_FIRE_PROPERTY_CHANGE,
                     args(var(NAME), var(OLD_VALUE), var(NEW_VALUE))))));
 
         // add method:
         // void firePropertyChange(PropertyChangeEvent event) {
-        //     this$vetoableChangeSupport.firePropertyChange(event)
+        //     this$propertyChangeSupport.firePropertyChange(event)
         //  }
         injectMethod(classNode,
             new MethodNode(
-                METHOD_FIRE_VETOABLE_CHANGE,
+                METHOD_FIRE_PROPERTY_CHANGE,
                 PROTECTED,
                 VOID_TYPE,
                 params(param(pceClassNode, EVENT)),
                 NO_EXCEPTIONS,
                 stmnt(call(
-                    field(vcsField),
-                    METHOD_FIRE_VETOABLE_CHANGE,
+                    field(pcsField),
+                    METHOD_FIRE_PROPERTY_CHANGE,
                     args(var(EVENT))))));
     }
 }
