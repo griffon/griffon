@@ -32,21 +32,14 @@ ext.childProjects = [
     ':griffon-javafx-compile',
     ':griffon-swing',
     ':griffon-javafx',
-    ':griffon-lanterna',
-    ':griffon-lanterna3',
-    ':griffon-pivot',
     ':griffon-swing-groovy',
     ':griffon-javafx-groovy',
-    ':griffon-lanterna-groovy',
-    ':griffon-lanterna3-groovy',
-    ':griffon-pivot-groovy',
     ':griffon-swing-test',
     ':griffon-javafx-test',
-    ':griffon-pivot-test'
 ]
 
 ext.sampleProjects = []
-for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna', 'lanterna3']) {
+for (toolkit in ['swing', 'javafx']) {
     for (lang in ['groovy', 'java']) {
         sampleProjects << ":sample-${toolkit}-${lang}".toString()
     }

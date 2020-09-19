@@ -112,7 +112,7 @@ Where the following apply:
  * 'query' accepts `yes` and `no` as values.
  * 'switch' accepts `on` and `off` as values.
 
-Core UI Toolkit dependencies, such as `griffon-swing`, `griffon-javafx`, and `griffon-pivot` deliver
+Core UI Toolkit dependencies, such as `griffon-swing`, `griffon-javafx` deliver
 additional Converters. The following tables summarize these additions:
 
 .Swing Converter mappings
@@ -250,40 +250,4 @@ The following styles are supported by `FontConverter`:
 Where the following applies:
 
  * `R`, `G`, `B` and `A` represent an hexadecimal number.
-
-.Pivot Converter mappings
-[cols="3*", options="header"]
-|===
-
-| Type
-| Editor Class
-| Format
-
-| java.awt.Color
-| griffon.pivot.converters.ColorConverter
-| #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
-
-| org.apache.pivot.wtk.Bounds
-| griffon.pivot.converters.BoundsConverter
-| x, y , width, height
-
-| org.apache.pivot.wtk.Dimensions
-| griffon.pivot.converters.DimensionsConverter
-| width, height
-
-| org.apache.pivot.wtk.Insets
-| griffon.pivot.converters.InsetsConverter
-| top, left, right, bottom
-
-| org.apache.pivot.wtk.Point
-| griffon.pivot.converters.PointConverter
-| x, y
-
-|===
-
-Where the following apply:
-
- * `R`, `G`, `B` and `A` represent an hexadecimal number.
- * Color supports all color constants defined by `griffon.pivot.support.Colors`.
-
 

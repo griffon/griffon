@@ -21,7 +21,7 @@
     </p>
 
     <p>
-        Griffon supports 4 different UI toolkits: Swing, JavaFX, Apache Pivot, and Lanterna.
+        Griffon supports 2 different UI toolkits: Swing, JavaFX.
     </p>
 
     <p>
@@ -77,10 +77,6 @@ Available templates in griffon/griffon-lazybones-templates
     griffon-javafx-groovy
     griffon-javafx-java
     griffon-javafx-kotlin
-    griffon-lanterna-groovy
-    griffon-lanterna-java
-    griffon-pivot-groovy
-    griffon-pivot-java
     griffon-plugin
     griffon-swing-groovy
     griffon-swing-java</code></pre>
@@ -123,10 +119,6 @@ Currently available templates are:
 <div class="content">
 <pre class="prettyprint"><code>    griffon-javafx-groovy-archetype
     griffon-javafx-java-archetype
-    griffon-lanterna-groovy-archetype
-    griffon-lanterna-java-archetype
-    griffon-pivot-groovy-archetype
-    griffon-pivot-java-archetype
     griffon-swing-groovy-archetype
     griffon-swing-java-archetype</code></pre>
 </div>
