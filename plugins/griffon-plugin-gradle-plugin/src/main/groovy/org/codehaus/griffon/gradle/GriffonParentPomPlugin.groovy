@@ -18,10 +18,12 @@
 package org.codehaus.griffon.gradle
 
 import groovy.transform.CompileDynamic
+import org.gradle.BuildAdapter
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
+import org.gradle.api.invocation.Gradle
 import org.gradle.api.plugins.AppliedPlugin
 import org.gradle.api.tasks.compile.GroovyCompile
 import org.gradle.api.tasks.compile.JavaCompile
@@ -46,6 +48,8 @@ class GriffonParentPomPlugin implements Plugin<Project> {
         if (!project.hasProperty('sonatypePassword')) project.ext.sonatypePassword = '**undefined**'
 
         String guideProjectName = project.rootProject.name - '-plugin' + '-guide'
+
+        GriffonExtension griffonExtension = project.extensions.create('griffon', GriffonExtension, project)
 
         project.extensions.findByType(ProjectConfigurationExtension).with {
             release = (project.rootProject.project.findProperty('release') ?: false).toBoolean()
@@ -342,5 +346,16 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                     }
                 })
         }
+
+        project.gradle.addBuildListener(new BuildAdapter() {
+            @Override
+            void projectsEvaluated(Gradle gradle) {
+                for (Project p : project.subprojects) {
+                    if (p.name.endsWith('-guide')) continue
+                    GriffonPlugin.processResources(p, p.sourceSets.main, griffonExtension)
+                    GriffonPlugin.processResources(p, p.sourceSets.test, griffonExtension)
+                }
+            }
+        })
     }
 }

@@ -51,11 +51,11 @@ class GriffonPlugin implements Plugin<Project> {
         registerBuildListener(project, extension)
     }
 
-    private void applyDefaultDependencies(final Project project) {
+    static void applyDefaultDependencies(final Project project) {
         project.configurations.maybeCreate('griffon').visible = false
     }
 
-    private void applyDefaultPlugins(Project project, GriffonExtension extension) {
+    static void applyDefaultPlugins(Project project, GriffonExtension extension) {
         project.apply(plugin: 'idea')
         project.apply(plugin: 'java-library')
         project.apply(plugin: 'org.kordamp.gradle.java-project')
@@ -96,7 +96,7 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void configureNormalization(Project project) {
+    static void configureNormalization(Project project) {
         project.allprojects {
             normalization {
                 runtimeClasspath {
@@ -110,7 +110,7 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void configureSourceTargetCompatibility(Project project) {
+    static void configureSourceTargetCompatibility(Project project) {
         project.allprojects { Project p ->
             def scompat = project.findProperty('sourceCompatibility')
             def tcompat = project.findProperty('targetCompatibility')
@@ -126,7 +126,7 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void configureDefaultSourceSets(Project project, String sourceSetName) {
+    static void configureDefaultSourceSets(Project project, String sourceSetName) {
         // configure default source directories
         project.sourceSets.main[sourceSetName].srcDirs += [
             'griffon-app/conf',
@@ -145,15 +145,15 @@ class GriffonPlugin implements Plugin<Project> {
         ]
     }
 
-    private static String resolveApplicationName(Project project) {
+    static String resolveApplicationName(Project project) {
         if (project.hasProperty('applicationName')) {
             return project.applicationName
         }
         return project.name
     }
 
-    private void processResources(Project project, SourceSet sourceSet, GriffonExtension extension) {
-        ProjectConfigurationExtension config = project.extensions.getByName('effectiveConfig')
+    static void processResources(Project project, SourceSet sourceSet, GriffonExtension extension) {
+        ProjectConfigurationExtension config = project.extensions.getByName('config')
 
         project.tasks."${sourceSet.processResourcesTaskName}" {
             filesMatching([
@@ -161,6 +161,8 @@ class GriffonPlugin implements Plugin<Project> {
                 '**/*.groovy',
                 '**/*.html',
                 '**/*.xml',
+                '**/*.yml',
+                '**/*.toml',
                 '**/*.txt'
             ]) {
                 expand([
@@ -175,7 +177,7 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void configureApplicationSettings(Project project, GriffonExtension extension) {
+    static void configureApplicationSettings(Project project, GriffonExtension extension) {
         TaskProvider<Copy> createDistributionFiles = project.tasks.register('createDistributionFiles', Copy, new Action<Copy>() {
             @Override
             void execute(Copy t) {
@@ -219,7 +221,7 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void createDefaultDirectoryStructure(Project project, GriffonExtension extension, String sourceSetName) {
+    static void createDefaultDirectoryStructure(Project project, GriffonExtension extension, String sourceSetName) {
         if (extension.generateProjectStructure.get()) {
             def createIfNotExists = { File dir ->
                 if (!dir.exists()) {
@@ -233,7 +235,7 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void validateToolkit(Project project, GriffonExtension extension) {
+    static void validateToolkit(Project project, GriffonExtension extension) {
         if (extension.toolkit.orNull) {
             if (!GriffonExtension.TOOLKIT_NAMES.contains(extension.toolkit.orNull)) {
                 throw new BuildException("The value of griffon.toolkit can only be one of ${GriffonExtension.TOOLKIT_NAMES.join(',')}",
@@ -242,7 +244,7 @@ class GriffonPlugin implements Plugin<Project> {
         }
     }
 
-    private void registerBuildListener(
+    private static void registerBuildListener(
         final Project project, final GriffonExtension extension) {
         project.gradle.addBuildListener(new BuildAdapter() {
             @Override
