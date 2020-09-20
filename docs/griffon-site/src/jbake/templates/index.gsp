@@ -128,12 +128,12 @@ Currently available templates are:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint"><code>\$ mvn archetype:generate
-    -DarchetypeGroupId=org.codehaus.griffon.maven
-    -DarchetypeArtifactId=griffon-javafx-java-archetype
-    -DarchetypeVersion=2.15.0
-    -DgroupId=org.example
-    -DartifactId=app
+<pre class="prettyprint"><code>\$ mvn archetype:generate \
+    -DarchetypeGroupId=org.codehaus.griffon.maven \
+    -DarchetypeArtifactId=griffon-javafx-java-archetype \
+    -DarchetypeVersion=2.15.0 \
+    -DgroupId=org.example \
+    -DartifactId=app \
     -Dversion=1.0.0-SNAPSHOT</code></pre>
 </div>
 </div>

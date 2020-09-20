@@ -5,7 +5,10 @@ import griffon.exceptions.GriffonViewInitializationException
 import javafx.application.Platform
 
 class ApplicationEventHandler : EventHandler {
-    fun onUncaughtGriffonViewInitializationException(x: GriffonViewInitializationException) {
-        Platform.exit()
+    @javax.application.event.EventHandler
+    fun handleUncaughtExceptionThrownEvent(x: UncaughtExceptionThrownEvent) {
+        if (x.getThrowable() is GriffonViewInitializationException) {
+            Platform.exit()
+        }
     }
 }

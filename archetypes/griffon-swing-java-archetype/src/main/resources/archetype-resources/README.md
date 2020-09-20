@@ -11,6 +11,7 @@ and Java as main language. The project has the following file structure
     │   ├── i18n
     │   ├── lifecycle
     │   ├── models
+    │   ├── mvcs
     │   ├── resources
     │   ├── services
     │   └── views

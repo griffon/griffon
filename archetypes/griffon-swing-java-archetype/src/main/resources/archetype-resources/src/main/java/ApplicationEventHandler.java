@@ -1,10 +1,14 @@
 package ${groupId};
 
 import griffon.core.event.EventHandler;
+import griffon.core.events.UncaughtExceptionThrownEvent;
 import griffon.exceptions.GriffonViewInitializationException;
 
 public class ApplicationEventHandler implements EventHandler {
-    public void onUncaughtGriffonViewInitializationException(GriffonViewInitializationException x) {
-        System.exit(1);
+    @javax.application.event.EventHandler
+    public void handleUncaughtExceptionThrownEvent(UncaughtExceptionThrownEvent x) {
+        if (x.getThrowable() instanceof GriffonViewInitializationException) {
+            System.exit(1);
+        }
     }
 }
