@@ -26,7 +26,6 @@ import griffon.javafx.JavaFXGriffonApplication;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Window;
-import org.awaitility.Duration;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
 import org.codehaus.griffon.test.javafx.TestJavaFXGriffonApplication;
 import org.junit.rules.MethodRule;
@@ -36,12 +35,13 @@ import org.testfx.api.FxToolkit;
 import org.testfx.util.WaitForAsyncUtils;
 
 import javax.application.event.EventHandler;
+import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
 import static griffon.test.javafx.TestContext.getTestContext;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Objects.requireNonNull;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 
 /**
@@ -58,7 +58,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
     protected JavaFXGriffonApplication application;
 
     public GriffonTestFXRule(@Nonnull String windowName) {
-        this(TestJavaFXGriffonApplication.class, windowName, new Duration(10, SECONDS), DefaultGriffonApplication.EMPTY_ARGS);
+        this(TestJavaFXGriffonApplication.class, windowName, Duration.of(10, SECONDS), DefaultGriffonApplication.EMPTY_ARGS);
     }
 
     public GriffonTestFXRule(@Nonnull String windowName, @Nonnull Duration timeout) {
@@ -66,7 +66,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
     }
 
     public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName) {
-        this(applicationClass, windowName, new Duration(10, SECONDS), DefaultGriffonApplication.EMPTY_ARGS);
+        this(applicationClass, windowName, Duration.of(10, SECONDS), DefaultGriffonApplication.EMPTY_ARGS);
     }
 
     public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull Duration timeout) {
@@ -74,7 +74,7 @@ public class GriffonTestFXRule extends TestFX implements MethodRule {
     }
 
     public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull String[] startupArgs) {
-        this(applicationClass, windowName, new Duration(10, SECONDS), startupArgs);
+        this(applicationClass, windowName, Duration.of(10, SECONDS), startupArgs);
     }
 
     public GriffonTestFXRule(@Nonnull Class<? extends TestJavaFXGriffonApplication> applicationClass, @Nonnull String windowName, @Nonnull Duration timeout, @Nonnull String[] startupArgs) {

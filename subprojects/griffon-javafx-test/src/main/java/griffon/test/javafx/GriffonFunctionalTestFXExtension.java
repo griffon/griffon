@@ -26,7 +26,6 @@ import griffon.javafx.JavaFXGriffonApplication;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.stage.Window;
-import org.awaitility.Duration;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
 import org.codehaus.griffon.test.javafx.TestJavaFXGriffonApplication;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -41,12 +40,13 @@ import org.testfx.api.FxToolkit;
 import org.testfx.util.WaitForAsyncUtils;
 
 import javax.application.event.EventHandler;
+import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.Objects.requireNonNull;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.create;
 
@@ -66,7 +66,7 @@ public class GriffonFunctionalTestFXExtension extends TestFX
 
     public static class Builder {
         private String windowName = "mainWindow";
-        private Duration timeout = new Duration(10, SECONDS);
+        private Duration timeout = Duration.of(10, SECONDS);
         private String[] startupArgs = DefaultGriffonApplication.EMPTY_ARGS;
         private Class<? extends TestJavaFXGriffonApplication> applicationClass = TestJavaFXGriffonApplication.class;
 

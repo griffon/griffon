@@ -23,6 +23,7 @@ dependencies {
     annotationProcessor project(':griffon-core-compile')
 
     testImplementation("org.awaitility:awaitility-groovy:$awaitilityVersion") {
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
         exclude group: 'org.hamcrest', module: 'hamcrest-library'
