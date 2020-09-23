@@ -30,12 +30,14 @@ import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
 import griffon.core.injection.Key;
 import griffon.core.injection.Module;
+import griffon.util.ConverterRegistryHolder;
 import griffon.util.GriffonClassUtils;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.util.TypeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.application.converter.ConverterRegistry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -86,6 +88,8 @@ public abstract class AbstractApplicationBootstrapper implements ApplicationBoot
         // 3 create injector
         LOG.debug("Creating application injector");
         createInjector(bindings);
+
+        ConverterRegistryHolder.setConverterRegistry(application.getInjector().getInstance(ConverterRegistry.class));
     }
 
     @Override

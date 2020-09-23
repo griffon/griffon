@@ -165,4 +165,12 @@ public class VetoableChangeSupport {
         requireNonBlank(propertyName, "Argument 'propertyName' must not be blank");
         fireVetoableChange(new PropertyChangeEvent(source, propertyName, oldValue, newValue));
     }
+
+    public boolean hasVetoableListeners() {
+        return getVetoableChangeListeners().length > 0;
+    }
+
+    public boolean hasVetoableListeners(@Nonnull String propertyName) {
+        return getVetoableChangeListeners(propertyName).length > 0;
+    }
 }

@@ -102,7 +102,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
                 try {
                     runnable.run();
                 } catch (Throwable throwable) {
-                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                    exceptionHandler.handleUncaught(Thread.currentThread(), throwable);
                 }
             });
         }
@@ -116,7 +116,7 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
             try {
                 runnable.run();
             } catch (Throwable throwable) {
-                exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                exceptionHandler.handleUncaught(Thread.currentThread(), throwable);
             }
         });
     }

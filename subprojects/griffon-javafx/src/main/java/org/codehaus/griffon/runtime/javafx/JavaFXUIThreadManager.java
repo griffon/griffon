@@ -53,7 +53,7 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
                 try {
                     runnable.run();
                 } catch (Throwable throwable) {
-                    getExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
+                    getExceptionHandler().handleUncaught(Thread.currentThread(), throwable);
                 }
             }, null);
 
@@ -61,7 +61,7 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
             try {
                 task.get();
             } catch (InterruptedException | ExecutionException e) {
-                getExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                getExceptionHandler().handleUncaught(Thread.currentThread(), e);
             }
         }
     }

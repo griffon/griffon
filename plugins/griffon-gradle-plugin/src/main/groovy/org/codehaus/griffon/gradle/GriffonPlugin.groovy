@@ -24,6 +24,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.invocation.Gradle
 import org.gradle.api.plugins.AppliedPlugin
+import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskProvider
@@ -44,11 +45,24 @@ class GriffonPlugin implements Plugin<Project> {
     void apply(Project project) {
         GriffonExtension extension = project.extensions.create('griffon', GriffonExtension, project)
 
+        applyDefaultVersions(project, extension)
         applyDefaultPlugins(project, extension)
         applyDefaultDependencies(project)
         configureSourceTargetCompatibility(project)
         configureNormalization(project)
         registerBuildListener(project, extension)
+    }
+
+    static void applyDefaultVersions(Project project, GriffonExtension extension) {
+        Properties versions = new Properties()
+        versions.load(GriffonPlugin.class.classLoader.getResourceAsStream('META-INF/griffon/versions.properties'))
+
+        extension.version.set(versions.getProperty('griffonVersion'))
+        versions.stringPropertyNames().each { versionProperty ->
+            if (!project.hasProperty(versionProperty)) {
+                project.extensions.findByType(ExtraPropertiesExtension).set(versionProperty, versions.getProperty(versionProperty))
+            }
+        }
     }
 
     static void applyDefaultDependencies(final Project project) {
@@ -59,16 +73,14 @@ class GriffonPlugin implements Plugin<Project> {
         project.apply(plugin: 'idea')
         project.apply(plugin: 'java-library')
         project.apply(plugin: 'org.kordamp.gradle.java-project')
-        if (extension.applicationProject.get()) {
-            project.apply(plugin: 'application')
-        }
+        project.apply(plugin: 'application')
 
         project.extensions.findByType(ProjectConfigurationExtension).with {
             release = (project.rootProject.findProperty('release') ?: false).toBoolean()
 
             info {
-                name          = project.name
-                description   = project.name
+                name          = project.findProperty('projectDescription') ?: project.name
+                description   = project.findProperty('projectDescription') ?: project.name
                 inceptionYear = new SimpleDateFormat('YYYY').format(new Date())
 
                 repositories {
@@ -80,6 +92,12 @@ class GriffonPlugin implements Plugin<Project> {
                         name = 'localSnapshot'
                         url  = "${project.rootProject.buildDir}/repos/local/snapshot"
                     }
+                }
+            }
+
+            coverage {
+                jacoco {
+                    toolVersion = project.jacocoVersion
                 }
             }
 
@@ -270,11 +288,6 @@ class GriffonPlugin implements Plugin<Project> {
                 appendDependency('core-test')
 
                 validateToolkit(project, extension)
-                if (extension.applicationProject.get()) {
-                    project.apply(plugin: 'application')
-                } else {
-                    project.mainClassName = '<INVALID>'
-                }
                 project.pluginManager.withPlugin('application') { plugin ->
                     configureApplicationSettings(project, extension)
                 }

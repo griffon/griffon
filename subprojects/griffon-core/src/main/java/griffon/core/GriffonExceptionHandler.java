@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public class GriffonExceptionHandler implements ExceptionHandler {
+public class GriffonExceptionHandler implements ExceptionHandler, Thread.UncaughtExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonExceptionHandler.class);
 
     private static final String[] CONFIG_OPTIONS = {
@@ -78,12 +78,16 @@ public class GriffonExceptionHandler implements ExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        handle(e);
+        handleUncaught(t, e);
     }
 
     @Override
+    public void handleUncaught(Thread t, Throwable e) {
+        handle(e);
+    }
+
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-    public void handle(Throwable throwable) {
+    protected void handle(Throwable throwable) {
         try {
             sanitize(throwable);
             printStacktrace(throwable);

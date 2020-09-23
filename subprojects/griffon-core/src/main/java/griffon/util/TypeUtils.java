@@ -22,6 +22,7 @@ import griffon.annotations.core.Nullable;
 import griffon.exceptions.GriffonException;
 import griffon.exceptions.TypeConversionException;
 
+import javax.application.converter.Converter;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -32,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.kordamp.jsr377.converter.FormattingConverter;
 
 import static java.util.Objects.requireNonNull;
 
@@ -224,13 +226,13 @@ public final class TypeUtils {
             }
         }
 
-        /*
-        PropertyEditor targetEditor = resolveTargetPropertyEditor(targetType, format);
-        if (targetEditor != null) {
-            targetEditor.setValue(value);
-            return (T) targetEditor.getValue();
+        Converter<T> converter = ConverterRegistryHolder.getConverterRegistry().findConverter(targetType);
+        if (converter != null) {
+            if (converter instanceof FormattingConverter) {
+                ((FormattingConverter) converter).setFormat(format);
+            }
+            return converter.fromObject(value);
         }
-        */
 
         throw new TypeConversionException(value, targetType);
     }

@@ -15,20 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.core;
+package griffon.util;
+
+import griffon.annotations.core.Nonnull;
+
+import javax.application.converter.ConverterRegistry;
 
 /**
  * @author Andres Almiray
- * @since 2.5.0
  */
-public interface ExceptionHandler extends javax.application.ExceptionHandler {
-    /**
-     * "griffon.full.stacktrace"
-     */
-    String GRIFFON_FULL_STACKTRACE = "griffon.full.stacktrace";
+public class ConverterRegistryHolder {
+    private static ConverterRegistry converterRegistry;
 
-    /**
-     * "griffon.exception.output"
-     */
-    String GRIFFON_EXCEPTION_OUTPUT = "griffon.exception.output";
+    @Nonnull
+    public static ConverterRegistry getConverterRegistry() {
+        return converterRegistry;
+    }
+
+    public static void setConverterRegistry(@Nonnull ConverterRegistry converterRegistry) {
+        ConverterRegistryHolder.converterRegistry = converterRegistry;
+    }
 }

@@ -33,6 +33,8 @@ import org.kordamp.gradle.plugin.bintray.BintrayPlugin
 import org.kordamp.gradle.plugin.bom.BomPlugin
 import org.kordamp.gradle.plugin.project.java.JavaProjectPlugin
 
+import java.text.SimpleDateFormat
+
 /**
  * @author Andres Almiray
  */
@@ -48,14 +50,19 @@ class GriffonParentPomPlugin implements Plugin<Project> {
         if (!project.hasProperty('sonatypePassword')) project.ext.sonatypePassword = '**undefined**'
 
         String guideProjectName = project.rootProject.name - '-plugin' + '-guide'
+        Set<Project> exampleProjects = project.rootProject.subprojects.grep { it.projectDir.absolutePath.contains('examples') }
 
         GriffonExtension griffonExtension = project.extensions.create('griffon', GriffonExtension, project)
+        GriffonPlugin.applyDefaultVersions(project, griffonExtension)
 
         project.extensions.findByType(ProjectConfigurationExtension).with {
             release = (project.rootProject.project.findProperty('release') ?: false).toBoolean()
 
             info {
-                vendor = 'Griffon'
+                name          = project.findProperty('projectDescription') ?: project.name
+                description   = project.findProperty('projectDescription') ?: project.name
+                inceptionYear = new SimpleDateFormat('YYYY').format(new Date())
+                vendor        = 'Griffon'
 
                 links {
                     website = "https://github.com/griffon-plugins/${project.rootProject.name}"
@@ -101,6 +108,12 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                 }
             }
 
+            coverage {
+                jacoco {
+                    toolVersion = project.jacocoVersion
+                }
+            }
+
             licensing {
                 licenses {
                     license {
@@ -137,6 +150,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
 
             bom {
                 exclude(guideProjectName)
+                exampleProjects.each { p -> exclude(p.name) }
             }
 
             dependencies {
@@ -213,6 +227,9 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                         annotationProcessor sub.config.dependencies.gav('jipsy')
                         testAnnotationProcessor sub.config.dependencies.gav('jipsy')
 
+                        annotationProcessor "org.codehaus.griffon:griffon-core-compile:${sub.griffonVersion}"
+                        testAnnotationProcessor "org.codehaus.griffon:griffon-core-compile:${sub.griffonVersion}"
+
                         testImplementation sub.config.dependencies.gav('junit5', 'junit-jupiter-api')
                         testImplementation sub.config.dependencies.gav('junit5', 'junit-jupiter-params')
                         testRuntimeOnly sub.config.dependencies.gav('junit5', 'junit-jupiter-engine')
@@ -256,7 +273,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
 
                     sub.jar {
                         manifest {
-                            attributes('Automatic-Module-Name': sub.group + (sub.name - 'griffon-').replace('-', '.'))
+                            attributes('Automatic-Module-Name': (sub.group - 'org.codehaus.') + '.' + (sub.name - 'griffon-').replace('-', '.'))
                         }
                     }
                 }
@@ -268,12 +285,36 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                 dir('subprojects') {
                     config {
                         info {
-                            name        = project.name
-                            description = project.projectDescription
+                            name        = project.findProperty('projectDescription') ?: project.name
+                            description = project.findProperty('projectDescription') ?: project.name
                         }
                     }
 
                     compileGroovy.enabled = false
+                }
+
+                dir('examples') {
+                    config {
+                        docs {
+                            javadoc {
+                                enabled = false
+                            }
+                        }
+
+                        bintray {
+                            enabled = false
+                        }
+
+                        publishing {
+                            enabled = false
+                        }
+                    }
+
+                    dependencies {
+                        compileOnly("org.codehaus.groovy:groovy-all:${project.groovyVersion}") {
+                            exclude group: 'junit', module: 'junit'
+                        }
+                    }
                 }
 
                 path(':' + guideProjectName) {

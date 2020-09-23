@@ -142,6 +142,14 @@ public class PropertyChangeSupport {
         }
     }
 
+    public boolean hasListeners() {
+        return getPropertyChangeListeners().length > 0;
+    }
+
+    public boolean hasListeners(@Nonnull String propertyName) {
+        return getPropertyChangeListeners(propertyName).length > 0;
+    }
+
     private boolean valuesAreEqual(@Nonnull PropertyChangeEvent event) {
         if (null == event) return true;
         if (event.getOldValue() == event.getNewValue()) return true;

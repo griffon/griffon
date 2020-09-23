@@ -41,8 +41,6 @@ class GriffonExtension {
 
     final Property<Boolean> generateProjectStructure
 
-    final Property<Boolean> applicationProject
-
     final Property<String> applicationIconName
 
     final MapProperty<String, String> applicationProperties
@@ -56,7 +54,6 @@ class GriffonExtension {
         disableDependencyResolution = project.objects.property(Boolean).convention(false)
         includeDefaultRepositories = project.objects.property(Boolean).convention(true)
         generateProjectStructure = project.objects.property(Boolean).convention(true)
-        applicationProject = project.objects.property(Boolean).convention(true)
         applicationIconName = project.objects.property(String).convention('griffon.icns')
         applicationProperties = project.objects.mapProperty(String, String).convention(new LinkedHashMap<String, String>())
     }

@@ -98,7 +98,7 @@ public abstract class AbstractEventRouter implements EventRouter {
             try {
                 runnable.run();
             } catch (Throwable throwable) {
-                exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                exceptionHandler.handleUncaught(Thread.currentThread(), throwable);
             }
         });
     }

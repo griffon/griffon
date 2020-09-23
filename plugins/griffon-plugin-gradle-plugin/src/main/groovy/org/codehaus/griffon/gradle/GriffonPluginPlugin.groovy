@@ -33,12 +33,15 @@ class GriffonPluginPlugin implements Plugin<Settings> {
 
         settings.extensions.findByType(ProjectsExtension).with {
             layout = 'two-level'
-            directories = ['docs', 'subprojects']
+            directories = ['docs', 'subprojects', 'examples']
 
             plugins {
                 all {
                     id 'idea'
                 }
+                /*path(':') {
+                    id 'org.codehaus.griffon.parent-pom'
+                }*/
                 dir('subprojects') {
                     id 'java-library'
                     id 'groovy'
@@ -48,6 +51,11 @@ class GriffonPluginPlugin implements Plugin<Settings> {
                     id 'org.kordamp.gradle.guide'
                     id 'org.ajoberstar.git-publish'
                 }
+                dir('examples') {
+                    id 'groovy'
+                    id 'java-library'
+                    //id 'org.codehaus.griffon.project'
+                }
             }
         }
 
@@ -55,7 +63,11 @@ class GriffonPluginPlugin implements Plugin<Settings> {
             @Override
             void projectsLoaded(Gradle gradle) {
                 gradle.rootProject.pluginManager.apply(GriffonParentPomPlugin)
+                gradle.rootProject.subprojects
+                    .grep { it.projectDir.absolutePath.contains('examples') }
+                    .each { p ->  p.pluginManager.apply(GriffonPlugin) }
             }
         })
+
     }
 }

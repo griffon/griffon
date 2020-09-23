@@ -49,3 +49,18 @@ dependencies {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }
+
+processResources {
+    expand(
+        griffonVersion       : version,
+        groovyVersion        : groovyVersion,
+        spockVersion         : spockVersion,
+        slf4jVersion         : slf4jVersion,
+        jacocoVersion        : jacocoVersion,
+        junitVersion         : junitVersion,
+        junit5Version        : junit5Version,
+        junitPlatformVersion : junitPlatformVersion,
+        jipsyVersion         : jipsyVersion,
+        awaitilityVersion    : awaitilityVersion,
+    )
+}

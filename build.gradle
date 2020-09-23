@@ -476,9 +476,7 @@ subprojects { Project subproj ->
 
             jar {
                 manifest {
-                    attributes(
-                        'Automatic-Module-Name': 'org.codehaus.' + subproj.name.replaceAll('-', '.')
-                    )
+                    attributes('Automatic-Module-Name': subproj.name.replaceAll('-', '.'))
                 }
             }
         }
