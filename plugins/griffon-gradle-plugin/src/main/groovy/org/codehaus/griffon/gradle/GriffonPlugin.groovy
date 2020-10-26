@@ -32,6 +32,7 @@ import org.gradle.api.tasks.compile.GroovyCompile
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.tooling.BuildException
 import org.kordamp.gradle.plugin.base.ProjectConfigurationExtension
+import org.kordamp.gradle.plugin.project.java.JavaProjectPlugin
 
 import java.text.SimpleDateFormat
 
@@ -72,8 +73,8 @@ class GriffonPlugin implements Plugin<Project> {
     static void applyDefaultPlugins(Project project, GriffonExtension extension) {
         project.apply(plugin: 'idea')
         project.apply(plugin: 'java-library')
-        project.apply(plugin: 'org.kordamp.gradle.java-project')
         project.apply(plugin: 'application')
+        JavaProjectPlugin.applyIfMissing(project)
 
         project.extensions.findByType(ProjectConfigurationExtension).with {
             release = (project.rootProject.findProperty('release') ?: false).toBoolean()

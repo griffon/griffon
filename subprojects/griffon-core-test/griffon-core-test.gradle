@@ -26,8 +26,8 @@ dependencies {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
         exclude group: 'org.hamcrest', module: 'hamcrest-library'
     }
-    api config.dependencies.gav('junit5', 'junit-jupiter-api')
-    api(config.dependencies.gav('junit5v', 'junit-vintage-engine')) {
+    api config.dependencyManagement.gav('junit5', 'junit-jupiter-api')
+    api(config.dependencyManagement.gav('junit5v', 'junit-vintage-engine')) {
         exclude module: 'junit', group: 'junit'
     }
 }

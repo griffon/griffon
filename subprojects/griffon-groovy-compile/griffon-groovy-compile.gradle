@@ -29,7 +29,7 @@ dependencies {
     api("org.codehaus.groovy:groovy-all:$groovyVersion") {
         exclude group: 'junit', module: 'junit'
     }
-    api(config.dependencies.gav('gipsy')) {
+    api(config.dependencyManagement.gav('gipsy')) {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }

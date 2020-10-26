@@ -209,7 +209,7 @@ config {
         }
     }
 
-    dependencies {
+    dependencyManagement {
         dependency('jsr377') {
             groupId    = 'javax.application'
             artifactId = 'jsr377-api'
@@ -376,16 +376,16 @@ subprojects { Project subproj ->
         dependencies {
             // if (isCoreProject) cfg.platform('griffon', 'api')
 
-            compileOnly config.dependencies.gav('jipsy')
-            annotationProcessor config.dependencies.gav('jipsy')
+            compileOnly config.dependencyManagement.gav('jipsy')
+            annotationProcessor config.dependencyManagement.gav('jipsy')
 
-            testImplementation config.dependencies.gav('junit5', 'junit-jupiter-api')
-            testImplementation config.dependencies.gav('junit5', 'junit-jupiter-params')
-            testRuntimeOnly config.dependencies.gav('junit5', 'junit-jupiter-engine')
-            testRuntimeOnly(config.dependencies.gav('junit5v', 'junit-vintage-engine')) {
+            testImplementation config.dependencyManagement.gav('junit5', 'junit-jupiter-api')
+            testImplementation config.dependencyManagement.gav('junit5', 'junit-jupiter-params')
+            testRuntimeOnly config.dependencyManagement.gav('junit5', 'junit-jupiter-engine')
+            testRuntimeOnly(config.dependencyManagement.gav('junit5v', 'junit-vintage-engine')) {
                 exclude group: 'junit', module: 'junit'
             }
-            testImplementation(config.dependencies.gav('junit')) {
+            testImplementation(config.dependencyManagement.gav('junit')) {
                 exclude group: 'org.hamcrest', module: 'hamcrest-core'
             }
             testImplementation("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
@@ -414,11 +414,11 @@ subprojects { Project subproj ->
                     exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
                 }
 
-                testImplementation config.dependencies.gav('jsr377', 'jsr377-tck')
+                testImplementation config.dependencyManagement.gav('jsr377', 'jsr377-tck')
                 testImplementation "org.mockito:mockito-core:$mockitoVersion"
             }
-            testImplementation config.dependencies.gav('slf4j', 'slf4j-simple')
-            testImplementation config.dependencies.gav('cglib', 'cglib-nodep')
+            testImplementation config.dependencyManagement.gav('slf4j', 'slf4j-simple')
+            testImplementation config.dependencyManagement.gav('cglib', 'cglib-nodep')
         }
 
         processTestResources {

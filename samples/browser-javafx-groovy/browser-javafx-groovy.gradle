@@ -27,14 +27,14 @@ dependencies {
 
     runtimeOnly project(':griffon-guice')
 
-    runtimeOnly config.dependencies.gav('slf4j', 'slf4j-simple')
+    runtimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-simple')
 
     runtimeOnly('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtimeOnly(config.dependencies.gav('slf4j', 'slf4j-log4j12')) {
+    runtimeOnly(config.dependencyManagement.gav('slf4j', 'slf4j-log4j12')) {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'log4j',     module: 'log4j'
     }

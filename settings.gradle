@@ -54,20 +54,20 @@ includeBuild '../jsr377-converters'
 projects {
     layout = 'explicit'
 
-    includeFromDir('subprojects')
-    includeFromDir('plugins')
-    includeFromDir('samples')
+    includeProjects('subprojects')
+    includeProjects('plugins')
+    includeProjects('samples')
         .exclude('editor-swing-groovy')
-        .when(!appveyor)
-    includeFromDir('poms').when(fullBuild)
-    includeFromDir('templates').when(fullBuild)
-    includeFromDir('docs').when(fullBuild)
-    includeFromDir('archetypes').when(fullBuild)
+        .includeIf(!appveyor)
+    includeProjects('poms').includeIf(fullBuild)
+    includeProjects('templates').includeIf(fullBuild)
+    includeProjects('docs').includeIf(fullBuild)
+    includeProjects('archetypes').includeIf(fullBuild)
 
     plugins {
         all {
             id 'idea'
-            id('net.ossindex.audit').when(fullBuild)
+            id('net.ossindex.audit').includeIf(fullBuild)
         }
         path(':') {
             id 'org.kordamp.gradle.java-project'
@@ -78,11 +78,11 @@ projects {
             id 'java-library'
             id 'groovy'
             id('nebula.optional-base')
-            id('org.kordamp.gradle.jdeps').when({-> false && fullBuild})
-            id('org.jonnyzzz.java9c').when(fullBuild)
+            id('org.kordamp.gradle.jdeps').includeIf({-> false && fullBuild})
+            id('org.jonnyzzz.java9c').includeIf(fullBuild)
         }
         dir('archetypes') {
-            exclude('archetypes')
+            excludeDir('archetypes')
             id 'java-library'
         }
         dir('plugins') {

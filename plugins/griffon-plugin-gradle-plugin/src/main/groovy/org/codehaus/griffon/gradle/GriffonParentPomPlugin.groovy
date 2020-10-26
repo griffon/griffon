@@ -25,6 +25,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 import org.gradle.api.invocation.Gradle
 import org.gradle.api.plugins.AppliedPlugin
+import org.gradle.api.publish.plugins.PublishingPlugin
 import org.gradle.api.tasks.compile.GroovyCompile
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
@@ -40,9 +41,9 @@ import java.text.SimpleDateFormat
  */
 class GriffonParentPomPlugin implements Plugin<Project> {
     void apply(Project project) {
-        project.plugins.apply(JavaProjectPlugin)
-        project.plugins.apply(BintrayPlugin)
-        project.plugins.apply(BomPlugin)
+        JavaProjectPlugin.applyIfMissing(project)
+        BintrayPlugin.applyIfMissing(project)
+        BomPlugin.applyIfMissing(project)
 
         if (!project.hasProperty('bintrayUsername')) project.ext.bintrayUsername = '**undefined**'
         if (!project.hasProperty('bintrayApiKey')) project.ext.bintrayApiKey = '**undefined**'
@@ -144,7 +145,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
             }
 
             publishing {
-                releasesRepository = 'localRelease'
+                releasesRepository  = 'localRelease'
                 snapshotsRepository = 'localSnapshot'
             }
 
@@ -153,7 +154,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                 exampleProjects.each { p -> exclude(p.name) }
             }
 
-            dependencies {
+            dependencyManagement {
                 dependency("org.kordamp.gipsy:gipsy:${project.jipsyVersion}")
                 dependency("org.kordamp.jipsy:jipsy:${project.jipsyVersion}") {
                     modules    = ['jipsy-util']
@@ -222,21 +223,21 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                 @Override
                 void execute(AppliedPlugin ap) {
                     sub.dependencies {
-                        compileOnly sub.config.dependencies.gav('gipsy')
-                        compileOnly sub.config.dependencies.gav('jipsy')
-                        annotationProcessor sub.config.dependencies.gav('jipsy')
-                        testAnnotationProcessor sub.config.dependencies.gav('jipsy')
+                        compileOnly sub.config.dependencyManagement.gav('gipsy')
+                        compileOnly sub.config.dependencyManagement.gav('jipsy')
+                        annotationProcessor sub.config.dependencyManagement.gav('jipsy')
+                        testAnnotationProcessor sub.config.dependencyManagement.gav('jipsy')
 
                         annotationProcessor "org.codehaus.griffon:griffon-core-compile:${sub.griffonVersion}"
                         testAnnotationProcessor "org.codehaus.griffon:griffon-core-compile:${sub.griffonVersion}"
 
-                        testImplementation sub.config.dependencies.gav('junit5', 'junit-jupiter-api')
-                        testImplementation sub.config.dependencies.gav('junit5', 'junit-jupiter-params')
-                        testRuntimeOnly sub.config.dependencies.gav('junit5', 'junit-jupiter-engine')
-                        testRuntimeOnly(sub.config.dependencies.gav('junit5v', 'junit-vintage-engine')) {
+                        testImplementation sub.config.dependencyManagement.gav('junit5', 'junit-jupiter-api')
+                        testImplementation sub.config.dependencyManagement.gav('junit5', 'junit-jupiter-params')
+                        testRuntimeOnly sub.config.dependencyManagement.gav('junit5', 'junit-jupiter-engine')
+                        testRuntimeOnly(sub.config.dependencyManagement.gav('junit5v', 'junit-vintage-engine')) {
                             exclude group: 'junit', module: 'junit'
                         }
-                        testImplementation(sub.config.dependencies.gav('junit')) {
+                        testImplementation(sub.config.dependencyManagement.gav('junit')) {
                             exclude group: 'org.hamcrest', module: 'hamcrest-core'
                         }
                         testImplementation("org.codehaus.groovy:groovy-all:${sub.groovyVersion}") {
@@ -255,8 +256,8 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                         testCompileOnly "org.codehaus.griffon:griffon-core-compile:${sub.griffonVersion}"
                         testCompileOnly "org.codehaus.griffon:griffon-beans-compile:${sub.griffonVersion}"
                         testCompileOnly "org.codehaus.griffon:griffon-groovy-compile:${sub.griffonVersion}"
-                        testCompileOnly sub.config.dependencies.gav('jipsy')
-                        testCompileOnly sub.config.dependencies.gav('gipsy')
+                        testCompileOnly sub.config.dependencyManagement.gav('jipsy')
+                        testCompileOnly sub.config.dependencyManagement.gav('gipsy')
 
                         testImplementation "org.codehaus.griffon:griffon-core-test:${sub.griffonVersion}"
                         testImplementation("org.codehaus.griffon:griffon-groovy:${sub.griffonVersion}") {

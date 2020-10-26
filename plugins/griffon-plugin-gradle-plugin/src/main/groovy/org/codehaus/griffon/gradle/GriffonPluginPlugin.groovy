@@ -39,9 +39,6 @@ class GriffonPluginPlugin implements Plugin<Settings> {
                 all {
                     id 'idea'
                 }
-                /*path(':') {
-                    id 'org.codehaus.griffon.parent-pom'
-                }*/
                 dir('subprojects') {
                     id 'java-library'
                     id 'groovy'
@@ -54,7 +51,6 @@ class GriffonPluginPlugin implements Plugin<Settings> {
                 dir('examples') {
                     id 'groovy'
                     id 'java-library'
-                    //id 'org.codehaus.griffon.project'
                 }
             }
         }
@@ -68,6 +64,5 @@ class GriffonPluginPlugin implements Plugin<Settings> {
                     .each { p ->  p.pluginManager.apply(GriffonPlugin) }
             }
         })
-
     }
 }
