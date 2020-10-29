@@ -15,19 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-apply plugin: 'java-library'
-apply plugin: 'groovy'
-apply plugin: 'application'
 
 mainClassName = 'editor.Launcher'
 
 dependencies {
+    compileOnly project(':griffon-beans-compile')
     compileOnly(project(':griffon-groovy-compile')) {
         exclude module: 'griffon-javafx-compile'
     }
-    compileOnly project(':griffon-beans-compile')
 
-    api project(':griffon-beans')
     api project(':griffon-groovy')
     api project(':griffon-swing')
 

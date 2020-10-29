@@ -40,10 +40,8 @@ buildscript {
 }
 apply plugin: 'org.kordamp.gradle.kordamp-parentbuild'
 
-boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
-boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 boolean github   = (System.env['CI'] ?: false) as boolean
-boolean fullBuild = !github && !travis && !appveyor
+boolean fullBuild = !github
 
 rootProject.name = 'griffon'
 
@@ -56,9 +54,7 @@ projects {
 
     includeProjects('subprojects')
     includeProjects('plugins')
-    includeProjects('samples')
-        .exclude('editor-swing-groovy')
-        .includeIf(!appveyor)
+    includeProjects('samples').includeIf(fullBuild)
     includeProjects('poms').includeIf(fullBuild)
     includeProjects('templates').includeIf(fullBuild)
     includeProjects('docs').includeIf(fullBuild)
@@ -77,7 +73,6 @@ projects {
         dir('subprojects') {
             id 'java-library'
             id 'groovy'
-            id('nebula.optional-base')
             id('org.kordamp.gradle.jdeps').includeIf({-> false && fullBuild})
             id('org.jonnyzzz.java9c').includeIf(fullBuild)
         }

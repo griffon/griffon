@@ -18,12 +18,10 @@
 
 apply from: 'gradle/idea.gradle'
 
-//boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
 boolean github   = (System.env['CI'] ?: false) as boolean
-//boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
 ext {
     depProjects = []
-    fullBuild = !github // && !travis && !appveyor
+    fullBuild = !github
     resourceFilePatterns = [
         '**/*.properties',
         '**/*.groovy',
@@ -374,8 +372,6 @@ subprojects { Project subproj ->
         }
 
         dependencies {
-            // if (isCoreProject) cfg.platform('griffon', 'api')
-
             compileOnly config.dependencyManagement.gav('jipsy')
             annotationProcessor config.dependencyManagement.gav('jipsy')
 
@@ -451,11 +447,31 @@ subprojects { Project subproj ->
             }
         }
 
-        subproj.apply from: rootProject.file('gradle/code-quality.gradle')
+        license {
+            mapping {
+                kt     = 'SLASHSTAR_STYLE'
+                java   = 'SLASHSTAR_STYLE'
+                groovy = 'SLASHSTAR_STYLE'
+                gdsl   = 'SLASHSTAR_STYLE'
+                dsld   = 'SLASHSTAR_STYLE'
+                fxml   = 'XML_STYLE'
+            }
+            exclude '**/*.png'
+            exclude '**/griffon/util/MethodUtils.java'
+            exclude '**/griffon/util/application.groovy'
+            exclude '**/griffon/util/application.xml'
+            exclude '**/griffon/util/application_jdk8.groovy'
+            exclude '**/griffon/util/bad_application.xml'
+            exclude '**/org/jdesktop/swinghelper/debug/CheckThreadViolationRepaintManager.java'
+            exclude '**/org/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor.java'
+            exclude '**/org/testfx/service/support/WaitUntilSupport.java'
+            exclude 'archetype-resources/**/*'
+            exclude '**/archetype*.xml'
+        }
 
-        // sonarqube {
-        //     skipProject = !shouldPublish
-        // }
+        licenseTest {
+            source -= sourceSets.test.resources
+        }
 
         if (isCoreProject) {
             if (rootProject.fullBuild) {
@@ -469,10 +485,6 @@ subprojects { Project subproj ->
                     attributes('Automatic-Module-Name': subproj.name.replaceAll('-', '.'))
                 }
             }
-        }
-
-        if (isCoreProject && rootProject.fullBuild) {
-            // subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
         }
 
         javadoc {
