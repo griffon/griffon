@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2020 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -270,10 +270,8 @@ class GriffonPlugin implements Plugin<Project> {
             void projectsEvaluated(Gradle gradle) {
                 if (extension.includeDefaultRepositories.get()) {
                     project.repositories.mavenLocal()
-                    // enable jcenter
-                    project.repositories.jcenter()
-                    // enable griffon-plugins @ bintray
-                    project.repositories.maven { url = 'http://dl.bintray.com/griffon/griffon-plugins' }
+                    // enable mavenCentral
+                    project.repositories.mavenCentral()
                 }
 
                 configureDefaultSourceSets(project, 'java')

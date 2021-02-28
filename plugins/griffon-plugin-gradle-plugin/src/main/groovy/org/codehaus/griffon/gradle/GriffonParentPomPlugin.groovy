@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2020 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,7 +179,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
 
         project.allprojects {
             repositories {
-                jcenter()
+                mavenCentral()
                 mavenCentral()
                 mavenLocal()
             }
