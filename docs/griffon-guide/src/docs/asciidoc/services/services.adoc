@@ -17,7 +17,7 @@ package sample
 import griffon.core.artifact.GriffonService
 
 @javax.inject.Singleton
-@org.kordamp.jipsy.ServiceProviderFor(GriffonService)
+@org.kordamp.jipsy.annotations.ServiceProviderFor(GriffonService)
 class MathService {
     def addition(a, b) { a + b }
 }
@@ -36,7 +36,7 @@ import griffon.core.controller.ControllerAction
 import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 
-@org.kordamp.jipsy.ServiceProviderFor(GriffonController)
+@org.kordamp.jipsy.annotations.ServiceProviderFor(GriffonController)
 class SampleController {
     @MVCMember @Nonnull SampleModel model
 

@@ -21,7 +21,7 @@ import griffon.core.injection.Module
 import griffon.util.AnnotationUtils.named
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import java.util.ResourceBundle
 
 @ServiceProviderFor(Module::class)

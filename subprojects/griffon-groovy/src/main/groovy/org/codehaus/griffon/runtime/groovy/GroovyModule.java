@@ -33,7 +33,7 @@ import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupFactory;
 import org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroupManager;
 import org.codehaus.griffon.runtime.groovy.resources.GroovyAwareResourceResolverDecoratorFactory;
 import org.codehaus.griffon.runtime.groovy.util.GroovyScriptResourceBundleLoader;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 

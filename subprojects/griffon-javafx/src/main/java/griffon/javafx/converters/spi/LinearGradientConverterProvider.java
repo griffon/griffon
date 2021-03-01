@@ -19,7 +19,7 @@ package griffon.javafx.converters.spi;
 
 import griffon.javafx.converters.LinearGradientConverter;
 import javafx.scene.paint.LinearGradient;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.application.converter.Converter;
 import javax.application.converter.spi.ConverterProvider;

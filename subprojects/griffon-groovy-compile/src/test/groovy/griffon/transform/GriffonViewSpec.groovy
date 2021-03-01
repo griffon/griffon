@@ -29,7 +29,7 @@ class GriffonViewSpec extends Specification {
 
         when:
         def clazz = gcl.parseClass('''
-            @org.kordamp.jipsy.ServiceProviderFor(griffon.core.artifact.GriffonView)
+            @org.kordamp.jipsy.annotations.ServiceProviderFor(griffon.core.artifact.GriffonView)
             class SimpleView {
                 void initUI() { }
             }
@@ -49,7 +49,7 @@ class GriffonViewSpec extends Specification {
             ''')
 
         def clazz = gcl.parseClass('''
-            @org.kordamp.jipsy.ServiceProviderFor(griffon.core.artifact.GriffonView)
+            @org.kordamp.jipsy.annotations.ServiceProviderFor(griffon.core.artifact.GriffonView)
             class SimpleView extends BaseView {
                 void initUI() { }
             }

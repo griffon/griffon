@@ -18,7 +18,7 @@ package org.example.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import griffon.metadata.TypeProviderFor;
+import org.kordamp.jipsy.annotations.TypeProviderFor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;

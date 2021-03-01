@@ -23,7 +23,7 @@ import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;

@@ -21,7 +21,7 @@ import griffon.core.artifact.GriffonModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 @ServiceProviderFor(GriffonModel.class)
 public class ContainerModel extends AbstractGriffonModel {

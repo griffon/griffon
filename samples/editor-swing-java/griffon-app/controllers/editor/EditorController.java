@@ -22,7 +22,7 @@ import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ControllerAction;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.io.IOException;
 import java.util.Map;

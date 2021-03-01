@@ -18,7 +18,7 @@
 package sample.javafx.kotlin;
 
 import griffon.core.artifact.GriffonModel
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel

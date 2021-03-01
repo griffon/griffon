@@ -20,7 +20,7 @@ package sample.javafx.groovy
 import griffon.core.artifact.GriffonService
 import griffon.core.i18n.MessageSource
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 import static griffon.util.GriffonNameUtils.isBlank
 

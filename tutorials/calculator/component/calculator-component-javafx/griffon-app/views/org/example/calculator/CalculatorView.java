@@ -17,7 +17,7 @@ package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import griffon.util.CollectionUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

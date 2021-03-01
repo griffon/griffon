@@ -17,7 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonController;
 import griffon.annotations.inject.MVCMember;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import javax.application.threading.Threading;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

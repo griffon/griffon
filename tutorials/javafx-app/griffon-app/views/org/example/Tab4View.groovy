@@ -18,7 +18,7 @@ package org.example
 import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
 import griffon.javafx.beans.binding.UIThreadAwareBindings
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import javafx.beans.property.StringProperty
 import javafx.scene.control.Tab
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView

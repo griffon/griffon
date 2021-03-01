@@ -22,7 +22,7 @@ import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
 import griffon.core.events.RandomEvent;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.application.event.EventHandler;
 

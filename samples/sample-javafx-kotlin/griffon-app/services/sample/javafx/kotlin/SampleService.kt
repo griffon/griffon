@@ -18,7 +18,7 @@
 package sample.javafx.kotlin
 
 import griffon.core.artifact.GriffonService
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import griffon.util.GriffonNameUtils.isBlank
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService
 

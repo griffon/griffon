@@ -18,7 +18,7 @@ package org.example;
 import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
 import griffon.javafx.support.JavaFXAction;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;

@@ -3,7 +3,7 @@ package ${project_package}
 import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import javax.swing.SwingConstants
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView
 

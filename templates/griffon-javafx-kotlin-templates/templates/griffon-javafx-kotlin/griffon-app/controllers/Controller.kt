@@ -3,7 +3,7 @@ package ${project_package}
 import griffon.core.artifact.GriffonController
 import griffon.core.controller.ControllerAction
 import griffon.annotations.inject.MVCMember
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
 import griffon.annotations.core.Nonnull
 import javax.application.threading.Threading

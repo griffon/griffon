@@ -20,7 +20,7 @@ import griffon.annotations.inject.MVCMember;
 import griffon.javafx.beans.binding.UIThreadAwareBindings;
 import griffon.javafx.support.JavaFXAction;
 import griffon.javafx.support.JavaFXUtils;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

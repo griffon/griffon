@@ -20,7 +20,7 @@ package browser
 import griffon.core.artifact.GriffonModel
 import groovyx.javafx.beans.FXBindable
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 @ServiceProviderFor(GriffonModel)
 class BrowserModel extends AbstractGriffonModel {

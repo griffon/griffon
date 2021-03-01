@@ -25,7 +25,7 @@ import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.LifecycleHandlerProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.util.ResourceBundle;
 

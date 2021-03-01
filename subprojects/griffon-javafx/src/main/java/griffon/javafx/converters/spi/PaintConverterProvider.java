@@ -19,7 +19,7 @@ package griffon.javafx.converters.spi;
 
 import griffon.javafx.converters.PaintConverter;
 import javafx.scene.paint.Paint;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.application.converter.Converter;
 import javax.application.converter.spi.ConverterProvider;

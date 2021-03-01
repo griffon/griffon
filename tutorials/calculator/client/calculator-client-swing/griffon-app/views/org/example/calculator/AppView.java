@@ -16,7 +16,7 @@
 package org.example.calculator;
 
 import griffon.core.artifact.GriffonView;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
 
 import griffon.annotations.core.Nonnull;

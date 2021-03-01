@@ -39,7 +39,7 @@ import griffon.core.injection.InjectorFactory;
 import griffon.exceptions.FieldException;
 import griffon.exceptions.NewInstanceException;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

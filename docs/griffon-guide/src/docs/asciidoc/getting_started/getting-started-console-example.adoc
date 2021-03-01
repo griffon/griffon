@@ -216,7 +216,7 @@ include::{console-swing-groovy}/griffon-app/models/console/ConsoleModel.groovy[l
 Griffon Models are *_not_* domain classes like the ones you find in Grails; they're more akin
 to presentation models, and as such, they're used to transfer data between Views and Controllers.
 
-Notice the usage of the `@org.kordamp.jipsy.ServiceProviderFor` annotation. This annotation serves as an additional hint to the
+Notice the usage of the `@org.kordamp.jipsy.annotations.ServiceProviderFor` annotation. This annotation serves as an additional hint to the
 compiler, letting it know it must generate or update a metadata file in an specific location.
 The file is named after the argument set on the annotation, in this case, `griffon.core.artifact.GriffonModel`. This file
 is automatically placed under `META-INF/services`. It's contents are fully qualified class names of types that implement

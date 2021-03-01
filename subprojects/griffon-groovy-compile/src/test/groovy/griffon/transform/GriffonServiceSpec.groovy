@@ -29,7 +29,7 @@ class GriffonServiceSpec extends Specification {
 
         when:
         def clazz = gcl.parseClass('''
-            @org.kordamp.jipsy.ServiceProviderFor(griffon.core.artifact.GriffonService)
+            @org.kordamp.jipsy.annotations.ServiceProviderFor(griffon.core.artifact.GriffonService)
             class SimpleService { }
             ''')
 
@@ -47,7 +47,7 @@ class GriffonServiceSpec extends Specification {
             ''')
 
         def clazz = gcl.parseClass('''
-            @org.kordamp.jipsy.ServiceProviderFor(griffon.core.artifact.GriffonService)
+            @org.kordamp.jipsy.annotations.ServiceProviderFor(griffon.core.artifact.GriffonService)
             class SimpleService extends BaseService { }
             ''')
 

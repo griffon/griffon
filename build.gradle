@@ -214,7 +214,10 @@ config {
             modules    = ['jsr377-tck']
         }
         dependency("org.kordamp.gipsy:gipsy:$jipsyVersion")
-        dependency("org.kordamp.jipsy:jipsy:$jipsyVersion") {
+        dependency('jipsy') {
+            groupId    = 'org.kordamp.jipsy'
+            artifactId = 'jipsy-processor'
+            version    = jipsyVersion
             modules    = ['jipsy-util']
         }
         dependency('slf4j') {

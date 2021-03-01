@@ -40,7 +40,7 @@ import griffon.core.injection.InjectorFactory;
 import griffon.exceptions.FieldException;
 import griffon.exceptions.NewInstanceException;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

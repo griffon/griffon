@@ -18,7 +18,7 @@
 package griffon.swing.converters.spi;
 
 import griffon.swing.converters.PolygonConverter;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.application.converter.Converter;
 import javax.application.converter.spi.ConverterProvider;

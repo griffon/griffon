@@ -26,7 +26,7 @@ package org.example;
 
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 
@@ -48,7 +48,7 @@ package org.example;
 
 import griffon.core.injection.Module;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 
@@ -72,7 +72,7 @@ are specified using the `{link_depends_on}` annotation, like so:
 import griffon.core.injection.Module;
 import griffon.annotations.inject.DependsOn;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 
@@ -321,7 +321,7 @@ as follows
 import griffon.core.injection.Module;
 import griffon.annotations.inject.DependsOn;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 
@@ -343,7 +343,7 @@ import griffon.core.injection.Module;
 import griffon.annotations.inject.DependsOn;
 import griffon.annotations.inject.Evicts;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 
@@ -377,7 +377,7 @@ package com.acme;
 
 import org.apache.onami.scheduler.QuartzModule;
 import com.google.inject.Module;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 @ServiceProviderFor(Module.class)
 public class MyQuartzModule extends QuartzModule {

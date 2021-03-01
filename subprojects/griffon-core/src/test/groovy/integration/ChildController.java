@@ -23,7 +23,7 @@ import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonController;
 import griffon.core.mvc.MVCGroup;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 import java.util.ArrayList;

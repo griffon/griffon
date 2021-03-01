@@ -79,7 +79,7 @@ import griffon.core.injection.Module;
 import griffon.annotations.inject.DependsOn;
 import griffon.util.BuilderCustomizer;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 
@@ -129,7 +129,7 @@ package com.acme
 import griffon.core.event.EventHandler
 import griffon.core.injection.Module
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 @ServiceProviderFor(Module)
 class ApplicationModule extends AbstractModule {
@@ -144,7 +144,7 @@ class ApplicationModule extends AbstractModule {
 
 == Artifacts
 
-All artifacts must be annotated with `@org.kordamp.jipsy.ServiceProviderFor` without exception.
+All artifacts must be annotated with `@org.kordamp.jipsy.annotations.ServiceProviderFor` without exception.
 Failure to follow this rule will make Griffon miss the artifact during bootstrap.
 The value for this annotation must be the basic interface that defines the artifact's
 type, for example:
@@ -155,7 +155,7 @@ type, for example:
 package sample
 
 import griffon.core.artifact.GriffonModel
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 @ServiceProviderFor(GriffonModel)
 class SampleModel {
@@ -181,7 +181,7 @@ class as an starting point:
 package sample
 
 import griffon.core.artifact.GriffonView
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import griffon.annotations.inject.MVCMember
 import griffon.annotations.core.Nonnull
 

@@ -22,7 +22,7 @@ import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
 import javafx.beans.value.ChangeListener
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 @ServiceProviderFor(GriffonView)
 class BrowserView extends AbstractJavaFXGriffonView {

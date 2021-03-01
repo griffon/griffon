@@ -3,7 +3,7 @@ package ${project_package}
 import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 import javafx.fxml.FXML
 import javafx.scene.Group
 import javafx.scene.Scene

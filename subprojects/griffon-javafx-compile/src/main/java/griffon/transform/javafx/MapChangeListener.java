@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * import javafx.collections.ObservableMap
  * import griffon.core.artifact.GriffonModel
  *
- * &#064;org.kordamp.jipsy.ServiceProviderFor(GriffonModel)
+ * &#064;org.kordamp.jipsy.annotations.ServiceProviderFor(GriffonModel)
  * class SampleModel {
  *     def controller
  *
@@ -54,7 +54,7 @@ import java.lang.annotation.Target;
  * import javafx.collections.ObservableMap
  * import griffon.core.artifact.GriffonModel
  *
- * &#064;org.kordamp.jipsy.ServiceProviderFor(GriffonModel)
+ * &#064;org.kordamp.jipsy.annotations.ServiceProviderFor(GriffonModel)
  * class SampleModel {
  *    def controller
  *

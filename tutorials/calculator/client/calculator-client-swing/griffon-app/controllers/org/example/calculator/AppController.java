@@ -17,7 +17,7 @@ package org.example.calculator;
 
 import griffon.core.artifact.GriffonController;
 import griffon.core.mvc.MVCGroup;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
 import java.awt.BorderLayout;

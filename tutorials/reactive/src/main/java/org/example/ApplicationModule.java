@@ -24,7 +24,7 @@ import org.example.api.Github;
 import org.example.api.GithubAPI;
 import org.example.api.GithubAPIProvider;
 import org.example.api.ObjectMapperProvider;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import static griffon.util.AnnotationUtils.named;
 

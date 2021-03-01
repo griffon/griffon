@@ -21,7 +21,7 @@ import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
 import griffon.core.artifact.GriffonView
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 @ServiceProviderFor(GriffonView)
 class SampleView extends AbstractJavaFXGriffonView {

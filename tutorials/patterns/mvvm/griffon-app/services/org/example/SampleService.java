@@ -17,7 +17,7 @@ package org.example;
 
 import griffon.core.artifact.GriffonService;
 import griffon.core.i18n.MessageSource;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
 import static griffon.util.GriffonNameUtils.isBlank;
