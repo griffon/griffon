@@ -121,6 +121,10 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                         id = 'Apache-2.0'
                     }
                 }
+                mappings = [
+                    gdsl: 'SLASHSTAR_STYLE',
+                    dsld: 'SLASHSTAR_STYLE'
+                ]
             }
 
             docs {
@@ -156,7 +160,10 @@ class GriffonParentPomPlugin implements Plugin<Project> {
 
             dependencyManagement {
                 dependency("org.kordamp.gipsy:gipsy:${project.jipsyVersion}")
-                dependency("org.kordamp.jipsy:jipsy:${project.jipsyVersion}") {
+                dependency('jipsy') {
+                    groupId    = 'org.kordamp.jipsy'
+                    artifactId = 'jipsy-processor'
+                    version    = project.jipsyVersion
                     modules    = ['jipsy-util']
                 }
                 dependency("junit:junit:${project.junitVersion}")
