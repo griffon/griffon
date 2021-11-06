@@ -94,11 +94,6 @@ config {
         }
     }
 
-    bintray {
-        userOrg = 'griffon'
-        name    = 'griffon'
-    }
-
     stats {
         formats = ['xml', 'txt']
         paths = [
@@ -262,12 +257,6 @@ allprojects {
         gradlePluginPortal()
         mavenLocal()
     }
-
-    if (rootProject.fullBuild) {
-        audit {
-            failOnError = false
-        }
-    }
 }
 
 subprojects { Project subproj ->
@@ -294,10 +283,6 @@ subprojects { Project subproj ->
         }
 
         publishing {
-            enabled = shouldPublish
-        }
-
-        bintray {
             enabled = shouldPublish
         }
 
@@ -476,12 +461,6 @@ subprojects { Project subproj ->
         }
 
         if (isCoreProject) {
-            if (rootProject.fullBuild) {
-                java9c {
-                    failOnCollision = false
-                }
-            }
-
             jar {
                 manifest {
                     attributes('Automatic-Module-Name': subproj.name.replaceAll('-', '.'))

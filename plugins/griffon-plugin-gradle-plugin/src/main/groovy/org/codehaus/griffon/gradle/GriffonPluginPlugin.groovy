@@ -42,7 +42,6 @@ class GriffonPluginPlugin implements Plugin<Settings> {
                 dir('subprojects') {
                     id 'java-library'
                     id 'groovy'
-                    id 'org.jonnyzzz.java9c'
                 }
                 dir('docs') {
                     id 'org.kordamp.gradle.guide'

@@ -29,12 +29,6 @@ config {
     }
 }
 
-bintray {
-    pkg {
-        repo = 'griffon-archetypes'
-    }
-}
-
 task copyResources(type: Copy) {
     destinationDir = project.file("${buildDir}/resources/main/archetype-resources")
     from(rootProject.file('archetypes/shared-files/sources'))

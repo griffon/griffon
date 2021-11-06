@@ -26,11 +26,9 @@ buildscript {
         classpath 'org.jbake:jbake-gradle-plugin:5.2.0'
         classpath 'org.ajoberstar:gradle-git-publish:2.1.3'
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:5.0.3'
-        classpath 'gradle.plugin.gradle-java9-collision:plugin:0.2.3'
-        classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.4.11'
         classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "org.kordamp.gradle:jdeps-gradle-plugin:0.12.0"
+        classpath "org.kordamp.gradle:jdeps-gradle-plugin:0.15.0"
         classpath "org.kordamp.gradle:groovy-project-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:guide-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:plugin-gradle-plugin:$kordampPluginVersion"
@@ -63,10 +61,8 @@ projects {
     plugins {
         all {
             id 'idea'
-            id('net.ossindex.audit').includeIf(fullBuild)
         }
         path(':') {
-            id 'org.kordamp.gradle.java-project'
             id 'org.kordamp.gradle.clirr'
             id 'org.kordamp.gradle.coveralls'
         }
@@ -74,7 +70,6 @@ projects {
             id 'java-library'
             id 'groovy'
             id('org.kordamp.gradle.jdeps').includeIf({-> false && fullBuild})
-            id('org.jonnyzzz.java9c').includeIf(fullBuild)
         }
         dir('archetypes') {
             excludeDir('archetypes')

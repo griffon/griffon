@@ -44,7 +44,7 @@ dependencies {
     api "org.kordamp.gradle:java-project-gradle-plugin:$kordampPluginVersion"
     compileOnly 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
 
-    testImplementation('org.spockframework:spock-core:1.3-groovy-2.5') {
+    testImplementation("org.spockframework:spock-core:$spockVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }
