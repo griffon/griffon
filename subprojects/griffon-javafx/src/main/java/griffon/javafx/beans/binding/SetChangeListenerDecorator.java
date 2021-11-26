@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package griffon.javafx.beans.binding;
 
 import javafx.collections.SetChangeListener;
 
-import javax.annotation.Nonnull;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -30,11 +28,10 @@ import static java.util.Objects.requireNonNull;
 public class SetChangeListenerDecorator<E> implements SetChangeListener<E> {
     private final SetChangeListener<E> delegate;
 
-    public SetChangeListenerDecorator(@Nonnull SetChangeListener<E> delegate) {
+    public SetChangeListenerDecorator(SetChangeListener<E> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final SetChangeListener<E> getDelegate() {
         return delegate;
     }

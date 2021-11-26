@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,12 +41,10 @@ import static java.util.Objects.requireNonNull;
  */
 public class ElementObservableList<E> extends DelegatingObservableList<E> {
     public interface ObservableValueContainer {
-        @Nonnull
         ObservableValue<?>[] observableValues();
     }
 
     public interface ObservableValueExtractor<E> {
-        @Nonnull
         ObservableValue<?>[] observableValues(@Nullable E instance);
     }
 
@@ -94,7 +92,6 @@ public class ElementObservableList<E> extends DelegatingObservableList<E> {
         subscriptions.put(element, elementSubscriptions);
     }
 
-    @Nonnull
     @SuppressWarnings("unchecked")
     private ListenerSubscription createChangeListener(@Nonnull final E element, @Nonnull final ObservableValue<?> observable) {
         final ChangeListener listener = (value, oldValue, newValue) -> fireChange(changeFor(element));
@@ -102,7 +99,6 @@ public class ElementObservableList<E> extends DelegatingObservableList<E> {
         return () -> observable.removeListener(listener);
     }
 
-    @Nonnull
     private ListChangeListener.Change<? extends E> changeFor(@Nonnull final E element) {
         final int position = indexOf(element);
         final int[] permutations = new int[0];
@@ -165,7 +161,6 @@ public class ElementObservableList<E> extends DelegatingObservableList<E> {
     private static class DefaultObservableValueExtractor<T> implements ObservableValueExtractor<T> {
         private final Map<Class<?>, List<Method>> observableValueMetadata = new LinkedHashMap<>();
 
-        @Nonnull
         @Override
         public ObservableValue<?>[] observableValues(@Nullable T instance) {
             if (instance == null) {

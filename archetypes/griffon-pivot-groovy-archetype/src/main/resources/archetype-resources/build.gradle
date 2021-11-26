@@ -1,0 +1,71 @@
+import java.text.SimpleDateFormat
+
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:${griffonVersion}'
+        classpath 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.39.0'
+        classpath 'gradle.plugin.net.nemerosa:versioning:2.15.1'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.codehaus.griffon.griffon'
+apply plugin: 'net.nemerosa.versioning'
+
+Date buildTimeAndDate = new Date()
+ext {
+    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
+    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
+    macosx = System.getProperty('os.name').contains('Mac OS')
+}
+
+griffon {
+    disableDependencyResolution = false
+    includeGroovyDependencies = true
+    version = '${griffonVersion}'
+    toolkit = 'pivot'
+    applicationProperties = [
+        'build_date'    : buildDate,
+        'build_time'    : buildTime,
+        'build_revision': versioning.info.commit
+    ]
+}
+
+mainClassName = '${package}.Launcher'
+
+apply from: 'gradle/publishing.gradle'
+apply from: 'gradle/code-quality.gradle'
+apply plugin: 'com.github.ben-manes.versions'
+
+dependencies {
+    api "org.codehaus.griffon:griffon-guice:${griffon.version.get()}"
+
+    runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
+
+    testImplementation "org.codehaus.griffon:griffon-pivot-test:${griffon.version.get()}"
+    testImplementation "org.spockframework:spock-core:${spockVersion}"
+    testImplementation('org.awaitility:awaitility-groovy:3.1.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
+    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
+}
+
+startScripts {
+    doLast {
+        if (!macosx) unixScript.text = unixScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
+        windowsScript.text = windowsScript.text.replaceAll('"(-Xdock:(name|icon)=)([^"]*?)(")', ' ')
+    }
+}
+
+if (hasProperty('debugRun') && ((project.debugRun as boolean))) {
+    run {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+    }
+}

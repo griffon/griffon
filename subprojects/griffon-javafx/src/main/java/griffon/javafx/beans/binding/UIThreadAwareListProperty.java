@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import javax.annotation.Nonnull;
-
 import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.application.Platform.runLater;
 
@@ -33,7 +31,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwareListProperty<E> extends ListPropertyDecorator<E> implements UIThreadAware {
-    UIThreadAwareListProperty(@Nonnull ListProperty<E> delegate) {
+    UIThreadAwareListProperty(ListProperty<E> delegate) {
         super(delegate);
     }
 

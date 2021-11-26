@@ -2,9 +2,7 @@
 [[_buildtools_gradle]]
 = Gradle
 
-{link_gradle} is the preferred build tool for a Griffon project. The <<_buildtools_lazybones,Lazybones>>
-templates create a default `build.gradle` file that contains the minimum configuration
-to build, test and package a Griffon application or plugin.
+{link_gradle} is the preferred build tool for a Griffon project.
 
 == The "griffon" Plugin
 
@@ -21,7 +19,8 @@ To use the Griffon plugin, include the following in your build script:
 ----
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -34,9 +33,8 @@ apply plugin: 'org.codehaus.griffon.griffon'
 
 This plugin performs the following configurations when applied to a project:
 
- * Registers _jcenter()_ , _http://dl.bintray.com/griffon/griffon-plugins_ and _mavenLocal()_ as default repositories.
+ * Registers _mavenCentral()_ and _mavenLocal()_ as default repositories.
  * Applies the following plugins: `idea`, `java`, `application`.
- * Creates additional compile-time only configurations: _compileOnly_, _testCompileOnly_.
  * Resolves plugin dependencies using the _griffon_ configuration.
  * Adjusts javadoc/groovydoc/idea/eclipse classpaths given the new configurations.
  * Configures standard source directories with `main` and `test` source sets.
@@ -44,30 +42,30 @@ This plugin performs the following configurations when applied to a project:
 
 The following dependencies are also added by default:
 
- * on `compile`
+ * on `api`
  ** org.codehaus.griffon:griffon-core:{griffon-version}
  * on `compileOnly`
  ** org.codehaus.griffon:griffon-core-compile:{griffon-version}
- * on `testCompile`
+ * on `testImplementation`
  ** org.codehaus.griffon:griffon-core-test:{griffon-version}
- * on `testCompileOnly`
+ * on `testImplementationOnly`
  ** org.codehaus.griffon:griffon-core-compile:{griffon-version}
 
 If the *toolkit* conventional property is defined (plugins may opt to skip it), then
 the following dependencies are added:
 
- * on `compile`
+ * on `api`
  ** org.codehaus.griffon:griffon-<toolkit>:{griffon-version}
 
 If the `groovy` plugin is applied, then the following dependencies are also added:
 
-  * on `compile`
+  * on `api`
   ** org.codehaus.griffon:griffon-groovy:{griffon-version}
-  * on `compile`
+  * on `api`
   ** org.codehaus.griffon:griffon-<toolkit>-groovy:{griffon-version}
   * on `compileOnly`
   ** org.codehaus.griffon:griffon-groovy-compile:{griffon-version}
-  * on `testCompileOnly`
+  * on `testImplementationOnly`
   ** org.codehaus.griffon:griffon-groovy-compile:{griffon-version}
 
 The `griffon` configuration can be used to resolve dependencies using {link_bom} files.
@@ -107,11 +105,11 @@ The Griffon plugin adds some properties to the project, which you can use to con
 [cols="4*", options="header"]
 |===
 | Property name               | Type    | Default value     | Description
-| disableDependencyResolution | boolean | false             | Disable automatic inclusion of dependencies defined with the _griffon_ configuration.
-| includeDefaultRepositories  | boolean | true              | Force inclusion of default repositories (`jcenter` and `griffon-plugins`).
-| includeGroovyDependencies   | boolean | -                 | Force inclusion of Groovy dependencies defined with the _griffon_ configuration.
-| toolkit                     | String  | _                 | The UI toolkit to use. May be left unset. Valid values are `swing`, `javafx`, `pivot`, `lanterna`.
-| version                     | String  | {griffon-version} | The Griffon version to use for Griffon core dependencies.
+| disableDependencyResolution | boolean | false             | Disable automatic inclusion of dependencies defined with the _griffon_ configuration.
+| includeDefaultRepositories  | boolean | true              | Force inclusion of default repositories (`jcenter` and `griffon-plugins`).
+| includeGroovyDependencies   | boolean | -                 | Force inclusion of Groovy dependencies defined with the _griffon_ configuration.
+| toolkit                     | String  | _                 | The UI toolkit to use. May be left unset. Valid values are `swing`, `javafx`, `pivot`, `lanterna`.
+| version                     | String  | {griffon-version} | The Griffon version to use for Griffon core dependencies.
 | applicationIconName         | String  | griffon.icns      | The name of the application icon to display on OSX's dock. Icon file must reside inside `src/media`.
 |===
 
@@ -140,7 +138,7 @@ To use the Griffon Build plugin, include the following in your build script:
 ----
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
@@ -159,7 +157,7 @@ The Griffon Build plugin adds a number of tasks to your project, as shown below.
 [cols="4*", options="header"]
 |===
 | Task name                | Depends on | Type                          | Description
-| GenerateBomTask          | -          | `GenerateBomTask`             | Generates a BOM file that includes all subprojects.
+| GenerateBomTask          | -          | `GenerateBomTask`             | Generates a BOM file that includes all subprojects.
 |===
 
 == Dependencies

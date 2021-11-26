@@ -1,4 +1,4 @@
-package \${groupId}
+package \${package}
 
 import griffon.core.event.EventHandler
 import griffon.exceptions.GriffonViewInitializationException

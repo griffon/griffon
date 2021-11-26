@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,10 +46,8 @@ public final class GriffonFXCollections {
      *
      * @param source the <tt>ObservableList</tt> to be wrapped
      * @param <E>    the list's parameter type.
-     *
      * @return a new <tt>ObservableList</tt>
      */
-    @Nonnull
     public static <E> ObservableList<E> uiThreadAwareObservableList(@Nonnull ObservableList<E> source) {
         requireNonNull(source, ERROR_SOURCE_NULL);
         return source instanceof UIThreadAware ? source : new UIThreadAwareObservableList<>(source);
@@ -75,10 +73,8 @@ public final class GriffonFXCollections {
      *
      * @param source the <tt>ObservableSet</tt> to be wrapped
      * @param <E>    the set's parameter type.
-     *
      * @return a new <tt>ObservableSet</tt>
      */
-    @Nonnull
     public static <E> ObservableSet<E> uiThreadAwareObservableSet(@Nonnull ObservableSet<E> source) {
         requireNonNull(source, ERROR_SOURCE_NULL);
         return source instanceof UIThreadAware ? source : new UIThreadAwareObservableSet<>(source);
@@ -105,10 +101,8 @@ public final class GriffonFXCollections {
      * @param source the <tt>ObservableMap</tt> to be wrapped
      * @param <K>    the type of keys maintained by the map
      * @param <V>    the type of mapped values
-     *
      * @return a new <tt>ObservableMap</tt>
      */
-    @Nonnull
     public static <K, V> ObservableMap<K, V> uiThreadAwareObservableMap(@Nonnull ObservableMap<K, V> source) {
         requireNonNull(source, ERROR_SOURCE_NULL);
         return source instanceof UIThreadAware ? source : new UIThreadAwareObservableMap<>(source);
@@ -129,17 +123,14 @@ public final class GriffonFXCollections {
         }
     }
 
-    @Nonnull
     public static <E> ObservableStream<E> observableStream(@Nonnull ObservableList<E> list) {
         return new ListObservableStream<>(list);
     }
 
-    @Nonnull
     public static <E> ObservableStream<E> observableStream(@Nonnull ObservableSet<E> set) {
         return new SetObservableStream<>(set);
     }
 
-    @Nonnull
     public static <K, V> ObservableStream<V> observableStream(@Nonnull ObservableMap<K, V> map) {
         return new MapObservableStream<>(map);
     }

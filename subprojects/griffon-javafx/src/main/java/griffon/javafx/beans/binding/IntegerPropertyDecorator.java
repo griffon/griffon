@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.beans.value.ObservableValue;
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
@@ -44,11 +43,10 @@ import static java.util.Objects.requireNonNull;
 public class IntegerPropertyDecorator extends IntegerProperty {
     private final IntegerProperty delegate;
 
-    public IntegerPropertyDecorator(@Nonnull IntegerProperty delegate) {
+    public IntegerPropertyDecorator(IntegerProperty delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final IntegerProperty getDelegate() {
         return delegate;
     }

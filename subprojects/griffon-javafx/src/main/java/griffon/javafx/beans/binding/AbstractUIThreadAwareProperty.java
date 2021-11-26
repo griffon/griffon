@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,12 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author Andres Almiray
  * @since 2.9.0
  */
 abstract class AbstractUIThreadAwareProperty<T> extends PropertyDecorator<T> implements UIThreadAware {
-    AbstractUIThreadAwareProperty(@Nonnull Property<T> delegate) {
+    AbstractUIThreadAwareProperty(Property<T> delegate) {
         super(delegate);
     }
 

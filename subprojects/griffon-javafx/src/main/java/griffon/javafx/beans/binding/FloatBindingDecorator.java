@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.collections.ObservableList;
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
@@ -40,11 +39,10 @@ import static java.util.Objects.requireNonNull;
 public class FloatBindingDecorator extends FloatBinding {
     private final FloatBinding delegate;
 
-    public FloatBindingDecorator(@Nonnull FloatBinding delegate) {
+    public FloatBindingDecorator(FloatBinding delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final FloatBinding getDelegate() {
         return delegate;
     }
@@ -55,8 +53,18 @@ public class FloatBindingDecorator extends FloatBinding {
     }
 
     @Override
+    public boolean equals(Object o) {
+        return this == o || delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
     public String toString() {
-        return getDelegate().toString();
+        return getClass().getName() + ":" + delegate.toString();
     }
 
     @Override

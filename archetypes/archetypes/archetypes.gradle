@@ -1,42 +1,61 @@
-apply plugin: 'java'
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2008-2021 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+plugins {
+    id 'base'
+}
+
+config {
+    artifacts {
+        jar {
+            enabled = false
+        }
+    }
+}
+
+ext.archetypeProjects = [
+    ':griffon-javafx-java-archetype',
+    ':griffon-javafx-groovy-archetype',
+    ':griffon-lanterna-java-archetype',
+    ':griffon-lanterna-groovy-archetype',
+    ':griffon-pivot-java-archetype',
+    ':griffon-pivot-groovy-archetype',
+    ':griffon-swing-java-archetype',
+    ':griffon-swing-groovy-archetype'
+]
+
+configurations {
+    archetypes
+}
 
 dependencies {
-    compile project(':griffon-javafx-java-archetype')
-    compile project(':griffon-javafx-groovy-archetype')
-    compile project(':griffon-lanterna-java-archetype')
-    compile project(':griffon-lanterna-groovy-archetype')
-    compile project(':griffon-pivot-java-archetype')
-    compile project(':griffon-pivot-groovy-archetype')
-    compile project(':griffon-swing-java-archetype')
-    compile project(':griffon-swing-groovy-archetype')
+    archetypes archetypeProjects.collect { project(it) }
 }
 
 evaluationDependsOnChildren()
 
+task cleanAllArchetypes(type: DefaultTask) {
+    dependsOn archetypeProjects.collect { it + ':clean' }
+}
+
+task packageAllArchetypes(type: DefaultTask) {
+    dependsOn archetypeProjects.collect { it + ':jar' }
+}
+
 task installAllArchetypes(type: DefaultTask) {
-
+    dependsOn archetypeProjects.collect { it + ':publishToMavenLocal' }
 }
-
-installAllArchetypes.dependsOn([
-    ':griffon-javafx-java-archetype:publishToMavenLocal',
-    ':griffon-javafx-groovy-archetype:publishToMavenLocal',
-    ':griffon-lanterna-java-archetype:publishToMavenLocal',
-    ':griffon-lanterna-groovy-archetype:publishToMavenLocal',
-    ':griffon-pivot-java-archetype:publishToMavenLocal',
-    ':griffon-pivot-groovy-archetype:publishToMavenLocal',
-    ':griffon-swing-java-archetype:publishToMavenLocal',
-    ':griffon-swing-groovy-archetype:publishToMavenLocal'])
-
-task publishAllArchetypes(type: DefaultTask) {
-
-}
-
-publishAllArchetypes.dependsOn([
-    ':griffon-javafx-java-archetype:bintrayUpload',
-    ':griffon-javafx-groovy-archetype:bintrayUpload',
-    ':griffon-lanterna-java-archetype:bintrayUpload',
-    ':griffon-lanterna-groovy-archetype:bintrayUpload',
-    ':griffon-pivot-java-archetype:bintrayUpload',
-    ':griffon-pivot-groovy-archetype:bintrayUpload',
-    ':griffon-swing-java-archetype:bintrayUpload',
-    ':griffon-swing-groovy-archetype:bintrayUpload'])

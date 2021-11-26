@@ -68,7 +68,7 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
     compileOnly "org.projectlombok:lombok:$lombokVersion"
 
-    compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
+    compile "org.codehaus.griffon:griffon-guice:${griffon.version.get()}"
     compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.1'
     compile 'org.kordamp.ikonli:ikonli-javafx:2.1.1'
     compile 'org.kordamp.ikonli:ikonli-typicons-pack:2.1.1'
@@ -82,9 +82,9 @@ dependencies {
     compile "io.reactivex:rxjava:$rxjavaVersion"
 
     griffon 'org.codehaus.griffon.plugins:griffon-miglayout-plugin:1.1.1'
-    runtime 'org.slf4j:slf4j-simple:1.7.25'
+    runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
 
-    testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version}"
+    testCompile "org.codehaus.griffon:griffon-javafx-test:${griffon.version.get()}"
     testCompile  "org.mockito:mockito-core:$mockitoVersion"
 
     integrationTestCompile "org.awaitility:awaitility:$awaitilityVersion"

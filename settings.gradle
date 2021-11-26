@@ -1,81 +1,131 @@
-boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
-boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
-boolean fullBuild = !travis && !appveyor
-
-def includeProject = { String projectDirName, String projectName ->
-    File baseDir = new File(settingsDir, projectDirName)
-    File projectDir = new File(baseDir, projectName)
-    String buildFileName = "${projectName}.gradle"
-
-    assert projectDir.isDirectory()
-    assert new File(projectDir, buildFileName).isFile()
-
-    include projectName
-    project(":${projectName}").projectDir    = projectDir
-    project(":${projectName}").buildFileName = buildFileName
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2008-2021 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+buildscript {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.jbake:jbake-gradle-plugin:5.2.0'
+        classpath 'org.ajoberstar:gradle-git-publish:2.1.3'
+        classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:5.0.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.kordamp.gradle:jdeps-gradle-plugin:0.15.0"
+        classpath "org.kordamp.gradle:groovy-project-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:guide-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:plugin-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:sonar-gradle-plugin:$kordampPluginVersion"
+        classpath "org.kordamp.gradle:kordamp-parentbuild:$kordampBuildVersion"
+    }
 }
+apply plugin: 'org.kordamp.gradle.kordamp-parentbuild'
+
+boolean github   = (System.env['CI'] ?: false) as boolean
+boolean fullBuild = !github
 
 rootProject.name = 'griffon'
 
-includeProject 'subprojects', 'griffon-core'
-includeProject 'subprojects', 'griffon-core-compile'
-includeProject 'subprojects', 'griffon-core-test'
-includeProject 'subprojects', 'griffon-guice'
-includeProject 'subprojects', 'griffon-groovy'
-includeProject 'subprojects', 'griffon-groovy-compile'
-includeProject 'subprojects', 'griffon-swing'
-includeProject 'subprojects', 'griffon-swing-groovy'
-includeProject 'subprojects', 'griffon-javafx'
-includeProject 'subprojects', 'griffon-javafx-groovy'
-includeProject 'subprojects', 'griffon-javafx-kotlin'
-includeProject 'subprojects', 'griffon-lanterna'
-includeProject 'subprojects', 'griffon-lanterna-groovy'
-includeProject 'subprojects', 'griffon-pivot'
-includeProject 'subprojects', 'griffon-pivot-groovy'
-includeProject 'subprojects', 'griffon-fest-test'
-includeProject 'subprojects', 'griffon-pivot-test'
-includeProject 'subprojects', 'griffon-javafx-test'
-includeProject 'subprojects', 'gradle-griffon-plugin'
-includeProject 'subprojects', 'gradle-griffon-build-plugin'
+projects {
+    layout = 'explicit'
 
-if (!appveyor) {
-    includeProject 'samples', 'sample-swing-java'
-    includeProject 'samples', 'sample-swing-groovy'
-    includeProject 'samples', 'sample-javafx-java'
-    includeProject 'samples', 'sample-javafx-groovy'
-    includeProject 'samples', 'sample-lanterna-java'
-    includeProject 'samples', 'sample-lanterna-groovy'
-    includeProject 'samples', 'sample-javafx-kotlin'
-    includeProject 'samples', 'sample-pivot-java'
-    includeProject 'samples', 'sample-pivot-groovy'
+    includeProjects('subprojects')
+    includeProjects('plugins')
+    includeProjects('samples').includeIf(fullBuild)
+    includeProjects('poms').includeIf(fullBuild)
+    includeProjects('docs').includeIf(fullBuild)
+    includeProjects('archetypes').includeIf(fullBuild)
+
+    plugins {
+        all {
+            id 'idea'
+        }
+        path(':') {
+            id 'org.kordamp.gradle.coveralls'
+            id 'org.kordamp.gradle.java-project'
+        }
+        dir('subprojects') {
+            id 'java-library'
+            id 'groovy'
+            id('org.kordamp.gradle.jdeps').includeIf({-> false && fullBuild})
+        }
+        dir('archetypes') {
+            excludeDir('archetypes')
+            id 'java-library'
+        }
+        dir('plugins') {
+            id 'java-library'
+            id 'groovy'
+            id 'org.kordamp.gradle.groovy-project'
+            id 'org.kordamp.gradle.plugin'
+        }
+        dir('samples') {
+            id 'java-library'
+            id 'application'
+        }
+        path(':sample-*') {
+            id 'groovy'
+            id 'org.kordamp.gradle.integration-test'
+            id 'org.kordamp.gradle.functional-test'
+        }
+        path('*-groovy') {
+            id 'groovy'
+        }
+        path('*-kotlin') {
+            id 'kotlin'
+        }
+    }
 }
 
-if (fullBuild) {
-    includeProject 'subprojects', 'application-master-pom'
-    includeProject 'samples', 'editor-swing-groovy'
-    includeProject 'samples', 'editor-swing-java'
-    includeProject 'samples', 'editor-javafx-java'
-    includeProject 'samples', 'browser-javafx-groovy'
-    includeProject 'samples', 'console-swing-groovy'
-    includeProject 'templates', 'griffon-swing-java-templates'
-    includeProject 'templates', 'griffon-swing-groovy-templates'
-    includeProject 'templates', 'griffon-javafx-java-templates'
-    includeProject 'templates', 'griffon-javafx-groovy-templates'
-    includeProject 'templates', 'griffon-javafx-kotlin-templates'
-    includeProject 'templates', 'griffon-pivot-java-templates'
-    includeProject 'templates', 'griffon-pivot-groovy-templates'
-    includeProject 'templates', 'griffon-lanterna-java-templates'
-    includeProject 'templates', 'griffon-lanterna-groovy-templates'
-    includeProject 'templates', 'griffon-standard-templates'
-    includeProject 'docs', 'griffon-guide'
-    includeProject 'docs', 'griffon-site'
-    includeProject 'archetypes', 'griffon-javafx-java-archetype'
-    includeProject 'archetypes', 'griffon-javafx-groovy-archetype'
-    includeProject 'archetypes', 'griffon-lanterna-java-archetype'
-    includeProject 'archetypes', 'griffon-lanterna-groovy-archetype'
-    includeProject 'archetypes', 'griffon-pivot-java-archetype'
-    includeProject 'archetypes', 'griffon-pivot-groovy-archetype'
-    includeProject 'archetypes', 'griffon-swing-java-archetype'
-    includeProject 'archetypes', 'griffon-swing-groovy-archetype'
-    includeProject 'archetypes', 'archetypes'
+enforce {
+    enabled = false
+    mergeStrategy = 'override'
+    rule(enforcer.rules.DependencyConvergence)
+    rule(enforcer.rules.BanDuplicateClasses) { r ->
+        r.enabled = false
+        // r.ignoreWhenIdentical = true
+        // r.findAllDuplicates = false
+        // dependency("org.slf4j:slf4j-log4j12:$slf4jVersion") { d ->
+        //     d.ignore('org.slf4j.impl.*')
+        // }
+    }
+    rule(enforcer.rules.ForceDependencies) { r ->
+        r.dependencies.addAll "com.google.guava:guava:$guavaVersion",
+            //"jline:jline:$jlineVersion",
+            "junit:junit:$junitVersion",
+            "cglib:cglib-nodep:$cglibVersion",
+            "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
+            "org.codehau.groovy:groovy:$groovyVersion",
+            "org.codehaus.groovy:groovy:$groovyVersion",
+            "org.codehaus.groovy:groovy-json:$groovyVersion",
+            "org.codehaus.groovy:groovy-macro:$groovyVersion",
+            "org.codehaus.groovy:groovy-nio:$groovyVersion",
+            "org.codehaus.groovy:groovy-sql:$groovyVersion",
+            "org.codehaus.groovy:groovy-templates:$groovyVersion",
+            "org.codehaus.groovy:groovy-test:$groovyVersion",
+            "org.codehaus.groovy:groovy-xml:$groovyVersion",
+            "org.slf4j:slf4j-api:$slf4jVersion",
+            "org.slf4j:slf4j-simple:$slf4jVersion",
+            "com.google.code.findbugs:jsr305:$jsr305Version",
+            "commons-io:commons-io:$commonsIoVersion",
+            "org.apache.commons:commons-lang3:$commonsLang3Version",
+            "org.ow2.asm:asm:$asmVersion",
+            "org.ow2.asm:asm-commons:$asmVersion",
+            "org.ow2.asm:asm-tree:$asmVersion"
+    }
 }

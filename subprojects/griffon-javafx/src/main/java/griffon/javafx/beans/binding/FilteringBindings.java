@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -63,11 +62,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final T defaultValue, @Nonnull final Predicate<? super T> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableList<T> items, final T defaultValue, final Predicate<? super T> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createObjectBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -79,11 +76,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final Predicate<? super T> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableList<T> items, final Supplier<T> supplier, final Predicate<? super T> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -96,11 +91,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final T defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableList<T> items, final T defaultValue, final ObservableValue<Predicate<? super T>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createObjectBinding(() -> {
@@ -116,11 +109,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<Predicate<? super T>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -137,11 +128,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableList<Boolean> items, @Nonnull final Boolean defaultValue, @Nonnull final Predicate<? super Boolean> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableList<Boolean> items, final Boolean defaultValue, final Predicate<? super Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createBooleanBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -153,11 +142,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableList<Boolean> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Predicate<? super Boolean> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableList<Boolean> items, final Supplier<Boolean> supplier, final Predicate<? super Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -170,11 +157,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableList<Boolean> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Predicate<? super Boolean>> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableList<Boolean> items, final Boolean defaultValue, final ObservableValue<Predicate<? super Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createBooleanBinding(() -> {
@@ -190,11 +175,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableList<Boolean> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Predicate<? super Boolean>> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableList<Boolean> items, final Supplier<Boolean> supplier, final ObservableValue<Predicate<? super Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -211,11 +194,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableList<Integer> items, @Nonnull final Integer defaultValue, @Nonnull final Predicate<? super Integer> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableList<Integer> items, final Integer defaultValue, final Predicate<? super Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createIntegerBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -227,11 +208,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableList<Integer> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Predicate<? super Integer> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableList<Integer> items, final Supplier<Integer> supplier, final Predicate<? super Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -244,11 +223,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableList<Integer> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Predicate<? super Integer>> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableList<Integer> items, final Integer defaultValue, final ObservableValue<Predicate<? super Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createIntegerBinding(() -> {
@@ -264,11 +241,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableList<Integer> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Predicate<? super Integer>> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableList<Integer> items, final Supplier<Integer> supplier, final ObservableValue<Predicate<? super Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -285,11 +260,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableList<Long> items, @Nonnull final Long defaultValue, @Nonnull final Predicate<? super Long> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableList<Long> items, final Long defaultValue, final Predicate<? super Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createLongBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -301,11 +274,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableList<Long> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Predicate<? super Long> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableList<Long> items, final Supplier<Long> supplier, final Predicate<? super Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -318,11 +289,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableList<Long> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Predicate<? super Long>> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableList<Long> items, final Long defaultValue, final ObservableValue<Predicate<? super Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createLongBinding(() -> {
@@ -338,11 +307,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableList<Long> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Predicate<? super Long>> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableList<Long> items, final Supplier<Long> supplier, final ObservableValue<Predicate<? super Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -359,11 +326,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableList<Float> items, @Nonnull final Float defaultValue, @Nonnull final Predicate<? super Float> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableList<Float> items, final Float defaultValue, final Predicate<? super Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createFloatBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -375,11 +340,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableList<Float> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Predicate<? super Float> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableList<Float> items, final Supplier<Float> supplier, final Predicate<? super Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -392,11 +355,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableList<Float> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Predicate<? super Float>> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableList<Float> items, final Float defaultValue, final ObservableValue<Predicate<? super Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createFloatBinding(() -> {
@@ -412,11 +373,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableList<Float> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Predicate<? super Float>> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableList<Float> items, final Supplier<Float> supplier, final ObservableValue<Predicate<? super Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -433,11 +392,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableList<Double> items, @Nonnull final Double defaultValue, @Nonnull final Predicate<? super Double> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableList<Double> items, final Double defaultValue, final Predicate<? super Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createDoubleBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -449,11 +406,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableList<Double> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Predicate<? super Double> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableList<Double> items, final Supplier<Double> supplier, final Predicate<? super Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -466,11 +421,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableList<Double> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Predicate<? super Double>> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableList<Double> items, final Double defaultValue, final ObservableValue<Predicate<? super Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createDoubleBinding(() -> {
@@ -486,11 +439,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableList<Double> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Predicate<? super Double>> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableList<Double> items, final Supplier<Double> supplier, final ObservableValue<Predicate<? super Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -507,11 +458,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableList<String> items, @Nonnull final String defaultValue, @Nonnull final Predicate<? super String> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableList<String> items, final String defaultValue, final Predicate<? super String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createStringBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -523,11 +472,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableList<String> items, @Nonnull final Supplier<String> supplier, @Nonnull final Predicate<? super String> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableList<String> items, final Supplier<String> supplier, final Predicate<? super String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -540,11 +487,9 @@ public final class FilteringBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableList<String> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Predicate<? super String>> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableList<String> items, final String defaultValue, final ObservableValue<Predicate<? super String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createStringBinding(() -> {
@@ -560,11 +505,9 @@ public final class FilteringBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableList<String> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Predicate<? super String>> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableList<String> items, final Supplier<String> supplier, final ObservableValue<Predicate<? super String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -581,11 +524,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final T defaultValue, @Nonnull final Predicate<? super T> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableSet<T> items, final T defaultValue, final Predicate<? super T> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createObjectBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -597,11 +538,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final Predicate<? super T> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableSet<T> items, final Supplier<T> supplier, final Predicate<? super T> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -614,11 +553,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final T defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableSet<T> items, final T defaultValue, final ObservableValue<Predicate<? super T>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createObjectBinding(() -> {
@@ -634,11 +571,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T> ObjectBinding<T> filterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter) {
+    public static <T> ObjectBinding<T> filterThenFindFirst(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<Predicate<? super T>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -655,11 +590,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableSet<Boolean> items, @Nonnull final Boolean defaultValue, @Nonnull final Predicate<? super Boolean> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableSet<Boolean> items, final Boolean defaultValue, final Predicate<? super Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createBooleanBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -671,11 +604,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableSet<Boolean> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Predicate<? super Boolean> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableSet<Boolean> items, final Supplier<Boolean> supplier, final Predicate<? super Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -688,11 +619,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableSet<Boolean> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Predicate<? super Boolean>> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableSet<Boolean> items, final Boolean defaultValue, final ObservableValue<Predicate<? super Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createBooleanBinding(() -> {
@@ -708,11 +637,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableSet<Boolean> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Predicate<? super Boolean>> filter) {
+    public static BooleanBinding filterThenFindFirstBoolean(final ObservableSet<Boolean> items, final Supplier<Boolean> supplier, final ObservableValue<Predicate<? super Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -729,11 +656,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableSet<Integer> items, @Nonnull final Integer defaultValue, @Nonnull final Predicate<? super Integer> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableSet<Integer> items, final Integer defaultValue, final Predicate<? super Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createIntegerBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -745,11 +670,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableSet<Integer> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Predicate<? super Integer> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableSet<Integer> items, final Supplier<Integer> supplier, final Predicate<? super Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -762,11 +685,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableSet<Integer> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Predicate<? super Integer>> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableSet<Integer> items, final Integer defaultValue, final ObservableValue<Predicate<? super Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createIntegerBinding(() -> {
@@ -782,11 +703,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableSet<Integer> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Predicate<? super Integer>> filter) {
+    public static IntegerBinding filterThenFindFirstInteger(final ObservableSet<Integer> items, final Supplier<Integer> supplier, final ObservableValue<Predicate<? super Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -803,11 +722,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableSet<Long> items, @Nonnull final Long defaultValue, @Nonnull final Predicate<? super Long> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableSet<Long> items, final Long defaultValue, final Predicate<? super Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createLongBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -819,11 +736,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableSet<Long> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Predicate<? super Long> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableSet<Long> items, final Supplier<Long> supplier, final Predicate<? super Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -836,11 +751,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableSet<Long> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Predicate<? super Long>> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableSet<Long> items, final Long defaultValue, final ObservableValue<Predicate<? super Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createLongBinding(() -> {
@@ -856,11 +769,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static LongBinding filterThenFindFirstLong(@Nonnull final ObservableSet<Long> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Predicate<? super Long>> filter) {
+    public static LongBinding filterThenFindFirstLong(final ObservableSet<Long> items, final Supplier<Long> supplier, final ObservableValue<Predicate<? super Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -877,11 +788,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableSet<Float> items, @Nonnull final Float defaultValue, @Nonnull final Predicate<? super Float> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableSet<Float> items, final Float defaultValue, final Predicate<? super Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createFloatBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -893,11 +802,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableSet<Float> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Predicate<? super Float> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableSet<Float> items, final Supplier<Float> supplier, final Predicate<? super Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -910,11 +817,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableSet<Float> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Predicate<? super Float>> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableSet<Float> items, final Float defaultValue, final ObservableValue<Predicate<? super Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createFloatBinding(() -> {
@@ -930,11 +835,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableSet<Float> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Predicate<? super Float>> filter) {
+    public static FloatBinding filterThenFindFirstFloat(final ObservableSet<Float> items, final Supplier<Float> supplier, final ObservableValue<Predicate<? super Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -951,11 +854,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableSet<Double> items, @Nonnull final Double defaultValue, @Nonnull final Predicate<? super Double> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableSet<Double> items, final Double defaultValue, final Predicate<? super Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createDoubleBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -967,11 +868,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableSet<Double> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Predicate<? super Double> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableSet<Double> items, final Supplier<Double> supplier, final Predicate<? super Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -984,11 +883,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableSet<Double> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Predicate<? super Double>> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableSet<Double> items, final Double defaultValue, final ObservableValue<Predicate<? super Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createDoubleBinding(() -> {
@@ -1004,11 +901,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableSet<Double> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Predicate<? super Double>> filter) {
+    public static DoubleBinding filterThenFindFirstDouble(final ObservableSet<Double> items, final Supplier<Double> supplier, final ObservableValue<Predicate<? super Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1025,11 +920,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableSet<String> items, @Nonnull final String defaultValue, @Nonnull final Predicate<? super String> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableSet<String> items, final String defaultValue, final Predicate<? super String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createStringBinding(() -> items.stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1041,11 +934,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableSet<String> items, @Nonnull final Supplier<String> supplier, @Nonnull final Predicate<? super String> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableSet<String> items, final Supplier<String> supplier, final Predicate<? super String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1058,11 +949,9 @@ public final class FilteringBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableSet<String> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Predicate<? super String>> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableSet<String> items, final String defaultValue, final ObservableValue<Predicate<? super String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createStringBinding(() -> {
@@ -1078,11 +967,9 @@ public final class FilteringBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static StringBinding filterThenFindFirstString(@Nonnull final ObservableSet<String> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Predicate<? super String>> filter) {
+    public static StringBinding filterThenFindFirstString(final ObservableSet<String> items, final Supplier<String> supplier, final ObservableValue<Predicate<? super String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1099,11 +986,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V> ObjectBinding<V> filterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final V defaultValue, @Nonnull final Predicate<? super V> filter) {
+    public static <K, V> ObjectBinding<V> filterThenFindFirst(final ObservableMap<K, V> items, final V defaultValue, final Predicate<? super V> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createObjectBinding(() -> items.values().stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1115,11 +1000,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V> ObjectBinding<V> filterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final Predicate<? super V> filter) {
+    public static <K, V> ObjectBinding<V> filterThenFindFirst(final ObservableMap<K, V> items, final Supplier<V> supplier, final Predicate<? super V> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1132,11 +1015,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V> ObjectBinding<V> filterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final V defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter) {
+    public static <K, V> ObjectBinding<V> filterThenFindFirst(final ObservableMap<K, V> items, final V defaultValue, final ObservableValue<Predicate<? super V>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createObjectBinding(() -> {
@@ -1152,11 +1033,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V> ObjectBinding<V> filterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter) {
+    public static <K, V> ObjectBinding<V> filterThenFindFirst(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<Predicate<? super V>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1173,11 +1052,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K> BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableMap<K, Boolean> items, @Nonnull final Boolean defaultValue, @Nonnull final Predicate<? super Boolean> filter) {
+    public static <K> BooleanBinding filterThenFindFirstBoolean(final ObservableMap<K, Boolean> items, final Boolean defaultValue, final Predicate<? super Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createBooleanBinding(() -> items.values().stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1189,11 +1066,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K> BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableMap<K, Boolean> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Predicate<? super Boolean> filter) {
+    public static <K> BooleanBinding filterThenFindFirstBoolean(final ObservableMap<K, Boolean> items, final Supplier<Boolean> supplier, final Predicate<? super Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1206,11 +1081,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K> BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableMap<K, Boolean> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Predicate<? super Boolean>> filter) {
+    public static <K> BooleanBinding filterThenFindFirstBoolean(final ObservableMap<K, Boolean> items, final Boolean defaultValue, final ObservableValue<Predicate<? super Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createBooleanBinding(() -> {
@@ -1226,11 +1099,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K> BooleanBinding filterThenFindFirstBoolean(@Nonnull final ObservableMap<K, Boolean> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Predicate<? super Boolean>> filter) {
+    public static <K> BooleanBinding filterThenFindFirstBoolean(final ObservableMap<K, Boolean> items, final Supplier<Boolean> supplier, final ObservableValue<Predicate<? super Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1247,11 +1118,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K> IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableMap<K, Integer> items, @Nonnull final Integer defaultValue, @Nonnull final Predicate<? super Integer> filter) {
+    public static <K> IntegerBinding filterThenFindFirstInteger(final ObservableMap<K, Integer> items, final Integer defaultValue, final Predicate<? super Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createIntegerBinding(() -> items.values().stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1263,11 +1132,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K> IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableMap<K, Integer> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Predicate<? super Integer> filter) {
+    public static <K> IntegerBinding filterThenFindFirstInteger(final ObservableMap<K, Integer> items, final Supplier<Integer> supplier, final Predicate<? super Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1280,11 +1147,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K> IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableMap<K, Integer> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Predicate<? super Integer>> filter) {
+    public static <K> IntegerBinding filterThenFindFirstInteger(final ObservableMap<K, Integer> items, final Integer defaultValue, final ObservableValue<Predicate<? super Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createIntegerBinding(() -> {
@@ -1300,11 +1165,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K> IntegerBinding filterThenFindFirstInteger(@Nonnull final ObservableMap<K, Integer> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Predicate<? super Integer>> filter) {
+    public static <K> IntegerBinding filterThenFindFirstInteger(final ObservableMap<K, Integer> items, final Supplier<Integer> supplier, final ObservableValue<Predicate<? super Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1321,11 +1184,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K> LongBinding filterThenFindFirstLong(@Nonnull final ObservableMap<K, Long> items, @Nonnull final Long defaultValue, @Nonnull final Predicate<? super Long> filter) {
+    public static <K> LongBinding filterThenFindFirstLong(final ObservableMap<K, Long> items, final Long defaultValue, final Predicate<? super Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createLongBinding(() -> items.values().stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1337,11 +1198,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K> LongBinding filterThenFindFirstLong(@Nonnull final ObservableMap<K, Long> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Predicate<? super Long> filter) {
+    public static <K> LongBinding filterThenFindFirstLong(final ObservableMap<K, Long> items, final Supplier<Long> supplier, final Predicate<? super Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1354,11 +1213,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K> LongBinding filterThenFindFirstLong(@Nonnull final ObservableMap<K, Long> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Predicate<? super Long>> filter) {
+    public static <K> LongBinding filterThenFindFirstLong(final ObservableMap<K, Long> items, final Long defaultValue, final ObservableValue<Predicate<? super Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createLongBinding(() -> {
@@ -1374,11 +1231,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K> LongBinding filterThenFindFirstLong(@Nonnull final ObservableMap<K, Long> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Predicate<? super Long>> filter) {
+    public static <K> LongBinding filterThenFindFirstLong(final ObservableMap<K, Long> items, final Supplier<Long> supplier, final ObservableValue<Predicate<? super Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1395,11 +1250,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K> FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableMap<K, Float> items, @Nonnull final Float defaultValue, @Nonnull final Predicate<? super Float> filter) {
+    public static <K> FloatBinding filterThenFindFirstFloat(final ObservableMap<K, Float> items, final Float defaultValue, final Predicate<? super Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createFloatBinding(() -> items.values().stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1411,11 +1264,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K> FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableMap<K, Float> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Predicate<? super Float> filter) {
+    public static <K> FloatBinding filterThenFindFirstFloat(final ObservableMap<K, Float> items, final Supplier<Float> supplier, final Predicate<? super Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1428,11 +1279,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K> FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableMap<K, Float> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Predicate<? super Float>> filter) {
+    public static <K> FloatBinding filterThenFindFirstFloat(final ObservableMap<K, Float> items, final Float defaultValue, final ObservableValue<Predicate<? super Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createFloatBinding(() -> {
@@ -1448,11 +1297,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K> FloatBinding filterThenFindFirstFloat(@Nonnull final ObservableMap<K, Float> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Predicate<? super Float>> filter) {
+    public static <K> FloatBinding filterThenFindFirstFloat(final ObservableMap<K, Float> items, final Supplier<Float> supplier, final ObservableValue<Predicate<? super Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1469,11 +1316,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K> DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableMap<K, Double> items, @Nonnull final Double defaultValue, @Nonnull final Predicate<? super Double> filter) {
+    public static <K> DoubleBinding filterThenFindFirstDouble(final ObservableMap<K, Double> items, final Double defaultValue, final Predicate<? super Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createDoubleBinding(() -> items.values().stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1485,11 +1330,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K> DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableMap<K, Double> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Predicate<? super Double> filter) {
+    public static <K> DoubleBinding filterThenFindFirstDouble(final ObservableMap<K, Double> items, final Supplier<Double> supplier, final Predicate<? super Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1502,11 +1345,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K> DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableMap<K, Double> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Predicate<? super Double>> filter) {
+    public static <K> DoubleBinding filterThenFindFirstDouble(final ObservableMap<K, Double> items, final Double defaultValue, final ObservableValue<Predicate<? super Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createDoubleBinding(() -> {
@@ -1522,11 +1363,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K> DoubleBinding filterThenFindFirstDouble(@Nonnull final ObservableMap<K, Double> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Predicate<? super Double>> filter) {
+    public static <K> DoubleBinding filterThenFindFirstDouble(final ObservableMap<K, Double> items, final Supplier<Double> supplier, final ObservableValue<Predicate<? super Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1543,11 +1382,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K> StringBinding filterThenFindFirstString(@Nonnull final ObservableMap<K, String> items, @Nonnull final String defaultValue, @Nonnull final Predicate<? super String> filter) {
+    public static <K> StringBinding filterThenFindFirstString(final ObservableMap<K, String> items, final String defaultValue, final Predicate<? super String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createStringBinding(() -> items.values().stream().filter(filter).findFirst().orElse(defaultValue), items);
@@ -1559,11 +1396,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K> StringBinding filterThenFindFirstString(@Nonnull final ObservableMap<K, String> items, @Nonnull final Supplier<String> supplier, @Nonnull final Predicate<? super String> filter) {
+    public static <K> StringBinding filterThenFindFirstString(final ObservableMap<K, String> items, final Supplier<String> supplier, final Predicate<? super String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1576,11 +1411,9 @@ public final class FilteringBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K> StringBinding filterThenFindFirstString(@Nonnull final ObservableMap<K, String> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Predicate<? super String>> filter) {
+    public static <K> StringBinding filterThenFindFirstString(final ObservableMap<K, String> items, final String defaultValue, final ObservableValue<Predicate<? super String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         return createStringBinding(() -> {
@@ -1596,11 +1429,9 @@ public final class FilteringBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K> StringBinding filterThenFindFirstString(@Nonnull final ObservableMap<K, String> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Predicate<? super String>> filter) {
+    public static <K> StringBinding filterThenFindFirstString(final ObservableMap<K, String> items, final Supplier<String> supplier, final ObservableValue<Predicate<? super String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1618,11 +1449,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final R defaultValue, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableList<T> items, final R defaultValue, final Function<? super T, R> mapper, final Predicate<? super R> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1636,11 +1465,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<R> supplier, final Function<? super T, R> mapper, final Predicate<? super R> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1655,11 +1482,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final R defaultValue, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableList<T> items, final R defaultValue, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1679,11 +1504,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<R> supplier, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1704,11 +1527,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Boolean defaultValue, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final Predicate<Boolean> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableList<T> items, final Boolean defaultValue, final Function<? super T, Boolean> mapper, final Predicate<Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1722,11 +1543,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final Predicate<Boolean> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Boolean> supplier, final Function<? super T, Boolean> mapper, final Predicate<Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1741,11 +1560,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<Predicate<Boolean>> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableList<T> items, final Boolean defaultValue, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<Predicate<Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1765,11 +1582,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<Predicate<Boolean>> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Boolean> supplier, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<Predicate<Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1790,11 +1605,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Integer defaultValue, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final Predicate<Integer> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableList<T> items, final Integer defaultValue, final Function<? super T, Integer> mapper, final Predicate<Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1808,11 +1621,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final Predicate<Integer> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Integer> supplier, final Function<? super T, Integer> mapper, final Predicate<Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1827,11 +1638,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<Predicate<Integer>> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableList<T> items, final Integer defaultValue, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<Predicate<Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1851,11 +1660,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<Predicate<Integer>> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Integer> supplier, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<Predicate<Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1876,11 +1683,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Long defaultValue, @Nonnull final Function<? super T, Long> mapper, @Nonnull final Predicate<Long> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableList<T> items, final Long defaultValue, final Function<? super T, Long> mapper, final Predicate<Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1894,11 +1699,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super T, Long> mapper, @Nonnull final Predicate<Long> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Long> supplier, final Function<? super T, Long> mapper, final Predicate<Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1913,11 +1716,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<Predicate<Long>> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableList<T> items, final Long defaultValue, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<Predicate<Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1937,11 +1738,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<Predicate<Long>> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Long> supplier, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<Predicate<Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1962,11 +1761,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Float defaultValue, @Nonnull final Function<? super T, Float> mapper, @Nonnull final Predicate<Float> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableList<T> items, final Float defaultValue, final Function<? super T, Float> mapper, final Predicate<Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -1980,11 +1777,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super T, Float> mapper, @Nonnull final Predicate<Float> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Float> supplier, final Function<? super T, Float> mapper, final Predicate<Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1999,11 +1794,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<Predicate<Float>> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableList<T> items, final Float defaultValue, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<Predicate<Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2023,11 +1816,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<Predicate<Float>> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Float> supplier, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<Predicate<Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2048,11 +1839,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Double defaultValue, @Nonnull final Function<? super T, Double> mapper, @Nonnull final Predicate<Double> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableList<T> items, final Double defaultValue, final Function<? super T, Double> mapper, final Predicate<Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2066,11 +1855,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super T, Double> mapper, @Nonnull final Predicate<Double> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Double> supplier, final Function<? super T, Double> mapper, final Predicate<Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2085,11 +1872,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<Predicate<Double>> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableList<T> items, final Double defaultValue, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<Predicate<Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2109,11 +1894,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<Predicate<Double>> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<Double> supplier, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<Predicate<Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2134,11 +1917,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final String defaultValue, @Nonnull final Function<? super T, String> mapper, @Nonnull final Predicate<String> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableList<T> items, final String defaultValue, final Function<? super T, String> mapper, final Predicate<String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2152,11 +1933,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super T, String> mapper, @Nonnull final Predicate<String> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<String> supplier, final Function<? super T, String> mapper, final Predicate<String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2171,11 +1950,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<Predicate<String>> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableList<T> items, final String defaultValue, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<Predicate<String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2195,11 +1972,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<Predicate<String>> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableList<T> items, final Supplier<String> supplier, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<Predicate<String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2220,11 +1995,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final R defaultValue, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableSet<T> items, final R defaultValue, final Function<? super T, R> mapper, final Predicate<? super R> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2238,11 +2011,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<R> supplier, final Function<? super T, R> mapper, final Predicate<? super R> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2257,11 +2028,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final R defaultValue, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableSet<T> items, final R defaultValue, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2281,11 +2050,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> filter) {
+    public static <T, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<R> supplier, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2306,11 +2073,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Boolean defaultValue, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final Predicate<Boolean> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableSet<T> items, final Boolean defaultValue, final Function<? super T, Boolean> mapper, final Predicate<Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2324,11 +2089,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final Predicate<Boolean> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Boolean> supplier, final Function<? super T, Boolean> mapper, final Predicate<Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2343,11 +2106,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<Predicate<Boolean>> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableSet<T> items, final Boolean defaultValue, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<Predicate<Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2367,11 +2128,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<Predicate<Boolean>> filter) {
+    public static <T> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Boolean> supplier, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<Predicate<Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2392,11 +2151,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Integer defaultValue, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final Predicate<Integer> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableSet<T> items, final Integer defaultValue, final Function<? super T, Integer> mapper, final Predicate<Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2410,11 +2167,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final Predicate<Integer> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Integer> supplier, final Function<? super T, Integer> mapper, final Predicate<Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2429,11 +2184,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<Predicate<Integer>> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableSet<T> items, final Integer defaultValue, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<Predicate<Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2453,11 +2206,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<Predicate<Integer>> filter) {
+    public static <T> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Integer> supplier, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<Predicate<Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2478,11 +2229,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Long defaultValue, @Nonnull final Function<? super T, Long> mapper, @Nonnull final Predicate<Long> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableSet<T> items, final Long defaultValue, final Function<? super T, Long> mapper, final Predicate<Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2496,11 +2245,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super T, Long> mapper, @Nonnull final Predicate<Long> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Long> supplier, final Function<? super T, Long> mapper, final Predicate<Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2515,11 +2262,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<Predicate<Long>> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableSet<T> items, final Long defaultValue, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<Predicate<Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2539,11 +2284,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<Predicate<Long>> filter) {
+    public static <T> LongBinding mapToLongThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Long> supplier, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<Predicate<Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2564,11 +2307,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Float defaultValue, @Nonnull final Function<? super T, Float> mapper, @Nonnull final Predicate<Float> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableSet<T> items, final Float defaultValue, final Function<? super T, Float> mapper, final Predicate<Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2582,11 +2323,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super T, Float> mapper, @Nonnull final Predicate<Float> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Float> supplier, final Function<? super T, Float> mapper, final Predicate<Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2601,11 +2340,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<Predicate<Float>> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableSet<T> items, final Float defaultValue, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<Predicate<Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2625,11 +2362,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<Predicate<Float>> filter) {
+    public static <T> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Float> supplier, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<Predicate<Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2650,11 +2385,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Double defaultValue, @Nonnull final Function<? super T, Double> mapper, @Nonnull final Predicate<Double> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableSet<T> items, final Double defaultValue, final Function<? super T, Double> mapper, final Predicate<Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2668,11 +2401,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super T, Double> mapper, @Nonnull final Predicate<Double> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Double> supplier, final Function<? super T, Double> mapper, final Predicate<Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2687,11 +2418,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<Predicate<Double>> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableSet<T> items, final Double defaultValue, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<Predicate<Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2711,11 +2440,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<Predicate<Double>> filter) {
+    public static <T> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<Double> supplier, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<Predicate<Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2736,11 +2463,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final String defaultValue, @Nonnull final Function<? super T, String> mapper, @Nonnull final Predicate<String> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableSet<T> items, final String defaultValue, final Function<? super T, String> mapper, final Predicate<String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2754,11 +2479,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super T, String> mapper, @Nonnull final Predicate<String> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<String> supplier, final Function<? super T, String> mapper, final Predicate<String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2773,11 +2496,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<Predicate<String>> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableSet<T> items, final String defaultValue, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<Predicate<String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2797,11 +2518,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<Predicate<String>> filter) {
+    public static <T> StringBinding mapToStringThenFilterThenFindFirst(final ObservableSet<T> items, final Supplier<String> supplier, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<Predicate<String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2822,11 +2541,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final R defaultValue, @Nonnull final Function<? super V, R> mapper, @Nonnull final Predicate<? super R> filter) {
+    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableMap<K, V> items, final R defaultValue, final Function<? super V, R> mapper, final Predicate<? super R> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2840,11 +2557,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super V, R> mapper, @Nonnull final Predicate<? super R> filter) {
+    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<R> supplier, final Function<? super V, R> mapper, final Predicate<? super R> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2859,11 +2574,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final R defaultValue, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> filter) {
+    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableMap<K, V> items, final R defaultValue, final ObservableValue<Function<? super V, R>> mapper, final ObservableValue<Predicate<? super R>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2883,11 +2596,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> filter) {
+    public static <K, V, R> ObjectBinding<R> mapThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<R> supplier, final ObservableValue<Function<? super V, R>> mapper, final ObservableValue<Predicate<? super R>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2908,11 +2619,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Boolean defaultValue, @Nonnull final Function<? super V, Boolean> mapper, @Nonnull final Predicate<Boolean> filter) {
+    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableMap<K, V> items, final Boolean defaultValue, final Function<? super V, Boolean> mapper, final Predicate<Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2926,11 +2635,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super V, Boolean> mapper, @Nonnull final Predicate<Boolean> filter) {
+    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Boolean> supplier, final Function<? super V, Boolean> mapper, final Predicate<Boolean> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2945,11 +2652,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper, @Nonnull final ObservableValue<Predicate<Boolean>> filter) {
+    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableMap<K, V> items, final Boolean defaultValue, final ObservableValue<Function<? super V, Boolean>> mapper, final ObservableValue<Predicate<Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -2969,11 +2674,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper, @Nonnull final ObservableValue<Predicate<Boolean>> filter) {
+    public static <K, V> BooleanBinding mapToBooleanThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Boolean> supplier, final ObservableValue<Function<? super V, Boolean>> mapper, final ObservableValue<Predicate<Boolean>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2994,11 +2697,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Integer defaultValue, @Nonnull final Function<? super V, Integer> mapper, @Nonnull final Predicate<Integer> filter) {
+    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableMap<K, V> items, final Integer defaultValue, final Function<? super V, Integer> mapper, final Predicate<Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3012,11 +2713,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super V, Integer> mapper, @Nonnull final Predicate<Integer> filter) {
+    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Integer> supplier, final Function<? super V, Integer> mapper, final Predicate<Integer> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3031,11 +2730,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper, @Nonnull final ObservableValue<Predicate<Integer>> filter) {
+    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableMap<K, V> items, final Integer defaultValue, final ObservableValue<Function<? super V, Integer>> mapper, final ObservableValue<Predicate<Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3055,11 +2752,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper, @Nonnull final ObservableValue<Predicate<Integer>> filter) {
+    public static <K, V> IntegerBinding mapToIntegerThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Integer> supplier, final ObservableValue<Function<? super V, Integer>> mapper, final ObservableValue<Predicate<Integer>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3080,11 +2775,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Long defaultValue, @Nonnull final Function<? super V, Long> mapper, @Nonnull final Predicate<Long> filter) {
+    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(final ObservableMap<K, V> items, final Long defaultValue, final Function<? super V, Long> mapper, final Predicate<Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3098,11 +2791,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super V, Long> mapper, @Nonnull final Predicate<Long> filter) {
+    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Long> supplier, final Function<? super V, Long> mapper, final Predicate<Long> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3117,11 +2808,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Function<? super V, Long>> mapper, @Nonnull final ObservableValue<Predicate<Long>> filter) {
+    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(final ObservableMap<K, V> items, final Long defaultValue, final ObservableValue<Function<? super V, Long>> mapper, final ObservableValue<Predicate<Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3141,11 +2830,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super V, Long>> mapper, @Nonnull final ObservableValue<Predicate<Long>> filter) {
+    public static <K, V> LongBinding mapToLongThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Long> supplier, final ObservableValue<Function<? super V, Long>> mapper, final ObservableValue<Predicate<Long>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3166,11 +2853,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Float defaultValue, @Nonnull final Function<? super V, Float> mapper, @Nonnull final Predicate<Float> filter) {
+    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableMap<K, V> items, final Float defaultValue, final Function<? super V, Float> mapper, final Predicate<Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3184,11 +2869,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super V, Float> mapper, @Nonnull final Predicate<Float> filter) {
+    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Float> supplier, final Function<? super V, Float> mapper, final Predicate<Float> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3203,11 +2886,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Function<? super V, Float>> mapper, @Nonnull final ObservableValue<Predicate<Float>> filter) {
+    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableMap<K, V> items, final Float defaultValue, final ObservableValue<Function<? super V, Float>> mapper, final ObservableValue<Predicate<Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3227,11 +2908,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super V, Float>> mapper, @Nonnull final ObservableValue<Predicate<Float>> filter) {
+    public static <K, V> FloatBinding mapToFloatThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Float> supplier, final ObservableValue<Function<? super V, Float>> mapper, final ObservableValue<Predicate<Float>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3252,11 +2931,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Double defaultValue, @Nonnull final Function<? super V, Double> mapper, @Nonnull final Predicate<Double> filter) {
+    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableMap<K, V> items, final Double defaultValue, final Function<? super V, Double> mapper, final Predicate<Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3270,11 +2947,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super V, Double> mapper, @Nonnull final Predicate<Double> filter) {
+    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Double> supplier, final Function<? super V, Double> mapper, final Predicate<Double> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3289,11 +2964,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Function<? super V, Double>> mapper, @Nonnull final ObservableValue<Predicate<Double>> filter) {
+    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableMap<K, V> items, final Double defaultValue, final ObservableValue<Function<? super V, Double>> mapper, final ObservableValue<Predicate<Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3313,11 +2986,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super V, Double>> mapper, @Nonnull final ObservableValue<Predicate<Double>> filter) {
+    public static <K, V> DoubleBinding mapToDoubleThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<Double> supplier, final ObservableValue<Function<? super V, Double>> mapper, final ObservableValue<Predicate<Double>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3338,11 +3009,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final String defaultValue, @Nonnull final Function<? super V, String> mapper, @Nonnull final Predicate<String> filter) {
+    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(final ObservableMap<K, V> items, final String defaultValue, final Function<? super V, String> mapper, final Predicate<String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3356,11 +3025,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super V, String> mapper, @Nonnull final Predicate<String> filter) {
+    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<String> supplier, final Function<? super V, String> mapper, final Predicate<String> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3375,11 +3042,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter       a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Function<? super V, String>> mapper, @Nonnull final ObservableValue<Predicate<String>> filter) {
+    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(final ObservableMap<K, V> items, final String defaultValue, final ObservableValue<Function<? super V, String>> mapper, final ObservableValue<Predicate<String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3399,11 +3064,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value before filtering.
      * @param filter   a non-interfering, stateless predicate to apply to the each value after mapping.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super V, String>> mapper, @Nonnull final ObservableValue<Predicate<String>> filter) {
+    public static <K, V> StringBinding mapToStringThenFilterThenFindFirst(final ObservableMap<K, V> items, final Supplier<String> supplier, final ObservableValue<Function<? super V, String>> mapper, final ObservableValue<Predicate<String>> filter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3424,11 +3087,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final R defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, R> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableList<T> items, final R defaultValue, final Predicate<? super T> filter, final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3442,11 +3103,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, R> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableList<T> items, final Supplier<R> supplier, final Predicate<? super T> filter, final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3461,11 +3120,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final R defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableList<T> items, final R defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3485,11 +3142,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableList<T> items, final Supplier<R> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3510,11 +3165,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Boolean defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableList<T> items, final Boolean defaultValue, final Predicate<? super T> filter, final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3528,11 +3181,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableList<T> items, final Supplier<Boolean> supplier, final Predicate<? super T> filter, final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3547,11 +3198,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableList<T> items, final Boolean defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3571,11 +3220,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableList<T> items, final Supplier<Boolean> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3596,11 +3243,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Integer defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableList<T> items, final Integer defaultValue, final Predicate<? super T> filter, final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3614,11 +3259,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableList<T> items, final Supplier<Integer> supplier, final Predicate<? super T> filter, final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3633,11 +3276,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableList<T> items, final Integer defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3657,11 +3298,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableList<T> items, final Supplier<Integer> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3682,11 +3321,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Long defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Long> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableList<T> items, final Long defaultValue, final Predicate<? super T> filter, final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3700,11 +3337,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Long> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableList<T> items, final Supplier<Long> supplier, final Predicate<? super T> filter, final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3719,11 +3354,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableList<T> items, final Long defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3743,11 +3376,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableList<T> items, final Supplier<Long> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3768,11 +3399,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Float defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableList<T> items, final Float defaultValue, final Predicate<? super T> filter, final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3786,11 +3415,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableList<T> items, final Supplier<Float> supplier, final Predicate<? super T> filter, final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3805,11 +3432,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableList<T> items, final Float defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3829,11 +3454,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableList<T> items, final Supplier<Float> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3854,11 +3477,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Double defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableList<T> items, final Double defaultValue, final Predicate<? super T> filter, final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3872,11 +3493,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableList<T> items, final Supplier<Double> supplier, final Predicate<? super T> filter, final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3891,11 +3510,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableList<T> items, final Double defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3915,11 +3532,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableList<T> items, final Supplier<Double> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3940,11 +3555,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final String defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, String> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableList<T> items, final String defaultValue, final Predicate<? super T> filter, final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3958,11 +3571,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, String> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableList<T> items, final Supplier<String> supplier, final Predicate<? super T> filter, final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -3977,11 +3588,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableList<T> items, final String defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4001,11 +3610,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableList<T> items, final Supplier<String> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4026,11 +3633,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final R defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, R> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableSet<T> items, final R defaultValue, final Predicate<? super T> filter, final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4044,11 +3649,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, R> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableSet<T> items, final Supplier<R> supplier, final Predicate<? super T> filter, final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4063,11 +3666,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final R defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableSet<T> items, final R defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4087,11 +3688,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
+    public static <T, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableSet<T> items, final Supplier<R> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4112,11 +3711,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Boolean defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableSet<T> items, final Boolean defaultValue, final Predicate<? super T> filter, final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4130,11 +3727,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Boolean> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableSet<T> items, final Supplier<Boolean> supplier, final Predicate<? super T> filter, final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4149,11 +3744,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableSet<T> items, final Boolean defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4173,11 +3766,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
+    public static <T> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableSet<T> items, final Supplier<Boolean> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4198,11 +3789,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Integer defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableSet<T> items, final Integer defaultValue, final Predicate<? super T> filter, final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4216,11 +3805,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Integer> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableSet<T> items, final Supplier<Integer> supplier, final Predicate<? super T> filter, final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4235,11 +3822,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableSet<T> items, final Integer defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4259,11 +3844,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
+    public static <T> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableSet<T> items, final Supplier<Integer> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4284,11 +3867,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Long defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Long> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableSet<T> items, final Long defaultValue, final Predicate<? super T> filter, final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4302,11 +3883,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Long> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableSet<T> items, final Supplier<Long> supplier, final Predicate<? super T> filter, final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4321,11 +3900,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableSet<T> items, final Long defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4345,11 +3922,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <T> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
+    public static <T> LongBinding filterThenMapToLongThenFindFirst(final ObservableSet<T> items, final Supplier<Long> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4370,11 +3945,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Float defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableSet<T> items, final Float defaultValue, final Predicate<? super T> filter, final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4388,11 +3961,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Float> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableSet<T> items, final Supplier<Float> supplier, final Predicate<? super T> filter, final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4407,11 +3978,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableSet<T> items, final Float defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4431,11 +4000,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
+    public static <T> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableSet<T> items, final Supplier<Float> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4456,11 +4023,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Double defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableSet<T> items, final Double defaultValue, final Predicate<? super T> filter, final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4474,11 +4039,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, Double> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableSet<T> items, final Supplier<Double> supplier, final Predicate<? super T> filter, final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4493,11 +4056,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableSet<T> items, final Double defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4517,11 +4078,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
+    public static <T> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableSet<T> items, final Supplier<Double> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4542,11 +4101,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final String defaultValue, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, String> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableSet<T> items, final String defaultValue, final Predicate<? super T> filter, final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4560,11 +4117,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Predicate<? super T> filter, @Nonnull final Function<? super T, String> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableSet<T> items, final Supplier<String> supplier, final Predicate<? super T> filter, final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4579,11 +4134,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableSet<T> items, final String defaultValue, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4603,11 +4156,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each element. before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each element after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <T> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Predicate<? super T>> filter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding filterThenMapToStringThenFindFirst(final ObservableSet<T> items, final Supplier<String> supplier, final ObservableValue<Predicate<? super T>> filter, final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4628,11 +4179,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final R defaultValue, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, R> mapper) {
+    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableMap<K, V> items, final R defaultValue, final Predicate<? super V> filter, final Function<? super V, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4646,11 +4195,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, R> mapper) {
+    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableMap<K, V> items, final Supplier<R> supplier, final Predicate<? super V> filter, final Function<? super V, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4665,11 +4212,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final R defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, R>> mapper) {
+    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableMap<K, V> items, final R defaultValue, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, R>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4689,11 +4234,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an object binding
      */
-    @Nonnull
-    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, R>> mapper) {
+    public static <K, V, R> ObjectBinding<R> filterThenMapThenFindFirst(final ObservableMap<K, V> items, final Supplier<R> supplier, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, R>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4714,11 +4257,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Boolean defaultValue, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Boolean> mapper) {
+    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableMap<K, V> items, final Boolean defaultValue, final Predicate<? super V> filter, final Function<? super V, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4732,11 +4273,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Boolean> mapper) {
+    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableMap<K, V> items, final Supplier<Boolean> supplier, final Predicate<? super V> filter, final Function<? super V, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4751,11 +4290,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
+    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableMap<K, V> items, final Boolean defaultValue, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4775,11 +4312,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
+    public static <K, V> BooleanBinding filterThenMapToBooleanThenFindFirst(final ObservableMap<K, V> items, final Supplier<Boolean> supplier, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4800,11 +4335,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Integer defaultValue, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Integer> mapper) {
+    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableMap<K, V> items, final Integer defaultValue, final Predicate<? super V> filter, final Function<? super V, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4818,11 +4351,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Integer> mapper) {
+    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableMap<K, V> items, final Supplier<Integer> supplier, final Predicate<? super V> filter, final Function<? super V, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4837,11 +4368,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
+    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableMap<K, V> items, final Integer defaultValue, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4861,11 +4390,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return an integer binding
      */
-    @Nonnull
-    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
+    public static <K, V> IntegerBinding filterThenMapToIntegerThenFindFirst(final ObservableMap<K, V> items, final Supplier<Integer> supplier, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4886,11 +4413,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Long defaultValue, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Long> mapper) {
+    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(final ObservableMap<K, V> items, final Long defaultValue, final Predicate<? super V> filter, final Function<? super V, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4904,11 +4429,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Long> mapper) {
+    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(final ObservableMap<K, V> items, final Supplier<Long> supplier, final Predicate<? super V> filter, final Function<? super V, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4923,11 +4446,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
+    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(final ObservableMap<K, V> items, final Long defaultValue, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4947,11 +4468,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a long binding
      */
-    @Nonnull
-    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
+    public static <K, V> LongBinding filterThenMapToLongThenFindFirst(final ObservableMap<K, V> items, final Supplier<Long> supplier, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -4972,11 +4491,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Float defaultValue, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Float> mapper) {
+    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableMap<K, V> items, final Float defaultValue, final Predicate<? super V> filter, final Function<? super V, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -4990,11 +4507,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Float> mapper) {
+    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableMap<K, V> items, final Supplier<Float> supplier, final Predicate<? super V> filter, final Function<? super V, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -5009,11 +4524,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
+    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableMap<K, V> items, final Float defaultValue, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -5033,11 +4546,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a float binding
      */
-    @Nonnull
-    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
+    public static <K, V> FloatBinding filterThenMapToFloatThenFindFirst(final ObservableMap<K, V> items, final Supplier<Float> supplier, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -5058,11 +4569,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Double defaultValue, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Double> mapper) {
+    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableMap<K, V> items, final Double defaultValue, final Predicate<? super V> filter, final Function<? super V, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -5076,11 +4585,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, Double> mapper) {
+    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableMap<K, V> items, final Supplier<Double> supplier, final Predicate<? super V> filter, final Function<? super V, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -5095,11 +4602,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
+    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableMap<K, V> items, final Double defaultValue, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -5119,11 +4624,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a double binding
      */
-    @Nonnull
-    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
+    public static <K, V> DoubleBinding filterThenMapToDoubleThenFindFirst(final ObservableMap<K, V> items, final Supplier<Double> supplier, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -5144,11 +4647,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final String defaultValue, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, String> mapper) {
+    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(final ObservableMap<K, V> items, final String defaultValue, final Predicate<? super V> filter, final Function<? super V, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -5162,11 +4663,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final Predicate<? super V> filter, @Nonnull final Function<? super V, String> mapper) {
+    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(final ObservableMap<K, V> items, final Supplier<String> supplier, final Predicate<? super V> filter, final Function<? super V, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
@@ -5181,11 +4680,9 @@ public final class FilteringBindings {
      * @param defaultValue the value to be returned if there is no value present.
      * @param filter       a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper       a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final String defaultValue, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
+    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(final ObservableMap<K, V> items, final String defaultValue, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -5205,11 +4702,9 @@ public final class FilteringBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param filter   a non-interfering, stateless predicate to apply to the each value before mapping.
      * @param mapper   a non-interfering, stateless function to apply to the each value after filtering.
-     *
      * @return a string binding
      */
-    @Nonnull
-    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Predicate<? super V>> filter, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
+    public static <K, V> StringBinding filterThenMapToStringThenFindFirst(final ObservableMap<K, V> items, final Supplier<String> supplier, final ObservableValue<Predicate<? super V>> filter, final ObservableValue<Function<? super V, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(filter, ERROR_FILTER_NULL);

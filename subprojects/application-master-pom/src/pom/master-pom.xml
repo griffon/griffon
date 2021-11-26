@@ -22,10 +22,12 @@
     <artifactId>application-master-pom</artifactId>
     <version>@project.version@</version>
     <packaging>pom</packaging>
+
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Griffon Application Master POM</description>
     <url>http://griffon-framework.org</url>
     <inceptionYear>2008</inceptionYear>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -33,9 +35,11 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
     <scm>
         <url>https://github.com/griffon/griffon</url>
     </scm>
+
     <developers>
         <developer>
             <id>aalmiray</id>
@@ -51,58 +55,29 @@
         <groovy.version>@groovy.version@</groovy.version>
         <slf4j.version>@slf4j.version@</slf4j.version>
         <spock.version>@spock.version@</spock.version>
-        <codenarc.version>0.21</codenarc.version>
-        <spotbugs.version>3.1.0-RC3</spotbugs.version>
-        <izpack-standalone.version>4.3.5</izpack-standalone.version>
-        <izpack.staging.dir>${project.build.directory}/izpack</izpack.staging.dir>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.version>3.8.4</maven.version>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- plugins -->
-        <plugin.antrun.version>1.8</plugin.antrun.version>
-        <plugin.appassembler.version>2.0.0</plugin.appassembler.version>
-        <plugin.assembly.version>3.1.0</plugin.assembly.version>
-        <plugin.buildhelper.version>3.0.0</plugin.buildhelper.version>
-        <plugin.changes.version>2.12.1</plugin.changes.version>
-        <plugin.checkstyle.version>2.17</plugin.checkstyle.version>
-        <plugin.compiler.version>3.7.0</plugin.compiler.version>
-        <plugin.coveralls.version>4.3.0</plugin.coveralls.version>
-        <plugin.dependency.version>3.0.1</plugin.dependency.version>
-        <plugin.exec.version>1.6.0</plugin.exec.version>
-        <plugin.findbugs.version>3.0.5</plugin.findbugs.version>
-        <plugin.git.commit.version>2.2.3</plugin.git.commit.version>
-        <plugin.gmavenplus.version>1.6</plugin.gmavenplus.version>
-        <plugin.javadoc.version>2.10.4</plugin.javadoc.version>
-        <plugin.javafx.version>8.8.3</plugin.javafx.version>
-        <plugin.jacoco.version>0.7.9</plugin.jacoco.version>
-        <plugin.jdepend.version>2.0</plugin.jdepend.version>
-        <plugin.jar.version>3.1.0</plugin.jar.version>
-        <plugin.jxr.version>2.5</plugin.jxr.version>
-        <plugin.osxappbundle.version>1.0.1</plugin.osxappbundle.version>
-        <plugin.processor.version>3.3.2</plugin.processor.version>
-        <plugin.project-info-reports.version>2.9</plugin.project-info-reports.version>
-        <plugin.release.version>2.5.3</plugin.release.version>
-        <plugin.shade.version>3.1.0</plugin.shade.version>
-        <plugin.shade_ext_transformers.version>1.0.3</plugin.shade_ext_transformers.version>
-        <plugin.site.version>3.6</plugin.site.version>
-        <plugin.surefire.version>2.20</plugin.surefire.version>
-        <plugin.versions.version>2.4</plugin.versions.version>
-        <maven-checkstyle-plugin.configLocation>${project.basedir}/config/checkstyle/checkstyle.xml</maven-checkstyle-plugin.configLocation>
-        <!-- javafx signing -->
-        <keystore.alias>example-user</keystore.alias>
-        <keystore.password>example-password</keystore.password>
-        <!-- plugin status -->
-        <checkstyle.skip>false</checkstyle.skip>
-        <codenarc.skip>true</codenarc.skip>
-        <findbugs.skip>true</findbugs.skip>
-        <javadocs.skip>false</javadocs.skip>
-        <jacoco.skip>false</jacoco.skip>
-        <pmd.skip>false</pmd.skip>
+        <plugin.appassembler.version>2.1.0</plugin.appassembler.version>
+        <plugin.assembly.version>3.3.0</plugin.assembly.version>
+        <plugin.buildhelper.version>3.2.0</plugin.buildhelper.version>
+        <plugin.clean.version>3.1.0</plugin.clean.version>
+        <plugin.compiler.version>3.8.1</plugin.compiler.version>
+        <plugin.dependency.version>3.2.0</plugin.dependency.version>
+        <plugin.enforcer.version>3.0.0-M3</plugin.enforcer.version>
+        <plugin.exec.version>3.0.0</plugin.exec.version>
+        <plugin.git.commit.version>4.0.0</plugin.git.commit.version>
+        <plugin.gmavenplus.version>1.13.0</plugin.gmavenplus.version>
+        <plugin.jar.version>3.2.0</plugin.jar.version>
+        <plugin.processor.version>4.5-jdk8</plugin.processor.version>
+        <plugin.release.version>3.0.0-M4</plugin.release.version>
+        <plugin.resources.version>3.2.0</plugin.resources.version>
+        <plugin.surefire.version>3.0.0-M5</plugin.surefire.version>
+        <plugin.versions.version>2.8.1</plugin.versions.version>
     </properties>
-
-    <prerequisites>
-        <maven>3.5.0</maven>
-    </prerequisites>
 
     <!-- tag::dependencyManagement[] -->
     <dependencyManagement>
@@ -211,15 +186,30 @@
             </dependency>
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
+                <artifactId>groovy</artifactId>
                 <version>${groovy.version}</version>
-                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-xml</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-version</artifactId>
+                <version>${groovy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.spockframework</groupId>
                 <artifactId>spock-core</artifactId>
                 <version>${spock.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -229,6 +219,35 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${plugin.enforcer.version}</version>
+                    <inherited>true</inherited>
+                    <executions>
+                        <execution>
+                            <id>enforce-maven</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration combine.children="override">
+                        <rules>
+                            <requireMavenVersion>
+                                <version>${maven.version}</version>
+                            </requireMavenVersion>
+                            <requireJavaVersion>
+                                <version>${java.version}</version>
+                            </requireJavaVersion>
+                            <reactorModuleConvergence>
+                                <message>The reactor is not valid</message>
+                                <ignoreModuleDependencies>true</ignoreModuleDependencies>
+                            </reactorModuleConvergence>
+                            <requireUpperBoundDeps/>
+                        </rules>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
@@ -243,6 +262,7 @@
                             <configuration>
                                 <sources>
                                     <source>griffon-app/conf</source>
+                                    <source>griffon-app/mvcs</source>
                                     <source>griffon-app/controllers</source>
                                     <source>griffon-app/models</source>
                                     <source>griffon-app/services</source>
@@ -267,6 +287,18 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${plugin.resources.version}</version>
+                    <inherited>true</inherited>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${plugin.clean.version}</version>
+                    <inherited>true</inherited>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -301,6 +333,8 @@
                                 <includes>
                                     <include>conf/**/*.groovy</include>
                                     <include>conf/**/*.java</include>
+                                    <include>mvcs/**/*.groovy</include>
+                                    <include>mvcs/**/*.java</include>
                                     <include>controllers/**/*.groovy</include>
                                     <include>controllers/**/*.java</include>
                                     <include>models/**/*.groovy</include>
@@ -321,6 +355,15 @@
                                 </includes>
                             </source>
                         </sources>
+                        <testSources>
+                            <testSource>
+                                <directory>${project.basedir}/src/test/groovy</directory>
+                                <includes>
+                                    <include>**/*.groovy</include>
+                                    <include>**/*.java</include>
+                                </includes>
+                            </testSource>
+                        </testSources>
                         <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
                     </configuration>
                 </plugin>
@@ -335,7 +378,7 @@
                             <goals>
                                 <goal>process</goal>
                             </goals>
-                            <configuration>
+                            <configuration combine.children="append">
                                 <addCompileSourceRoots>true</addCompileSourceRoots>
                             </configuration>
                         </execution>
@@ -345,7 +388,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>${plugin.jar.version}</version>
-                    <configuration>
+                    <configuration combine.children="override">
                         <archive>
                             <manifestEntries>
                                 <Build-Jdk>${java.version} (${java.vendor} ${java.vm.version})</Build-Jdk>
@@ -362,7 +405,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${plugin.surefire.version}</version>
                     <inherited>true</inherited>
-                    <configuration>
+                    <configuration combine.children="append">
                         <includes>
                             <include>**/*Test.*</include>
                             <include>**/*Spec.*</include>
@@ -385,98 +428,6 @@
                     <inherited>true</inherited>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>${plugin.project-info-reports.version}</version>
-                    <inherited>true</inherited>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jxr-plugin</artifactId>
-                    <version>${plugin.jxr.version}</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <aggregate>true</aggregate>
-                        <linkJavadoc>true</linkJavadoc>
-                        <javadocDir>${project.build.directory}/site/apidocs</javadocDir>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>process-resources</phase>
-                            <goals>
-                                <goal>jxr</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${plugin.checkstyle.version}</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <skip>${checkstyle.skip}</skip>
-                        <configLocation>${maven-checkstyle-plugin.configLocation}</configLocation>
-                        <failsOnError>false</failsOnError>
-                        <enableRulesSummary>true</enableRulesSummary>
-                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>run-checkstyle</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>checkstyle</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jdepend-maven-plugin</artifactId>
-                    <version>${plugin.jdepend.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <version>${plugin.findbugs.version}</version>
-                    <inherited>true</inherited>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.github.spotbugs</groupId>
-                            <artifactId>spotbugs</artifactId>
-                            <version>${spotbugs.version}</version>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                        <skip>${findbugs.skip}</skip>
-                        <maxHeap>512</maxHeap>
-                        <xmlOutput>true</xmlOutput>
-                        <includeTests>true</includeTests>
-                        <effort>max</effort>
-                        <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${plugin.javadoc.version}</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <skip>${javadocs.skip}</skip>
-                        <failOnError>false</failOnError>
-                        <splitindex>true</splitindex>
-                        <links>
-                            <link>http://www.slf4j.org/apidocs/</link>
-                            <link>http://junit.org/junit4/javadoc/latest/</link>
-                            <link>http://aalmiray.github.io/jsr-305/apidocs/</link>
-                            <link>http://javax-inject.github.io/javax-inject/api/</link>
-                            <link>http://docs.oracle.com/javase/8/docs/api/</link>
-                            <link>http://griffon-framework.org/guide/latest/api/</link>
-                        </links>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>${plugin.versions.version}</version>
@@ -495,212 +446,6 @@
                     <inherited>true</inherited>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>${plugin.antrun.version}</version>
-                    <inherited>true</inherited>
-                    <executions>
-                        <!--
-                        <execution>
-                            <id>process-resources</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                            <configuration>
-                                <tasks>
-                                    <ant antfile="maven/process-resources.xml"/>
-                                </tasks>
-                            </configuration>
-                        </execution>
-                        -->
-                        <execution>
-                            <id>post-site</id>
-                            <phase>site</phase>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                            <configuration>
-                                <tasks>
-                                    <ant antfile="maven/post-site.xml"/>
-                                </tasks>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>com.zenjava</groupId>
-                    <artifactId>javafx-maven-plugin</artifactId>
-                    <version>${plugin.javafx.version}</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <mainClass>${application.main.class}</mainClass>
-                        <!-- only required if signing the jar file -->
-                        <keyStoreAlias>${keystore.alias}</keyStoreAlias>
-                        <keyStorePassword>${keystore.password}</keyStorePassword>
-                        <vendor>${project.name}</vendor>
-                        <appName>${project.name}</appName>
-                        <allPermissions/>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>${plugin.site.version}</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <attach>true</attach>
-                        <reportPlugins>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-changes-plugin</artifactId>
-                                <version>${plugin.changes.version}</version>
-                                <reportSets>
-                                    <reportSet>
-                                        <reports>
-                                            <report>changes-report</report>
-                                        </reports>
-                                    </reportSet>
-                                </reportSets>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-project-info-reports-plugin</artifactId>
-                                <version>${plugin.project-info-reports.version}</version>
-                                <configuration>
-                                    <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                                </configuration>
-                                <reports>
-                                    <report>summary</report>
-                                    <report>cim</report>
-                                    <report>index</report>
-                                    <report>license</report>
-                                    <report>project-team</report>
-                                    <report>dependencies</report>
-                                    <report>dependency-convergence</report>
-                                    <report>issue-tracking</report>
-                                    <report>scm</report>
-                                    <report>modules</report>
-                                    <report>plugins</report>
-                                </reports>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-checkstyle-plugin</artifactId>
-                                <version>${plugin.checkstyle.version}</version>
-                                <configuration>
-                                    <skip>${checkstyle.skip}</skip>
-                                    <configLocation>${maven-checkstyle-plugin.configLocation}</configLocation>
-                                    <failsOnError>false</failsOnError>
-                                    <enableRulesSummary>true</enableRulesSummary>
-                                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                                </configuration>
-                                <reportSets>
-                                    <reportSet>
-                                        <reports>
-                                            <report>checkstyle</report>
-                                        </reports>
-                                    </reportSet>
-                                </reportSets>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>jdepend-maven-plugin</artifactId>
-                                <version>${plugin.jdepend.version}</version>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>findbugs-maven-plugin</artifactId>
-                                <version>${plugin.findbugs.version}</version>
-                                <configuration>
-                                    <skip>${findbugs.skip}</skip>
-                                    <maxHeap>512</maxHeap>
-                                    <includeTests>true</includeTests>
-                                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                                    <xrefTestLocation>xref-test</xrefTestLocation>
-                                    <xrefLocation>xref</xrefLocation>
-                                </configuration>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>${plugin.javadoc.version}</version>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-jxr-plugin</artifactId>
-                                <configuration>
-                                    <aggregate>true</aggregate>
-                                    <linkJavadoc>true</linkJavadoc>
-                                    <javadocDir>${project.build.directory}/site/apidocs</javadocDir>
-                                </configuration>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-surefire-report-plugin</artifactId>
-                                <version>${plugin.surefire.version}</version>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.jacoco</groupId>
-                                <artifactId>jacoco-maven-plugin</artifactId>
-                                <version>${plugin.jacoco.version}</version>
-                                <configuration>
-                                    <skip>${jacoco.skip}</skip>
-                                </configuration>
-                            </plugin>
-                            <plugin>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>versions-maven-plugin</artifactId>
-                                <version>${plugin.versions.version}</version>
-                                <configuration>
-                                    <skip>${versions.skip}</skip>
-                                </configuration>
-                                <reportSets>
-                                    <reportSet>
-                                        <reports>
-                                            <report>dependency-updates-report</report>
-                                            <report>plugin-updates-report</report>
-                                            <report>property-updates-report</report>
-                                        </reports>
-                                    </reportSet>
-                                </reportSets>
-                            </plugin>
-                        </reportPlugins>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>attach-descriptor</id>
-                            <goals>
-                                <goal>attach-descriptor</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.eluder.coveralls</groupId>
-                    <artifactId>coveralls-maven-plugin</artifactId>
-                    <version>${plugin.coveralls.version}</version>
-                    <inherited>true</inherited>
-                </plugin>
-                <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${plugin.jacoco.version}</version>
-                    <inherited>true</inherited>
-                    <configuration>
-                        <skip>${jacoco.skip}</skip>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>prepare-agent</id>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <groupId>pl.project13.maven</groupId>
                     <artifactId>git-commit-id-plugin</artifactId>
                     <version>${plugin.git.commit.version}</version>
@@ -717,7 +462,8 @@
                         <verbose>false</verbose>
                         <failOnNoGitDirectory>false</failOnNoGitDirectory>
                         <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                        <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                        <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+                        </generateGitPropertiesFilename>
                         <dateFormat>yyyy-MM-dd'T'HH:mm:ss.SSSZ</dateFormat>
                     </configuration>
                 </plugin>
@@ -726,6 +472,10 @@
 
         <!-- tag::plugins[] -->
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -743,22 +493,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
             </plugin>
@@ -769,10 +503,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
@@ -865,44 +595,6 @@
             </build>
         </profile>
         <!-- end::profile_distribution[] -->
-        <!-- tag::profile_izpack[] -->
-        <profile>
-            <id>izpack</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.codehaus.izpack</groupId>
-                    <artifactId>izpack-standalone-compiler</artifactId>
-                    <version>${izpack-standalone.version}</version>
-                    <optional>true</optional>
-                    <scope>provided</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <defaultGoal>process-sources</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>${plugin.antrun.version}</version>
-                        <executions>
-                            <execution>
-                                <id>process-sources</id>
-                                <phase>process-sources</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <ant antfile="maven/prepare-izpack.xml"/>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <!-- end::profile_izpack[] -->
         <!-- tag::profile_run[] -->
         <profile>
             <id>run</id>
@@ -914,7 +606,7 @@
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>${plugin.exec.version}</version>
                         <inherited>true</inherited>
-                        <configuration>
+                        <configuration combine.children="append">
                             <mainClass>${application.main.class}</mainClass>
                             <systemProperties>
                                 <systemProperty>
@@ -937,86 +629,5 @@
             </build>
         </profile>
         <!-- end::profile_run[] -->
-        <!-- tag::profile_shade[] -->
-        <profile>
-            <id>shade</id>
-            <build>
-                <defaultGoal>package</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-shade-plugin</artifactId>
-                        <version>${plugin.shade.version}</version>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>${application.main.class}</Main-Class>
-                                    </manifestEntries>
-                                </transformer>
-                                <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer"/>
-                                <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer">
-                                    <path>META-INF/griffon</path>
-                                </transformer>
-                                <transformer implementation="org.kordamp.shade.resources.ServicesResourceTransformer">
-                                    <path>META-INF/types</path>
-                                </transformer>
-                                <transformer implementation="org.kordamp.shade.resources.PropertiesFileTransformer">
-                                    <paths>
-                                        <path>META-INF/editors/java.beans.PropertyEditor</path>
-                                    </paths>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>shade</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.kordamp.shade</groupId>
-                                <artifactId>maven-shade-ext-transformers</artifactId>
-                                <version>${plugin.shade_ext_transformers.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <!-- end::profile_shade[] -->
-        <!--
-        <profile>
-            <id>macbundle</id>
-            <build>
-                <defaultGoal>package</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>com.agiliumlabs.osxappbundle</groupId>
-                        <artifactId>osxappbundle-maven-plugin</artifactId>
-                        <version>${plugin.osxappbundle.version}</version>
-                        <inherited>true</inherited>
-                        <configuration>
-                            <mainClass>${application.main.class}</mainClass>
-                            <iconFile>src/media/griffon.icns</iconFile>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>bundle</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        -->
     </profiles>
 </project>

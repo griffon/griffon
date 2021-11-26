@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,12 +124,10 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-    @Nonnull
     public PropertyChangeListener[] getPropertyChangeListeners() {
         return pcs.getPropertyChangeListeners();
     }
 
-    @Nonnull
     public PropertyChangeListener[] getPropertyChangeListeners(@Nullable String propertyName) {
         return pcs.getPropertyChangeListeners(propertyName);
     }
@@ -144,7 +142,6 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     // ------------------------------------------------------
 
-    @Nonnull
     public Locale getLocale() {
         return locale;
     }
@@ -156,12 +153,10 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         firePropertyChange(PROPERTY_LOCALE, oldValue, locale);
     }
 
-    @Nonnull
     public String[] getStartupArgs() {
         return startupArgs;
     }
 
-    @Nonnull
     public Logger getLog() {
         return log;
     }
@@ -172,7 +167,9 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
         requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);
-        if (!shutdownHandlers.contains(handler)) { shutdownHandlers.add(handler); }
+        if (!shutdownHandlers.contains(handler)) {
+            shutdownHandlers.add(handler);
+        }
     }
 
     public void removeShutdownHandler(@Nonnull ShutdownHandler handler) {
@@ -180,7 +177,6 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         shutdownHandlers.remove(handler);
     }
 
-    @Nonnull
     public ApplicationPhase getPhase() {
         synchronized (lock) {
             return this.phase;
@@ -194,91 +190,76 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         }
     }
 
-    @Nonnull
     @Override
     public ApplicationClassLoader getApplicationClassLoader() {
         return injector.getInstance(ApplicationClassLoader.class);
     }
 
-    @Nonnull
     @Override
     public Context getContext() {
         return injector.getInstance(Context.class, named("applicationContext"));
     }
 
-    @Nonnull
     @Override
     public Configuration getConfiguration() {
         return getConfigurationManager().getConfiguration();
     }
 
-    @Nonnull
     @Override
     public ConfigurationManager getConfigurationManager() {
         return injector.getInstance(ConfigurationManager.class);
     }
 
-    @Nonnull
     @Override
     public UIThreadManager getUIThreadManager() {
         return injector.getInstance(UIThreadManager.class);
     }
 
-    @Nonnull
     @Override
     public EventRouter getEventRouter() {
         return injector.getInstance(EventRouter.class, named("applicationEventRouter"));
     }
 
-    @Nonnull
     @Override
     public ArtifactManager getArtifactManager() {
         return injector.getInstance(ArtifactManager.class);
     }
 
-    @Nonnull
     @Override
     public ActionManager getActionManager() {
         return injector.getInstance(ActionManager.class);
     }
 
-    @Nonnull
     @Override
     public AddonManager getAddonManager() {
         return injector.getInstance(AddonManager.class);
     }
 
-    @Nonnull
     @Override
     public MVCGroupManager getMvcGroupManager() {
         return injector.getInstance(MVCGroupManager.class);
     }
 
-    @Nonnull
     @Override
     public MessageSource getMessageSource() {
         return injector.getInstance(MessageSource.class, named("applicationMessageSource"));
     }
 
-    @Nonnull
     @Override
     public ResourceResolver getResourceResolver() {
         return injector.getInstance(ResourceResolver.class, named("applicationResourceResolver"));
     }
 
-    @Nonnull
     @Override
     public ResourceHandler getResourceHandler() {
         return injector.getInstance(ResourceHandler.class);
     }
 
-    @Nonnull
     @Override
     public ResourceInjector getResourceInjector() {
         return injector.getInstance(ResourceInjector.class, named("applicationResourceInjector"));
     }
 
-    @Nonnull
     @Override
     public Injector<?> getInjector() {
         return injector;
@@ -291,7 +272,6 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
         MVCGroupExceptionHandler.registerWith(this);
     }
 
-    @Nonnull
     @Override
     @SuppressWarnings("unchecked")
     public <W> WindowManager<W> getWindowManager() {
@@ -316,7 +296,9 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     }
 
     public void ready() {
-        if (getPhase() != ApplicationPhase.STARTUP) { return; }
+        if (getPhase() != ApplicationPhase.STARTUP) {
+            return;
+        }
 
         showStartingWindow();
 
@@ -369,9 +351,13 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
     protected boolean doShutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
-        if (getPhase() == ApplicationPhase.SHUTDOWN) { return false; }
+        if (getPhase() == ApplicationPhase.SHUTDOWN) {
+            return false;
+        }
 
-        if (!canShutdown()) { return false; }
+        if (!canShutdown()) {
+            return false;
+        }
         log.info("Shutdown is in process");
 
         // signal that shutdown is in process
@@ -420,7 +406,9 @@ public abstract class AbstractJavaFXGriffonApplication extends Application imple
 
     @SuppressWarnings("unchecked")
     public void startup() {
-        if (getPhase() != ApplicationPhase.INITIALIZE) { return; }
+        if (getPhase() != ApplicationPhase.INITIALIZE) {
+            return;
+        }
 
         setPhase(ApplicationPhase.STARTUP);
         event(ApplicationEvent.STARTUP_START, singletonList(this));

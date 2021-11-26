@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,13 +50,11 @@ public class ResetableStringProperty extends AbstractResetableProperty<String> {
         super(bean, name, baseValue);
     }
 
-    @Nonnull
     @Override
     protected Property<String> writableBaseValueProperty() {
         return writableBaseValueStringProperty();
     }
 
-    @Nonnull
     protected StringProperty writableBaseValueStringProperty() {
         if (baseValue == null) {
             baseValue = new SimpleStringProperty(this, "baseValue");
@@ -64,24 +62,20 @@ public class ResetableStringProperty extends AbstractResetableProperty<String> {
         return baseValue;
     }
 
-    @Nonnull
     @Override
     public ReadOnlyProperty<String> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
-    @Nonnull
     public ReadOnlyStringProperty baseValueStringProperty() {
         return writableBaseValueStringProperty();
     }
 
-    @Nonnull
     @Override
     public Property<String> valueProperty() {
         return valueStringProperty();
     }
 
-    @Nonnull
     public StringProperty valueStringProperty() {
         if (value == null) {
             value = new SimpleStringProperty(this, "value");
