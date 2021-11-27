@@ -27,11 +27,13 @@ import java.beans.PropertyEditor
 @Unroll
 class BoundsPropertyEditorSpec extends Specification {
     @Shared
-    private Bounds bounds = new Bounds(10, 20, 30, 40)
+    static Bounds bounds = new Bounds(10, 20, 30, 40)
 
     void "Bounds format '#format' should be equal to #bounds"() {
         setup:
 
+        println System.getProperty('spock.user.home')
+        println 'WTF'
         PropertyEditor editor = new BoundsPropertyEditor()
 
         when:

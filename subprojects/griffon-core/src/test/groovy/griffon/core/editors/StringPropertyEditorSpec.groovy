@@ -26,7 +26,7 @@ import java.beans.PropertyEditor
 @Unroll
 class StringPropertyEditorSpec extends Specification {
     @Shared
-    private Object object = new Object()
+    private static Object object = new Object()
 
     void "String literal '#literal' should be equal to #value"() {
         setup:

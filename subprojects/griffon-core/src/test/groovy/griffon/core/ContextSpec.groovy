@@ -29,9 +29,9 @@ import javax.inject.Named
 
 @Unroll
 class ContextSpec extends Specification {
-    @Shared private Context ctx1 = new DefaultContext()
-    @Shared private Context ctx2 = new DefaultContext(ctx1)
-    @Shared private Context ctx3 = new DefaultContext(ctx1)
+    @Shared private static Context ctx1 = new DefaultContext()
+    @Shared private static Context ctx2 = new DefaultContext(ctx1)
+    @Shared private static Context ctx3 = new DefaultContext(ctx1)
 
     def setup() {
         ctx1['foo'] = 'foo'

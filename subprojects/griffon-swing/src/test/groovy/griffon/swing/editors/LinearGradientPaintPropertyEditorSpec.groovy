@@ -34,10 +34,10 @@ import static java.awt.MultipleGradientPaint.CycleMethod.REPEAT
 @Unroll
 class LinearGradientPaintPropertyEditorSpec extends Specification {
     @Shared
-    private LinearGradientPaint sharedPaint = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], NO_CYCLE)
+    private static LinearGradientPaint sharedPaint = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], NO_CYCLE)
 
     @Shared
-    private LinearGradientPaint sharedPaintC = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], REPEAT)
+    private static LinearGradientPaint sharedPaintC = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], REPEAT)
 
     void "LinearGradientPaint format '#format' is supported"() {
         setup:

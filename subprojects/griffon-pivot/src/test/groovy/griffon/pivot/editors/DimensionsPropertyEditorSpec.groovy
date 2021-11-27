@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class DimensionsPropertyEditorSpec extends Specification {
     @Shared
-    private Dimensions dimensions = new Dimensions(10, 20)
+    private static Dimensions dimensions = new Dimensions(10, 20)
 
     void "Dimensions format '#format' should be equal to #dimensions"() {
         setup:

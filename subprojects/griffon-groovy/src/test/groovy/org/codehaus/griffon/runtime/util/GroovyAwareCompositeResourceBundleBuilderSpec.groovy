@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when
 
 class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
     @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+    final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private Provider<Injector> injector
@@ -82,7 +82,7 @@ class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
 
     def "Load Java and properties bundles"() {
         given:
-        when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([resourceBundleLoader1, resourceBundleLoader2])
+        injector.get().getInstances(ResourceBundleLoader) >> [resourceBundleLoader1, resourceBundleLoader2]
         ResourceBundle bundle = bundleBuilder.create('org.codehaus.griffon.runtime.util.JavaBundle')
 
         expect:

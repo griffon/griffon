@@ -30,7 +30,6 @@ buildscript {
         classpath "org.kordamp.gradle:groovy-project-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:guide-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:plugin-gradle-plugin:$kordampPluginVersion"
-        classpath "org.kordamp.gradle:sonar-gradle-plugin:$kordampPluginVersion"
         classpath "org.kordamp.gradle:kordamp-parentbuild:$kordampBuildVersion"
     }
 }
@@ -106,7 +105,6 @@ enforce {
     }
     rule(enforcer.rules.ForceDependencies) { r ->
         r.dependencies.addAll "com.google.guava:guava:$guavaVersion",
-            //"jline:jline:$jlineVersion",
             "junit:junit:$junitVersion",
             "cglib:cglib-nodep:$cglibVersion",
             "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
@@ -126,6 +124,12 @@ enforce {
             "org.apache.commons:commons-lang3:$commonsLang3Version",
             "org.ow2.asm:asm:$asmVersion",
             "org.ow2.asm:asm-commons:$asmVersion",
-            "org.ow2.asm:asm-tree:$asmVersion"
+            "org.ow2.asm:asm-tree:$asmVersion",
+            "org.objenesis:objenesis:$objenesisVersion",
+            "net.bytebuddy:byte-buddy:$bytebuddyVersion",
+            "net.bytebuddy:byte-buddy-agent:$bytebuddyVersion",
+            "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
+            "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
+            "org.junit.platform:junit-platform-launcher:$junitPlatformVersion"
     }
 }

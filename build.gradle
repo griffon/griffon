@@ -191,6 +191,20 @@ config {
             modules    = ['slf4j-simple', 'slf4j-log4j12']
         }
         dependency("junit:junit:$junitVersion")
+        dependency('junit5') {
+            groupId    = 'org.junit.jupiter'
+            artifactId = 'junit-jupiter-api'
+            version    = junit5Version
+            modules    = [
+                'junit-jupiter-params',
+                'junit-jupiter-engine'
+            ]
+        }
+        dependency('junit5v') {
+            groupId    = 'org.junit.vintage'
+            artifactId = 'junit-vintage-engine'
+            version    = junit5Version
+        }
         dependency('testfx') {
             groupId    = 'org.testfx'
             artifactId = 'testfx-core'
@@ -311,9 +325,15 @@ subprojects { Project subproj ->
             compileOnly config.dependencyManagement.gav('jipsy')
             annotationProcessor config.dependencyManagement.gav('jipsy')
 
-            testImplementation(config.dependencyManagement.gav('junit')) {
-                exclude group: 'org.hamcrest', module: 'hamcrest-core'
+            testImplementation config.dependencyManagement.gav('junit5', 'junit-jupiter-api')
+            testImplementation config.dependencyManagement.gav('junit5', 'junit-jupiter-params')
+            testRuntimeOnly config.dependencyManagement.gav('junit5', 'junit-jupiter-engine')
+            testRuntimeOnly(config.dependencyManagement.gav('junit5v', 'junit-vintage-engine')) {
+                exclude group: 'junit', module: 'junit'
             }
+            //testImplementation(config.dependencyManagement.gav('junit')) {
+            //    exclude group: 'org.hamcrest', module: 'hamcrest-core'
+            //}
             testImplementation("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
                 exclude group: 'junit', module: 'junit'
             }
@@ -321,22 +341,16 @@ subprojects { Project subproj ->
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
             }
             if (!subproj.name.endsWith('-gradle-plugin')) {
-                testImplementation("org.codehaus.groovy:groovy:$groovyVersion") {
-                    exclude group: 'junit', module: 'junit'
-                }
-                testImplementation("org.spockframework:spock-core:$spockVersion") {
-                    exclude group: 'junit', module: 'junit'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-groovysh'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-json'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-nio'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-macro'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-templates'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-test'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-sql'
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
-                }
-
+                testImplementation "org.codehaus.groovy:groovy:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-macro:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-templates:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-datetime:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-nio:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-sql:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-xml:$groovyVersion"
+                testImplementation "org.spockframework:spock-core:$spockVersion"
                 testImplementation "org.mockito:mockito-core:$mockitoVersion"
             }
             testImplementation config.dependencyManagement.gav('slf4j', 'slf4j-simple')
@@ -423,84 +437,6 @@ subprojects { Project subproj ->
 
     }
 }
-
-
-//@javax.inject.Named('root')
-//@org.kordamp.gradle.annotations.DependsOn(['buildInfo'])
-//class RootAllProjectsEvaluatedListener implements org.kordamp.gradle.listener.AllProjectsEvaluatedListener {
-//    @Override
-//    void allProjectsEvaluated(Project rootProject) {
-//        println rootProject.config.buildInfo
-//        println rootProject.config.buildInfo.enabled
-//        println rootProject.config.buildInfo.buildBy
-//        rootProject.subprojects.each { Project subprj ->
-//            subprj.plugins.withType(JavaPlugin) {
-//                subprj.processResources {
-//                    //println rootProject.config.buildInfo.buildCreatedBy
-//                    inputs.property('build_date', rootProject.config.buildInfo.buildDate + ':' + rootProject.config.buildInfo.buildTime)
-//                    filesMatching(subprj.rootProject.ext.resourceFilePatterns) {
-//                        expand(
-//                            'application_name': subprj.name,
-//                            'application_version': subprj.version,
-//                            'griffon_version': subprj.version,
-//                            'built_by': rootProject.config.buildInfo.buildBy,
-//                            'created_by': rootProject.config.buildInfo.buildCreatedBy,
-//                            'build_date': rootProject.config.buildInfo.buildDate,
-//                            'build_time': rootProject.config.buildInfo.buildTime,
-//                            'build_revision': rootProject.config.buildInfo.buildRevision
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//
-//        rootProject.aggregateJavadoc {
-//            doLast { task ->
-//                copy {
-//                    into task.destinationDir
-//                    from rootProject.file('src/javadoc/resources/img/griffon.ico'),
-//                        rootProject.file('src/javadoc/resources/css/stylesheet.css')
-//                }
-//                copy {
-//                    into file("${task.destinationDir}/resources")
-//                    from rootProject.file('src/javadoc/resources/img/')
-//                }
-//                copy {
-//                    into file("${task.destinationDir}/images/")
-//                    from rootProject.file('src/media/banners/medium.png')
-//                    rename '.*', 'griffon-banner-medium.png'
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//org.kordamp.gradle.listener.ProjectEvaluationListenerManager.addAllProjectsEvaluatedListener(project, new RootAllProjectsEvaluatedListener())
-//gradle.taskGraph.whenReady {
-//    gradle.rootProject.subprojects.each { Project subprj ->
-//        subprj.plugins.withType(JavaPlugin) {
-//            subprj.processResources {
-//                println gradle.rootProject.config.buildInfo
-//                println gradle.rootProject.config.buildInfo.enabled
-//                println gradle.rootProject.config.buildInfo.buildBy
-//                println gradle.rootProject.config.buildInfo.buildCreatedBy
-//                inputs.property('build_date', gradle.rootProject.config.buildInfo.buildDate + ':' + gradle.rootProject.config.buildInfo.buildTime)
-//                filesMatching(subprj.rootProject.ext.resourceFilePatterns) {
-//                    expand(
-//                        'application_name': subprj.name,
-//                        'application_version': subprj.version,
-//                        'griffon_version': subprj.version,
-//                        'built_by': gradle.rootProject.config.buildInfo.buildBy,
-//                        'created_by': gradle.rootProject.config.buildInfo.buildCreatedBy,
-//                        'build_date': gradle.rootProject.config.buildInfo.buildDate,
-//                        'build_time': gradle.rootProject.config.buildInfo.buildTime,
-//                        'build_revision': gradle.rootProject.config.buildInfo.buildRevision
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
 
 project.gradle.addBuildListener(new BuildAdapter() {
     @Override

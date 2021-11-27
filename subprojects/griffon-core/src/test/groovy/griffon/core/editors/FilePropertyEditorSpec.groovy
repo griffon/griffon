@@ -26,7 +26,7 @@ import java.beans.PropertyEditor
 @Unroll
 class FilePropertyEditorSpec extends Specification {
     @Shared
-    private File sharedFile = new File('.')
+    private static File sharedFile = new File('.')
 
     void "File literal '#literal' should be equal to #value"() {
         setup:

@@ -25,7 +25,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -138,7 +137,6 @@ public class MappingObservableListTest {
         private final StringProperty name = new SimpleStringProperty(this, "name");
         private final StringProperty lastname = new SimpleStringProperty(this, "lastname");
 
-
         public ObservablePerson(String name, String lastname) {
             setName(name);
             setLastname(lastname);
@@ -168,7 +166,6 @@ public class MappingObservableListTest {
             this.lastname.set(lastname);
         }
 
-        @Nonnull
         @Override
         public ObservableValue<?>[] observableValues() {
             return new StringProperty[]{nameProperty(), lastnameProperty()};

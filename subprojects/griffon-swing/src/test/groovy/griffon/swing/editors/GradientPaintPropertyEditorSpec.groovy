@@ -30,7 +30,7 @@ import static java.awt.Color.WHITE
 @Unroll
 class GradientPaintPropertyEditorSpec extends Specification {
     @Shared
-    private GradientPaint gradientPaint = new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE)
+    private static GradientPaint gradientPaint = new GradientPaint(0f, 0f, BLACK, 1f, 1f, WHITE)
 
     void "GradientPaint format '#format' is supported"() {
         setup:

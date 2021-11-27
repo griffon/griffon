@@ -25,7 +25,7 @@ import spock.lang.Specification
 
 class GriffonModelClassSpec extends Specification {
     @Shared
-    private GriffonModelClass griffonClass = new DefaultGriffonModelClass(new TestGriffonApplication(), SimpleModel)
+    private static GriffonModelClass griffonClass = new DefaultGriffonModelClass(new TestGriffonApplication(), SimpleModel)
 
     void 'Get and Set properties on model instance'() {
         given:

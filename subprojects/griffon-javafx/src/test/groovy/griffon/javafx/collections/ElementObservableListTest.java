@@ -26,8 +26,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -184,7 +182,6 @@ public class ElementObservableListTest {
             super(id, name, lastname);
         }
 
-        @Nonnull
         @Override
         public ObservableValue<?>[] observableValues() {
             return new ObservableValue<?>[]{
@@ -196,9 +193,8 @@ public class ElementObservableListTest {
     }
 
     public static class ObservablePersonObservableValueExtractor implements ElementObservableList.ObservableValueExtractor<ObservablePerson> {
-        @Nonnull
         @Override
-        public ObservableValue<?>[] observableValues(@Nullable ObservablePerson instance) {
+        public ObservableValue<?>[] observableValues(ObservablePerson instance) {
             return new ObservableValue<?>[]{
                 instance.idProperty(),
                 instance.nameProperty(),

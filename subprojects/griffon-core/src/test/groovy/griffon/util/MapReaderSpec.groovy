@@ -35,7 +35,7 @@ class MapReaderSpec extends Specification {
 
     @Inject private Injector injector
 
-    @Shared private Map map = [
+    @Shared static private Map map = [
         key1                                  : 'value1',
         'environments.development.key2'       : 'development',
         'environments.test.key2'              : 'test',

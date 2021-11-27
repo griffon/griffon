@@ -260,6 +260,7 @@ class GriffonPlugin implements Plugin<Project> {
                     maybeIncludeGroovyDependency(groovyDependenciesEnabled, toolkit + '-groovy')
                 }
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')
+                maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy-test')
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy-compile')
 
                 GriffonPluginResolutionStrategy.applyTo(project)

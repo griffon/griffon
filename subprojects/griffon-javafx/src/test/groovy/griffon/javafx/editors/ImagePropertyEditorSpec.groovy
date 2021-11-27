@@ -28,10 +28,10 @@ import java.beans.PropertyEditor
 @Unroll
 class ImagePropertyEditorSpec extends Specification {
     @Shared
-    private Image sharedImage = new Image(getClass().getClassLoader().getResourceAsStream('griffon-icon-16x16.png'))
+    private static Image sharedImage = new Image(ImagePropertyEditorSpec.class.classLoader.getResourceAsStream('griffon-icon-16x16.png'))
 
     @Shared
-    private File basePath = new File('build/resources/test')
+    private static File basePath = new File('build/resources/test')
 
     void setupSpec() {
         // force toolkit initialization

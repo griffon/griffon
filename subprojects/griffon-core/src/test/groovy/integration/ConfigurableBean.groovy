@@ -27,7 +27,7 @@ class ConfigurableBean {
     @Configured(value = 'keys.key2', defaultValue = 'true')
     boolean pboolean
 
-    @Configured(value = 'keys.key3', defaultValue = '01/01/2000', format = 'dd/MM/yyyy')
+    @Configured(value = 'keys.key3', defaultValue = '01/02/2000', format = 'dd/MM/yyyy')
     Date pdate
 
     @Nonnull

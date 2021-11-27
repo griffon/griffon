@@ -32,10 +32,10 @@ import static javafx.scene.paint.Color.WHITE
 @Unroll
 class RadialGradientPropertyEditorSpec extends Specification {
     @Shared
-    private RadialGradient sharedPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     @Shared
-    private RadialGradient sharedPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     void "RadialGradient format '#format' is supported"() {
         setup:

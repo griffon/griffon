@@ -27,10 +27,10 @@ class Xml2GroovySpec extends Specification {
     private static final String BAD_APPLICATION_XML = 'build/resources/test/griffon/util/bad_application.xml'
 
     @Shared
-    private String expected = getClass().getResourceAsStream('/griffon/util/application.groovy').text
+    private static String expected = getClass().getResourceAsStream('/griffon/util/application.groovy').text
 
     @Shared
-    private String expected8 = getClass().getResourceAsStream('/griffon/util/application_jdk8.groovy').text
+    private static String expected8 = getClass().getResourceAsStream('/griffon/util/application_jdk8.groovy').text
 
     def "Parse application.xml from #type"() {
         given:

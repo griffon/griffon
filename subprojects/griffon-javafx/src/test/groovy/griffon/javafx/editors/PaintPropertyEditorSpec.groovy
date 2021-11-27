@@ -35,16 +35,16 @@ import static javafx.scene.paint.Color.WHITE
 @Unroll
 class PaintPropertyEditorSpec extends Specification {
     @Shared
-    private RadialGradient sharedLinerPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedLinerPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     @Shared
-    private RadialGradient sharedLinearPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedLinearPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     @Shared
-    private RadialGradient sharedRadialPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedRadialPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     @Shared
-    private RadialGradient sharedRadialPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedRadialPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     void setup() {
         PropertyEditorResolver.clear()

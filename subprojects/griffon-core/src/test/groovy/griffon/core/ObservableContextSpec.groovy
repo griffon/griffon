@@ -28,9 +28,9 @@ import javax.annotation.Nonnull
 
 @Unroll
 class ObservableContextSpec extends Specification {
-    @Shared private ObservableContext ctx1 = new DefaultObservableContext()
-    @Shared private ObservableContext ctx2 = new DefaultObservableContext(ctx1)
-    @Shared private ObservableContext ctx3 = new DefaultObservableContext(ctx1)
+    @Shared private static ObservableContext ctx1 = new DefaultObservableContext()
+    @Shared private static ObservableContext ctx2 = new DefaultObservableContext(ctx1)
+    @Shared private static ObservableContext ctx3 = new DefaultObservableContext(ctx1)
 
     def setup() {
         ctx1['foo'] = 'foo'

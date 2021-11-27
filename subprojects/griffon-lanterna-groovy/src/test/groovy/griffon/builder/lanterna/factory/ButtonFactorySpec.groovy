@@ -28,7 +28,7 @@ import spock.lang.Unroll
 @Unroll
 class ButtonFactorySpec extends Specification {
     @Shared
-    private Closure runnable = { -> }
+    private static Closure runnable = { -> }
 
     void "Can create a button"() {
         given:

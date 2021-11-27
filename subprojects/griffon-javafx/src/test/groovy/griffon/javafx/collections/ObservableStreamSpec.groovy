@@ -17,6 +17,8 @@
  */
 package griffon.javafx.collections
 
+import groovy.transform.Canonical
+import groovy.transform.MapConstructor
 import javafx.beans.binding.BooleanBinding
 import javafx.beans.binding.ObjectBinding
 import javafx.beans.property.LongProperty
@@ -44,10 +46,10 @@ import static javafx.collections.FXCollections.observableSet
  */
 @Unroll
 class ObservableStreamSpec extends Specification {
-    @Shared private Ghost INKY = new Ghost(id: 1, name: 'Inky')
-    @Shared private Ghost PINKY = new Ghost(id: 2, name: 'Pinky')
-    @Shared private Ghost BLINKY = new Ghost(id: 3, name: 'Blinky')
-    @Shared private Ghost CLYDE = new Ghost(id: 4, name: 'Clyde')
+    @Shared private static Ghost INKY = new Ghost(id: 1, name: 'Inky')
+    @Shared private static Ghost PINKY = new Ghost(id: 2, name: 'Pinky')
+    @Shared private static Ghost BLINKY = new Ghost(id: 3, name: 'Blinky')
+    @Shared private static Ghost CLYDE = new Ghost(id: 4, name: 'Clyde')
 
     void "Check map/filter/reduce (default value) on #type"() {
         given:
@@ -111,7 +113,7 @@ class ObservableStreamSpec extends Specification {
 
         when:
         mapper1.setValue({ g -> g.id } as Function)
-        filter1.setValue({ n -> n % 2 == 1 } as Predicate)
+        filter1.setValue({ n -> n % 2 != 0 } as Predicate)
         mapper2.setValue({ n -> n * 2 } as Function)
         accumulator1.setValue({ a, b -> a * b } as BinaryOperator)
 
@@ -145,7 +147,7 @@ class ObservableStreamSpec extends Specification {
 
         when:
         mapper1.setValue({ g -> g.id } as Function)
-        filter1.setValue({ n -> n % 2 == 1 } as Predicate)
+        filter1.setValue({ n -> n % 2 != 0 } as Predicate)
         mapper2.setValue({ n -> n * 2 } as Function)
         accumulator1.setValue({ a, b -> a * b } as BinaryOperator)
 
@@ -445,7 +447,7 @@ class ObservableStreamSpec extends Specification {
         'ObservableMap'  | observableMapOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | CLYDE
     }
 
-    private ObservableList<Ghost> observableListsOfGhosts() {
+    private static ObservableList<Ghost> observableListsOfGhosts() {
         return observableArrayList(
             INKY,
             PINKY,
@@ -454,7 +456,7 @@ class ObservableStreamSpec extends Specification {
         )
     }
 
-    private ObservableSet<Ghost> observableSetOfGhosts() {
+    private static ObservableSet<Ghost> observableSetOfGhosts() {
         return observableSet([
             INKY,
             PINKY,
@@ -463,7 +465,7 @@ class ObservableStreamSpec extends Specification {
         ] as LinkedHashSet)
     }
 
-    private ObservableMap<String, Ghost> observableMapOfGhosts() {
+    private static ObservableMap<String, Ghost> observableMapOfGhosts() {
         return observableMap(
             g1: INKY,
             g2: PINKY,
@@ -472,8 +474,10 @@ class ObservableStreamSpec extends Specification {
         )
     }
 
-    private class Ghost implements Comparable<Ghost> {
-        int id
+    @Canonical
+    @MapConstructor
+    private static class Ghost implements Comparable<Ghost> {
+        Integer id
         String name
 
         @Override

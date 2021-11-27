@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when
 
 class GroovyAwareCompositeResourceBundleBuilder2Spec extends Specification {
     @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+    final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private Provider<Injector> injector

@@ -23,7 +23,7 @@ import spock.lang.Unroll
 
 @Unroll
 class ArtifactHandlerNotFoundExceptionSpec extends Specification {
-    @Shared private Exception cause = new Exception()
+    @Shared private static Exception cause = new Exception()
 
     void 'Exception should have proper formatted message'() {
         setup:

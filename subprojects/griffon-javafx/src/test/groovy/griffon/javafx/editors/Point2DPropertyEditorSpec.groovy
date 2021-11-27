@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class Point2DPropertyEditorSpec extends Specification {
     @Shared
-    private Point2D point = new Point2D(10, 20)
+    private static Point2D point = new Point2D(10, 20)
 
     void "Point2D format '#format' should be equal to #point"() {
         setup:

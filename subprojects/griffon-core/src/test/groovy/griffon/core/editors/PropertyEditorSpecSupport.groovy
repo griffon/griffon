@@ -22,7 +22,7 @@ import spock.lang.Specification
 
 abstract class PropertyEditorSpecSupport extends Specification {
     @Shared
-    private Locale defaultLocale = Locale.default
+    private static Locale defaultLocale = Locale.default
 
     def setup() {
         Locale.default = Locale.US

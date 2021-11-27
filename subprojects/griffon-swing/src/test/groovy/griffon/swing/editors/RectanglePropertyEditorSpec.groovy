@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class RectanglePropertyEditorSpec extends Specification {
     @Shared
-    private Rectangle rectangle = new Rectangle(10, 20, 30, 40)
+    private static Rectangle rectangle = new Rectangle(10, 20, 30, 40)
 
     void "Rectangle format '#format' should be equal to #rectangle"() {
         setup:

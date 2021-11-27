@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class PolygonPropertyEditorSpec extends Specification {
     @Shared
-    private Polygon polygon = new Polygon([0, 2] as int[], [1, 3] as int[], 2)
+    private static Polygon polygon = new Polygon([0, 2] as int[], [1, 3] as int[], 2)
 
     void "Polygon format '#format' should be supported"() {
         setup:

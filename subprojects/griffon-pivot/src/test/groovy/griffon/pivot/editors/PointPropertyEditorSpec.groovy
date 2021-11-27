@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class PointPropertyEditorSpec extends Specification {
     @Shared
-    private Point point = new Point(10, 20)
+    private static Point point = new Point(10, 20)
 
     void "Point format '#format' should be equal to #point"() {
         setup:

@@ -23,8 +23,8 @@ import spock.lang.Unroll
 
 @Unroll
 class TypeConversionExceptionSpec extends Specification {
-    @Shared private Exception cause = new Exception()
-    @Shared private Object instance = new Object()
+    @Shared private static Exception cause = new Exception()
+    @Shared private static Object instance = new Object()
 
     void 'Exception should have proper formatted message'() {
         setup:

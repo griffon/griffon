@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class InsetsPropertyEditorSpec extends Specification {
     @Shared
-    private Insets insets = new Insets(1, 2, 3, 4)
+    private static Insets insets = new Insets(1, 2, 3, 4)
 
     void "Insets format '#format' should be equal to #insets"() {
         setup:

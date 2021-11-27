@@ -26,7 +26,7 @@ import java.beans.PropertyEditor
 @Unroll
 class URLPropertyEditorSpec extends Specification {
     @Shared
-    private URL url = 'http://localhost'.toURL()
+    private static URL url = 'http://localhost'.toURL()
 
     void "URL literal '#literal' should be equal to #value"() {
         setup:
