@@ -41,7 +41,7 @@ config {
         tags          = ['griffon']
 
         links {
-            website      = 'https://github.com/griffon/griffon'
+            website      = 'https://griffon-framework.org'
             issueTracker = 'https://github.com/griffon/griffon/issues'
             scm          = 'https://github.com/griffon/griffon.git'
         }
@@ -118,7 +118,6 @@ config {
             autoLinks {
                 enabled = false
                 exclude 'griffon.*'
-                exclude 'jsr377.*'
             }
 
             options {
@@ -226,6 +225,10 @@ allprojects {
         mavenLocal()
         gradlePluginPortal()
     }
+
+    tasks.withType(GenerateModuleMetadata) {
+        enabled = false
+    }
 }
 
 subprojects { Project subproj ->
@@ -236,7 +239,7 @@ subprojects { Project subproj ->
     boolean isPomProject = subproj.name.endsWith('pom')
     boolean isGroovyProject = subproj.name.endsWith('-groovy')
     boolean isGradlePlugin = subproj.projectDir.absolutePath.contains('plugins')
-    boolean shouldPublish = isCoreProject || isArchetypeProject
+    boolean shouldPublish = isCoreProject || isArchetypeProject || isPomProject
 
     config {
         info {
@@ -331,9 +334,9 @@ subprojects { Project subproj ->
             testRuntimeOnly(config.dependencyManagement.gav('junit5v', 'junit-vintage-engine')) {
                 exclude group: 'junit', module: 'junit'
             }
-            //testImplementation(config.dependencyManagement.gav('junit')) {
-            //    exclude group: 'org.hamcrest', module: 'hamcrest-core'
-            //}
+            testImplementation(config.dependencyManagement.gav('junit')) {
+                exclude group: 'org.hamcrest', module: 'hamcrest-core'
+            }
             testImplementation("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
                 exclude group: 'junit', module: 'junit'
             }

@@ -84,109 +84,49 @@
         <dependencies>
             <dependency>
                 <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-core</artifactId>
+                <artifactId>griffon-bom</artifactId>
                 <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-core-compile</artifactId>
-                <version>${griffon.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-core-test</artifactId>
-                <version>${griffon.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-groovy</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-groovy-compile</artifactId>
-                <version>${griffon.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-swing</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-swing-groovy</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-fest-test</artifactId>
-                <version>${griffon.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-javafx</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-javafx-groovy</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-javafx-test</artifactId>
-                <version>${griffon.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-lanterna</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-lanterna-groovy</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-pivot</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-pivot-groovy</artifactId>
-                <version>${griffon.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-pivot-test</artifactId>
-                <version>${griffon.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.griffon</groupId>
-                <artifactId>griffon-guice</artifactId>
-                <version>${griffon.version}</version>
-                <scope>runtime</scope>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-json</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-macro</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-templates</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-test</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-datetime</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovynio</artifactId>
+                <version>${groovy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-sql</artifactId>
                 <version>${groovy.version}</version>
             </dependency>
             <dependency>
@@ -196,14 +136,13 @@
             </dependency>
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-version</artifactId>
+                <artifactId>groovy-swing</artifactId>
                 <version>${groovy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.spockframework</groupId>
                 <artifactId>spock-core</artifactId>
                 <version>${spock.version}</version>
-                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <groupId>org.codehaus.groovy</groupId>
