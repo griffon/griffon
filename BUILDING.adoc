@@ -2,8 +2,8 @@
 
 == Requirements
 
- * JDK 8u60 as a minimum.
- * Gradle 4.x. You may use the included `gradlew` script.
+ * JDK 8u60 as a minimum with JavaFX bundled.
+ * Gradle 6.9. You may use the included `gradlew` script.
 
 == Binaries
 
@@ -16,16 +16,11 @@
 
  * Install all binaries to your local maven repository with `gradle publishToMavenLocal`.
 
-== Lazybones Templates
+== Archetypes
 
 .Building & Installing
 
- * Invoke `gradle installAllTemplates`.
-
-.Usage
-
- * You must specify a version number that matches the version you just built, for example
-  `lazybones create griffon-javafx-groovy 1.12.0-SNAPSHOT sample`.
+ * Invoke `gradle installAllArchetypes`.
 
 == Sample Applications
 
@@ -34,11 +29,11 @@
 == Guide
 
  * Change into `docs/griffon.guide`.
- * Create a new version of the guide by invoking `gradle guide`.
+ * Create a new version of the guide by invoking `../gradlew createGuide`.
 
 == Site
 
  * Change into `docs/griffon-site`.
- * Create a new version of the site by invoking `gradle site`.
- * Run the site on an embedded HTTP server with `gradle siteRun`.
+ * Create a new version of the site by invoking `../gradlew bake`.
+ * Run the site on an embedded HTTP server with `../gradlew bakePreview`.
  * Browse to `http://localhost:8080/`.
