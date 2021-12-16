@@ -79,7 +79,7 @@ jobs:
           ./gradlew -Prelease=true -Pfull-release=true \
           -PsonatypeUsername=${{ secrets.SONATYPE_USERNAME }} \
           -PsonatypePassword=${{ secrets.SONATYPE_PASSWORD }} \
-          publishToSonatype publishPlugins -S
+          :*-archetype:publishToSonatype publishToSonatype publishPlugins -S
 
       - name: Set up Java for Release
         uses: actions/setup-java@v2

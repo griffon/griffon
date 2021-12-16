@@ -23,6 +23,7 @@ on: [push, pull_request]
 jobs:
   build:
     name: Build
+    if: startsWith(github.event.head_commit.message, 'Releasing version') != true
     strategy:
       fail-fast: false
       matrix:
