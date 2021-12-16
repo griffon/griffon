@@ -12,8 +12,8 @@
         <div class="col-md-8">
 
     <p><a
-        href="http://griffon-framework.org/">Griffon</a> is desktop application development platform for the JVM.Inspired by <a
-        href="http://grails.org/">Grails</a>, Griffon leverages concepts like
+        href="https://griffon-framework.org/">Griffon</a> is desktop application development platform for the JVM.Inspired by <a
+        href="https://grails.org/">Grails</a>, Griffon leverages concepts like
         Convention over Configuration, modularity, and freedom of choice. The framework
         at its core is written 100% in Java allowing developers to write their own applications
         with only Java. Other programming languages such as Groovy and Kotlin may be used too, in
@@ -43,13 +43,13 @@
     <div class="sectionbody">
 <div class="paragraph">
 <p>The recommended way to get started with a <code>Griffon</code> project is to use a
-<a href="http://maven.apache.org">Maven</a> archetype and
-<a href="http://maven.apache.org">Maven</a> or <a href="http://gradle.org">Gradle</a>. You can install these tools with
-<a href="http://sdkman.io/">SDKMAN</a>.</p>
+<a href="https://maven.apache.org">Maven</a> archetype and
+<a href="https://maven.apache.org">Maven</a> or <a href="https://gradle.org">Gradle</a>. You can install these tools with
+<a href="https://sdkman.io/">SDKMAN</a>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint"><code>\$ curl -s http://get.sdkman.io | bash
+<pre class="prettyprint"><code>\$ curl -s https://get.sdkman.io | bash
 \$ sdk install maven
 \$ sdk install gradle</code></pre>
 </div>
@@ -124,8 +124,8 @@ griffon-swing-groovy-archetype</code></pre>
         <div class="col-sm-4">
         <a class="twitter-timeline"  href="https://twitter.com/theaviary"  data-widget-id="492016338076848130">Tweets by @theaviary</a>
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-        <br/><script type="text/javascript" src="http://www.openhub.net/p/16389/widgets/project_factoids_stats.js"></script><br/>
-        <br/><script type="text/javascript" src="http://www.openhub.net/p/16389/widgets/project_languages.js"></script><br/>
+        <br/><script type="text/javascript" src="https://www.openhub.net/p/16389/widgets/project_factoids_stats.js"></script><br/>
+        <br/><script type="text/javascript" src="https://www.openhub.net/p/16389/widgets/project_languages.js"></script><br/>
         </div>
     </div>
 
