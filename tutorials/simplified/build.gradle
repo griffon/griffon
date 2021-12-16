@@ -16,47 +16,34 @@
 
 // tag::plugins[]
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'application'
     id 'idea'
-    id 'com.github.ben-manes.versions' version '0.17.0'
+    id 'com.github.ben-manes.versions' version '0.39.0'
     id 'com.github.hierynomus.license' version '0.14.0'
 }
 
-apply from: 'gradle/javafx-plugin.gradle'
-apply from: 'gradle/integration-test.gradle'
-apply from: 'gradle/functional-test.gradle'
+mainClassName = 'org.example.Launcher'
 // end::plugins[]
-
-// tag::javafx[]
-jfx {
-    mainClass         = 'org.example.Launcher'
-    allPermissions    = true
-    keyStoreAlias     = 'example-user'
-    keyStorePassword  = 'example-password'
-    jfxMainAppJarName = jar.archiveName
-    appName           = project.name
-    vendor            = project.name
-}
-// end::javafx[]
 
 // tag::dependencies[]
 repositories {
-    jcenter()
+    mavenCentral()
     mavenLocal()
 }
 
 dependencies {
-    compile "org.codehaus.griffon:griffon-javafx:${griffonVersion}"
-    compile "org.codehaus.griffon:griffon-guice:${griffonVersion}"
-    compile 'org.kordamp.ikonli:ikonli-javafx:2.1.1'
-    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:2.1.1'
-    compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.2'
+    api "org.codehaus.griffon:griffon-javafx:${griffonVersion}"
+    api "org.codehaus.griffon:griffon-guice:${griffonVersion}"
+    api 'org.kordamp.ikonli:ikonli-javafx:2.1.1'
+    api 'org.kordamp.ikonli:ikonli-fontawesome-pack:2.1.1'
+    api 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.2'
 
-    runtime 'org.slf4j:slf4j-simple:1.7.25'
+    runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
 
-    testCompile "org.codehaus.griffon:griffon-javafx-test:${griffonVersion}"
-    testCompile 'pl.pragmatists:JUnitParams:1.1.1'
-    testCompile 'org.mockito:mockito-core:2.15.1'
+    testImplementation "org.codehaus.griffon:griffon-javafx-test:${griffonVersion}"
+    testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
+    testImplementation 'org.mockito:mockito-core:2.15.1'
 }
 // end::dependencies[]
 
@@ -73,13 +60,13 @@ processResources {
 // end::resources[]
 
 license {
-    header = rootProject.file('config/HEADER')
+    header = rootProject.file('gradle/HEADER')
     strictCheck = true
     ignoreFailures = true
     mapping {
         java = 'SLASHSTAR_STYLE'
         fxml = 'XML_STYLE'
     }
-    ext.year = '2016-2018'
+    ext.copyrightYear = '2016-2021'
     exclude '**/*.png'
 }

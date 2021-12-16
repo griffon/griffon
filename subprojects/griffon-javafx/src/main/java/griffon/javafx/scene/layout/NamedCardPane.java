@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,12 +120,10 @@ public class NamedCardPane extends StackPane {
         }
     }
 
-    @Nonnull
     public ReadOnlyStringProperty selectedNodeIdProperty() {
         return selectedNodeId;
     }
 
-    @Nonnull
     public ReadOnlyObjectProperty<Node> selectedNodeProperty() {
         return selectedNode;
     }

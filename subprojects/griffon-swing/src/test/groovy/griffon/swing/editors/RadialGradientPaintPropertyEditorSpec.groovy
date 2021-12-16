@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,10 +35,10 @@ import static java.awt.MultipleGradientPaint.CycleMethod.REPEAT
 @Unroll
 class RadialGradientPaintPropertyEditorSpec extends Specification {
     @Shared
-    private RadialGradientPaint sharedPaint = new RadialGradientPaint(new Point2D.Float(2f, 2f), 5f, new Point2D.Float(4f, 4f), [0, 1] as float[], [BLACK, WHITE] as Color[], NO_CYCLE)
+    private static RadialGradientPaint sharedPaint = new RadialGradientPaint(new Point2D.Float(2f, 2f), 5f, new Point2D.Float(4f, 4f), [0, 1] as float[], [BLACK, WHITE] as Color[], NO_CYCLE)
 
     @Shared
-    private RadialGradientPaint sharedPaintC = new RadialGradientPaint(new Point2D.Float(2f, 2f), 5f, new Point2D.Float(4f, 4f), [0, 1] as float[], [BLACK, WHITE] as Color[], REPEAT)
+    private static RadialGradientPaint sharedPaintC = new RadialGradientPaint(new Point2D.Float(2f, 2f), 5f, new Point2D.Float(4f, 4f), [0, 1] as float[], [BLACK, WHITE] as Color[], REPEAT)
 
     void "RadialGradientPaint format '#format' is supported"() {
         setup:

@@ -1,13 +1,13 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,29 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-apply plugin: 'groovy'
-apply plugin: 'application'
-
 mainClassName = 'console.Launcher'
 
 dependencies {
+    compileOnly project(':griffon-core-compile')
     compileOnly project(':griffon-groovy-compile')
 
-    compile project(':griffon-groovy')
-    compile project(':griffon-swing')
+    api project(':griffon-groovy')
+    api project(':griffon-swing')
+    api project(':griffon-swing-groovy')
 
-    runtime project(':griffon-guice')
-    runtime project(':griffon-swing-groovy')
+    runtimeOnly project(':griffon-guice')
 
-    runtime('log4j:log4j:1.2.17') {
+    runtimeOnly('log4j:log4j:1.2.17') {
         exclude group: 'ant',         module: 'ant-nodeps'
         exclude group: 'ant',         module: 'ant-junit'
         exclude group: 'ant-contrib', module: 'ant-contrib'
     }
-    runtime "org.slf4j:slf4j-log4j12:$slf4jVersion"
+    runtimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-log4j12')
 
-    testCompile project(':griffon-core-test')
+    testImplementation project(':griffon-core-test')
 }
 
 sourceSets {

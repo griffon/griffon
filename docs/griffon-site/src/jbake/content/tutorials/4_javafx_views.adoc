@@ -35,20 +35,20 @@ image::/img/javafx-app.png[]
 == Creating the Application
 
 We'll follow similar steps as explained in link:1_getting_started.html[Tutorial 1::Getting Started, window="_blank"] to
-create a brand new Griffon 2 application. Assuming you've got SDKMAN, Lazybones and Gradle already installed on your system,
+create a brand new Griffon 2 application. Assuming you've got SDKMAN, Maven and Gradle already installed on your system,
 execute the following command on a console prompt, paying attention to the selections we've made
 
 [source]
 [subs="attributes"]
 ----
-$ lazybones create griffon-javafx-java app
-Creating project from template griffon-javafx-java (latest) in 'app'
-Define value for 'group' [org.example]:
-Define value for 'artifactId' [app]:
-Define value for 'version' [0.1.0-SNAPSHOT]:
-Define value for 'griffonVersion' [{jbake-griffon_version_current}]:
-Define value for 'package' [org.example]:
-Define value for 'className' [App]:
+$ mvn archetype:generate \
+      -DarchetypeGroupId=org.codehaus.griffon.maven \
+      -DarchetypeArtifactId=griffon-javafx-java-archetype \
+      -DarchetypeVersion={jbake-griffon_version_current} \
+      -DgroupId=editor \
+      -DartifactId=editor\
+      -Dversion=1.0.0-SNAPSHOT \
+      -Dgradle=true
 ----
 
 There should be a new directory named `app` with the freshly created application inside. At this point you can import
@@ -162,18 +162,14 @@ icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>
 [[_tutorial_4_3]]
 == Tab1: JavaFX API
 
-Let's generate the first MVCGroup by leveraging the Lazybones templates included in the application
+Let's generate the first MVCGroup by copying an existing one. We'll create a new set of files
+for the `sample` MVC group, as follows:
 
 [source]
 ----
-$ lazybones generate artifact::mvcgroup
-Define value for 'package' [org.example]:
-Define value for 'class' name: sample
-Created new artifact griffon-app/models/org/example/SampleModel.java
-Created new artifact griffon-app/views/org/example/SampleView.java
-Created new artifact griffon-app/controllers/org/example/SampleController.java
-Created new artifact src/test/java/org/example/SampleControllerTest.java
-Do not forget to add the group 'sample' to griffon-app/conf/Config.java
+griffon-app/models/org/example/SampleModel.java
+griffon-app/views/org/example/SampleView.java
+griffon-app/controllers/org/example/SampleController.java
 ----
 
 Alright, good thing we updated the MVC configurations in `Config.java` already. The behavior of each tab is to process
@@ -194,16 +190,7 @@ include::{javafx-app}/griffon-app/models/org/example/SampleModel.java[lines=16..
 include::{javafx-app}/griffon-app/controllers/org/example/SampleController.java[lines=16..-1]
 ----
 
-You can manually create `SampleService.java` or use Lazybones again
-
-[source]
-----
-$ lazybones generate artifact::service
-Define value for 'package' [org.example]:
-Define value for 'class' name: sample
-Created new artifact griffon-app/services/org/example/SampleService.java
-Created new artifact src/test/java/org/example/SampleServiceTest.java
-----
+You can manually create a `SampleService.java`
 
 .griffon-app/services/org/example/SampleService.java
 [source,java,options="nowrap"]
@@ -273,7 +260,7 @@ icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>
 [[_tutorial_4_5]]
 == Tab3: GroovyFX
 
-In a few words, link:http://groovyfx.org/[GroovyFX, window="_blank"] can be seen as a Groovy DSL for writing JavaFX UIs.
+In a few words, link:https://groovyfx.org/[GroovyFX, window="_blank"] can be seen as a Groovy DSL for writing JavaFX UIs.
 Instead of XML you use Groovy. This allows you to leverage a real programming language instead of just markup. We can
 make use of Groovy support in a straight Java application such as this because Java and Groovy can be mixed without
 any problems, as opposed to other popular JVM languages. This is also the reason why we updated the build file back at
@@ -327,10 +314,10 @@ by invoking the following command:
 
 [source]
 ----
-$ gradle run
+$ ./gradlew run
 ----
 
 The full code for this application can be found
-link:https://github.com/griffon/griffon/tree/master/tutorials/javafx-app[here, window="_blank"].
+link:https://github.com/griffon/griffon/tree/ {jbake-branch}/tutorials/javafx-app[here, window="_blank"].
 
 icon:arrow-up[link="#_tutorial_4_toc"] <<_tutorial_4_toc,Top>>

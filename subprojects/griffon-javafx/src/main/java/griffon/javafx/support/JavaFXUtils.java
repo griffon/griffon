@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param key  the message key to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nKey(@Nonnull Labeled node, @Nonnull String key) {
@@ -129,9 +128,7 @@ public final class JavaFXUtils {
      * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
      *
      * @param node the target node on which the key may have been registered.
-     *
      * @return the key registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -146,7 +143,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param args the array of arguments to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nArgs(@Nonnull Labeled node, @Nullable String args) {
@@ -159,9 +155,7 @@ public final class JavaFXUtils {
      * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
      *
      * @param node the target node on which the arguments may have been registered.
-     *
      * @return the arguments registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -176,7 +170,6 @@ public final class JavaFXUtils {
      *
      * @param node         the target node on which the key will be registered.
      * @param defaultValue the value to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nDefaultValue(@Nonnull Labeled node, @Nullable String defaultValue) {
@@ -188,9 +181,7 @@ public final class JavaFXUtils {
      * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
      *
      * @param node the target node on which the value may have been registered.
-     *
      * @return the value registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -204,7 +195,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param key  the message key to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nKey(@Nonnull Tab node, @Nonnull String key) {
@@ -217,9 +207,7 @@ public final class JavaFXUtils {
      * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
      *
      * @param node the target node on which the key may have been registered.
-     *
      * @return the key registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -234,7 +222,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param args the array of arguments to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nArgs(@Nonnull Tab node, @Nullable String args) {
@@ -247,9 +234,7 @@ public final class JavaFXUtils {
      * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
      *
      * @param node the target node on which the arguments may have been registered.
-     *
      * @return the arguments registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -264,7 +249,6 @@ public final class JavaFXUtils {
      *
      * @param node         the target node on which the key will be registered.
      * @param defaultValue the value to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nDefaultValue(@Nonnull Tab node, @Nullable String defaultValue) {
@@ -276,9 +260,7 @@ public final class JavaFXUtils {
      * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
      *
      * @param node the target node on which the value may have been registered.
-     *
      * @return the value registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -292,7 +274,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param key  the message key to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nKey(@Nonnull MenuItem node, @Nonnull String key) {
@@ -305,9 +286,7 @@ public final class JavaFXUtils {
      * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
      *
      * @param node the target node on which the key may have been registered.
-     *
      * @return the key registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -322,7 +301,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param args the array of arguments to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nArgs(@Nonnull MenuItem node, @Nullable String args) {
@@ -335,9 +313,7 @@ public final class JavaFXUtils {
      * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
      *
      * @param node the target node on which the arguments may have been registered.
-     *
      * @return the arguments registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -352,7 +328,6 @@ public final class JavaFXUtils {
      *
      * @param node         the target node on which the key will be registered.
      * @param defaultValue the value to be registered.
-     *
      * @since 2.9.0
      */
     public static void setI18nDefaultValue(@Nonnull MenuItem node, @Nullable String defaultValue) {
@@ -364,9 +339,7 @@ public final class JavaFXUtils {
      * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
      *
      * @param node the target node on which the value may have been registered.
-     *
      * @return the value registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.9.0
      */
     @Nullable
@@ -380,7 +353,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param key  the message key to be registered.
-     *
      * @since 2.11.0
      */
     public static void setI18nKey(@Nonnull Axis<?> node, @Nonnull String key) {
@@ -393,9 +365,7 @@ public final class JavaFXUtils {
      * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
      *
      * @param node the target node on which the key may have been registered.
-     *
      * @return the key registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.11.0
      */
     @Nullable
@@ -410,7 +380,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param args the array of arguments to be registered.
-     *
      * @since 2.11.0
      */
     public static void setI18nArgs(@Nonnull Axis<?> node, @Nullable String args) {
@@ -423,9 +392,7 @@ public final class JavaFXUtils {
      * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
      *
      * @param node the target node on which the arguments may have been registered.
-     *
      * @return the arguments registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.11.0
      */
     @Nullable
@@ -440,7 +407,6 @@ public final class JavaFXUtils {
      *
      * @param node         the target node on which the key will be registered.
      * @param defaultValue the value to be registered.
-     *
      * @since 2.11.0
      */
     public static void setI18nDefaultValue(@Nonnull Axis<?> node, @Nullable String defaultValue) {
@@ -452,9 +418,7 @@ public final class JavaFXUtils {
      * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
      *
      * @param node the target node on which the value may have been registered.
-     *
      * @return the value registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.11.0
      */
     @Nullable
@@ -468,7 +432,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param key  the message key to be registered.
-     *
      * @since 2.11.0
      */
     public static void setI18nKey(@Nonnull TableColumn<?, ?> node, @Nonnull String key) {
@@ -481,9 +444,7 @@ public final class JavaFXUtils {
      * Finds out if an i18n {@code key} has been registered with the target {@code Node}, returning the key if found.
      *
      * @param node the target node on which the key may have been registered.
-     *
      * @return the key registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.11.0
      */
     @Nullable
@@ -498,7 +459,6 @@ public final class JavaFXUtils {
      *
      * @param node the target node on which the key will be registered.
      * @param args the array of arguments to be registered.
-     *
      * @since 2.11.0
      */
     public static void setI18nArgs(@Nonnull TableColumn<?, ?> node, @Nullable String args) {
@@ -511,9 +471,7 @@ public final class JavaFXUtils {
      * Finds out if an {@code arguments array} has been registered with the target {@code Node}, returning the array if found.
      *
      * @param node the target node on which the arguments may have been registered.
-     *
      * @return the arguments registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.11.0
      */
     @Nullable
@@ -528,7 +486,6 @@ public final class JavaFXUtils {
      *
      * @param node         the target node on which the key will be registered.
      * @param defaultValue the value to be registered.
-     *
      * @since 2.11.0
      */
     public static void setI18nDefaultValue(@Nonnull TableColumn<?, ?> node, @Nullable String defaultValue) {
@@ -540,9 +497,7 @@ public final class JavaFXUtils {
      * Finds out if a {@code default value} has been registered with the target {@code Node}, returning the value if found.
      *
      * @param node the target node on which the value may have been registered.
-     *
      * @return the value registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.11.0
      */
     @Nullable
@@ -685,7 +640,6 @@ public final class JavaFXUtils {
      *
      * @param node     the target node on which the action will be registered.
      * @param actionId the id of the action to be registered.
-     *
      * @since 2.8.0
      */
     public static void setGriffonActionId(@Nonnull Node node, @Nonnull String actionId) {
@@ -698,9 +652,7 @@ public final class JavaFXUtils {
      * Finds out if an {@code Action} has been registered with the target {@code Node}, returning the action id if found.
      *
      * @param node the target node on which the action may have been registered.
-     *
      * @return the name of the action registered with the target {@code Node} or {@code null} if not found.
-     *
      * @since 2.8.0
      */
     @Nullable
@@ -714,7 +666,6 @@ public final class JavaFXUtils {
      *
      * @param menuItem the target menuItem on which the action will be registered.
      * @param actionId the id of the action to be registered.
-     *
      * @since 2.8.0
      */
     public static void setGriffonActionId(@Nonnull MenuItem menuItem, @Nonnull String actionId) {
@@ -727,9 +678,7 @@ public final class JavaFXUtils {
      * Finds out if an {@code Action} has been registered with the target {@code MenuItem}, returning the action id if found.
      *
      * @param menuItem the target menuItem on which the action may have been registered.
-     *
      * @return the name of the action registered with the target {@code MenuItem} or {@code null} if not found.
-     *
      * @since 2.8.0
      */
     @Nullable
@@ -743,15 +692,12 @@ public final class JavaFXUtils {
      *
      * @param source the <tt>ObservableList</tt> to be wrapped
      * @param <E>    the list's parameter type.
-     *
      * @return a new <tt>ObservableList</tt>
-     *
      * @see GriffonFXCollections#uiThreadAwareObservableList
      * @since 2.6.0
      * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableList} instead.
      */
     @Deprecated
-    @Nonnull
     public static <E> ObservableList<E> createJavaFXThreadProxyList(@Nonnull ObservableList<E> source) {
         return GriffonFXCollections.uiThreadAwareObservableList(source);
     }
@@ -761,15 +707,12 @@ public final class JavaFXUtils {
      *
      * @param source the <tt>ObservableSet</tt> to be wrapped
      * @param <E>    the set's parameter type.
-     *
      * @return a new <tt>ObservableSet</tt>
-     *
      * @see GriffonFXCollections#uiThreadAwareObservableSet
      * @since 2.9.0
      * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableSet} instead.
      */
     @Deprecated
-    @Nonnull
     public static <E> ObservableSet<E> createJavaFXThreadProxySet(@Nonnull ObservableSet<E> source) {
         return GriffonFXCollections.uiThreadAwareObservableSet(source);
     }
@@ -780,20 +723,16 @@ public final class JavaFXUtils {
      * @param source the <tt>ObservableMap</tt> to be wrapped
      * @param <K>    the type of keys maintained by the map
      * @param <V>    the type of mapped values
-     *
      * @return a new <tt>ObservableMap</tt>
-     *
      * @see GriffonFXCollections#uiThreadAwareObservableMap
      * @since 2.9.0
      * @deprecated Use {@code GriffonFXCollections.uiThreadAwareObservableMap} instead.
      */
     @Deprecated
-    @Nonnull
     public static <K, V> ObservableMap<K, V> createJavaFXThreadProxyMap(@Nonnull ObservableMap<K, V> source) {
         return GriffonFXCollections.uiThreadAwareObservableMap(source);
     }
 
-    @Nonnull
     @SuppressWarnings("ConstantConditions")
     public static <B> Property<?> extractProperty(@Nonnull B bean, @Nonnull String propertyName) {
         requireNonNull(bean, "Argument 'bean' must not be null");
@@ -1025,7 +964,9 @@ public final class JavaFXUtils {
 
     public static void setStyle(@Nonnull Node node, @Nonnull String style) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(style)) { return; }
+        if (isBlank(style)) {
+            return;
+        }
         if (style.startsWith("&")) {
             // append style
             String nodeStyle = node.getStyle();
@@ -1037,7 +978,9 @@ public final class JavaFXUtils {
 
     public static void setStyle(@Nonnull MenuItem node, @Nonnull String style) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(style)) { return; }
+        if (isBlank(style)) {
+            return;
+        }
         if (style.startsWith("&")) {
             // append style
             String nodeStyle = node.getStyle();
@@ -1049,7 +992,9 @@ public final class JavaFXUtils {
 
     public static void setGraphicStyle(@Nonnull ButtonBase node, @Nonnull String graphicStyle) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(graphicStyle)) { return; }
+        if (isBlank(graphicStyle)) {
+            return;
+        }
         if (node.getGraphic() != null) {
             setStyle(node.getGraphic(), graphicStyle);
         }
@@ -1057,7 +1002,9 @@ public final class JavaFXUtils {
 
     public static void setGraphicStyle(@Nonnull MenuItem node, @Nonnull String graphicStyle) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(graphicStyle)) { return; }
+        if (isBlank(graphicStyle)) {
+            return;
+        }
         if (node.getGraphic() != null) {
             setStyle(node.getGraphic(), graphicStyle);
         }
@@ -1069,7 +1016,9 @@ public final class JavaFXUtils {
 
     public static void setStyleClass(@Nonnull Node node, @Nonnull String styleClass, boolean remove) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(styleClass)) { return; }
+        if (isBlank(styleClass)) {
+            return;
+        }
 
         ObservableList<String> styleClasses = node.getStyleClass();
         applyStyleClass(styleClass, styleClasses, remove);
@@ -1081,7 +1030,9 @@ public final class JavaFXUtils {
 
     public static void setStyleClass(@Nonnull MenuItem node, @Nonnull String styleClass, boolean remove) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(styleClass)) { return; }
+        if (isBlank(styleClass)) {
+            return;
+        }
         ObservableList<String> styleClasses = node.getStyleClass();
         applyStyleClass(styleClass, styleClasses, remove);
     }
@@ -1092,7 +1043,9 @@ public final class JavaFXUtils {
 
     public static void setGraphicStyleClass(@Nonnull ButtonBase node, @Nonnull String graphicStyleClass, boolean remove) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }
+        if (isBlank(graphicStyleClass) || node.getGraphic() == null) {
+            return;
+        }
 
         ObservableList<String> graphicStyleClasses = node.getGraphic().getStyleClass();
         applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);
@@ -1104,7 +1057,9 @@ public final class JavaFXUtils {
 
     public static void setGraphicStyleClass(@Nonnull MenuItem node, @Nonnull String graphicStyleClass, boolean remove) {
         requireNonNull(node, ERROR_CONTROL_NULL);
-        if (isBlank(graphicStyleClass) || node.getGraphic() == null) { return; }
+        if (isBlank(graphicStyleClass) || node.getGraphic() == null) {
+            return;
+        }
 
         ObservableList<String> graphicStyleClasses = node.getGraphic().getStyleClass();
         applyStyleClass(graphicStyleClass, graphicStyleClasses, remove);
@@ -1118,7 +1073,9 @@ public final class JavaFXUtils {
             } else {
                 Set<String> classes = new LinkedHashSet<>(styleClasses);
                 for (String s : strings) {
-                    if (isBlank(s)) { continue; }
+                    if (isBlank(s)) {
+                        continue;
+                    }
                     classes.add(s.trim());
                 }
                 styleClasses.setAll(classes);
@@ -1192,11 +1149,7 @@ public final class JavaFXUtils {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
         runInsideUIThread(() -> {
-            if (graphic != null) {
-                control.graphicProperty().set(graphic);
-            } else {
-                control.graphicProperty().set(null);
-            }
+            control.graphicProperty().set(graphic);
         });
     }
 
@@ -1204,11 +1157,7 @@ public final class JavaFXUtils {
         requireNonNull(control, ERROR_CONTROL_NULL);
 
         runInsideUIThread(() -> {
-            if (graphic != null) {
-                control.graphicProperty().set(graphic);
-            } else {
-                control.graphicProperty().set(null);
-            }
+            control.graphicProperty().set(graphic);
         });
     }
 
@@ -1268,58 +1217,76 @@ public final class JavaFXUtils {
         requireNonNull(root, ERROR_ROOT_NULL);
         requireNonBlank(id, ERROR_ID_BLANK);
 
-        if (id.equals(root.getId())) { return root; }
+        if (id.equals(root.getId())) {
+            return root;
+        }
 
         if (root instanceof TabPane) {
             TabPane parent = (TabPane) root;
             for (Tab child : parent.getTabs()) {
                 if (child.getContent() != null) {
                     Node found = findNode(child.getContent(), id);
-                    if (found != null) { return found; }
+                    if (found != null) {
+                        return found;
+                    }
                 }
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
             if (parent.getContent() != null) {
                 Node found = findNode(parent.getContent(), id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof Accordion) {
             Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
                 Node found = findNode(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof SplitPane) {
             SplitPane parent = (SplitPane) root;
             for (Node child : parent.getItems()) {
                 Node found = findNode(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
             if (scrollPane.getContent() != null) {
                 Node found = findNode(scrollPane.getContent(), id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ToolBar) {
             ToolBar toolBar = (ToolBar) root;
             for (Node child : toolBar.getItems()) {
                 Node found = findNode(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ButtonBar) {
             ButtonBar buttonBar = (ButtonBar) root;
             for (Node child : buttonBar.getButtons()) {
                 Node found = findNode(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof TableView) {
             TableView tableView = (TableView) root;
             Node placeholder = tableView.getPlaceholder();
             if (placeholder != null) {
                 Node found = findNode(placeholder, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
@@ -1327,7 +1294,9 @@ public final class JavaFXUtils {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Node found = findNode(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
@@ -1339,19 +1308,25 @@ public final class JavaFXUtils {
         requireNonNull(root, ERROR_ROOT_NULL);
         requireNonBlank(id, ERROR_ID_BLANK);
 
-        if (id.equals(getPropertyValue(root, "id"))) { return root; }
+        if (id.equals(getPropertyValue(root, "id"))) {
+            return root;
+        }
 
         if (root instanceof Control) {
             Control control = (Control) root;
             ContextMenu contextMenu = control.getContextMenu();
             if (contextMenu != null) {
                 Object found = findElement(contextMenu, id);
-                if (found != null) {return found;}
+                if (found != null) {
+                    return found;
+                }
             }
             Tooltip tooltip = control.getTooltip();
             if (tooltip != null) {
                 Object found = findElement(tooltip, id);
-                if (found != null) {return found;}
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
@@ -1359,78 +1334,104 @@ public final class JavaFXUtils {
             ButtonBar buttonBar = (ButtonBar) root;
             for (Node child : buttonBar.getButtons()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof MenuBar) {
             MenuBar menuBar = (MenuBar) root;
             for (Menu child : menuBar.getMenus()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ContextMenu) {
             ContextMenu contextMenu = (ContextMenu) root;
             for (MenuItem child : contextMenu.getItems()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof Menu) {
             Menu menu = (Menu) root;
             for (MenuItem child : menu.getItems()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof TabPane) {
             TabPane tabPane = (TabPane) root;
             for (Tab child : tabPane.getTabs()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof Tab) {
             Tab tab = (Tab) root;
             if (tab.getContent() != null) {
                 Object found = findElement(tab.getContent(), id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
             if (parent.getContent() != null) {
                 Object found = findElement(parent.getContent(), id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof Accordion) {
             Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof SplitPane) {
             SplitPane parent = (SplitPane) root;
             for (Node child : parent.getItems()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
             if (scrollPane.getContent() != null) {
                 Object found = findElement(scrollPane.getContent(), id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ToolBar) {
             ToolBar toolBar = (ToolBar) root;
             for (Node child : toolBar.getItems()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof TableView) {
             TableView tableView = (TableView) root;
             Node placeholder = tableView.getPlaceholder();
             if (placeholder != null) {
                 Object found = findElement(placeholder, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
             for (Object child : tableView.getColumns()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
@@ -1438,7 +1439,9 @@ public final class JavaFXUtils {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Object found = findElement(child, id);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
@@ -1459,12 +1462,16 @@ public final class JavaFXUtils {
             ContextMenu contextMenu = control.getContextMenu();
             if (contextMenu != null) {
                 Object found = findElement(contextMenu, predicate);
-                if (found != null) {return found;}
+                if (found != null) {
+                    return found;
+                }
             }
             Tooltip tooltip = control.getTooltip();
             if (tooltip != null) {
                 Object found = findElement(tooltip, predicate);
-                if (found != null) {return found;}
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
@@ -1472,78 +1479,104 @@ public final class JavaFXUtils {
             ButtonBar buttonBar = (ButtonBar) root;
             for (Node child : buttonBar.getButtons()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof MenuBar) {
             MenuBar menuBar = (MenuBar) root;
             for (Menu child : menuBar.getMenus()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ContextMenu) {
             ContextMenu contextMenu = (ContextMenu) root;
             for (MenuItem child : contextMenu.getItems()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof Menu) {
             Menu menu = (Menu) root;
             for (MenuItem child : menu.getItems()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof TabPane) {
             TabPane tabPane = (TabPane) root;
             for (Tab child : tabPane.getTabs()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof Tab) {
             Tab tab = (Tab) root;
             if (tab.getContent() != null) {
                 Object found = findElement(tab.getContent(), predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof TitledPane) {
             TitledPane parent = (TitledPane) root;
             if (parent.getContent() != null) {
                 Object found = findElement(parent.getContent(), predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof Accordion) {
             Accordion parent = (Accordion) root;
             for (TitledPane child : parent.getPanes()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof SplitPane) {
             SplitPane parent = (SplitPane) root;
             for (Node child : parent.getItems()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ScrollPane) {
             ScrollPane scrollPane = (ScrollPane) root;
             if (scrollPane.getContent() != null) {
                 Object found = findElement(scrollPane.getContent(), predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof ToolBar) {
             ToolBar toolBar = (ToolBar) root;
             for (Node child : toolBar.getItems()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         } else if (root instanceof TableView) {
             TableView tableView = (TableView) root;
             Node placeholder = tableView.getPlaceholder();
             if (placeholder != null) {
                 Object found = findElement(placeholder, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
             for (Object child : tableView.getColumns()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
@@ -1551,14 +1584,15 @@ public final class JavaFXUtils {
             Parent parent = (Parent) root;
             for (Node child : parent.getChildrenUnmodifiable()) {
                 Object found = findElement(child, predicate);
-                if (found != null) { return found; }
+                if (found != null) {
+                    return found;
+                }
             }
         }
 
         return null;
     }
 
-    @Nonnull
     public static Collection<Object> findElements(@Nonnull Object root, @Nonnull Predicate<Object> predicate) {
         Set<Object> accumulator = new LinkedHashSet<>();
         findElements(root, predicate, accumulator);

@@ -1,13 +1,13 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,71 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import java.text.SimpleDateFormat
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'http://dl.bintray.com/pledbrook/plugins' }
-        maven { url 'https://plugins.gradle.org/m2/' }
-    }
-
-    dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
-        classpath 'org.ajoberstar:gradle-git:1.7.2'
-        classpath 'uk.co.cacoethes:lazybones-gradle:1.2.4'
-        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'org.kordamp.gradle:clirr-gradle-plugin:0.2.5'
-        classpath 'net.nemerosa:versioning:2.6.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.10'
-        classpath 'gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.1.1'
-        classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.3.0'
-        classpath 'com.gradle:build-scan-plugin:1.13.4'
-        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
-        classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
-    }
-}
-apply plugin: 'com.gradle.build-scan'
 apply from: 'gradle/idea.gradle'
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'net.nemerosa.versioning'
-apply plugin: 'org.sonarqube'
-apply plugin: 'org.standardout.versioneye'
 
-buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-    licenseAgree = 'yes'
-}
-
-jacoco {
-    toolVersion = jacocoVersion
-}
-
-boolean travis   = (System.env['TRAVIS'] ?: false) as boolean
-boolean appveyor = (System.env['APPVEYOR'] ?: false) as boolean
-Date buildTimeAndDate = new Date()
+boolean github = (System.env['CI'] ?: false) as boolean
 ext {
-    buildBy = System.properties['user.name']
-    buildDate = new SimpleDateFormat('yyyy-MM-dd').format(buildTimeAndDate)
-    buildTime = new SimpleDateFormat('HH:mm:ss.SSSZ').format(buildTimeAndDate)
-    buildRevision = versioning.info.commit
-    buildCreatedBy = "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})".toString()
-    projectsWithCoverage = []
-    projectsWithIntegrationCoverage = []
-    projectsWithFunctionalCoverage = []
-    baseJaCocoDir = "${buildDir}/reports/jacoco/test/"
-    jacocoMergeExecFile = "${baseJaCocoDir}jacocoTestReport.exec"
-    jacocoMergeReportHTMLFile = "${baseJaCocoDir}/html/"
-    jacocoMergeReportXMLFile = "${baseJaCocoDir}/jacocoTestReport.xml"
-    projectsWithClirr = []
     depProjects = []
-    fullBuild = !travis && !appveyor
+    fullBuild = !github
     resourceFilePatterns = [
         '**/*.properties',
         '**/*.groovy',
@@ -87,88 +28,336 @@ ext {
         '**/*.xml',
         '**/*.txt'
     ]
+    nonCoreProjects = subprojects.findAll { !it.projectDir.absolutePath.contains('subprojects') }
+    coreProjects = subprojects.findAll { it.projectDir.absolutePath.contains('subprojects') }
 }
 
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = ''
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = ''
-if (!project.hasProperty('mavenUsername')) ext.mavenUsername = ''
-if (!project.hasProperty('mavenPassword')) ext.mavenPassword = ''
+config {
+    info {
+        name          = 'griffon'
+        vendor        = 'Griffon'
+        description   = project.project_description
+        inceptionYear = '2008'
+        tags          = ['griffon']
 
-allprojects {
-    apply plugin: 'base'
-    apply plugin: 'idea'
-    apply plugin: 'com.github.ben-manes.versions'
-    apply plugin: 'net.ossindex.audit'
-
-    repositories {
-        jcenter()
-    }
-
-    if (JavaVersion.current().isJava8Compatible()) {
-        tasks.withType(Javadoc) {
-            options.addStringOption('Xdoclint:none', '-quiet')
+        links {
+            website      = 'https://griffon-framework.org'
+            issueTracker = 'https://github.com/griffon/griffon/issues'
+            scm          = 'https://github.com/griffon/griffon.git'
         }
-    }
 
-    dependencyUpdates.resolutionStrategy = {
-        componentSelection { rules ->
-            rules.all { selection ->
-                boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier ->
-                    selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-                }
-                if (rejected) {
-                    selection.reject('Release candidate')
-                }
+        scm {
+            url                 = 'https://github.com/griffon/griffon'
+            connection          = 'scm:git:https://github.com/griffon/griffon.git'
+            developerConnection = 'scm:git:git@github.com:griffon/griffon.git'
+        }
+
+        people {
+            person {
+                id    = 'shemnon'
+                name  = 'Danno Ferrin'
+                roles = ['Developer']
+            }
+            person {
+                id    = 'jwill'
+                name  = 'James Williams'
+                roles = ['Developer']
+            }
+            person {
+                id    = 'aklein'
+                name  = 'Alexander Klein'
+                roles = ['Developer']
+            }
+            person {
+                id    = 'rgroeschke'
+                name  = 'Rene Groeschke'
+                roles = ['Developer']
+            }
+            person {
+                name  = 'Dierk Koenig'
+                roles = ['Contributor']
+            }
+            person {
+                name  = 'Guillaume Laforge'
+                roles = ['Contributor']
+            }
+            person {
+                name  = 'Dean Iverson'
+                roles = ['Contributor']
             }
         }
     }
 
-    audit {
-        failOnError = false
+    stats {
+        formats = ['xml', 'txt']
+        paths = [
+            mvc       : [name: 'MVCGroups',     path: 'griffon-app/mvcs'],
+            model     : [name: 'Models',        path: 'griffon-app/models'],
+            view      : [name: 'Views',         path: 'griffon-app/views'],
+            controller: [name: 'Controllers',   path: 'griffon-app/controllers'],
+            service   : [name: 'Services',      path: 'griffon-app/services'],
+            config    : [name: 'Configuration', path: 'griffon-app/conf'],
+            lifecycle : [name: 'Lifecycle',     path: 'griffon-app/lifecycle']
+        ]
+    }
+
+    docs {
+        groovydoc {
+            enabled = false
+        }
+
+        javadoc {
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
+
+            exclude '**/*.html'
+            exclude 'META-INF/**'
+            exclude '**/*.groovy'
+
+            autoLinks {
+                enabled = false
+                exclude 'griffon.*'
+            }
+
+            options {
+                addBooleanOption('javafx', true)
+                links 'https://www.slf4j.org/apidocs/'
+                links 'https://junit.org/junit4/javadoc/latest/'
+                links 'https://aalmiray.github.io/jsr-305/apidocs/'
+                links 'https://javax-inject.github.io/javax-inject/api/'
+                links 'https://docs.oracle.com/javase/8/docs/api/'
+                links 'https://docs.oracle.com/javase/8/javafx/api/'
+                links 'https://google.github.io/guice/api-docs/4.1/javadoc/'
+                links 'http://docs.groovy-lang.org/latest/html/api/'
+                links 'http://kordamp.org/jipsy/apidocs/'
+                links 'http://kordamp.org/gipsy/apidocs/'
+            }
+        }
+
+        sourceHtml {
+            overview {
+                windowTitle = "Griffon $version"
+                docTitle = "Griffon $version"
+                docDescription = """Griffon is an application framework for developing desktop
+                                applications in Groovy. Inspired by Grails, Griffon follows the Convention over
+                                Configuration paradigm, paired with an intuitive MVC architecture and a command
+                                line interface."""
+                icon = rootProject.file('src/javadoc/resources/img/griffon.ico')
+                stylesheet = rootProject.file('src/javadoc/resources/css/stylesheet.css')
+            }
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
+        }
+
+        sourceXref {
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
+        }
+    }
+
+    artifacts {
+        source {
+            aggregate {
+                excludedProjects.addAll nonCoreProjects
+            }
+        }
+    }
+
+    bom {
+        enabled = false
+    }
+
+    coverage {
+        jacoco {
+            toolVersion = jacocoVersion
+        }
+    }
+
+    dependencyManagement {
+        dependency("org.kordamp.gipsy:gipsy:$jipsyVersion")
+        dependency('jipsy') {
+            groupId    = 'org.kordamp.jipsy'
+            artifactId = 'jipsy'
+            version    = jipsyVersion
+        }
+        dependency('slf4j') {
+            groupId    = 'org.slf4j'
+            artifactId = 'slf4j-api'
+            version    = slf4jVersion
+            modules    = ['slf4j-simple', 'slf4j-log4j12']
+        }
+        dependency("junit:junit:$junitVersion")
+        dependency('junit5') {
+            groupId    = 'org.junit.jupiter'
+            artifactId = 'junit-jupiter-api'
+            version    = junit5Version
+            modules    = [
+                'junit-jupiter-params',
+                'junit-jupiter-engine'
+            ]
+        }
+        dependency('junit5v') {
+            groupId    = 'org.junit.vintage'
+            artifactId = 'junit-vintage-engine'
+            version    = junit5Version
+        }
+        dependency('testfx') {
+            groupId    = 'org.testfx'
+            artifactId = 'testfx-core'
+            version    = testfxVersion
+            modules    = ['testfx-junit']
+        }
+        dependency("com.google.guava:guava:$guavaVersion")
+        dependency('cglib') {
+            groupId    = 'cglib'
+            artifactId = 'cglib'
+            version    = cglibVersion
+            modules    = ['cglib-nodep']
+        }
     }
 }
 
-subprojects { subproj ->
-    plugins.withType(JavaPlugin) {
-        subproj.tasks.withType(JavaCompile) {
-            sourceCompatibility = subproj.sourceCompatibility
-            targetCompatibility = subproj.targetCompatibility
+allprojects {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+    }
+
+    tasks.withType(GenerateModuleMetadata) {
+        enabled = false
+    }
+}
+
+subprojects { Project subproj ->
+    boolean isCoreProject = subproj.projectDir.absolutePath.contains('subprojects')
+    boolean isSampleProject = subproj.projectDir.absolutePath.contains('samples')
+    boolean isDocProject = subproj.projectDir.absolutePath.contains('docs')
+    boolean isArchetypeProject = subproj.name.endsWith('-archetype')
+    boolean isPomProject = subproj.name.endsWith('pom')
+    boolean isGroovyProject = subproj.name.endsWith('-groovy')
+    boolean isGradlePlugin = subproj.projectDir.absolutePath.contains('plugins')
+    boolean shouldPublish = isCoreProject || isArchetypeProject || isPomProject
+
+    config {
+        info {
+            name        = subproj.name
+            description = subproj.project_description
+            specification {
+                enabled = !isArchetypeProject && !isDocProject
+            }
+            implementation {
+                enabled = !isArchetypeProject && !isDocProject
+            }
+        }
+
+        publishing {
+            enabled = shouldPublish
+        }
+
+        artifacts {
+            source {
+                enabled = shouldPublish
+            }
+
+            minpom {
+                enabled = isCoreProject || isSampleProject
+            }
+        }
+
+        docs {
+            javadoc {
+                enabled = shouldPublish
+            }
+
+            sourceHtml {
+                enabled = isCoreProject
+            }
+
+            sourceXref {
+                enabled = isCoreProject
+            }
+        }
+
+        testing {
+            enabled = isCoreProject || isSampleProject || isGradlePlugin
+        }
+
+        coverage {
+            jacoco {
+                enabled = isCoreProject || isSampleProject || isGradlePlugin
+            }
+        }
+
+        licensing {
+            enabled = !isArchetypeProject && !isDocProject
+        }
+
+        stats {
+            enabled = !isArchetypeProject && !isDocProject
+        }
+    }
+
+    plugins.withType(GroovyPlugin) {
+        if (isCoreProject && !isGroovyProject && !isGradlePlugin) {
+            compileGroovy.enabled = false
+            groovydoc.enabled = false
         }
 
         subproj.tasks.withType(GroovyCompile) {
             sourceCompatibility = subproj.sourceCompatibility
             targetCompatibility = subproj.targetCompatibility
         }
+    }
 
-        dependencies {
-            testCompile "junit:junit:$junitVersion"
-            testCompile 'com.google.guiceberry:guiceberry:3.3.1'
-            testCompile("com.google.inject:guice:$guiceVersion") {
-                exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
+    plugins.withType(JavaPlugin) {
+        config {
+            info {
+                description = project.project_description
             }
-            if (!subproj.name.startsWith('gradle-')) {
-                testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-                testCompile("org.spockframework:spock-core:$spockVersion") {
-                    exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-                }
-            }
-            testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
-            testCompile 'cglib:cglib-nodep:3.2.0'
         }
 
-        processResources {
-            filesMatching(resourceFilePatterns) {
-                expand(
-                    'application_name'   : project.name,
-                    'application_version': project.version,
-                    'griffon_version'    : project.version,
-                    'built_by'           : buildBy,
-                    'created_by'         : buildCreatedBy,
-                    'build_date'         : buildDate,
-                    'build_time'         : buildTime,
-                    'build_revision'     : versioning.info.commit
-                )
+        subproj.tasks.withType(JavaCompile) {
+            sourceCompatibility = subproj.sourceCompatibility
+            targetCompatibility = subproj.targetCompatibility
+        }
+
+        dependencies {
+            compileOnly config.dependencyManagement.gav('jipsy')
+            annotationProcessor config.dependencyManagement.gav('jipsy')
+
+            testImplementation config.dependencyManagement.gav('junit5', 'junit-jupiter-api')
+            testImplementation config.dependencyManagement.gav('junit5', 'junit-jupiter-params')
+            testRuntimeOnly config.dependencyManagement.gav('junit5', 'junit-jupiter-engine')
+            testRuntimeOnly(config.dependencyManagement.gav('junit5v', 'junit-vintage-engine')) {
+                exclude group: 'junit', module: 'junit'
             }
+            testImplementation(config.dependencyManagement.gav('junit')) {
+                exclude group: 'org.hamcrest', module: 'hamcrest-core'
+            }
+            testImplementation("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
+                exclude group: 'junit', module: 'junit'
+            }
+            testImplementation("com.google.inject:guice:$guiceVersion") {
+                exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
+            }
+            if (!subproj.name.endsWith('-gradle-plugin')) {
+                testImplementation "org.codehaus.groovy:groovy:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-macro:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-templates:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-datetime:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-nio:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-sql:$groovyVersion"
+                testImplementation "org.codehaus.groovy:groovy-xml:$groovyVersion"
+                testImplementation "org.spockframework:spock-core:$spockVersion"
+                testImplementation "org.mockito:mockito-core:$mockitoVersion"
+            }
+            testImplementation config.dependencyManagement.gav('slf4j', 'slf4j-simple')
+            testImplementation config.dependencyManagement.gav('cglib', 'cglib-nodep')
         }
 
         processTestResources {
@@ -181,18 +370,16 @@ subprojects { subproj ->
             }
         }
 
-        task sourceJar(type: Jar) {
-            group 'Build'
-            description 'An archive of the source code'
-            classifier 'sources'
-            from sourceSets.main.allSource
-        }
+        test {
+            useJUnitPlatform()
 
-        task javadocJar(type: Jar) {
-            group 'Build'
-            description 'An archive of the Javadocs'
-            classifier 'javadoc'
-            from javadoc.destinationDir
+            testLogging {
+                events 'skipped', 'failed'
+            }
+
+            reports {
+                html.enabled = true
+            }
         }
 
         tasks.withType(AbstractCompile) {
@@ -203,180 +390,97 @@ subprojects { subproj ->
             }
         }
 
-        subproj.apply from: rootProject.file('gradle/code-quality.gradle')
-
-        sonarqube {
-            skipProject = !subproj.publishJars.toBoolean()
+        license {
+            mapping {
+                kt     = 'SLASHSTAR_STYLE'
+                java   = 'SLASHSTAR_STYLE'
+                groovy = 'SLASHSTAR_STYLE'
+                gdsl   = 'SLASHSTAR_STYLE'
+                dsld   = 'SLASHSTAR_STYLE'
+                fxml   = 'XML_STYLE'
+            }
+            exclude '**/*.png'
+            exclude '**/griffon/util/MethodUtils.java'
+            exclude '**/griffon/util/application.groovy'
+            exclude '**/griffon/util/application.xml'
+            exclude '**/griffon/util/application_jdk8.groovy'
+            exclude '**/griffon/util/bad_application.xml'
+            exclude '**/org/jdesktop/swinghelper/debug/CheckThreadViolationRepaintManager.java'
+            exclude '**/org/jdesktop/swinghelper/debug/EventDispatchThreadHangMonitor.java'
+            exclude '**/org/testfx/service/support/WaitUntilSupport.java'
+            exclude 'archetype-resources/**/*'
+            exclude '**/archetype*.xml'
         }
 
-        if (subproj.publishJars.toBoolean()) {
-            subproj.apply from: rootProject.file('gradle/publish.gradle')
-            if (subproj.name.startsWith('griffon-')) {
-                subproj.apply plugin: 'org.kordamp.gradle.clirr'
-                subproj.apply plugin: 'org.kordamp.jdeps'
-                subproj.apply from: rootProject.file('gradle/bintray.gradle')
-                subproj.apply from: rootProject.file('gradle/sonarqube.gradle')
+        licenseTest {
+            source -= sourceSets.test.resources
+        }
 
-                subproj.jdeps {
-                    failOnError = false
-                }
-
-                subproj.clirr {
-                    failOnErrors = false
-                }
-
-                projectsWithClirr << subproj
-            }
-
-            test {
-                testLogging {
-                    afterSuite { desc, result ->
-                        if (!desc.parent) {
-                            println "Test results ${project.name}: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
-                        }
-                    }
-                }
-            }
-
-            javadoc {
-                excludes = ['**/*.html', 'META-INF/**', '**/*.groovy']
-
-                options.addBooleanOption('javafx', true)
-
-                options.use         = true
-                options.splitIndex  = true
-                options.encoding    = 'UTF-8'
-                options.author      = true
-                options.version     = true
-                options.windowTitle = "$subproj.pomDescription $version"
-                options.docTitle    = "$subproj.pomDescription $version"
-                options.footer      = rootProject.javadocFooter
-                options.links 'https://www.slf4j.org/apidocs/'
-                options.links 'https://junit.org/junit4/javadoc/latest/'
-                options.links 'https://aalmiray.github.io/jsr-305/apidocs/'
-                options.links 'https://javax-inject.github.io/javax-inject/api/'
-                options.links 'https://docs.oracle.com/javase/8/docs/api/'
-                options.links 'https://docs.oracle.com/javase/8/javafx/api/'
-                options.links 'https://google.github.io/guice/api-docs/4.1/javadoc/'
-                options.links 'https://mabe02.github.io/lanterna/apidocs/2.1/'
-                options.links 'https://pivot.apache.org/2.0.5/docs/api/'
-                options.links 'http://docs.groovy-lang.org/latest/html/api/'
-                options.links 'https://aalmiray.github.io/jipsy/apidocs/'
-                options.links 'https://aalmiray.github.io/gipsy/apidocs/'
-
-                doLast { task ->
-                    copy {
-                        into task.destinationDir
-                        from rootProject.file('src/javadoc/resources/img/griffon.ico'),
-                             rootProject.file('src/javadoc/resources/css/stylesheet.css')
-                    }
-                    copy {
-                        into file("${task.destinationDir}/resources")
-                        from rootProject.file('src/javadoc/resources/img/')
-                    }
+        if (isCoreProject) {
+            jar {
+                manifest {
+                    attributes('Automatic-Module-Name': subproj.name.replaceAll('-', '.'))
                 }
             }
         }
 
-        subproj.apply plugin: 'org.kordamp.gradle.stats'
-        if (subproj.projectDir.parentFile.name == 'samples') {
-            def statsTask = subproj.tasks.findByName('stats')
-            statsTask.formats = ['txt']
-            statsTask.paths += [
-                model     : [name: 'Models',        path: 'griffon-app/models'],
-                view      : [name: 'Views',         path: 'griffon-app/views'],
-                controller: [name: 'Controllers',   path: 'griffon-app/controllers'],
-                service   : [name: 'Services',      path: 'griffon-app/services'],
-                config    : [name: 'Configuration', path: 'griffon-app/conf'],
-                lifecycle : [name: 'Lifecycle',     path: 'griffon-app/lifecycle']
-            ]
+        javadoc {
+            doLast { task ->
+                copy {
+                    into task.destinationDir
+                    from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                        rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                }
+                copy {
+                    into file("${task.destinationDir}/resources")
+                    from rootProject.file('src/javadoc/resources/img/')
+                }
+            }
+        }
+
+    }
+}
+
+project.gradle.addBuildListener(new BuildAdapter() {
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+        gradle.rootProject.subprojects.each { Project subprj ->
+            subprj.plugins.withType(JavaPlugin) {
+                subprj.processResources {
+                    inputs.property('build_date', gradle.rootProject.config.buildInfo.buildDate + ':' + gradle.rootProject.config.buildInfo.buildTime)
+                    filesMatching(subprj.rootProject.ext.resourceFilePatterns) {
+                        expand(
+                            'application_name': subprj.name,
+                            'application_version': subprj.version,
+                            'griffon_version': subprj.version,
+                            'built_by': gradle.rootProject.config.buildInfo.buildBy,
+                            'created_by': gradle.rootProject.config.buildInfo.buildCreatedBy,
+                            'build_date': gradle.rootProject.config.buildInfo.buildDate,
+                            'build_time': gradle.rootProject.config.buildInfo.buildTime,
+                            'build_revision': gradle.rootProject.config.buildInfo.buildRevision
+                        )
+                    }
+                }
+            }
+        }
+
+        rootProject.aggregateJavadoc {
+            doLast { task ->
+                copy {
+                    into task.destinationDir
+                    from rootProject.file('src/javadoc/resources/img/griffon.ico'),
+                        rootProject.file('src/javadoc/resources/css/stylesheet.css')
+                }
+                copy {
+                    into file("${task.destinationDir}/resources")
+                    from rootProject.file('src/javadoc/resources/img/')
+                }
+                copy {
+                    into file("${task.destinationDir}/images/")
+                    from rootProject.file('src/media/banners/medium.png')
+                    rename '.*', 'griffon-banner-medium.png'
+                }
+            }
         }
     }
-
-    task allDeps(type: DependencyReportTask) {}
-    configurations.all {
-        resolutionStrategy.force  "com.google.guava:guava:$guavaVersion",
-            "junit:junit:$junitVersion",
-            "cglib:cglib-nodep:$cglibVersion",
-            "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
-            "org.codehau.groovy:groovy-all:$groovyVersion",
-            "org.slf4j:slf4j-api:$slf4jVersion",
-            "org.slf4j:slf4j-simple:$slf4jVersion",
-            "org.easytesting:fest-util:$festUtilVersion",
-            "com.google.code.findbugs:jsr305:$jsr305Version",
-            "commons-io:commons-io:$commonsIoVersion",
-            "org.apache.commons:commons-lang3:$commonsLang3Version",
-            "com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:$concurrentLHMVersion",
-            "org.ow2.asm:asm:$asmVersion",
-            "org.ow2.asm:asm-commons:$asmVersion",
-            "org.ow2.asm:asm-tree:$asmVersion"
-
-        resolutionStrategy.failOnVersionConflict()
-    }
-}
-
-evaluationDependsOnChildren()
-
-task jacocoRootMerge(type: org.gradle.testing.jacoco.tasks.JacocoMerge) {
-    dependsOn = projectsWithCoverage.test + projectsWithIntegrationCoverage.integrationTest + projectsWithFunctionalCoverage.functionalTest
-    executionData = files([
-        projectsWithCoverage.jacocoTestReport +
-            projectsWithIntegrationCoverage.jacocoIntegrationTestReport +
-            projectsWithFunctionalCoverage.jacocoFunctionalTestReport
-    ].unique().executionData)
-    destinationFile = file(jacocoMergeExecFile)
-}
-
-task jacocoRootReport(dependsOn: jacocoRootMerge, type: JacocoReport) {
-    group = 'Reporting'
-    description = 'Aggregate Jacoco coverage reports.'
-
-    additionalSourceDirs = files(projectsWithCoverage.sourceSets.main.allSource.srcDirs)
-    sourceDirectories = files(projectsWithCoverage .sourceSets.main.allSource.srcDirs)
-    classDirectories = files(projectsWithCoverage.sourceSets.main.output)
-    executionData = files(jacocoRootMerge.destinationFile)
-
-    reports {
-        html.enabled = true
-        xml.enabled = true
-        html.destination = file(jacocoMergeReportHTMLFile)
-        xml.destination = file(jacocoMergeReportXMLFile)
-    }
-}
-
-sonarqube {
-    properties {
-        property 'sonar.jacoco.reportPath', file(jacocoMergeExecFile).absolutePath
-    }
-}
-
-versioneye {
-    includeSubProjects = true
-}
-
-coveralls {
-    sourceDirs = projectsWithCoverage.sourceSets.main.allSource.srcDirs.flatten()
-    jacocoReportPath = jacocoMergeReportXMLFile
-}
-
-task binaryReport(type: org.kordamp.gradle.clirr.ClirrReportTask) {
-    dependsOn = projectsWithClirr.tasks.clirr
-    reports = files(projectsWithClirr.findAll{ it.extensions.clirr.enabled }.tasks.clirr.xmlReport)
-    filter = { difference ->
-        difference?.message?.text() =~ /field __timeStamp/ ||
-        difference?.message?.text() =~ /super\$/ ||
-        difference?.message?.text() =~ /this\$/ ||
-        difference?.message?.text() =~ /__.swapInit/ ||
-        difference?.message?.text() =~ /_methodMissing/ ||
-        difference?.message?.text() =~ /_propertyMissing/ ||
-        difference?.message?.text() =~ /getDE/ ||
-        difference?.message?.text() =~ /getCO/ ||
-        difference?.message?.text() =~ /getSE/ ||
-        difference?.classname?.text() =~ /_closure/ ||
-        !(difference?.classname?.text() =~ /griffon/)
-    }
-}
-
-task sourceReport(type: org.kordamp.gradle.stats.AggregateStatsReportTask) {
-    projects = project.subprojects.grep { it.name.startsWith('griffon') }.name
-}
+})

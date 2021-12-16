@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ package griffon.javafx.beans.binding;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 
-import javax.annotation.Nonnull;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -31,11 +29,10 @@ import static java.util.Objects.requireNonNull;
 public class InvalidationListenerDecorator implements InvalidationListener {
     private final InvalidationListener delegate;
 
-    public InvalidationListenerDecorator(@Nonnull InvalidationListener delegate) {
+    public InvalidationListenerDecorator(InvalidationListener delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final InvalidationListener getDelegate() {
         return delegate;
     }

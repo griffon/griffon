@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class Point2DPropertyEditorSpec extends Specification {
     @Shared
-    private Point2D point = new Point2D.Double(10, 20)
+    private static Point2D point = new Point2D.Double(10, 20)
 
     void "Point2D format '#format' should be equal to #point"() {
         setup:

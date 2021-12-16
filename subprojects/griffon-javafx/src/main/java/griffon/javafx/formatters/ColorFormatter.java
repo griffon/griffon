@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,12 +116,9 @@ public class ColorFormatter extends AbstractFormatter<Color> {
      * <p>Returns a {@code ColorFormatter} given a color pattern.</p>
      *
      * @param pattern the input pattern. Must be one of the 4 supported color patterns.
-     *
      * @return a {@code ColorPattern} instance
-     *
      * @throws IllegalArgumentException if the supplied {@code pattern} is not supported
      */
-    @Nonnull
     public static ColorFormatter getInstance(@Nonnull String pattern) {
         return new ColorFormatter(pattern);
     }
@@ -161,7 +158,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
      *
      * @return the pattern this {@code ColorFormatter} uses for parsing/formatting.
      */
-    @Nonnull
     public String getPattern() {
         return delegate.getPattern();
     }
@@ -180,13 +176,10 @@ public class ColorFormatter extends AbstractFormatter<Color> {
      * {@code javafx.scene.paint.Color}.
      *
      * @param str the string representation of a {@code javafx.scene.paint.Color}
-     *
      * @return a {@code javafx.scene.paint.Color} instance matching the supplied RGBA color components
-     *
      * @throws ParseException if the string cannot be parsed by the chosen pattern
      * @see javafx.scene.paint.Color
      */
-    @Nonnull
     @SuppressWarnings("ConstantConditions")
     public static Color parseColor(@Nonnull String str) throws ParseException {
         if (str.startsWith(HASH)) {
@@ -215,13 +208,10 @@ public class ColorFormatter extends AbstractFormatter<Color> {
     }
 
     private interface ColorFormatterDelegate {
-        @Nonnull
         String getPattern();
 
-        @Nonnull
         String format(@Nonnull Color color);
 
-        @Nonnull
         Color parse(@Nonnull String str) throws ParseException;
     }
 
@@ -233,7 +223,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public String getPattern() {
             return pattern;
         }
@@ -265,7 +254,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public String format(@Nonnull Color color) {
             requireNonNull(color, ERROR_COLOR_NULL);
 
@@ -277,7 +265,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith(HASH) || str.length() != 4) {
                 throw parseError(str, Color.class);
@@ -306,7 +293,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public String format(@Nonnull Color color) {
             requireNonNull(color, ERROR_COLOR_NULL);
 
@@ -319,7 +305,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith(HASH) || str.length() != 5) {
                 throw parseError(str, Color.class);
@@ -352,7 +337,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public String format(@Nonnull Color color) {
             requireNonNull(color, ERROR_COLOR_NULL);
 
@@ -364,7 +348,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith(HASH) || str.length() != 7) {
                 throw parseError(str, Color.class);
@@ -393,7 +376,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public String format(@Nonnull Color color) {
             requireNonNull(color, ERROR_COLOR_NULL);
 
@@ -406,7 +388,6 @@ public class ColorFormatter extends AbstractFormatter<Color> {
         }
 
         @Override
-        @Nonnull
         public Color parse(@Nonnull String str) throws ParseException {
             if (!str.startsWith(HASH) || str.length() != 9) {
                 throw parseError(str, Color.class);

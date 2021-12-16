@@ -1,13 +1,13 @@
 application {
-    title = 'app'
-    startupGroups = ['app']
+    title = '_app'
+    startupGroups = ['_app']
     autoShutdown = true
 }
 mvcGroups {
-    // MVC Group for "app"
-    'app' {
-        model      = '\${groupId}.AppModel'
-        view       = '\${groupId}.AppView'
-        controller = '\${groupId}.AppController'
+    // MVC Group for "_app"
+    '_app' {
+        model      = '\${package}._APPModel'
+        view       = '\${package}._APPView'
+        controller = '\${package}._APPController'
     }
 }

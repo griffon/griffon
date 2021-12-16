@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ import static javafx.scene.paint.Color.WHITE
 @Unroll
 class RadialGradientPropertyEditorSpec extends Specification {
     @Shared
-    private RadialGradient sharedPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedPaint = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     @Shared
-    private RadialGradient sharedPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static RadialGradient sharedPaintC = new RadialGradient(1, 2, 3, 4, 5, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     void "RadialGradient format '#format' is supported"() {
         setup:

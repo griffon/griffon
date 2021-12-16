@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.javafx.uithread
+package griffon.javafx.kotlin.uithread
 
 import griffon.javafx.beans.binding.UIThreadAwareBindings
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
 import javafx.beans.binding.BooleanBinding
+import javafx.beans.binding.BooleanExpression
 import javafx.beans.binding.DoubleBinding
+import javafx.beans.binding.DoubleExpression
 import javafx.beans.binding.FloatBinding
+import javafx.beans.binding.FloatExpression
 import javafx.beans.binding.IntegerBinding
+import javafx.beans.binding.IntegerExpression
+import javafx.beans.binding.ListExpression
 import javafx.beans.binding.LongBinding
+import javafx.beans.binding.LongExpression
+import javafx.beans.binding.MapExpression
 import javafx.beans.binding.ObjectBinding
+import javafx.beans.binding.ObjectExpression
+import javafx.beans.binding.SetExpression
 import javafx.beans.binding.StringBinding
+import javafx.beans.binding.StringExpression
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.FloatProperty
@@ -36,6 +46,16 @@ import javafx.beans.property.LongProperty
 import javafx.beans.property.MapProperty
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.Property
+import javafx.beans.property.ReadOnlyBooleanProperty
+import javafx.beans.property.ReadOnlyDoubleProperty
+import javafx.beans.property.ReadOnlyFloatProperty
+import javafx.beans.property.ReadOnlyIntegerProperty
+import javafx.beans.property.ReadOnlyListProperty
+import javafx.beans.property.ReadOnlyLongProperty
+import javafx.beans.property.ReadOnlyMapProperty
+import javafx.beans.property.ReadOnlyObjectProperty
+import javafx.beans.property.ReadOnlySetProperty
+import javafx.beans.property.ReadOnlyStringProperty
 import javafx.beans.property.SetProperty
 import javafx.beans.property.StringProperty
 import javafx.beans.value.ChangeListener
@@ -301,4 +321,84 @@ fun StringBinding.uiThreadAware(): StringBinding {
 
 fun <T> ObjectBinding<T>.uiThreadAware(): ObjectBinding<T> {
     return UIThreadAwareBindings.uiThreadAwareObjectBinding(this)
+}
+
+fun ReadOnlyBooleanProperty.uiThreadAware(): ReadOnlyBooleanProperty {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyBooleanProperty(this)
+}
+
+fun ReadOnlyIntegerProperty.uiThreadAware(): ReadOnlyIntegerProperty {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyIntegerProperty(this)
+}
+
+fun ReadOnlyLongProperty.uiThreadAware(): ReadOnlyLongProperty {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyLongProperty(this)
+}
+
+fun ReadOnlyFloatProperty.uiThreadAware(): ReadOnlyFloatProperty {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyFloatProperty(this)
+}
+
+fun ReadOnlyDoubleProperty.uiThreadAware(): ReadOnlyDoubleProperty {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyDoubleProperty(this)
+}
+
+fun ReadOnlyStringProperty.uiThreadAware(): ReadOnlyStringProperty {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyStringProperty(this)
+}
+
+fun <T> ReadOnlyObjectProperty<T>.uiThreadAware(): ReadOnlyObjectProperty<T> {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyObjectProperty(this)
+}
+
+fun <E> ReadOnlyListProperty<E>.uiThreadAware(): ReadOnlyListProperty<E> {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyListProperty(this)
+}
+
+fun <E> ReadOnlySetProperty<E>.uiThreadAware(): ReadOnlySetProperty<E> {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlySetProperty(this)
+}
+
+fun <K, V> ReadOnlyMapProperty<K, V>.uiThreadAware(): ReadOnlyMapProperty<K, V> {
+    return UIThreadAwareBindings.uiThreadAwareReadOnlyMapProperty(this)
+}
+
+fun BooleanExpression.uiThreadAware(): BooleanExpression {
+    return UIThreadAwareBindings.uiThreadAwareBooleanExpression(this)
+}
+
+fun IntegerExpression.uiThreadAware(): IntegerExpression {
+    return UIThreadAwareBindings.uiThreadAwareIntegerExpression(this)
+}
+
+fun LongExpression.uiThreadAware(): LongExpression {
+    return UIThreadAwareBindings.uiThreadAwareLongExpression(this)
+}
+
+fun FloatExpression.uiThreadAware(): FloatExpression {
+    return UIThreadAwareBindings.uiThreadAwareFloatExpression(this)
+}
+
+fun DoubleExpression.uiThreadAware(): DoubleExpression {
+    return UIThreadAwareBindings.uiThreadAwareDoubleExpression(this)
+}
+
+fun StringExpression.uiThreadAware(): StringExpression {
+    return UIThreadAwareBindings.uiThreadAwareStringExpression(this)
+}
+
+fun <T> ObjectExpression<T>.uiThreadAware(): ObjectExpression<T> {
+    return UIThreadAwareBindings.uiThreadAwareObjectExpression(this)
+}
+
+fun <E> ListExpression<E>.uiThreadAware(): ListExpression<E> {
+    return UIThreadAwareBindings.uiThreadAwareListExpression(this)
+}
+
+fun <E> SetExpression<E>.uiThreadAware(): SetExpression<E> {
+    return UIThreadAwareBindings.uiThreadAwareSetExpression(this)
+}
+
+fun <K, V> MapExpression<K, V>.uiThreadAware(): MapExpression<K, V> {
+    return UIThreadAwareBindings.uiThreadAwareMapExpression(this)
 }

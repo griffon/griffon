@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -138,7 +137,6 @@ public class MappingObservableListTest {
         private final StringProperty name = new SimpleStringProperty(this, "name");
         private final StringProperty lastname = new SimpleStringProperty(this, "lastname");
 
-
         public ObservablePerson(String name, String lastname) {
             setName(name);
             setLastname(lastname);
@@ -168,7 +166,6 @@ public class MappingObservableListTest {
             this.lastname.set(lastname);
         }
 
-        @Nonnull
         @Override
         public ObservableValue<?>[] observableValues() {
             return new StringProperty[]{nameProperty(), lastnameProperty()};

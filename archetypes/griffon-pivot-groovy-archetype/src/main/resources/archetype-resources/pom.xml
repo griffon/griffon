@@ -10,12 +10,29 @@
     <parent>
         <groupId>org.codehaus.griffon</groupId>
         <artifactId>application-master-pom</artifactId>
-        <version>1.15.1</version>
+        <version>\${griffonVersion}</version>
     </parent>
 
+    <!--
+        Modify as needed.
+        Leave values as is to disallow inheritance from Griffon's parent.
+    -->
+    <description/>
+    <inceptionYear/>
+    <url/>
+    <licenses combine.children="override">
+        <license/>
+    </licenses>
+    <developers combine.children="override">
+        <developer/>
+    </developers>
+    <scm>
+        <url/>
+    </scm>
+
     <properties>
-        <griffon.version>${griffon_version}</griffon.version>
-        <application.main.class>\${groupId}.Launcher</application.main.class>
+        <griffon.version>\${griffonVersion}</griffon.version>
+        <application.main.class>\${package}.Launcher</application.main.class>
         <application_name>\${project.name}</application_name>
         <application_version>\${project.version}</application_version>
         <build_date>\${git.build.time}</build_date>
@@ -34,16 +51,18 @@
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <testSourceDirectory>src/test/groovy</testSourceDirectory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <dependencies>
         <!-- compile -->
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-groovy-compile</artifactId>
@@ -64,6 +83,7 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-guice</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -75,27 +95,17 @@
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-core-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.griffon</groupId>
             <artifactId>griffon-pivot-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <name>jcenter</name>
-            <url>http://jcenter.bintray.com/</url>
-        </repository>
-        <repository>
-            <id>griffon-plugins</id>
-            <name>griffon-plugins</name>
-            <url>http://dl.bintray.com/griffon/griffon-plugins</url>
-        </repository>
-    </repositories>
 </project>

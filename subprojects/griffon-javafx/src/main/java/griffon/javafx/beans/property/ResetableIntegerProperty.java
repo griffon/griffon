@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,13 +50,11 @@ public class ResetableIntegerProperty extends AbstractResetableProperty<Number> 
         super(bean, name, baseValue);
     }
 
-    @Nonnull
     @Override
     protected Property<Number> writableBaseValueProperty() {
         return writableBaseValueIntegerProperty();
     }
 
-    @Nonnull
     protected IntegerProperty writableBaseValueIntegerProperty() {
         if (baseValue == null) {
             baseValue = new SimpleIntegerProperty(this, "baseValue");
@@ -64,24 +62,20 @@ public class ResetableIntegerProperty extends AbstractResetableProperty<Number> 
         return baseValue;
     }
 
-    @Nonnull
     @Override
     public ReadOnlyProperty<Number> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
-    @Nonnull
     public ReadOnlyIntegerProperty baseValueIntegerProperty() {
         return writableBaseValueIntegerProperty();
     }
 
-    @Nonnull
     @Override
     public Property<Number> valueProperty() {
         return valueIntegerProperty();
     }
 
-    @Nonnull
     public IntegerProperty valueIntegerProperty() {
         if (value == null) {
             value = new SimpleIntegerProperty(this, "value");

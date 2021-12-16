@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-
-import com.github.jengelman.gradle.plugins.shadow.transformers.*
-
 import java.text.SimpleDateFormat
 
 buildscript {
     repositories {
-        jcenter()
-        maven { url 'https://plugins.gradle.org/m2/' }
+        mavenCentral()
+        gradlePluginPortal()
         mavenLocal()
     }
 
     dependencies {
-        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.15.1'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
-        classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
-        classpath 'com.github.cr0:gradle-macappbundle-plugin:3.1.0'
-        classpath 'org.kordamp.gradle:stats-gradle-plugin:0.2.2'
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-        classpath 'de.gliderpilot.gradle.jnlp:gradle-jnlp-plugin:1.2.5'
-        classpath 'net.nemerosa:versioning:2.6.1'
+        classpath 'org.codehaus.griffon:gradle-griffon-plugin:2.16.0-SNAPSHOT'
+        classpath 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.39.0'
+        classpath 'gradle.plugin.net.nemerosa:versioning:2.15.1'
     }
 }
 
@@ -56,7 +47,7 @@ ext {
 griffon {
     disableDependencyResolution = false
     includeGroovyDependencies = true
-    version = '2.15.1'
+    version = '2.16.0-SNAPSHOT'
     toolkit = 'javafx'
     applicationProperties = [
         'build_date'    : buildDate,
@@ -71,60 +62,17 @@ ext {
 
 mainClassName = 'org.example.Launcher'
 
-apply from: 'gradle/publishing.gradle'
-apply from: 'gradle/code-coverage.gradle'
 apply from: 'gradle/code-quality.gradle'
-apply from: 'gradle/javafx-plugin.gradle'
-apply from: 'gradle/package.gradle'
-apply from: 'gradle/docs.gradle'
-apply plugin: 'com.github.johnrengelman.shadow'
-apply plugin: 'org.kordamp.gradle.stats'
 apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'com.github.kt3k.coveralls'
-
-jfx {
-    mainClass         = mainClassName
-    allPermissions    = true
-    keyStoreAlias     = 'example-user'
-    keyStorePassword  = 'example-password'
-    jfxMainAppJarName = jar.archiveName
-    appName           = project.name
-    vendor            = project.name
-}
 
 dependencies {
-    compile "org.codehaus.griffon:griffon-guice:${griffon.version}"
-    compile 'org.kordamp.ikonli:ikonli-javafx:2.1.1'
-    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:2.1.1'
-    compile 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.2'
+    api "org.codehaus.griffon:griffon-guice:${griffon.version.get()}"
+    api 'org.kordamp.ikonli:ikonli-javafx:2.1.1'
+    api 'org.kordamp.ikonli:ikonli-fontawesome-pack:2.1.1'
+    api 'org.kordamp.bootstrapfx:bootstrapfx-core:0.2.2'
 
-    runtime 'org.slf4j:slf4j-simple:1.7.25'
+    runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
 
-    testCompile 'org.codehaus.groovy:groovy-all:2.4.15'
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
-}
-
-tasks.withType(JavaCompile) {
-    sourceCompatibility = project.sourceCompatibility
-    targetCompatibility = project.targetCompatibility
-}
-
-tasks.withType(GroovyCompile) {
-    sourceCompatibility = project.sourceCompatibility
-    targetCompatibility = project.targetCompatibility
-}
-
-shadowJar {
-    transform(ServiceFileTransformer)
-    transform(ServiceFileTransformer) {
-        path = 'META-INF/griffon'
-    }
-    transform(ServiceFileTransformer) {
-        path = 'META-INF/types'
-    }
-    transform(PropertiesFileTransformer) {
-        paths = [
-            'META-INF/editors/java.beans.PropertyEditor'
-        ]
-    }
+    testImplementation 'org.codehaus.groovy:groovy:2.5.12'
+    testImplementation 'org.spockframework:spock-core:2.0-groovy-2.5'
 }

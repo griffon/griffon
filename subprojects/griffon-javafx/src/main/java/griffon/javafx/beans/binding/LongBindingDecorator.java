@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableNumberValue;
 import javafx.collections.ObservableList;
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
@@ -41,11 +40,10 @@ import static java.util.Objects.requireNonNull;
 public class LongBindingDecorator extends LongBinding {
     private final LongBinding delegate;
 
-    public LongBindingDecorator(@Nonnull LongBinding delegate) {
+    public LongBindingDecorator(LongBinding delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final LongBinding getDelegate() {
         return delegate;
     }
@@ -56,8 +54,18 @@ public class LongBindingDecorator extends LongBinding {
     }
 
     @Override
+    public boolean equals(Object o) {
+        return this == o || delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+    @Override
     public String toString() {
-        return getDelegate().toString();
+        return getClass().getName() + ":" + delegate.toString();
     }
 
     @Override

@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when
 
 class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
     @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
+    final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private Provider<Injector> injector
@@ -82,7 +82,7 @@ class GroovyAwareCompositeResourceBundleBuilderSpec extends Specification {
 
     def "Load Java and properties bundles"() {
         given:
-        when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([resourceBundleLoader1, resourceBundleLoader2])
+        injector.get().getInstances(ResourceBundleLoader) >> [resourceBundleLoader1, resourceBundleLoader2]
         ResourceBundle bundle = bundleBuilder.create('org.codehaus.griffon.runtime.util.JavaBundle')
 
         expect:

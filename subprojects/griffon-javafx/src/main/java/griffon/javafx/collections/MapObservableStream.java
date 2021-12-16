@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,13 +37,11 @@ class MapObservableStream<T> extends AbstractObservableStream<T> {
         super(list, operations);
     }
 
-    @Nonnull
     @Override
     protected <E> ObservableStream<E> createInstance(@Nonnull List<StreamOp> operations) {
         return new MapObservableStream<>((ObservableMap) observable, operations);
     }
 
-    @Nonnull
     @Override
     protected Stream createStream() {
         return ((ObservableMap) observable).values().stream();

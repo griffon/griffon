@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,10 @@ import static javafx.scene.paint.Color.WHITE
 @Unroll
 class LinearGradientPropertyEditorSpec extends Specification {
     @Shared
-    private LinearGradient sharedPaint = new LinearGradient(1, 2, 3, 4, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static LinearGradient sharedPaint = new LinearGradient(1, 2, 3, 4, false, CycleMethod.NO_CYCLE, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     @Shared
-    private LinearGradient sharedPaintC = new LinearGradient(1, 2, 3, 4, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
+    private static LinearGradient sharedPaintC = new LinearGradient(1, 2, 3, 4, false, CycleMethod.REPEAT, [new Stop(0d, BLACK), new Stop(1d, WHITE)])
 
     void "LinearGradient format '#format' is supported"() {
         setup:

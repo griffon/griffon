@@ -61,9 +61,9 @@ dependencies {
 
     testCompile "org.spockframework:spock-core:\${spockVersion}"
     testCompile('org.awaitility:awaitility-groovy:3.1.0') {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
-    testCompile "org.codehaus.groovy:groovy-all:\${groovyVersion}"
+    testCompile "org.codehaus.groovy:groovy:\${groovyVersion}"
 }
 
 task sourceJar(type: Jar) {

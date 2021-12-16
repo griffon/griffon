@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class Dimension2DPropertyEditorSpec extends Specification {
     @Shared
-    private Dimension2D dimension = new Dimension2D(10, 20)
+    private static Dimension2D dimension = new Dimension2D(10, 20)
 
     void "Dimension2D format '#format' should be equal to #dimension"() {
         setup:

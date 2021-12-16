@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,13 +50,11 @@ public class ResetableLongProperty extends AbstractResetableProperty<Number> {
         super(bean, name, baseValue);
     }
 
-    @Nonnull
     @Override
     protected Property<Number> writableBaseValueProperty() {
         return writableBaseValueLongProperty();
     }
 
-    @Nonnull
     protected LongProperty writableBaseValueLongProperty() {
         if (baseValue == null) {
             baseValue = new SimpleLongProperty(this, "baseValue");
@@ -64,24 +62,20 @@ public class ResetableLongProperty extends AbstractResetableProperty<Number> {
         return baseValue;
     }
 
-    @Nonnull
     @Override
     public ReadOnlyProperty<Number> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
-    @Nonnull
     public ReadOnlyLongProperty baseValueLongProperty() {
         return writableBaseValueLongProperty();
     }
 
-    @Nonnull
     @Override
     public Property<Number> valueProperty() {
         return valueLongProperty();
     }
 
-    @Nonnull
     public LongProperty valueLongProperty() {
         if (value == null) {
             value = new SimpleLongProperty(this, "value");

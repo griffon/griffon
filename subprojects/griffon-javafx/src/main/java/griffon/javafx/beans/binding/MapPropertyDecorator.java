@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -44,11 +43,10 @@ import static java.util.Objects.requireNonNull;
 public class MapPropertyDecorator<K, V> extends MapProperty<K, V> {
     private final MapProperty<K, V> delegate;
 
-    public MapPropertyDecorator(@Nonnull MapProperty<K, V> delegate) {
+    public MapPropertyDecorator(MapProperty<K, V> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final MapProperty<K, V> getDelegate() {
         return delegate;
     }

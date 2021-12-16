@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ import org.codehaus.griffon.runtime.core.MapResourceBundle
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
+
+import java.text.SimpleDateFormat
 
 import static com.google.inject.util.Providers.guicify
 import static griffon.util.AnnotationUtils.named
@@ -103,7 +105,7 @@ class ConfigurationSpec extends Specification {
 
         where:
         key               || expectedValue
-        'key.date.string' || Date.parse('YYYY-MM-dd', '1970-12-24')
+        'key.date.string' || new SimpleDateFormat('YYYY-MM-dd').parse('1970-12-24')
     }
 
     def 'Calling configuration.getAsString(#key, #defaultValue) returns #expectedValue'() {

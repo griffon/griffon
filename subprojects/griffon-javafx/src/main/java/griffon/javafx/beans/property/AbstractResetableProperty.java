@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,6 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         dirty = createDirtyBinding();
     }
 
-    @Nonnull
     protected BooleanBinding createDirtyBinding() {
         return Bindings.createBooleanBinding(this::checkValuesAreNotEqual, baseValueProperty(), valueProperty());
     }
@@ -91,10 +90,8 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return !Objects.equals(getBaseValue(), getValue());
     }
 
-    @Nonnull
     protected abstract Property<T> writableBaseValueProperty();
 
-    @Nonnull
     @Override
     public BooleanBinding dirtyProperty() {
         return dirty;
@@ -112,7 +109,6 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return valueProperty().getValue();
     }
 
-    @Nonnull
     @Override
     public ResetableProperty<T> setValue(@Nullable T value) {
         valueProperty().setValue(value);
@@ -124,14 +120,12 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return dirty.get();
     }
 
-    @Nonnull
     @Override
     public ResetableProperty<T> rebase() {
         writableBaseValueProperty().setValue(getValue());
         return this;
     }
 
-    @Nonnull
     @Override
     public ResetableProperty<T> reset() {
         setValue(getBaseValue());
@@ -144,7 +138,6 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return bean;
     }
 
-    @Nonnull
     @Override
     public String getName() {
         return name;

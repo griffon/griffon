@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,6 @@ import javafx.beans.binding.Binding;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 
-import javax.annotation.Nonnull;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -33,11 +31,10 @@ import static java.util.Objects.requireNonNull;
 public class BindingDecorator<T> implements Binding<T> {
     private final Binding<T> delegate;
 
-    public BindingDecorator(@Nonnull Binding<T> delegate) {
+    public BindingDecorator(Binding<T> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final Binding<T> getDelegate() {
         return delegate;
     }

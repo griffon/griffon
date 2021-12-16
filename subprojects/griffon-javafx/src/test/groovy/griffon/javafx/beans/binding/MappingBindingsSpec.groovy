@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package griffon.javafx.beans.binding
 
 import groovy.transform.Canonical
+import groovy.transform.Sortable
 import javafx.beans.binding.Binding
 import javafx.beans.binding.ObjectBinding
 import javafx.beans.property.ObjectProperty
@@ -247,6 +248,7 @@ class MappingBindingsSpec extends Specification {
     }
 
     @Canonical
+    @Sortable
     private static class Box {
         int id
     }

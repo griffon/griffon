@@ -2,10 +2,8 @@
 [[_buildtools_maven]]
 = Maven
 
-Application projects can also be built using {link_maven}. The <<_buildtools_lazybones,Lazybones>>
-templates create a default `pom.xml` file that contains the minimum configuration
-to build, test and package a Griffon application. The bulk of the conventions are performed by
-the {link_application_master_pom}.
+Application projects can also be built using {link_maven}.
+The bulk of the conventions are performed by the {link_application_master_pom}.
 
 == Plugins
 
@@ -15,32 +13,24 @@ The `application-master-pom` configures the following plugins:
 [cols="3*", options="header"]
 |===
 | Group                    | ArtifactId                        | Version
-| org.codehaus.mojo        | appassembler-maven-plugin         | 2.0.0
-| org.codehaus.mojo        | build-helper-maven-plugin         | 3.0.0
-| org.eluder.coveralls     | coveralls-maven-plugin            | 4.3.0
-| org.codehaus.mojo        | exec-maven-plugin                 | 1.6.0
-| org.codehaus.mojo        | findbugs-maven-plugin             | 3.0.5
+| org.codehaus.mojo        | appassembler-maven-plugin         | 2.1.0
+| org.codehaus.mojo        | build-helper-maven-plugin         | 3.2.0
+| org.codehaus.mojo        | exec-maven-plugin                 | 3.0.0
 | pl.project13.maven       | git-commit-id-plugin              | 2.2.3
-| org.codehaus.gmavenplus  | gmavenplus-plugin                 | 1.6
-| org.jacoco               | jacoco-maven-plugin               | 0.7.9
-| com.zenjava              | javafx-maven-plugin               | 8.8.3
-| org.codehaus.mojo        | jdepend-maven-plugin              | 2.0
-| org.apache.maven.plugins | maven-antrun-plugin               | 1.8
-| org.apache.maven.plugins | maven-assembly-plugin             | 3.1.0
+| org.codehaus.gmavenplus  | gmavenplus-plugin                 | 1.13.0
+| org.apache.maven.plugins | maven-assembly-plugin             | 3.3.0
+| org.apache.maven.plugins | maven-clean-plugin                | 3.1.0
 | org.apache.maven.plugins | maven-changes-plugin              | 2.12.1
-| org.apache.maven.plugins | maven-checkstyle-plugin           | 2.17
-| org.apache.maven.plugins | maven-compiler-plugin             | 3.7.0
-| org.apache.maven.plugins | maven-dependency-plugin           | 3.0.1
-| org.apache.maven.plugins | maven-javadoc-plugin              | 2.10.4
-| org.apache.maven.plugins | maven-jxr-plugin                  | 2.5
-| org.bsc.maven            | maven-processor-plugin            | 3.3.2
-| org.apache.maven.plugins | maven-project-info-reports-plugin | 2.9
-| org.apache.maven.plugins | maven-release-plugin              | 2.5.3
-| org.apache.maven.plugins | maven-shade-plugin                | 3.1.0
-| org.apache.maven.plugins | maven-site-plugin                 | 3.6
-| org.apache.maven.plugins | maven-surefire-plugin             | 2.20
-| org.apache.maven.plugins | maven-surefire-report-plugin      | 2.20
-| org.codehaus.mojo        | versions-maven-plugin             | 2.4
+| org.apache.maven.plugins | maven-compiler-plugin             | 3.8.1
+| org.apache.maven.plugins | maven-dependency-plugin           | 3.2.0
+| org.apache.maven.plugins | maven-enforcer-plugin             | 3.0.0-M3
+| org.apache.maven.plugins | maven-jar-plugin                  | 3.2.0
+| org.bsc.maven            | maven-processor-plugin            | 4.5-jdk8
+| org.apache.maven.plugins | maven-release-plugin              | 3.0.0-M4
+| org.apache.maven.plugins | maven-resources-plugin            | 2.5.3
+| org.apache.maven.plugins | maven-surefire-plugin             | 3.2.0
+| org.apache.maven.plugins | maven-surefire-report-plugin      | 3.0.0-M5
+| org.codehaus.mojo        | versions-maven-plugin             | 2.8.1
 |===
 
 Of which the following are applied by default:
@@ -104,36 +94,11 @@ include::{master-pom}[tags=profile_binary,indent=0]
 
 This profile packages the application using the `maven-assembly-plugin`.
 Enable it with `maven -Pdistribution`. You must execute the `binary`
-profile before running the `distribution` profile. You *CANNOT* combine
-both profiles.
+profile before running the `distribution` profile.
 
 [source,xml,linenums,options="nowrap"]
 [subs="verbatim,attributes"]
 ----
 include::{master-pom}[tags=profile_distribution,indent=0]
-----
-
-=== Izpack
-
-This profile creates a universal installer using {link_izpack}.
-Enable it with `maven -Pizpack`. You must execute the `distribution`
-profile before running the `izpack` profile. You *CANNOT* combine
-both profiles.
-
-[source,xml,linenums,options="nowrap"]
-[subs="verbatim,attributes"]
-----
-include::{master-pom}[tags=profile_izpack,indent=0]
-----
-
-=== Shade
-
-This profile creates a single JAR by combining the application's classes
-and its dependencies. Enable it with `maven -Pshade`.
-
-[source,xml,linenums,options="nowrap"]
-[subs="verbatim,attributes"]
-----
-include::{master-pom}[tags=profile_shade,indent=0]
 ----
 

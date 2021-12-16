@@ -30,7 +30,7 @@ The following table enumerates the default PropertyEditors loaded by Griffon at 
 
 | java.lang.String
 | griffon.core.editors.StringPropertyEditor
-| 
+|
 
 | java.io.File
 | griffon.core.editors.FilePropertyEditor
@@ -114,62 +114,62 @@ additional PropertyEditors. The following tables summarize these additions:
 | Format
 
 | java.awt.Color
-| griffon.swing.editors.ColorPropertyEditor
+| griffon.swing.editors.ColorPropertyEditor
 | #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
 
-| java.awt.Dimension
-| griffon.swing.editors.DimensionPropertyEditor
+| java.awt.Dimension
+| griffon.swing.editors.DimensionPropertyEditor
 | width, height
 
-| java.awt.Font
+| java.awt.Font
 | griffon.swing.editors.FontPropertyEditor
 | family-style-size
 
-| java.awt.GradientPaint
-| griffon.swing.editors.GradientPaintPropertyEditor
+| java.awt.GradientPaint
+| griffon.swing.editors.GradientPaintPropertyEditor
 | x1, y1, #RGB, x2, y2, #RGB, CYCLIC
 
-| java.awt.Image
-| griffon.swing.editors.ImagePropertyEditor
+| java.awt.Image
+| griffon.swing.editors.ImagePropertyEditor
 | path/to/image_file
 
-| java.awt.Insets
-| griffon.swing.editors.InsetsPropertyEditor
+| java.awt.Insets
+| griffon.swing.editors.InsetsPropertyEditor
 | top, left, bottom, right
 
-| java.awt.LinearGradientPaint
-| griffon.swing.editors.LinearGradientPaintPropertyEditor
+| java.awt.LinearGradientPaint
+| griffon.swing.editors.LinearGradientPaintPropertyEditor
 | xy, y1, x2, x2, [0.0, 1.0], [#RGB, #RGB], REPEAT
 
-| java.awt.Point
-| griffon.swing.editors.PointPropertyEditor
+| java.awt.Point
+| griffon.swing.editors.PointPropertyEditor
 | x, y
 
-| java.awt.Polygon
-| griffon.swing.editors.PolygonPropertyEditor
+| java.awt.Polygon
+| griffon.swing.editors.PolygonPropertyEditor
 | x1, y1, x2, y2, ..., xn, yn
 
-| java.awt.RadialGradientPaint
-| griffon.swing.editors.RadialGradientPaintPropertyEditor
+| java.awt.RadialGradientPaint
+| griffon.swing.editors.RadialGradientPaintPropertyEditor
 | xy, y1, r, fx, fy, [0.0, 1.0], [#RGB, #RGB], REPEAT
 
-| java.awt.Rectangle
-| griffon.swing.editors.RectanglePropertyEditor
+| java.awt.Rectangle
+| griffon.swing.editors.RectanglePropertyEditor
 | x, y, width, height
 
-| java.awt.geom.Point2D
-| griffon.swing.editors.Point2DPropertyEditor
+| java.awt.geom.Point2D
+| griffon.swing.editors.Point2DPropertyEditor
 | x, y
 
-| java.awt.geom.Rectangle2D
-| griffon.swing.editors.Rectangle2DPropertyEditor
+| java.awt.geom.Rectangle2D
+| griffon.swing.editors.Rectangle2DPropertyEditor
 | x, y, width, height
 
-| java.awt.image.BufferedImage
-| griffon.swing.editors.BufferedImagePropertyEditor
+| java.awt.image.BufferedImage
+| griffon.swing.editors.BufferedImagePropertyEditor
 | path/to/image_file
 
-| javax.swing.Icon
+| javax.swing.Icon
 | griffon.swing.editors.IconPropertyEditor
 | path/to/image_file
 
@@ -199,12 +199,12 @@ The following styles are supported by `FontPropertyEditor`:
 | Editor Class
 | Format
 
-| javafx.geometry.Dimension2D
-| griffon.javafx.editors.Dimension2DPropertyEditor
+| javafx.geometry.Dimension2D
+| griffon.javafx.editors.Dimension2DPropertyEditor
 | width, height
 
 | javafx.geometry.Insets
-| griffon.javafx.editors.InsetsPropertyEditor
+| griffon.javafx.editors.InsetsPropertyEditor
 | top, left, bottom, right
 
 | javafx.geometry.Point2D
@@ -212,27 +212,27 @@ The following styles are supported by `FontPropertyEditor`:
 | x, y
 
 | javafx.geometry.Rectangle2D
-| griffon.javafx.editors.Rectangle2DPropertyEditor
+| griffon.javafx.editors.Rectangle2DPropertyEditor
 | x, y , width, height
 
 | javafx.scene.image.Image
-| griffon.javafx.editors.ImagePropertyEditor
+| griffon.javafx.editors.ImagePropertyEditor
 | path/to/image_file
 
-| javafx.scene.paint.Color
-| griffon.javafx.editors.ColorPropertyEditor
+| javafx.scene.paint.Color
+| griffon.javafx.editors.ColorPropertyEditor
 | #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
 
-| javafx.scene.paint.LinearGradient
-| griffon.javafx.editors.LinearGradientPropertyEditor
+| javafx.scene.paint.LinearGradient
+| griffon.javafx.editors.LinearGradientPropertyEditor
 | LinearGradient.parse()
 
 | javafx.scene.paint.RadialGradient
-| griffon.javafx.editors.RadialGradientPropertyEditor
+| griffon.javafx.editors.RadialGradientPropertyEditor
 | RadialGradient.parse()
 
-| javafx.scene.paint.Paint|
-| griffon.javafx.editors.PaintPropertyEditor
+| javafx.scene.paint.Paint|
+| griffon.javafx.editors.PaintPropertyEditor
 | all Color, LinearGradient and RadialGradient formats
 
 |===
@@ -250,22 +250,22 @@ Where the following applies:
 | Format
 
 | java.awt.Color
-| griffon.pivot.editors.ColorPropertyEditor
+| griffon.pivot.editors.ColorPropertyEditor
 | #RGB ; #RGBA ; #RRGGBB; #RRGGBBAA ; Color constant
 
-| org.apache.pivot.wtk.Bounds
-| griffon.pivot.editors.BoundsPropertyEditor
+| org.apache.pivot.wtk.Bounds
+| griffon.pivot.editors.BoundsPropertyEditor
 | x, y , width, height
 
 | org.apache.pivot.wtk.Dimensions
-| griffon.pivot.editors.DimensionsPropertyEditor
+| griffon.pivot.editors.DimensionsPropertyEditor
 | width, height
 
 | org.apache.pivot.wtk.Insets
-| griffon.pivot.editors.InsetsPropertyEditor
+| griffon.pivot.editors.InsetsPropertyEditor
 | top, left, right, bottom
 
-| org.apache.pivot.wtk.Point
+| org.apache.pivot.wtk.Point
 | griffon.pivot.editors.PointPropertyEditor
 | x, y
 
@@ -286,24 +286,24 @@ Since Griffon 2.4.0, there's a `core-java8` package that delivers JDK8 specific 
 | Editor Class
 | Format
 
-| java.time.LocalDate
+| java.time.LocalDate
 | griffon.core.editors.LocalDatePropertyEditor
 |
 
-| java.time.LocalDateTime
-| griffon.core.editors.LocalDateTimePropertyEditor
+| java.time.LocalDateTime
+| griffon.core.editors.LocalDateTimePropertyEditor
 |
 
-| java.time.LocalTime
-| griffon.core.editors.LocalTimePropertyEditor
+| java.time.LocalTime
+| griffon.core.editors.LocalTimePropertyEditor
 |
 
-| java.util.Calendar
-| griffon.core.editors.ExtendedCalendarPropertyEditor
+| java.util.Calendar
+| griffon.core.editors.ExtendedCalendarPropertyEditor
 |
 
-| java.util.Date
-| griffon.core.editors.ExtendedDatePropertyEditor
+| java.util.Date
+| griffon.core.editors.ExtendedDatePropertyEditor
 |
 
 |===

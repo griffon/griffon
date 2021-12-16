@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,12 @@ package griffon.javafx.beans.binding;
 
 import javafx.beans.value.ObservableBooleanValue;
 
-import javax.annotation.Nonnull;
-
 /**
  * @author Andres Almiray
  * @since 2.9.0
  */
 class UIThreadAwareObservableBooleanValue extends UIThreadAwareObservableValue<Boolean> implements ObservableBooleanValue {
-    UIThreadAwareObservableBooleanValue(@Nonnull ObservableBooleanValue delegate) {
+    UIThreadAwareObservableBooleanValue(ObservableBooleanValue delegate) {
         super(delegate);
     }
 

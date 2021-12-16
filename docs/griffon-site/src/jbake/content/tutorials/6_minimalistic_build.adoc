@@ -16,9 +16,6 @@ that how all source and resources directories can be condensed into a minimum se
 . <<_tutorial_6_2,Metadata Files>>
 . <<_tutorial_6_3,Build Files>>
 .. <<_tutorial_6_3_1,Main>>
-.. <<_tutorial_6_3_2,JavaFX>>
-.. <<_tutorial_6_3_3,Integration Tests>>
-.. <<_tutorial_6_3_4,Functional Tests>>
 
 :numbered:
 
@@ -36,53 +33,40 @@ layout, with all sources for a simple application already inside their respectiv
 .
 ├── build.gradle                                                 //<1>
 ├── gradle                                                       //<2>
-│   ├── functional-test.gradle
-│   ├── integration-test.gradle
-│   ├── javafx-plugin.gradle
 ├── gradle.properties
 └── src
-    ├── functional-test                                          //<7>
-    │   └── java
-    │       └── org
-    │           └── example
-    │               └── SampleFunctionalTest.java
-    ├── integration-test                                         //<6>
-    │   └── java
-    │       └── org
-    │           └── example
-    │               └── SampleIntegrationTest.java
     ├── main                                                     //<3>
-    │   ├── java
-    │   │   ├── Config.java
-    │   │   └── org
-    │   │       └── example
-    │   │           ├── Launcher.java
-    │   │           ├── SampleController.java
-    │   │           ├── SampleModel.java
-    │   │           ├── SampleService.java
-    │   │           └── SampleView.java
-    │   └── resources                                            //<4>
-    │       ├── META-INF
-    │       │   └── griffon
-    │       │       ├── griffon.core.artifact.GriffonController
-    │       │       ├── griffon.core.artifact.GriffonModel
-    │       │       ├── griffon.core.artifact.GriffonService
-    │       │       └── griffon.core.artifact.GriffonView
-    │       ├── application.properties
-    │       ├── griffon-icon-128x128.png
-    │       ├── griffon-icon-16x16.png
-    │       ├── griffon-icon-24x24.png
-    │       ├── griffon-icon-256x256.png
-    │       ├── griffon-icon-32x32.png
-    │       ├── griffon-icon-48x48.png
-    │       ├── griffon-icon-64x64.png
-    │       ├── griffon.png
-    │       ├── log4j.properties
-    │       ├── messages.properties
-    │       ├── org
-    │       │   └── example
-    │       │       └── sample.fxml
-    │       └── resources.properties
+    │   ├── java
+    │   │   ├── Config.java
+    │   │   └── org
+    │   │       └── example
+    │   │           ├── Launcher.java
+    │   │           ├── SampleController.java
+    │   │           ├── SampleModel.java
+    │   │           ├── SampleService.java
+    │   │           └── SampleView.java
+    │   └── resources                                            //<4>
+    │       ├── META-INF
+    │       │   └── griffon
+    │       │       ├── griffon.core.artifact.GriffonController
+    │       │       ├── griffon.core.artifact.GriffonModel
+    │       │       ├── griffon.core.artifact.GriffonService
+    │       │       └── griffon.core.artifact.GriffonView
+    │       ├── application.properties
+    │       ├── griffon-icon-128x128.png
+    │       ├── griffon-icon-16x16.png
+    │       ├── griffon-icon-24x24.png
+    │       ├── griffon-icon-256x256.png
+    │       ├── griffon-icon-32x32.png
+    │       ├── griffon-icon-48x48.png
+    │       ├── griffon-icon-64x64.png
+    │       ├── griffon.png
+    │       ├── log4j.properties
+    │       ├── messages.properties
+    │       ├── org
+    │       │   └── example
+    │       │       └── sample.fxml
+    │       └── resources.properties
     └── test                                                     //<5>
         └── java
             └── org
@@ -95,8 +79,6 @@ layout, with all sources for a simple application already inside their respectiv
 <3> main sources
 <4> main resources
 <5> test sources
-<6> integration test sources
-<7> functional test sources
 
 We begin by looking at root directory, where we find the main build file [conum,data-value=1]_1_ paired with some additional
 build scripts [conum,data-value=2]_2_ that take care of configuring this project for JavaFX, as well as setting up
@@ -192,60 +174,5 @@ into resource files. We use Gradle's standard mechanism for processing resources
 include::{app-dir}/build.gradle[tags=resources]
 ----
 
-Finally, we must configure the entry point of the application so that the JavaFX plugin can find it.
-
-[source,groovy]
-.JavaFX configuration
-----
-include::{app-dir}/build.gradle[tags=javafx]
-----
-
 icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
 
-[[_tutorial_6_3_2]]
-=== JavaFX
-
-This file performs a check on several paths to locate the correct `jfxrt.jar` which is required by the JavaFX plugin.
-It also applies the JavaFX plugin.
-
-[source,groovy]
-.gradle/javafx-plugin.gradle
-----
-include::{app-dir}/gradle/javafx-plugin.gradle[lines=17..-1]
-----
-
-icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
-
-[[_tutorial_6_3_3]]
-=== Integration Tests
-
-Integration tests build up on existing configuration from regular tests. Some paths and classpaths need to be adjusted,
-as well as wiring up tasks dependencies, so that in the end, invoking `check` will also run `integration-test`, just like
-it happens with the standard `test` task.
-
-[source,groovy]
-.gradle/integration-test.gradle
-----
-include::{app-dir}/gradle/integration-test.gradle[lines=17..-1]
-----
-
-icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>
-
-[[_tutorial_6_3_4]]
-=== Functional Tests
-
-Functional tests differ from the previous ones by not extending directly from regular tests. This assures that functional
-tests don't get polluted with unit or integration concerns. This is the reason why basic test dependencies are defined
-explicitly here.
-
-[source,groovy]
-.gradle/functional-test.gradle
-----
-include::{app-dir}/gradle/functional-test.gradle[lines=17..-1]
-----
-
-The full code for this application can be found
-link:https://github.com/griffon/griffon/tree/master/tutorials/simplified[here, window="_blank"].
-
-
-icon:arrow-up[link="#_tutorial_6_toc"] <<_tutorial_6_toc,Top>>

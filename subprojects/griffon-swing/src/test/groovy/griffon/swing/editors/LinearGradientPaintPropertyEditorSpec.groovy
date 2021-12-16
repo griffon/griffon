@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,10 @@ import static java.awt.MultipleGradientPaint.CycleMethod.REPEAT
 @Unroll
 class LinearGradientPaintPropertyEditorSpec extends Specification {
     @Shared
-    private LinearGradientPaint sharedPaint = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], NO_CYCLE)
+    private static LinearGradientPaint sharedPaint = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], NO_CYCLE)
 
     @Shared
-    private LinearGradientPaint sharedPaintC = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], REPEAT)
+    private static LinearGradientPaint sharedPaintC = new LinearGradientPaint(1, 2, 3, 4, [0, 1] as float[], [BLACK, WHITE] as Color[], REPEAT)
 
     void "LinearGradientPaint format '#format' is supported"() {
         setup:

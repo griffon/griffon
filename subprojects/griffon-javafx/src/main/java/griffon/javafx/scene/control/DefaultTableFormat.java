@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,11 @@ import static java.util.Objects.requireNonNull;
  * @since 2.11.0
  */
 public class DefaultTableFormat<E> implements TableViewFormat<E> {
-    public static class Column<E,T> {
+    public static class Column<E, T> {
         private final String name;
         private final String title;
         private final Double size;
-        private final TableCellFactory<E,T> tableCellFactory;
+        private final TableCellFactory<E, T> tableCellFactory;
 
         public Column(@Nonnull String name) {
             this(name, getNaturalName(name), null, null);
@@ -56,7 +56,7 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
             this(name, getNaturalName(name), size, null);
         }
 
-        public Column(@Nonnull String name, @Nonnull TableCellFactory<E,T> tableCellFactory) {
+        public Column(@Nonnull String name, @Nonnull TableCellFactory<E, T> tableCellFactory) {
             this(name, getNaturalName(name), null, tableCellFactory);
         }
 
@@ -64,15 +64,15 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
             this(name, title, size, null);
         }
 
-        public Column(@Nonnull String name, @Nonnull String title, @Nonnull TableCellFactory<E,T> tableCellFactory) {
+        public Column(@Nonnull String name, @Nonnull String title, @Nonnull TableCellFactory<E, T> tableCellFactory) {
             this(name, title, null, tableCellFactory);
         }
 
-        public Column(@Nonnull String name, @Nonnull Double size, @Nonnull TableCellFactory<E,T> tableCellFactory) {
+        public Column(@Nonnull String name, @Nonnull Double size, @Nonnull TableCellFactory<E, T> tableCellFactory) {
             this(name, getNaturalName(name), size, tableCellFactory);
         }
 
-        public Column(@Nonnull String name, @Nonnull String title, @Nullable Double size, @Nonnull TableCellFactory<E,T> tableCellFactory) {
+        public Column(@Nonnull String name, @Nonnull String title, @Nullable Double size, @Nonnull TableCellFactory<E, T> tableCellFactory) {
             this.name = requireNonBlank(name, "Argument 'name' must not be blank");
             this.title = requireNonBlank(title, "Argument 'title' must not be blank");
             if (size != null) {
@@ -83,12 +83,10 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
             this.tableCellFactory = tableCellFactory;
         }
 
-        @Nonnull
         public String getName() {
             return name;
         }
 
-        @Nonnull
         public String getTitle() {
             return title;
         }
@@ -99,7 +97,7 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
         }
 
         @Nullable
-        public TableCellFactory<E,T> getTableCellFactory() {
+        public TableCellFactory<E, T> getTableCellFactory() {
             return tableCellFactory;
         }
     }
@@ -128,7 +126,6 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
         return columns.length;
     }
 
-    @Nonnull
     @Override
     public String getColumnName(int index) {
         return columns[index].getTitle();
@@ -140,7 +137,6 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
         return columns[index].getSize();
     }
 
-    @Nonnull
     @Override
     public ObservableValue<?> getObservableValue(@Nonnull E instance, int index) {
         final String columnName = columns[index].getName();
@@ -167,7 +163,6 @@ public class DefaultTableFormat<E> implements TableViewFormat<E> {
         return columns[index].getTableCellFactory();
     }
 
-    @Nonnull
     private Map<String, Method> harvestMetadata(@Nonnull Class<?> klass) {
         Map<String, Method> map = new LinkedHashMap<>();
 

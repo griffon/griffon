@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.beans.PropertyEditor
 @Unroll
 class Rectangle2DPropertyEditorSpec extends Specification {
     @Shared
-    private Rectangle2D rectangle = new Rectangle2D(10, 20, 30, 40)
+    private static Rectangle2D rectangle = new Rectangle2D(10, 20, 30, 40)
 
     void "Rectangle2D format '#format' should be equal to #rectangle"() {
         setup:

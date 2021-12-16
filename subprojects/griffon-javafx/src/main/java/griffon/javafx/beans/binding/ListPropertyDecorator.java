@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -46,11 +45,10 @@ import static java.util.Objects.requireNonNull;
 public class ListPropertyDecorator<E> extends ListProperty<E> {
     private final ListProperty<E> delegate;
 
-    public ListPropertyDecorator(@Nonnull ListProperty<E> delegate) {
+    public ListPropertyDecorator(ListProperty<E> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
-    @Nonnull
     protected final ListProperty<E> getDelegate() {
         return delegate;
     }

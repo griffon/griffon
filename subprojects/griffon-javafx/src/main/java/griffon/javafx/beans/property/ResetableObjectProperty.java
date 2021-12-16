@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,13 +50,11 @@ public class ResetableObjectProperty<E> extends AbstractResetableProperty<E> {
         super(bean, name, baseValue);
     }
 
-    @Nonnull
     @Override
     protected Property<E> writableBaseValueProperty() {
         return writableBaseValueObjectProperty();
     }
 
-    @Nonnull
     protected ObjectProperty writableBaseValueObjectProperty() {
         if (baseValue == null) {
             baseValue = new SimpleObjectProperty<>(this, "baseValue");
@@ -64,24 +62,20 @@ public class ResetableObjectProperty<E> extends AbstractResetableProperty<E> {
         return baseValue;
     }
 
-    @Nonnull
     @Override
     public ReadOnlyProperty<E> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
-    @Nonnull
     public ReadOnlyObjectProperty baseValueObjectProperty() {
         return writableBaseValueObjectProperty();
     }
 
-    @Nonnull
     @Override
     public Property<E> valueProperty() {
         return valueObjectProperty();
     }
 
-    @Nonnull
     public ObjectProperty<E> valueObjectProperty() {
         if (value == null) {
             value = new SimpleObjectProperty<>(this, "value");

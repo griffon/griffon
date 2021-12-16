@@ -1,11 +1,13 @@
 /*
- * Copyright 2008-2018 the original author or authors.
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,94 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import groovy.json.JsonParserType
-import groovy.json.JsonSlurper
-import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.webapp.WebAppContext
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://plugins.gradle.org/m2/' }
-    }
-
-    dependencies {
-        classpath 'org.jbake:jbake-gradle-plugin:1.2.0'
-        classpath "org.eclipse.jetty:jetty-webapp:$jettyVersion"
-        classpath "org.eclipse.jetty:jetty-annotations:$jettyVersion"
-    }
-}
-
-apply plugin: 'base'
-apply plugin: 'org.jbake.site'
-
-configurations {
-    docs
-}
-
-dependencies {
-    docs project(':griffon-guide')
-}
-
-task pluginList() {}
-pluginList.doLast {
-    URL url = 'https://api.github.com/users/griffon-plugins/repos?sort=full_name'.toURL()
-    def json = new JsonSlurper().setType(JsonParserType.LAX).parse(url)
-
-    String content = '''
-        :linkattrs:
-        :icons: 'font'
-
-        [cols="2,5*^"]
-        |====
-    '''.stripIndent(8)
-
-    json.each { repo ->
-        content += """| link:${repo.html_url}[${repo.name}, window="_blank"]"""
-        content += """pass:[<ul class="list-inline">
-        <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe></li>
-        <li><iframe src="http://ghbtns.com/github-btn.html?user=griffon-plugins&repo=${repo.name}&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe></li></ul>]""".stripIndent(8)
-        content += """| image:https://api.bintray.com/packages/griffon/griffon-plugins/${repo.name}/images/download.svg[link="https://bintray.com/griffon/griffon-plugins/${repo.name}/_latestVersion"]"""
-        content += """| image:http://img.shields.io/badge/docs-api-blue.svg[API, link="http://griffon-plugins.github.io/${repo.name}/"] """
-        content += """| image:http://img.shields.io/travis/griffon-plugins/${repo.name}/master.svg[Build Status, link="https://travis-ci.org/griffon-plugins/${repo.name}/"] """
-        content += """| image:http://img.shields.io/coveralls/griffon-plugins/${repo.name}/master.svg[Coverage Status, link="https://coveralls.io/r/griffon-plugins/${repo.name}/"] """
-        content += """| image:http://img.shields.io/github/issues/${repo.full_name}.svg[Open Issues, link="https://github.com/griffon-plugins/${repo.name}/issues"]"""
-        content += '\n'
-    }
-
-    content += '|====\n'
-
-    File pluginFile = new File("${buildDir}/tmp/plugins.adoc")
-    pluginFile.parentFile.mkdirs()
-    pluginFile.text = content
+plugins {
+    id 'org.jbake.site'
 }
 
 jbake {
-    // dependsOn pluginList
     configuration['asciidoctor.attributes.export'] = true
     configuration['asciidoctor.attributes.export.prefix'] = 'jbake-'
     configuration['griffon.version.current'] = project.version
     configuration['griffon.version.previous'] = rootProject.previousVersion
     configuration['project-build-dir'] = project.buildDir.absolutePath
     configuration['project-rootdir'] = rootProject.projectDir.absolutePath
+    configuration['branch'] = 'development_2_x'
 
-    version = '2.6.1'
-    asciidoctorjVersion = '1.5.6'
-    freemarkerVersion = '2.3.28'
+    version = '2.6.5'
+    // asciidoctorjVersion = '1.5.7'
+    freemarkerVersion = '2.3.31'
     groovyTemplatesVersion = groovyVersion
-    thymeleafVersion = '3.0.9.RELEASE'
-    jade4jVersion = '1.2.7'
-    flexmarkVersion = '0.32.24'
+    thymeleafVersion = '3.0.12.RELEASE'
+    jade4jVersion = '1.3.2'
+    // flexmarkVersion = '0.34.24'
 }
 
-task(guide, dependsOn: [':griffon-guide:guide']) {
+task(guide, dependsOn: [':griffon-guide:createGuide']) {
     // generates guide on the spot
 }
 
 task(copyGuide, type: Copy) {
     destinationDir = file("$buildDir/guide")
-    from(tasks.getByPath(':griffon-guide:guide').destinationDir) {
+    from(tasks.getByPath(':griffon-guide:createGuide').destinationDir) {
         into project.version
     }
 }
@@ -115,28 +58,16 @@ task(site, type: Copy, dependsOn: [bake, copyGuide]) {
     doLast {
         copy {
             into file("${destinationDir}/reports/${project.version}")
-            from(rootProject.tasks.binaryReport.reportsDir)
         }
     }
 }
 
-task(siteRun) {
+bakePreview {
     dependsOn site
-    doLast {
-        Server server = new Server(8080)
-        String wardir = site.destinationDir.absolutePath
-        WebAppContext context = new WebAppContext()
-        context.setResourceBase(wardir)
-        context.setDescriptor(wardir + 'WEB-INF/web.xml')
-        context.setContextPath('/')
-        context.setParentLoaderPriority(true)
-        server.setHandler(context)
-        server.start()
-        server.join()
-    }
+    input = site.destinationDir
 }
 
 task(siteZip, type: Zip, dependsOn: site) {
-    baseName = 'griffon-site'
+    archiveBaseName.set 'griffon-site'
     from site.destinationDir
 }

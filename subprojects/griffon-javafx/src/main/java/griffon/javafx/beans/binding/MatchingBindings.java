@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -48,11 +47,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable list of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding anyMatch(@Nonnull final ObservableList<T> items, @Nonnull final Predicate<? super T> predicate) {
+    public static <T> BooleanBinding anyMatch(final ObservableList<T> items, final Predicate<? super T> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.stream().anyMatch(predicate), items);
@@ -64,11 +61,9 @@ public final class MatchingBindings {
      * @param items     the observable list of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding anyMatch(@Nonnull final ObservableList<T> items, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <T, R> BooleanBinding anyMatch(final ObservableList<T> items, final Function<? super T, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -80,11 +75,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable list of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding anyMatch(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<Predicate<? super T>> predicate) {
+    public static <T> BooleanBinding anyMatch(final ObservableList<T> items, final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -100,11 +93,9 @@ public final class MatchingBindings {
      * @param items     the observable list of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding anyMatch(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <T, R> BooleanBinding anyMatch(final ObservableList<T> items, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -122,11 +113,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable list of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding noneMatch(@Nonnull final ObservableList<T> items, @Nonnull final Predicate<? super T> predicate) {
+    public static <T> BooleanBinding noneMatch(final ObservableList<T> items, final Predicate<? super T> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.stream().noneMatch(predicate), items);
@@ -138,11 +127,9 @@ public final class MatchingBindings {
      * @param items     the observable list of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding noneMatch(@Nonnull final ObservableList<T> items, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <T, R> BooleanBinding noneMatch(final ObservableList<T> items, final Function<? super T, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -154,11 +141,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable list of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding noneMatch(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<Predicate<? super T>> predicate) {
+    public static <T> BooleanBinding noneMatch(final ObservableList<T> items, final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -174,11 +159,9 @@ public final class MatchingBindings {
      * @param items     the observable list of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding noneMatch(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <T, R> BooleanBinding noneMatch(final ObservableList<T> items, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -196,11 +179,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable list of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding allMatch(@Nonnull final ObservableList<T> items, @Nonnull final Predicate<? super T> predicate) {
+    public static <T> BooleanBinding allMatch(final ObservableList<T> items, final Predicate<? super T> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.stream().allMatch(predicate), items);
@@ -212,11 +193,9 @@ public final class MatchingBindings {
      * @param items     the observable list of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding allMatch(@Nonnull final ObservableList<T> items, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <T, R> BooleanBinding allMatch(final ObservableList<T> items, final Function<? super T, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -228,11 +207,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable list of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding allMatch(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<Predicate<? super T>> predicate) {
+    public static <T> BooleanBinding allMatch(final ObservableList<T> items, final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -248,11 +225,9 @@ public final class MatchingBindings {
      * @param items     the observable list of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding allMatch(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <T, R> BooleanBinding allMatch(final ObservableList<T> items, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -270,11 +245,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable set of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding anyMatch(@Nonnull final ObservableSet<T> items, @Nonnull final Predicate<? super T> predicate) {
+    public static <T> BooleanBinding anyMatch(final ObservableSet<T> items, final Predicate<? super T> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.stream().anyMatch(predicate), items);
@@ -286,11 +259,9 @@ public final class MatchingBindings {
      * @param items     the observable set of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding anyMatch(@Nonnull final ObservableSet<T> items, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <T, R> BooleanBinding anyMatch(final ObservableSet<T> items, final Function<? super T, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -302,11 +273,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable set of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding anyMatch(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<Predicate<? super T>> predicate) {
+    public static <T> BooleanBinding anyMatch(final ObservableSet<T> items, final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -322,11 +291,9 @@ public final class MatchingBindings {
      * @param items     the observable set of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding anyMatch(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <T, R> BooleanBinding anyMatch(final ObservableSet<T> items, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -344,11 +311,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable set of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding noneMatch(@Nonnull final ObservableSet<T> items, @Nonnull final Predicate<? super T> predicate) {
+    public static <T> BooleanBinding noneMatch(final ObservableSet<T> items, final Predicate<? super T> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.stream().noneMatch(predicate), items);
@@ -360,11 +325,9 @@ public final class MatchingBindings {
      * @param items     the observable set of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding noneMatch(@Nonnull final ObservableSet<T> items, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <T, R> BooleanBinding noneMatch(final ObservableSet<T> items, final Function<? super T, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -376,11 +339,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable set of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding noneMatch(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<Predicate<? super T>> predicate) {
+    public static <T> BooleanBinding noneMatch(final ObservableSet<T> items, final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -396,11 +357,9 @@ public final class MatchingBindings {
      * @param items     the observable set of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding noneMatch(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <T, R> BooleanBinding noneMatch(final ObservableSet<T> items, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -418,11 +377,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable set of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding allMatch(@Nonnull final ObservableSet<T> items, @Nonnull final Predicate<? super T> predicate) {
+    public static <T> BooleanBinding allMatch(final ObservableSet<T> items, final Predicate<? super T> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.stream().allMatch(predicate), items);
@@ -434,11 +391,9 @@ public final class MatchingBindings {
      * @param items     the observable set of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding allMatch(@Nonnull final ObservableSet<T> items, @Nonnull final Function<? super T, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <T, R> BooleanBinding allMatch(final ObservableSet<T> items, final Function<? super T, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -450,11 +405,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable set of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T> BooleanBinding allMatch(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<Predicate<? super T>> predicate) {
+    public static <T> BooleanBinding allMatch(final ObservableSet<T> items, final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -470,11 +423,9 @@ public final class MatchingBindings {
      * @param items     the observable set of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <T, R> BooleanBinding allMatch(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <T, R> BooleanBinding allMatch(final ObservableSet<T> items, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -492,11 +443,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable map of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding anyMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final Predicate<? super V> predicate) {
+    public static <K, V> BooleanBinding anyMatch(final ObservableMap<K, V> items, final Predicate<? super V> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.values().stream().anyMatch(predicate), items);
@@ -508,11 +457,9 @@ public final class MatchingBindings {
      * @param items     the observable map of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V, R> BooleanBinding anyMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final Function<? super V, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <K, V, R> BooleanBinding anyMatch(final ObservableMap<K, V> items, final Function<? super V, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -524,11 +471,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable map of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding anyMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<Predicate<? super V>> predicate) {
+    public static <K, V> BooleanBinding anyMatch(final ObservableMap<K, V> items, final ObservableValue<Predicate<? super V>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -544,11 +489,9 @@ public final class MatchingBindings {
      * @param items     the observable map of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V, R> BooleanBinding anyMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <K, V, R> BooleanBinding anyMatch(final ObservableMap<K, V> items, final ObservableValue<Function<? super V, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -566,11 +509,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable map of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding noneMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final Predicate<? super V> predicate) {
+    public static <K, V> BooleanBinding noneMatch(final ObservableMap<K, V> items, final Predicate<? super V> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.values().stream().noneMatch(predicate), items);
@@ -582,11 +523,9 @@ public final class MatchingBindings {
      * @param items     the observable map of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V, R> BooleanBinding noneMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final Function<? super V, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <K, V, R> BooleanBinding noneMatch(final ObservableMap<K, V> items, final Function<? super V, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -598,11 +537,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable map of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding noneMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<Predicate<? super V>> predicate) {
+    public static <K, V> BooleanBinding noneMatch(final ObservableMap<K, V> items, final ObservableValue<Predicate<? super V>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -618,11 +555,9 @@ public final class MatchingBindings {
      * @param items     the observable map of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V, R> BooleanBinding noneMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <K, V, R> BooleanBinding noneMatch(final ObservableMap<K, V> items, final ObservableValue<Function<? super V, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -640,11 +575,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable map of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding allMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final Predicate<? super V> predicate) {
+    public static <K, V> BooleanBinding allMatch(final ObservableMap<K, V> items, final Predicate<? super V> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> items.values().stream().allMatch(predicate), items);
@@ -656,11 +589,9 @@ public final class MatchingBindings {
      * @param items     the observable map of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V, R> BooleanBinding allMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final Function<? super V, R> mapper, @Nonnull final Predicate<? super R> predicate) {
+    public static <K, V, R> BooleanBinding allMatch(final ObservableMap<K, V> items, final Function<? super V, R> mapper, final Predicate<? super R> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -672,11 +603,9 @@ public final class MatchingBindings {
      *
      * @param items     the observable map of items.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V> BooleanBinding allMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<Predicate<? super V>> predicate) {
+    public static <K, V> BooleanBinding allMatch(final ObservableMap<K, V> items, final ObservableValue<Predicate<? super V>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> {
@@ -692,11 +621,9 @@ public final class MatchingBindings {
      * @param items     the observable map of items.
      * @param mapper    a non-interfering, stateless function to apply to the each value before matching.
      * @param predicate a non-interfering, stateless predicate to apply to the each element.
-     *
      * @return a boolean binding
      */
-    @Nonnull
-    public static <K, V, R> BooleanBinding allMatch(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<Predicate<? super R>> predicate) {
+    public static <K, V, R> BooleanBinding allMatch(final ObservableMap<K, V> items, final ObservableValue<Function<? super V, R>> mapper, final ObservableValue<Predicate<? super R>> predicate) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(predicate, ERROR_PREDICATE_NULL);

@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.DoubleSupplier;
 import java.util.function.Function;
@@ -57,11 +55,9 @@ public final class CollectionBindings {
      *
      * @param items     the observable list of items.
      * @param delimiter the sequence of characters to be used between each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static StringBinding joinList(@Nonnull final ObservableList<?> items, @Nullable final String delimiter) {
+    public static StringBinding joinList(final ObservableList<?> items,  final String delimiter) {
         return joinList(items, delimiter, String::valueOf);
     }
 
@@ -71,11 +67,9 @@ public final class CollectionBindings {
      * @param items     the observable list of items.
      * @param delimiter the sequence of characters to be used between each element.
      * @param mapper    a non-interfering, stateless function to apply to the each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <T> StringBinding joinList(@Nonnull final ObservableList<T> items, @Nullable final String delimiter, @Nonnull final Function<? super T, String> mapper) {
+    public static <T> StringBinding joinList(final ObservableList<T> items,  final String delimiter, final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         final String value = delimiter == null ? "" : delimiter;
@@ -87,11 +81,9 @@ public final class CollectionBindings {
      *
      * @param items     the observable list of items.
      * @param delimiter the sequence of characters to be used between each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static StringBinding joinList(@Nonnull final ObservableList<?> items, @Nonnull final ObservableValue<String> delimiter) {
+    public static StringBinding joinList(final ObservableList<?> items, final ObservableValue<String> delimiter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(delimiter, ERROR_DELIMITER_NULL);
         return createStringBinding(() -> {
@@ -107,11 +99,9 @@ public final class CollectionBindings {
      * @param items     the observable list of items.
      * @param delimiter the sequence of characters to be used between each element.
      * @param mapper    a non-interfering, stateless function to apply to the each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <T> StringBinding joinList(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<String> delimiter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding joinList(final ObservableList<T> items, final ObservableValue<String> delimiter, final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(delimiter, ERROR_DELIMITER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -128,11 +118,9 @@ public final class CollectionBindings {
      *
      * @param items     the observable set of items.
      * @param delimiter the sequence of characters to be used between each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static StringBinding joinSet(@Nonnull final ObservableSet<?> items, @Nullable final String delimiter) {
+    public static StringBinding joinSet(final ObservableSet<?> items,  final String delimiter) {
         return joinSet(items, delimiter, String::valueOf);
     }
 
@@ -142,11 +130,9 @@ public final class CollectionBindings {
      * @param items     the observable set of items.
      * @param delimiter the sequence of characters to be used between each element.
      * @param mapper    a non-interfering, stateless function to apply to the each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <T> StringBinding joinSet(@Nonnull final ObservableSet<T> items, @Nullable final String delimiter, @Nonnull final Function<? super T, String> mapper) {
+    public static <T> StringBinding joinSet(final ObservableSet<T> items,  final String delimiter, final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         final String value = delimiter == null ? "" : delimiter;
@@ -158,11 +144,9 @@ public final class CollectionBindings {
      *
      * @param items     the observable set of items.
      * @param delimiter the sequence of characters to be used between each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static StringBinding joinSet(@Nonnull final ObservableSet<?> items, @Nonnull final ObservableValue<String> delimiter) {
+    public static StringBinding joinSet(final ObservableSet<?> items, final ObservableValue<String> delimiter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(delimiter, ERROR_DELIMITER_NULL);
         return createStringBinding(() -> {
@@ -178,11 +162,9 @@ public final class CollectionBindings {
      * @param items     the observable set of items.
      * @param delimiter the sequence of characters to be used between each element.
      * @param mapper    a non-interfering, stateless function to apply to the each element.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <T> StringBinding joinSet(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<String> delimiter, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
+    public static <T> StringBinding joinSet(final ObservableSet<T> items, final ObservableValue<String> delimiter, final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(delimiter, ERROR_DELIMITER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -199,12 +181,10 @@ public final class CollectionBindings {
      *
      * @param items     the observable map of items.
      * @param delimiter the sequence of characters to be used between each entry.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <K, V> StringBinding joinMap(@Nonnull final ObservableMap<K, V> items, @Nullable final String delimiter) {
-        return joinMap(items, delimiter, entry -> String.valueOf(entry.getKey()) + "=" + String.valueOf(entry.getValue()));
+    public static <K, V> StringBinding joinMap(final ObservableMap<K, V> items,  final String delimiter) {
+        return joinMap(items, delimiter, entry -> entry.getKey() + "=" + entry.getValue());
     }
 
     /**
@@ -213,11 +193,9 @@ public final class CollectionBindings {
      * @param items     the observable map of items.
      * @param delimiter the sequence of characters to be used between each element.
      * @param mapper    a non-interfering, stateless function to apply to the each entry.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <K, V> StringBinding joinMap(@Nonnull final ObservableMap<K, V> items, @Nullable final String delimiter, @Nonnull final Function<Map.Entry<K, V>, String> mapper) {
+    public static <K, V> StringBinding joinMap(final ObservableMap<K, V> items,  final String delimiter, final Function<Map.Entry<K, V>, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         final String value = delimiter == null ? "," : delimiter;
@@ -229,14 +207,12 @@ public final class CollectionBindings {
      *
      * @param items     the observable map of items.
      * @param delimiter the sequence of characters to be used between each entry.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <K, V> StringBinding joinMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<String> delimiter) {
+    public static <K, V> StringBinding joinMap(final ObservableMap<K, V> items, final ObservableValue<String> delimiter) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(delimiter, ERROR_DELIMITER_NULL);
-        final Function<Map.Entry<K, V>, String> mapper = entry -> String.valueOf(entry.getKey()) + "=" + String.valueOf(entry.getValue());
+        final Function<Map.Entry<K, V>, String> mapper = entry -> entry.getKey() + "=" + entry.getValue();
         return createStringBinding(() -> {
             String value = delimiter.getValue();
             value = value == null ? "" : value;
@@ -250,15 +226,13 @@ public final class CollectionBindings {
      * @param items     the observable map of items.
      * @param delimiter the sequence of characters to be used between each element.
      * @param mapper    a non-interfering, stateless function to apply to the each entry.
-     *
      * @return a string binding.
      */
-    @Nonnull
-    public static <K, V> StringBinding joinMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<String> delimiter, @Nonnull final ObservableValue<Function<Map.Entry<K, V>, String>> mapper) {
+    public static <K, V> StringBinding joinMap(final ObservableMap<K, V> items, final ObservableValue<String> delimiter, final ObservableValue<Function<Map.Entry<K, V>, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(delimiter, ERROR_DELIMITER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
-        final Function<Map.Entry<K, V>, String> mv = entry -> String.valueOf(entry.getKey()) + "=" + String.valueOf(entry.getValue());
+        final Function<Map.Entry<K, V>, String> mv = entry -> entry.getKey() + "=" + entry.getValue();
         return createStringBinding(() -> {
             String value = delimiter.getValue();
             value = value == null ? "" : value;
@@ -272,11 +246,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding minInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Number defaultValue) {
+    public static NumberBinding minInList(final ObservableList<? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElse(defaultValue.doubleValue()), items);
@@ -287,11 +259,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding minInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static NumberBinding minInList(final ObservableList<? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -302,11 +272,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding maxInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Number defaultValue) {
+    public static NumberBinding maxInList(final ObservableList<? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElse(defaultValue.doubleValue()), items);
@@ -317,11 +285,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding maxInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static NumberBinding maxInList(final ObservableList<? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -332,11 +298,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding averageInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Number defaultValue) {
+    public static NumberBinding averageInList(final ObservableList<? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElse(defaultValue.doubleValue()), items);
@@ -347,11 +311,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding averageInList(@Nonnull final ObservableList<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static NumberBinding averageInList(final ObservableList<? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -361,11 +323,9 @@ public final class CollectionBindings {
      * Creates a number binding that contains the sum of the items of the given observable list.
      *
      * @param items the observable list of items.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static NumberBinding sumOfList(@Nonnull final ObservableList<? extends Number> items) {
+    public static NumberBinding sumOfList(final ObservableList<? extends Number> items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).sum(), items);
     }
@@ -376,11 +336,9 @@ public final class CollectionBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInList(@Nonnull final ObservableList<T> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding minInList(final ObservableList<T> items, final Number defaultValue, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -393,11 +351,9 @@ public final class CollectionBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInList(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding minInList(final ObservableList<T> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -410,11 +366,9 @@ public final class CollectionBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInList(@Nonnull final ObservableList<T> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding maxInList(final ObservableList<T> items, final Number defaultValue, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -427,11 +381,9 @@ public final class CollectionBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInList(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding maxInList(final ObservableList<T> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -444,11 +396,9 @@ public final class CollectionBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInList(@Nonnull final ObservableList<T> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding averageInList(final ObservableList<T> items, final Number defaultValue, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -461,11 +411,9 @@ public final class CollectionBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInList(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding averageInList(final ObservableList<T> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -477,11 +425,9 @@ public final class CollectionBindings {
      *
      * @param items  the observable list of items.
      * @param mapper a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static <T> NumberBinding sumOfList(@Nonnull final ObservableList<T> items, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding sumOfList(final ObservableList<T> items, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(mapper).sum(), items);
@@ -493,11 +439,9 @@ public final class CollectionBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInList(@Nonnull final ObservableList<T> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding minInList(final ObservableList<T> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -514,11 +458,9 @@ public final class CollectionBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInList(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding minInList(final ObservableList<T> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -535,11 +477,9 @@ public final class CollectionBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInList(@Nonnull final ObservableList<T> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding maxInList(final ObservableList<T> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -556,11 +496,9 @@ public final class CollectionBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInList(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding maxInList(final ObservableList<T> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -577,11 +515,9 @@ public final class CollectionBindings {
      * @param items        the observable list of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInList(@Nonnull final ObservableList<T> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding averageInList(final ObservableList<T> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -598,11 +534,9 @@ public final class CollectionBindings {
      * @param items    the observable list of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInList(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding averageInList(final ObservableList<T> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -618,11 +552,9 @@ public final class CollectionBindings {
      *
      * @param items  the observable list of items.
      * @param mapper a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static <T> NumberBinding sumOfList(@Nonnull final ObservableList<T> items, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding sumOfList(final ObservableList<T> items, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -637,11 +569,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding minInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Number defaultValue) {
+    public static NumberBinding minInSet(final ObservableSet<? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElse(defaultValue.doubleValue()), items);
@@ -652,11 +582,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding minInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static NumberBinding minInSet(final ObservableSet<? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -667,11 +595,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding maxInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Number defaultValue) {
+    public static NumberBinding maxInSet(final ObservableSet<? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElse(defaultValue.doubleValue()), items);
@@ -682,11 +608,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding maxInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static NumberBinding maxInSet(final ObservableSet<? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -697,11 +621,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding averageInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Number defaultValue) {
+    public static NumberBinding averageInSet(final ObservableSet<? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElse(defaultValue.doubleValue()), items);
@@ -712,11 +634,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static NumberBinding averageInSet(@Nonnull final ObservableSet<? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static NumberBinding averageInSet(final ObservableSet<? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -726,11 +646,9 @@ public final class CollectionBindings {
      * Creates a number binding that contains the sum of the items of the given observable set.
      *
      * @param items the observable set of items.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static NumberBinding sumOfSet(@Nonnull final ObservableSet<? extends Number> items) {
+    public static NumberBinding sumOfSet(final ObservableSet<? extends Number> items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(Number::doubleValue).sum(), items);
     }
@@ -741,11 +659,9 @@ public final class CollectionBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding minInSet(final ObservableSet<T> items, final Number defaultValue, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -758,11 +674,9 @@ public final class CollectionBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding minInSet(final ObservableSet<T> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -775,11 +689,9 @@ public final class CollectionBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding maxInSet(final ObservableSet<T> items, final Number defaultValue, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -792,11 +704,9 @@ public final class CollectionBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding maxInSet(final ObservableSet<T> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -809,11 +719,9 @@ public final class CollectionBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding averageInSet(final ObservableSet<T> items, final Number defaultValue, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -826,11 +734,9 @@ public final class CollectionBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding averageInSet(final ObservableSet<T> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -842,11 +748,9 @@ public final class CollectionBindings {
      *
      * @param items  the observable set of items.
      * @param mapper a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static <T> NumberBinding sumOfSet(@Nonnull final ObservableSet<T> items, @Nonnull final ToDoubleFunction<? super T> mapper) {
+    public static <T> NumberBinding sumOfSet(final ObservableSet<T> items, final ToDoubleFunction<? super T> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> items.stream().mapToDouble(mapper).sum(), items);
@@ -858,11 +762,9 @@ public final class CollectionBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding minInSet(final ObservableSet<T> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -879,11 +781,9 @@ public final class CollectionBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding minInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding minInSet(final ObservableSet<T> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -900,11 +800,9 @@ public final class CollectionBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding maxInSet(final ObservableSet<T> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -921,11 +819,9 @@ public final class CollectionBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding maxInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding maxInSet(final ObservableSet<T> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -942,11 +838,9 @@ public final class CollectionBindings {
      * @param items        the observable set of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding averageInSet(final ObservableSet<T> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -963,11 +857,9 @@ public final class CollectionBindings {
      * @param items    the observable set of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <T> NumberBinding averageInSet(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding averageInSet(final ObservableSet<T> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -983,11 +875,9 @@ public final class CollectionBindings {
      *
      * @param items  the observable set of items.
      * @param mapper a non-interfering, stateless function to apply to the each element.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static <T> NumberBinding sumOfSet(@Nonnull final ObservableSet<T> items, @Nonnull final ObservableValue<ToDoubleFunction<? super T>> mapper) {
+    public static <T> NumberBinding sumOfSet(final ObservableSet<T> items, final ObservableValue<ToDoubleFunction<? super T>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -1002,11 +892,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K> NumberBinding minInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Number defaultValue) {
+    public static <K> NumberBinding minInMap(final ObservableMap<K, ? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).min().orElse(defaultValue.doubleValue()), items);
@@ -1017,11 +905,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K> NumberBinding minInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static <K> NumberBinding minInMap(final ObservableMap<K, ? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).min().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -1032,11 +918,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K> NumberBinding maxInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Number defaultValue) {
+    public static <K> NumberBinding maxInMap(final ObservableMap<K, ? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).max().orElse(defaultValue.doubleValue()), items);
@@ -1047,11 +931,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K> NumberBinding maxInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static <K> NumberBinding maxInMap(final ObservableMap<K, ? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).max().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -1062,11 +944,9 @@ public final class CollectionBindings {
      *
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K> NumberBinding averageInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Number defaultValue) {
+    public static <K> NumberBinding averageInMap(final ObservableMap<K, ? extends Number> items, final Number defaultValue) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).average().orElse(defaultValue.doubleValue()), items);
@@ -1077,11 +957,9 @@ public final class CollectionBindings {
      *
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K> NumberBinding averageInMap(@Nonnull final ObservableMap<K, ? extends Number> items, @Nonnull final Supplier<? extends Number> supplier) {
+    public static <K> NumberBinding averageInMap(final ObservableMap<K, ? extends Number> items, final Supplier<? extends Number> supplier) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).average().orElseGet(resolveDoubleSupplier(supplier)), items);
@@ -1091,11 +969,9 @@ public final class CollectionBindings {
      * Creates a number binding that contains the sum of the values of the given observable map.
      *
      * @param items the observable map of items.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static <K> NumberBinding sumOfMap(@Nonnull final ObservableMap<K, ? extends Number> items) {
+    public static <K> NumberBinding sumOfMap(final ObservableMap<K, ? extends Number> items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(Number::doubleValue).sum(), items);
     }
@@ -1106,11 +982,9 @@ public final class CollectionBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding minInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super V> mapper) {
+    public static <K, V> NumberBinding minInMap(final ObservableMap<K, V> items, final Number defaultValue, final ToDoubleFunction<? super V> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1123,11 +997,9 @@ public final class CollectionBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding minInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super V> mapper) {
+    public static <K, V> NumberBinding minInMap(final ObservableMap<K, V> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super V> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1140,11 +1012,9 @@ public final class CollectionBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding maxInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super V> mapper) {
+    public static <K, V> NumberBinding maxInMap(final ObservableMap<K, V> items, final Number defaultValue, final ToDoubleFunction<? super V> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1157,11 +1027,9 @@ public final class CollectionBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding maxInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super V> mapper) {
+    public static <K, V> NumberBinding maxInMap(final ObservableMap<K, V> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super V> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1174,11 +1042,9 @@ public final class CollectionBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding averageInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Number defaultValue, @Nonnull final ToDoubleFunction<? super V> mapper) {
+    public static <K, V> NumberBinding averageInMap(final ObservableMap<K, V> items, final Number defaultValue, final ToDoubleFunction<? super V> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1191,11 +1057,9 @@ public final class CollectionBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding averageInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ToDoubleFunction<? super V> mapper) {
+    public static <K, V> NumberBinding averageInMap(final ObservableMap<K, V> items, final Supplier<? extends Number> supplier, final ToDoubleFunction<? super V> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1207,11 +1071,9 @@ public final class CollectionBindings {
      *
      * @param items  the observable map of items.
      * @param mapper a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static <K, V> NumberBinding sumOfMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final ToDoubleFunction<? super V> mapper) {
+    public static <K, V> NumberBinding sumOfMap(final ObservableMap<K, V> items, final ToDoubleFunction<? super V> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> items.values().stream().mapToDouble(mapper).sum(), items);
@@ -1223,11 +1085,9 @@ public final class CollectionBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding minInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super V>> mapper) {
+    public static <K, V> NumberBinding minInMap(final ObservableMap<K, V> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super V>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1244,11 +1104,9 @@ public final class CollectionBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding minInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super V>> mapper) {
+    public static <K, V> NumberBinding minInMap(final ObservableMap<K, V> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super V>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1265,11 +1123,9 @@ public final class CollectionBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding maxInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super V>> mapper) {
+    public static <K, V> NumberBinding maxInMap(final ObservableMap<K, V> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super V>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1286,11 +1142,9 @@ public final class CollectionBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding maxInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super V>> mapper) {
+    public static <K, V> NumberBinding maxInMap(final ObservableMap<K, V> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super V>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1307,11 +1161,9 @@ public final class CollectionBindings {
      * @param items        the observable map of items.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding averageInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Number defaultValue, @Nonnull final ObservableValue<ToDoubleFunction<? super V>> mapper) {
+    public static <K, V> NumberBinding averageInMap(final ObservableMap<K, V> items, final Number defaultValue, final ObservableValue<ToDoubleFunction<? super V>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1328,11 +1180,9 @@ public final class CollectionBindings {
      * @param items    the observable map of items.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding
      */
-    @Nonnull
-    public static <K, V> NumberBinding averageInMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<? extends Number> supplier, @Nonnull final ObservableValue<ToDoubleFunction<? super V>> mapper) {
+    public static <K, V> NumberBinding averageInMap(final ObservableMap<K, V> items, final Supplier<? extends Number> supplier, final ObservableValue<ToDoubleFunction<? super V>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1348,11 +1198,9 @@ public final class CollectionBindings {
      *
      * @param items  the observable map of items.
      * @param mapper a non-interfering, stateless function to apply to the each value.
-     *
      * @return a number binding.
      */
-    @Nonnull
-    public static <K, V> NumberBinding sumOfMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final ObservableValue<ToDoubleFunction<? super V>> mapper) {
+    public static <K, V> NumberBinding sumOfMap(final ObservableMap<K, V> items, final ObservableValue<ToDoubleFunction<? super V>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -1362,8 +1210,7 @@ public final class CollectionBindings {
         }, items, mapper);
     }
 
-    @Nonnull
-    private static DoubleSupplier resolveDoubleSupplier(@Nonnull final Supplier<? extends Number> supplier) {
+    private static DoubleSupplier resolveDoubleSupplier(final Supplier<? extends Number> supplier) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return () -> supplier.get().doubleValue();
     }

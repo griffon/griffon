@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,14 +29,14 @@ import static java.util.Arrays.asList
 @Unroll
 class ConfigUtilsSpec extends Specification {
     @Shared
-    private Map<String, Object> map = [
+    private static Map<String, Object> map = [
         single: 'single',
         'key.string': 'string',
         'key.number': 'number'
     ]
 
     @Shared
-    private Map<String, Object> nestingMap = [
+    private static Map<String, Object> nestingMap = [
         single: 'single',
         key: [
             string: 'string',
@@ -45,10 +45,10 @@ class ConfigUtilsSpec extends Specification {
     ]
 
     @Shared
-    private ResourceBundle mapResourceBundle = new MapResourceBundle()
+    private static ResourceBundle mapResourceBundle = new MapResourceBundle()
 
     @Shared
-    private ResourceBundle expandableResourceBundle = wrapResourceBundle(new MapResourceBundle())
+    private static ResourceBundle expandableResourceBundle = wrapResourceBundle(new MapResourceBundle())
 
     def 'Calling getConfigValue() on #source.getClass() with #key gives #value'() {
         expect:

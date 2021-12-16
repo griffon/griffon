@@ -25,9 +25,8 @@ The first step is to get the tools needed to create an application. While it's p
 Griffon 2 application from scratch it's also true that the power of conventions allows you to get
 faster development cycles. We need the following tools:
 
- . link:http://sdkman.io/[SDKMAN, window="_blank"]: tool manager.
- . link:https://github.com/pledbrook/lazybones[Lazybones, window="_blank"]: template based project generator.
- . link:http://maven.apache.org/[Maven, window="_blank"] or link:http://gradle.org/[Gradle, window="_blank"]: build tool.
+ . link:https://sdkman.io/[SDKMAN, window="_blank"]: tool manager.
+ . link:https://maven.apache.org/[Maven, window="_blank"] or link:https://gradle.org/[Gradle, window="_blank"]: build tool.
  . link:https://www.jetbrains.com/idea/download/[IntelliJ IDEA, window="_blank"] or
    link:https://netbeans.org/downloads/[NetBeans, window="_blank"] or
    link:https://www.eclipse.org/downloads/[Eclipse, window="_blank"]: IDE.
@@ -39,13 +38,13 @@ It provides a convenient command line interface for installing, switching, remov
 The candidates we're interested in are _Lazybones_ and _Gradle_.
 
 NOTE: You can run SDKMAN on Windows as long as you have a POSIX environment. We recommend you to give
-link:http://babun.github.io/[Babun Shell, window="_blank"] a try first.
+link:https://babun.github.io/[Babun Shell, window="_blank"] a try first.
 
 Installing SDKMAN is as easy as executing the following command
 
 [source]
 ----
-$ curl -s http://get.sdkman.io | bash
+$ curl -s https://get.sdkman.io | bash
 ----
 
 This will download the required files and configure your environment. After this the `sdk` command should be available.
@@ -54,65 +53,6 @@ You can verify your setup by executing this command
 [source]
 ----
 $ sdk help
-----
-
-.Lazybones
-
-Lazybones is a command-line based tool for creating basic software projects from templates. It's similar in
-spirit to Maven Archetypes, however Lazybones templates can do much more than that, for example, new files
-can be created from scratch, even long after the project was created.
-
-Execute the following command to install Lazybones on your system
-
-[source]
-----
-$ sdk install lazybones
-----
-
-Verify your setup by invoking the following command
-
-[source]
-----
-$ lazybones help
-----
-
-As mentioned before, Lazybones relies on templates in order to create a project. There are a handful of templates
-available at the default Lazybones location. The Griffon based templates reside at a different location, so they
-must be configured in order to be found. Lazybones uses a simple configuration scheme for defining repositories,
-as up to version *0.8* this configuration is kept in a Groovy script whose standard location is
-`$USER_HOME/.lazybones/config.groovy`.
-
-TIP: Windows users should use the `%USER_HOME%\.lazybones\config.groovy` path.
-
-Griffon project templates are hosted at a link:https://bintray.com/griffon/griffon-lazybones-templates[Bintray, window="_blank"]
-repository, similarly as the standard Lazybones templates. Create the `config.groovy` file at the specified location if
-it doesn't exist, place the following content on it
-
-[source,groovy]
-----
-bintrayRepositories = [
-    'griffon/griffon-lazybones-templates',
-    'pledbrook/lazybones-templates'
-]
-----
-
-The Griffon project templates should be available now. You can verify this step by executing the following command
-
-[source]
-----
-$ lazybones list
-Available templates in griffon/griffon-lazybones-templates
-
-    griffon-javafx-groovy
-    griffon-javafx-java
-    griffon-javafx-kotlin
-    griffon-lanterna-groovy
-    griffon-lanterna-java
-    griffon-pivot-groovy
-    griffon-pivot-java
-    griffon-plugin
-    griffon-swing-groovy
-    griffon-swing-java
 ----
 
 .Gradle
@@ -136,19 +76,20 @@ Once installed you can verify that's working by invoking this command
 ----
 $ gradle --version
 ------------------------------------------------------------
-Gradle 4.0
+Gradle 6.9
 ------------------------------------------------------------
 
-Build time:   2017-06-14 15:11:08 UTC
-Revision:     316546a5fcb4e2dfe1d6aa0b73a4e09e8cecb5a5
+Build time:   2021-05-07 07:28:53 UTC
+Revision:     afe2e24ababc7b0213ccffff44970aa18035fc0e
 
-Groovy:       2.4.11
-Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
-JVM:          1.8.0_131 (Oracle Corporation 25.131-b11)
-OS:           Mac OS X 10.12.5 x86_64
+Kotlin:       1.4.20
+Groovy:       2.5.12
+Ant:          Apache Ant(TM) version 1.10.9 compiled on September 27 2020
+JVM:          1.8.0_312 (Azul Systems, Inc. 25.312-b07)
+OS:           Mac OS X 10.16 x86_64
 ----
 
-Gradle 4 is the minimum supported version.
+Gradle 6.0 is the minimum supported version.
 
 .Maven
 
@@ -169,12 +110,11 @@ You can verify this tool by executing this command
 [source]
 ----
 $ mvn -v
-Apache Maven 3.5.0 (ff8f5e7444045639af65f6095c62210b5713f426; 2017-04-03T21:39:06+02:00)
-Maven home: /usr/local/maven
-Java version: 1.8.0_131, vendor: Oracle Corporation
-Java home: /Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre
+Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537)
+Maven home: /Users/duke/.sdkman/candidates/maven/current
+Java version: 1.8.0_312, vendor: Azul Systems, Inc., runtime: /Users/duke/.sdkman/candidates/java/8.0.312.fx-zulu/zulu-8.jdk/Contents/Home/jre
 Default locale: en_US, platform encoding: UTF-8
-OS name: "mac os x", version: "10.12.5", arch: "x86_64", family: "mac"
+OS name: "mac os x", version: "10.16", arch: "x86_64", family: "mac"
 ----
 
 Maven 3 is the minimum supported version.
@@ -183,7 +123,7 @@ Maven 3 is the minimum supported version.
 
 All major IDEs can be used to build Griffon applications. Considering that the Griffon tool chain is comprised
 of tools that can be invoked from the command line you may want to use a text editor (such as
-link:http://www.vim.org/[VIM, window="_blank"]) instead.
+link:https://www.vim.org/[VIM, window="_blank"]) instead.
 
 icon:arrow-up[link="#_tutorial_1_toc"] <<_tutorial_1_toc,Top>>
 
@@ -204,29 +144,25 @@ While the currently supported programming languages are
  * Groovy
  * Kotlin
 
-In this tutorial we'll go for the most basic combination: Swing and Java. Execute the `create` Lazybones command
-using the `griffon-swing-java`  template as the starting point. Note that the template uses sensible defaults
+In this tutorial we'll go for the most basic combination: Swing and Java. Execute the `archetype:generate` Maven goal
+using the `griffon-swing-java-archetype` archetype as the starting point. Note that the archetype uses sensible defaults
 for most of its options, however ou can change them to suit your needs. Here's how a creation session looks
 
 [source]
 [subs="attributes"]
 ----
-$ lazybones create griffon-swing-java sample
-Creating project from template griffon-swing-java (latest) in 'sample'
-Define value for 'group' [org.example]:
-Define value for 'artifactId' [sample]:
-Define value for 'version' [0.1.0-SNAPSHOT]:
-Define value for 'griffonVersion' [{jbake-griffon_version_current}]:
-Define value for 'package' [org.example]:
-Define value for 'className' [Sample]:
-
-...
-Project created in sample!
+$ mvn archetype:generate \
+      -DarchetypeGroupId=org.codehaus.griffon.maven \
+      -DarchetypeArtifactId=griffon-swing-java-archetype \
+      -DarchetypeVersion={jbake-griffon_version_current} \
+      -DgroupId=org.example \
+      -DartifactId=sample\
+      -Dversion=1.0.0-SNAPSHOT \
+      -Dgradle=true
 ----
 
 Change into the `sample` directory and inspect its contents. You'll see it contains a `build.gradle` file that
-can be used to build the project with Gradle. There's also a `pom.xml` if you prefer Maven. The standard structure
-of a Griffon application looks like this
+can be used to build the project with Gradle. The standard structure of a Griffon application looks like this
 
 [source]
 ----
@@ -241,10 +177,7 @@ of a Griffon application looks like this
 │   ├── resources
 │   ├── services
 │   └── views
-├── pom.xml
 └── src
-    ├── integration-test
-    │   └── java
     ├── main
     │   ├── java
     │   └── resources
@@ -263,7 +196,7 @@ the right command for it. In the case of Gradle this is a simple as executing
 
 [source]
 ----
-$ gradle run
+$ ./gradlew run
 ----
 
 Project dependencies get downloaded, classes are compiled and a small window pops up after a few seconds. Maven
@@ -272,7 +205,7 @@ plugins and profiles that follow the conventions. Running the application with M
 
 [source]
 ----
-$ mvn -Prun
+$ ./mvnw -Prun
 ----
 
 The master pom uses a profile to make sure that classes and resources are properly handled before the application's
@@ -294,9 +227,6 @@ with Griffon 2 projects!
 
 You can import a project either using the Gradle or Maven import. Once you do you'll be able to invoke build
 goals using the respective build tool view.
-
-NOTE: Mac OSX users must run IntelliJ IDEA using JDK7 (the default is JDK6 in Intellij 15) otherwise the Gradle plugin will not
-be able to import the project and will fail with a cryptic error.
 
 You must also have Annotation Processing enabled for compile time annotations such as `@ArtifactProviderFor` to be picked
 up automatically. Open up Preferences and navigate to *Build, Execution Deployment* > *Compiler* > *Annotation Processors*

@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import spock.lang.Stepwise
 
 import javax.annotation.Nonnull
 import javax.annotation.Nullable
+import java.text.SimpleDateFormat
 
 import static griffon.util.AnnotationUtils.named
 import static griffon.util.AnnotationUtils.typed
@@ -1012,7 +1013,7 @@ class GriffonApplicationSpec extends Specification {
         then:
         bean.pstring == 'value1'
         bean.pboolean
-        bean.pdate.clearTime() == Date.parse('yyyy/MM/dd', '2000/01/01').clearTime()
+        bean.pdate == new SimpleDateFormat('yyyy/MM/dd').parse('2000/02/01')
         bean.customString == 'custom'
     }
 

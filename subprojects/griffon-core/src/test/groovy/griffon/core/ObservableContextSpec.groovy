@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import javax.annotation.Nonnull
 
 @Unroll
 class ObservableContextSpec extends Specification {
-    @Shared private ObservableContext ctx1 = new DefaultObservableContext()
-    @Shared private ObservableContext ctx2 = new DefaultObservableContext(ctx1)
-    @Shared private ObservableContext ctx3 = new DefaultObservableContext(ctx1)
+    @Shared private static ObservableContext ctx1 = new DefaultObservableContext()
+    @Shared private static ObservableContext ctx2 = new DefaultObservableContext(ctx1)
+    @Shared private static ObservableContext ctx3 = new DefaultObservableContext(ctx1)
 
     def setup() {
         ctx1['foo'] = 'foo'

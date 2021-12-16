@@ -25,7 +25,7 @@ $(function () {
         window.open('https://github.com/' + params.owner + '/' + params.repo);
     });
 
-    params.sha = params.sha || 'master';
+    params.sha = params.sha || 'master';
 
     $.ajax("https://api.github.com/repos/" + params.owner + "/" + params.repo + "/commits?sha=" + params.sha + "&callback=callback", {
         dataType: 'jsonp',

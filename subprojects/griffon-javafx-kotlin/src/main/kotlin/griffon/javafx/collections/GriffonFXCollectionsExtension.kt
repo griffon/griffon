@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package griffon.javafx.collections
+package griffon.javafx.kotlin.collections
 
+import griffon.javafx.collections.GriffonFXCollections
+import griffon.javafx.collections.MappingObservableList
 import javafx.beans.value.ObservableValue
 import javafx.collections.ObservableList
 import javafx.collections.ObservableMap

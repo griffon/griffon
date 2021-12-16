@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,10 @@ import java.beans.PropertyEditor
 @Unroll
 class ImagePropertyEditorSpec extends Specification {
     @Shared
-    private Image sharedImage = new Image(getClass().getClassLoader().getResourceAsStream('griffon-icon-16x16.png'))
+    private static Image sharedImage = new Image(ImagePropertyEditorSpec.class.classLoader.getResourceAsStream('griffon-icon-16x16.png'))
 
     @Shared
-    private File basePath = new File('build/resources/test')
+    private static File basePath = new File('build/resources/test')
 
     void setupSpec() {
         // force toolkit initialization

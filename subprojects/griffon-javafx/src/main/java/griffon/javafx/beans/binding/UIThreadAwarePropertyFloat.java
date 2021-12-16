@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ package griffon.javafx.beans.binding;
 import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 
-import javax.annotation.Nonnull;
-
 import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.application.Platform.runLater;
 
@@ -30,7 +28,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwarePropertyFloat extends AbstractUIThreadAwareProperty<Float> implements Property<Float> {
-    UIThreadAwarePropertyFloat(@Nonnull Property<Float> delegate) {
+    UIThreadAwarePropertyFloat(Property<Float> delegate) {
         super(delegate);
     }
 

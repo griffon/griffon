@@ -1,13 +1,13 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2008-2018 the original author or authors.
+ * Copyright 2008-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,12 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+apply from: rootProject.file('samples/shared-files/samples-common-java.gradle')
 
-apply plugin: 'groovy'
-apply plugin: 'application'
-apply from: rootProject.file('gradle/integration-test.gradle')
-
-mainClassName = 'sample.swing.java.Launcher'
+application {
+    mainClassName = project.name.replace('-', '.') + '.Launcher'
+}
 
 ext.hasIntegrationTests = true
 ext.hasFunctionalTests = false
@@ -36,38 +35,13 @@ ext.depProjects.each { evaluationDependsOn it }
 apply from: rootProject.file('gradle/coverage-samples.gradle')
 
 dependencies {
-    compileOnly project(':griffon-core-compile')
+    api project(':griffon-swing')
 
-    compile project(':griffon-swing')
-    compile project(':griffon-guice')
-
-    runtime "org.slf4j:slf4j-simple:$slf4jVersion"
-
-    testCompile project(':griffon-core-test')
-    testCompile project(':griffon-fest-test')
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs = [
-                'griffon-app/conf',
-                'griffon-app/controllers',
-                'griffon-app/models',
-                'griffon-app/views',
-                'griffon-app/services',
-                'griffon-app/lifecycle',
-                'src/main/java'
-            ]
-        }
-        resources {
-            srcDirs = [
-                'griffon-app/resources',
-                'griffon-app/i18n',
-                'src/main/resources'
-            ]
-        }
-    }
+    testImplementation project(':griffon-fest-test')
 }
 
 compileGroovy.enabled = false
+
+afterEvaluate {
+    functionalTest.enabled = false
+}
