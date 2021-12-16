@@ -1,0 +1,59 @@
+project:
+  name: griffon
+  description: Next generation desktop application development platform for the JVM
+  longDescription: |
+    Griffon is desktop application development platform for the JVM.
+    Inspired by Grails, Griffon leverages concepts like Convention over Configuration, modularity,
+    and freedom of choice. The framework at its core is written 100% in Java allowing developers
+    to write their own applications with only Java. Other programming languages such as Groovy and
+    Kotlin may be used too, in which case additional capabilities such as builders and extension
+    methods become available.
+    Griffon supports 4 different UI toolkits: Swing, JavaFX, Apache Pivot, and Lanterna.
+    Griffon encourages the use of the MVC pattern but it's not limited to a single interpretation,
+    you can for example apply standard MVC, MVP, MVVM, PMVC and others. Griffon also follows in the
+    spirit of the Swing Application Framework (JSR 296), it defines a simple yet powerful application
+    life cycle and event publishing mechanism regardless of the UI toolkit of choice.
+
+  website: https://griffon-framework.org
+  authors:
+    - Andres Almiray
+  license: Apache-2.0
+  java:
+    groupId: org.codehaus.griffon
+    version: 8
+    multiProject: true
+  extraProperties:
+    inceptionYear: 2008
+  tags:
+    - 'griffon'
+    - 'java'
+    - 'desktop'
+    - 'javafx'
+    - 'swing'
+
+release:
+  github:
+    branch: master
+    overwrite: true
+    sign: true
+    discussionCategoryName: Announcements
+    changelog:
+      formatted: ALWAYS
+      format: '- {{commitShortHash}} {{commitTitle}}'
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+      hide:
+        categories:
+          - '🔀 Merge'
+        contributors:
+          - 'GitHub'
+
+signing:
+  active: always
+  armored: true
+
+announce:
+  twitter:
+    active: release
+    status: 🚀 Griffon {{projectVersion}} has been released! {{releaseNotesUrl}}
