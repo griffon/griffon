@@ -30,7 +30,7 @@ ext.depProjects = [
     ':griffon-swing-groovy',
     ':griffon-guice',
     ':griffon-core-test',
-    ':griffon-fest-test'
+    ':griffon-swing-test'
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
@@ -42,7 +42,7 @@ dependencies {
     api project(':griffon-groovy')
     api project(':griffon-swing-groovy')
 
-    testImplementation project(':griffon-fest-test')
+    testImplementation project(':griffon-swing-test')
 }
 
 afterEvaluate {

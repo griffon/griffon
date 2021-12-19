@@ -248,14 +248,7 @@ class GriffonPlugin implements Plugin<Project> {
                 if (extension.toolkit.orNull) {
                     String toolkit = extension.toolkit.get()
                     appendDependency(toolkit)
-                    switch (toolkit) {
-                        case 'swing':
-                            appendDependency('fest-test')
-                            break
-                        case 'javafx':
-                            appendDependency(toolkit + '-test')
-                            break
-                    }
+                    appendDependency(toolkit + '-test')
                     maybeIncludeGroovyDependency(groovyDependenciesEnabled, toolkit + '-groovy')
                 }
                 maybeIncludeGroovyDependency(groovyDependenciesEnabled, 'groovy')

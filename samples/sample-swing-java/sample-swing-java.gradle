@@ -28,7 +28,7 @@ ext.depProjects = [
     ':griffon-swing',
     ':griffon-guice',
     ':griffon-core-test',
-    ':griffon-fest-test'
+    ':griffon-swing-test'
 ]
 
 ext.depProjects.each { evaluationDependsOn it }
@@ -37,7 +37,7 @@ apply from: rootProject.file('gradle/coverage-samples.gradle')
 dependencies {
     api project(':griffon-swing')
 
-    testImplementation project(':griffon-fest-test')
+    testImplementation project(':griffon-swing-test')
 }
 
 compileGroovy.enabled = false
