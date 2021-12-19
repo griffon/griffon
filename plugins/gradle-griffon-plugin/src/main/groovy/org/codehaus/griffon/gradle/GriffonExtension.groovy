@@ -27,7 +27,7 @@ import org.gradle.api.provider.Property
  */
 @CompileStatic
 class GriffonExtension {
-    static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'pivot', 'lanterna']
+    static final List<String> TOOLKIT_NAMES = ['swing', 'javafx', 'lanterna']
 
     final Property<String> version
 

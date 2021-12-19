@@ -29,19 +29,16 @@ ext.childProjects = [
     ':griffon-swing',
     ':griffon-javafx',
     ':griffon-lanterna',
-    ':griffon-pivot',
     ':griffon-swing-groovy',
     ':griffon-javafx-groovy',
     ':griffon-lanterna-groovy',
-    ':griffon-pivot-groovy',
     ':griffon-core-test',
     ':griffon-javafx-test',
-    ':griffon-fest-test',
-    ':griffon-pivot-test'
+    ':griffon-fest-test'
 ]
 
 def sampleProjects = []
-for (toolkit in ['swing', 'javafx', 'pivot', 'lanterna']) {
+for (toolkit in ['swing', 'javafx', 'lanterna']) {
     for (lang in ['groovy', 'java']) {
         sampleProjects << ":sample-${toolkit}-${lang}".toString()
     }

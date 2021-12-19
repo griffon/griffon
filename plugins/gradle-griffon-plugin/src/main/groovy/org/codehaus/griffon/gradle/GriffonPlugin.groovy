@@ -253,7 +253,6 @@ class GriffonPlugin implements Plugin<Project> {
                             appendDependency('fest-test')
                             break
                         case 'javafx':
-                        case 'pivot':
                             appendDependency(toolkit + '-test')
                             break
                     }
