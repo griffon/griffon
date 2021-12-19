@@ -22,7 +22,7 @@ import spock.lang.IgnoreIf
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Font
+import java.awt.*
 import java.beans.PropertyEditor
 
 @Unroll

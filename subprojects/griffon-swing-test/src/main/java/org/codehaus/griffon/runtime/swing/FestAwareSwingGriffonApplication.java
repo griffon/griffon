@@ -19,7 +19,7 @@ package org.codehaus.griffon.runtime.swing;
 
 import griffon.swing.SwingGriffonApplication;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * @author Andres Almiray

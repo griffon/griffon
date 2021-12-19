@@ -17,14 +17,14 @@
  */
 package org.codehaus.griffon.runtime.swing.artifact;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.swing.support.SwingAction;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**

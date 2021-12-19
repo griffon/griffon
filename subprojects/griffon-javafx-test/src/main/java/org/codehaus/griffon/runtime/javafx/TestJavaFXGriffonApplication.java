@@ -21,7 +21,7 @@ import griffon.core.ApplicationBootstrapper;
 import griffon.core.test.TestCaseAware;
 import griffon.javafx.JavaFXGriffonApplication;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 import static griffon.javafx.test.TestContext.getTestContext;
 

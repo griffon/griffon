@@ -17,25 +17,12 @@
  */
 package griffon.swing.support;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.WindowConstants;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 

@@ -22,8 +22,7 @@ import griffon.metadata.PropertyEditorFor;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

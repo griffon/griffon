@@ -22,7 +22,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.SourceUnit;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

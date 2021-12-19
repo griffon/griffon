@@ -19,7 +19,7 @@ package griffon.core.test;
 
 import griffon.core.injection.Module;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.List;
 
 /**

@@ -233,7 +233,7 @@ class GriffonPlugin implements Plugin<Project> {
                 }
 
                 // add default core dependencies
-                appendDependency('core')
+                appendDependency('core-impl')
                 appendDependency('core-compile')
                 appendDependency('core-test')
 

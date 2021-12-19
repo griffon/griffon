@@ -24,7 +24,7 @@ import org.codehaus.griffon.runtime.swing.FestAwareSwingGriffonApplication;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.awt.Frame;
 import java.lang.reflect.Field;
 

@@ -37,8 +37,8 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static griffon.util.GriffonNameUtils.isNotBlank;

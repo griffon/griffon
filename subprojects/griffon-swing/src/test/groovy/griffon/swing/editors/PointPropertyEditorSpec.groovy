@@ -21,7 +21,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Point
+import java.awt.*
 import java.beans.PropertyEditor
 
 @Unroll

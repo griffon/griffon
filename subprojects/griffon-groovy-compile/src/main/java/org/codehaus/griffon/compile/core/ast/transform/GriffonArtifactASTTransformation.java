@@ -31,7 +31,7 @@ import org.codehaus.groovy.control.SourceUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;

@@ -17,10 +17,10 @@
  */
 package griffon.javafx.support;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 
-import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 /**

@@ -20,7 +20,7 @@ package org.codehaus.griffon.compile.core.ast.transform;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.lang.reflect.Modifier;
 
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;

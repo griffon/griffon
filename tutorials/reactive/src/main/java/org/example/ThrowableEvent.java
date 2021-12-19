@@ -18,7 +18,7 @@ package org.example;
 import griffon.core.event.Event;
 import lombok.Getter;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

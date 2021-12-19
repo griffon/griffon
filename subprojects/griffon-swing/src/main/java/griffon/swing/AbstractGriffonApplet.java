@@ -17,6 +17,8 @@
  */
 package griffon.swing;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
 import griffon.core.ApplicationEvent;
@@ -45,9 +47,7 @@ import org.codehaus.griffon.runtime.core.MVCGroupExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.JApplet;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -17,9 +17,9 @@
  */
 package griffon.javafx.support;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.DefaultProperty;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

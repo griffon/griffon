@@ -19,8 +19,8 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.core.CallableWithArgs;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import java.util.Map;
 
 /**

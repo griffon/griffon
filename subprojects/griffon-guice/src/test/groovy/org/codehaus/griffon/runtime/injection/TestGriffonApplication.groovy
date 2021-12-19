@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.runtime.injection
 
+import griffon.annotations.core.Nonnull
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication
-
-import javax.annotation.Nonnull
 
 class TestGriffonApplication extends AbstractGriffonApplication {
     @Nonnull

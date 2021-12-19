@@ -17,13 +17,13 @@
  */
 package griffon.javafx.collections.transformation;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.javafx.collections.ObservableMapBase;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.collections.WeakMapChangeListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;

@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.swing.controller;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
@@ -25,11 +27,7 @@ import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyEditor;

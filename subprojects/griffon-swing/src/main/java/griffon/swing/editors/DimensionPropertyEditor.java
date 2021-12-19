@@ -20,7 +20,7 @@ package griffon.swing.editors;
 import griffon.core.editors.AbstractPropertyEditor;
 import griffon.metadata.PropertyEditorFor;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 

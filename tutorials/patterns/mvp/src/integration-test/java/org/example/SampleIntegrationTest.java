@@ -30,7 +30,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 

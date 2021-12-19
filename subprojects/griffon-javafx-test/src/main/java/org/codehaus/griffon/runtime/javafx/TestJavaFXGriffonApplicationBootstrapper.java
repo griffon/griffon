@@ -23,7 +23,7 @@ import griffon.core.view.WindowManager;
 import org.codehaus.griffon.runtime.core.TestApplicationBootstrapper;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import java.util.List;
 
 /**

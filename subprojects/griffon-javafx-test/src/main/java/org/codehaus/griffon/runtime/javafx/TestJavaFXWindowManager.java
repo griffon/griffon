@@ -20,8 +20,8 @@ package org.codehaus.griffon.runtime.javafx;
 import griffon.core.GriffonApplication;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javax.inject.Named;
 
 import static griffon.javafx.test.TestContext.getTestContext;

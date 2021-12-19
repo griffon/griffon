@@ -17,9 +17,8 @@
  */
 package griffon.javafx.support;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.ObservableList;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author Andres Almiray

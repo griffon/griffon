@@ -17,12 +17,12 @@
  */
 package org.codehaus.griffon.runtime.groovy.util;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.util.ConfigReader;
 import groovy.lang.Script;
 import groovy.util.ConfigObject;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;

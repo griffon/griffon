@@ -17,14 +17,14 @@
  */
 package org.codehaus.griffon.runtime.groovy.mvc;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.core.mvc.MVCGroupManager;
 import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroup;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 /**

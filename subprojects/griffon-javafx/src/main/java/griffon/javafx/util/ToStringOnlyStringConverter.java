@@ -17,7 +17,8 @@
  */
 package griffon.javafx.util;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
+
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;

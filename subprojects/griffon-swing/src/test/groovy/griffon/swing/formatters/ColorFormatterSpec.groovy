@@ -21,7 +21,7 @@ import griffon.core.formatters.ParseException
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Color
+import java.awt.*
 
 import static griffon.swing.formatters.ColorFormatter.PATTERN_LONG
 import static griffon.swing.formatters.ColorFormatter.PATTERN_LONG_WITH_ALPHA

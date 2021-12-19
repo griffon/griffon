@@ -17,11 +17,11 @@
  */
 package griffon.swing;
 
+import griffon.annotations.core.Nonnull;
 import griffon.swing.support.SwingUtils;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
-import javax.annotation.Nonnull;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Map;
 
 /**

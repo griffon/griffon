@@ -25,7 +25,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 
 @ArtifactProviderFor(GriffonController.class)

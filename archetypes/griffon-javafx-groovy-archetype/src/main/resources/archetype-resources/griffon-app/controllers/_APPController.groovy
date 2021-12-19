@@ -5,7 +5,7 @@ import griffon.core.controller.ControllerAction
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import griffon.transform.Threading
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 
 @ArtifactProviderFor(GriffonController)
 class _APPController {

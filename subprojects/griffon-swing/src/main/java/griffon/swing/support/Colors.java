@@ -17,7 +17,7 @@
  */
 package griffon.swing.support;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Defines all Java, CSS and HTML colors.

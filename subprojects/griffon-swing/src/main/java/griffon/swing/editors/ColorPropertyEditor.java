@@ -23,7 +23,7 @@ import griffon.core.formatters.ParseException;
 import griffon.metadata.PropertyEditorFor;
 import griffon.swing.formatters.ColorFormatter;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

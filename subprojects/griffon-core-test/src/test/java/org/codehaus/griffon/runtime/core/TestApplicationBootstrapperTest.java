@@ -28,7 +28,7 @@ import griffon.core.injection.ProviderTypeBinding;
 import griffon.core.injection.TargetBinding;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Named;
 import javax.inject.Provider;
 import java.lang.annotation.Annotation;

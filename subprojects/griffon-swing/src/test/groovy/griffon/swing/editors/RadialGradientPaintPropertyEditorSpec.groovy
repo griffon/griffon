@@ -21,8 +21,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Color
-import java.awt.RadialGradientPaint
+import java.awt.*
 import java.awt.geom.Point2D
 import java.beans.PropertyEditor
 

@@ -17,13 +17,13 @@
  */
 package griffon.swing.formatters;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.formatters.AbstractFormatter;
 import griffon.core.formatters.ParseException;
 import griffon.swing.support.Colors;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.awt.Color;
+import java.awt.*;
 import java.util.Arrays;
 
 import static griffon.util.GriffonNameUtils.isBlank;

@@ -19,9 +19,7 @@ package org.jdesktop.swinghelper.debug;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.AWTEvent;
-import java.awt.EventQueue;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;

@@ -21,8 +21,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Color
-import java.awt.LinearGradientPaint
+import java.awt.*
 import java.beans.PropertyEditor
 
 import static java.awt.Color.BLACK

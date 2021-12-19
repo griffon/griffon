@@ -19,7 +19,7 @@ package org.codehaus.griffon.compile.core.ast.transform;
 
 import org.codehaus.groovy.ast.ClassNode;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * @author Andres Almiray

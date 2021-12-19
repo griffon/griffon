@@ -28,7 +28,7 @@ import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.kordamp.jipsy.ServiceProviderFor;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 /**
  * Handles generation of code for Griffon models.

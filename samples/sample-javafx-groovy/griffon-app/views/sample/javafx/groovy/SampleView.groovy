@@ -17,11 +17,10 @@
  */
 package sample.javafx.groovy
 
+import griffon.annotations.core.Nonnull
 import griffon.core.artifact.GriffonView
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
-
-import javax.annotation.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class SampleView {

@@ -22,7 +22,7 @@ import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 import static java.lang.reflect.Modifier.PUBLIC;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;

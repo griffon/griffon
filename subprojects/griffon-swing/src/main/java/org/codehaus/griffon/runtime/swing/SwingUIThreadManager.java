@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.swing;
 
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.threading.AbstractUIThreadManager;
 
-import javax.annotation.Nonnull;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static java.util.Objects.requireNonNull;

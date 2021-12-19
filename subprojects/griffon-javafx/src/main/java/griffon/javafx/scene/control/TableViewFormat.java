@@ -17,10 +17,9 @@
  */
 package griffon.javafx.scene.control;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.value.ObservableValue;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Andres Almiray

@@ -17,11 +17,11 @@
  */
 package griffon.javafx.collections;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.collections.WeakMapChangeListener;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;

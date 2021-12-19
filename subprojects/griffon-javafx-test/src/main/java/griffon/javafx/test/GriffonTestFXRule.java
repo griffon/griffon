@@ -31,8 +31,8 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.testfx.api.FxToolkit;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import java.util.concurrent.TimeoutException;
 
 import static griffon.javafx.test.TestContext.getTestContext;

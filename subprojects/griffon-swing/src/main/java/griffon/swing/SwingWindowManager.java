@@ -17,12 +17,12 @@
  */
 package griffon.swing;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.view.WindowManager;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.JInternalFrame;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Set;
 
 /**

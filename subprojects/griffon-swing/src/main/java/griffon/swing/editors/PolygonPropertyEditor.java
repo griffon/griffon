@@ -20,7 +20,7 @@ package griffon.swing.editors;
 import griffon.core.editors.AbstractPropertyEditor;
 import griffon.metadata.PropertyEditorFor;
 
-import java.awt.Polygon;
+import java.awt.*;
 import java.util.List;
 
 import static griffon.util.GriffonNameUtils.isBlank;

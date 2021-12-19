@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.swing;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
@@ -27,15 +29,12 @@ import org.codehaus.griffon.runtime.core.view.AbstractWindowManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.swing.JInternalFrame;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;

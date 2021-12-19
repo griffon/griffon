@@ -26,8 +26,8 @@ import javafx.collections.ObservableList
 import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
 
-import javax.annotation.Nonnull
-import javax.annotation.Nullable
+import griffon.annotations.core.Nonnull
+import griffon.annotations.core.Nullable
 import java.util.function.Function
 import java.util.function.Supplier
 import java.util.function.ToDoubleFunction

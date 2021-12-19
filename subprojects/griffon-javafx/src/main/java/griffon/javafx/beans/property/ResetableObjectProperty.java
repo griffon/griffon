@@ -17,14 +17,13 @@
  */
 package griffon.javafx.beans.property;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Andres Almiray

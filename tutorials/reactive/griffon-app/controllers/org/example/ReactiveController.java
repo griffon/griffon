@@ -25,7 +25,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 import java.util.concurrent.TimeUnit;
 

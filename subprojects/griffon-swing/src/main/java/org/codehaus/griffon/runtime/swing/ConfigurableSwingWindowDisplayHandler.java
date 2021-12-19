@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.swing;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.CallableWithArgs;
 import griffon.core.GriffonApplication;
 import griffon.core.RunnableWithArgs;
@@ -27,11 +28,10 @@ import org.codehaus.griffon.runtime.core.view.ConfigurableWindowDisplayHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.swing.JInternalFrame;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Map;
 
 import static griffon.util.AnnotationUtils.named;

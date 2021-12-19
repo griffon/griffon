@@ -17,7 +17,7 @@
  */
 package griffon.javafx.beans.property;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 public class ResetableLongPropertyTest extends AbstractResetablePropertyTestCase<Number> {
     @Override

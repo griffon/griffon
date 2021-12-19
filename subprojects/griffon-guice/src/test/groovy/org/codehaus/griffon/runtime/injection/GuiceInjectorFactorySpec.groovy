@@ -18,6 +18,7 @@
 package org.codehaus.griffon.runtime.injection
 
 import com.google.inject.CreationException
+import griffon.annotations.core.Nonnull
 import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
 import griffon.core.GriffonApplication
@@ -37,7 +38,6 @@ import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvide
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager
 import spock.lang.Specification
 
-import javax.annotation.Nonnull
 import javax.inject.Provider
 import javax.inject.Qualifier
 import java.lang.annotation.Annotation

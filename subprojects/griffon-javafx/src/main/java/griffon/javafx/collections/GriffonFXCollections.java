@@ -17,6 +17,7 @@
  */
 package griffon.javafx.collections;
 
+import griffon.annotations.core.Nonnull;
 import griffon.javafx.beans.binding.UIThreadAware;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -25,8 +26,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

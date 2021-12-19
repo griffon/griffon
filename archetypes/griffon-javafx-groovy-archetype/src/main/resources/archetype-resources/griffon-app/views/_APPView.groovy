@@ -4,7 +4,7 @@ import griffon.core.artifact.GriffonView
 import griffon.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 
 @ArtifactProviderFor(GriffonView)
 class _APPView extends AbstractJavaFXGriffonView {

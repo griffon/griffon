@@ -25,7 +25,7 @@ import javafx.collections.ObservableList
 import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
 
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 import java.util.function.Function
 
 /**

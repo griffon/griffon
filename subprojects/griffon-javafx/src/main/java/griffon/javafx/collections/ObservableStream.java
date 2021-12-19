@@ -17,13 +17,13 @@
  */
 package griffon.javafx.collections;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.value.ObservableLongValue;
 import javafx.beans.value.ObservableValue;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;

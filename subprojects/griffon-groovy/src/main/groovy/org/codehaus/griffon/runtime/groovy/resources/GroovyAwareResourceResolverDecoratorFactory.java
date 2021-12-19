@@ -17,11 +17,10 @@
  */
 package org.codehaus.griffon.runtime.groovy.resources;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.ResourceResolver;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecorator;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 

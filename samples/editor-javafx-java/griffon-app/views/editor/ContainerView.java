@@ -17,6 +17,8 @@
  */
 package editor;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
 import griffon.inject.MVCMember;
@@ -32,8 +34,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
 

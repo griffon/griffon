@@ -21,8 +21,8 @@ import griffon.core.GriffonApplication;
 import griffon.swing.SwingWindowDisplayHandler;
 import groovy.lang.Closure;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.awt.Window;

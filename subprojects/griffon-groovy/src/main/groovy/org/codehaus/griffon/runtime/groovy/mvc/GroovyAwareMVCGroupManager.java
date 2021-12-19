@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.groovy.mvc;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.GriffonApplication;
 import griffon.core.mvc.MVCGroup;
@@ -28,7 +29,6 @@ import org.codehaus.griffon.runtime.core.mvc.DefaultMVCGroupManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;

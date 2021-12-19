@@ -17,14 +17,13 @@
  */
 package griffon.javafx.beans.property;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Andres Almiray

@@ -17,15 +17,12 @@
  */
 package griffon.swing.support;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.CallableWithArgs;
 import griffon.core.RunnableWithArgs;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 import static griffon.util.GriffonNameUtils.isNotBlank;

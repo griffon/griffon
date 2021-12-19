@@ -17,13 +17,12 @@
  */
 package sample.swing.java;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import org.codehaus.griffon.runtime.core.AbstractLifecycleHandler;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import static griffon.util.GriffonApplicationUtils.isMacOSX;
 

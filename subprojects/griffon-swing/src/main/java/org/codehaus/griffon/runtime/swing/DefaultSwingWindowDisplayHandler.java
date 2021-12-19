@@ -17,11 +17,11 @@
  */
 package org.codehaus.griffon.runtime.swing;
 
+import griffon.annotations.core.Nonnull;
 import griffon.swing.SwingWindowDisplayHandler;
 
-import javax.annotation.Nonnull;
-import javax.swing.JInternalFrame;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;

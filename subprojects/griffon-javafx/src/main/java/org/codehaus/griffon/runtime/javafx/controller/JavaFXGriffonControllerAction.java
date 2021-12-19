@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.runtime.javafx.controller;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
@@ -27,8 +29,6 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyEditor;
 

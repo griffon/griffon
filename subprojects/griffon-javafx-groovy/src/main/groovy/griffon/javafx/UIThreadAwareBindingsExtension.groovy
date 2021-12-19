@@ -54,7 +54,7 @@ import javafx.collections.ObservableMap
 import javafx.collections.ObservableSet
 import javafx.collections.SetChangeListener
 
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 import java.util.function.Consumer
 
 /**

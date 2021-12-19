@@ -21,7 +21,7 @@ import griffon.swing.support.Colors
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import java.awt.Color
+import java.awt.*
 import java.beans.PropertyEditor
 
 @Unroll

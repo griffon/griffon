@@ -19,15 +19,9 @@ package org.jdesktop.swinghelper.debug;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JComponent;
-import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.applet.Applet;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Window;
+import java.awt.*;
 import java.lang.ref.WeakReference;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;

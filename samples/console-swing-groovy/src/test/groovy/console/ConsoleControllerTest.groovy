@@ -17,6 +17,7 @@
  */
 package console
 
+import griffon.annotations.core.Nonnull
 import griffon.core.artifact.ArtifactManager
 import griffon.core.injection.Module
 import griffon.core.test.GriffonUnitRule
@@ -26,7 +27,6 @@ import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule
 import org.junit.Rule
 import org.junit.Test
 
-import javax.annotation.Nonnull
 import javax.inject.Inject
 
 import static java.util.concurrent.TimeUnit.SECONDS

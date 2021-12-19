@@ -17,11 +17,10 @@
  */
 package org.codehaus.griffon.runtime.javafx;
 
+import griffon.annotations.core.Nonnull;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
-import javax.annotation.Nonnull;
 
 import static griffon.util.GriffonNameUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;

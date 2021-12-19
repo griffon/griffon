@@ -27,7 +27,7 @@ import javafx.collections.ObservableList
 import org.junit.Ignore
 import org.junit.Test
 
-import javax.annotation.Nonnull
+import griffon.annotations.core.Nonnull
 import java.util.function.Function
 
 import static javafx.collections.FXCollections.observableArrayList

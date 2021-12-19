@@ -17,13 +17,13 @@
  */
 package griffon.util
 
+import griffon.annotations.core.Nonnull
 import griffon.core.ApplicationClassLoader
 import griffon.core.env.Environment
 import griffon.core.env.GriffonEnvironment
 import griffon.core.env.Metadata
 import org.codehaus.groovy.runtime.InvokerHelper
 
-import javax.annotation.Nonnull
 import javax.inject.Inject
 
 import static griffon.util.GriffonNameUtils.isBlank

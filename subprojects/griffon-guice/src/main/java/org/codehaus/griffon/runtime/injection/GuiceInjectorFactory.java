@@ -27,6 +27,7 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.ProvisionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
+import griffon.annotations.core.Nonnull;
 import griffon.core.ApplicationEvent;
 import griffon.core.Context;
 import griffon.core.GriffonApplication;
@@ -43,7 +44,6 @@ import org.kordamp.jipsy.ServiceProviderFor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;

@@ -17,13 +17,13 @@
  */
 package griffon.util;
 
+import griffon.annotations.core.Nonnull;
 import groovy.lang.Closure;
 import groovy.lang.MissingMethodException;
 import groovy.lang.MissingPropertyException;
 import groovy.util.Factory;
 import groovy.util.FactoryBuilderSupport;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

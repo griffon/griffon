@@ -17,12 +17,12 @@
  */
 package griffon.javafx.collections;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableListBase;
 import javafx.collections.WeakListChangeListener;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;

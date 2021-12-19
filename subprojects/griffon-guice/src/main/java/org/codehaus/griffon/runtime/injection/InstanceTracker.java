@@ -19,9 +19,9 @@ package org.codehaus.griffon.runtime.injection;
 
 import com.google.inject.Binding;
 import com.google.inject.Injector;
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.Collections;

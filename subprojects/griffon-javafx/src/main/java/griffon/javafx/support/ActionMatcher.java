@@ -17,10 +17,10 @@
  */
 package griffon.javafx.support;
 
+import griffon.annotations.core.Nonnull;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 
 import static griffon.javafx.support.JavaFXUtils.configureControl;

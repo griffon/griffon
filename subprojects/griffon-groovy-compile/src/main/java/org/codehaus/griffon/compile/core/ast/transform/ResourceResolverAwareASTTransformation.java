@@ -34,7 +34,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 
 import static griffon.util.GriffonNameUtils.isBlank;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.injectInterface;

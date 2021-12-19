@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.groovy.util;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.resources.ResourceHandler;
 import griffon.inject.Evicts;
 import griffon.util.ConfigReader;
@@ -25,7 +26,6 @@ import griffon.util.ResourceBundleReader;
 import groovy.lang.Script;
 import org.codehaus.griffon.runtime.util.ClassResourceBundleLoader;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.net.URL;

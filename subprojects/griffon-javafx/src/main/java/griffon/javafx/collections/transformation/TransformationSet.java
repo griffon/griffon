@@ -17,13 +17,13 @@
  */
 package griffon.javafx.collections.transformation;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.javafx.collections.ObservableSetBase;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.collections.WeakSetChangeListener;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;

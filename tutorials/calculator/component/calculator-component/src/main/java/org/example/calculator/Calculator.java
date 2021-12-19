@@ -15,7 +15,7 @@
  */
 package org.example.calculator;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 

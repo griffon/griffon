@@ -17,6 +17,7 @@
  */
 package griffon.builder.core;
 
+import griffon.annotations.core.Nonnull;
 import griffon.builder.core.factory.MetaComponentFactory;
 import griffon.core.threading.UIThreadManager;
 import groovy.lang.Closure;
@@ -25,7 +26,6 @@ import groovy.util.FactoryBuilderSupport;
 import org.codehaus.griffon.runtime.groovy.view.AbstractBuilderCustomizer;
 import org.codehaus.groovy.runtime.MethodClosure;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;

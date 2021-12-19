@@ -28,7 +28,7 @@ import org.codehaus.griffon.runtime.core.injection.AbstractTestingModule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Inject;
 import java.util.List;
 

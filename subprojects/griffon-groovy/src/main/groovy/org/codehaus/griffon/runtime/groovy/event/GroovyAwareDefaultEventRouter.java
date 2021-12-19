@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.runtime.groovy.event;
 
+import griffon.annotations.core.Nonnull;
 import groovy.lang.Closure;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Proxy;
 
 import static griffon.util.GriffonClassUtils.getFieldValue;

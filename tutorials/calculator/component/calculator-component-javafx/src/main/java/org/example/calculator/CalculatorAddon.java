@@ -18,7 +18,7 @@ package org.example.calculator;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 
-import javax.annotation.Nonnull;
+import griffon.annotations.core.Nonnull;
 import javax.inject.Named;
 import java.util.Map;
 
