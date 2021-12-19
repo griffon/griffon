@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-name: Release
+name: Early Access
 
 on:
   push:
@@ -24,7 +24,7 @@ on:
 
 jobs:
   release:
-    name: Release
+    name: Early Access
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -65,7 +65,7 @@ jobs:
       - name: Release
         uses: jreleaser/release-action@v1
         with:
-          arguments: full-release
+          arguments: release
         env:
           JRELEASER_PROJECT_VERSION: ${{ github.event.inputs.version }}
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GIT_ACCESS_TOKEN }}
