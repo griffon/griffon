@@ -17,13 +17,12 @@
  */
 package griffon.swing.converters
 
+import griffon.converter.ConversionException
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import griffon.converter.ConversionException
-import java.awt.Color
-import java.awt.LinearGradientPaint
+import java.awt.*
 
 import static java.awt.Color.BLACK
 import static java.awt.Color.RED

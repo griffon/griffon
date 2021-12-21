@@ -17,8 +17,8 @@
  */
 package griffon.javafx.formatters
 
-import javafx.scene.paint.Color
 import griffon.formatter.ParseException
+import javafx.scene.paint.Color
 import spock.lang.Specification
 import spock.lang.Unroll
 

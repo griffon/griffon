@@ -20,8 +20,8 @@ package griffon.swing;
 import griffon.annotations.core.Nonnull;
 import griffon.core.view.WindowDisplayHandler;
 
-import javax.swing.JInternalFrame;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * @author Andres Almiray

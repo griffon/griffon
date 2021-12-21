@@ -17,11 +17,11 @@
  */
 package griffon.swing.converters.spi;
 
+import griffon.converter.Converter;
+import griffon.converter.spi.ConverterProvider;
 import griffon.swing.converters.ImageConverter;
 import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
-import griffon.converter.Converter;
-import griffon.converter.spi.ConverterProvider;
 import java.awt.*;
 
 /**

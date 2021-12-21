@@ -17,12 +17,13 @@
  */
 package sample.swing.groovy
 
+import griffon.annotations.beans.Observable
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Observable
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonModel)
-class SampleModel {
+@ServiceProviderFor(GriffonModel)
+class SampleModel extends AbstractSwingGriffonModel {
     @Observable String input                                             //<1>
     @Observable String output                                            //<1>
 }

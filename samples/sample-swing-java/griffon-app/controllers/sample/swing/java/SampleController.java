@@ -17,16 +17,16 @@
  */
 package sample.swing.java;
 
-import griffon.annotations.core.Nonnull;
-import griffon.core.artifact.GriffonController;
 import griffon.annotations.controller.ControllerAction;
+import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import griffon.core.artifact.GriffonController;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Inject;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class SampleController extends AbstractGriffonController {
     private SampleModel model;                                          //<1>
 
@@ -41,7 +41,7 @@ public class SampleController extends AbstractGriffonController {
     @ControllerAction
     public void sayHello() {                                            //<3>
         final String result = sampleService.sayHello(model.getInput());
-        runInsideUIAsync(new Runnable() {                               //<4>
+        executeInsideUIAsync(new Runnable() {                           //<4>
             @Override
             public void run() {
                 model.setOutput(result);

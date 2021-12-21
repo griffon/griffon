@@ -17,42 +17,42 @@
  */
 package sample.swing.java;
 
-import griffon.test.swing.GriffonAssertjRule;
-import org.assertj.swing.fixture.FrameFixture;
-import org.junit.Rule;
-import org.junit.Test;
+import griffon.test.swing.GriffonAssertjExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-public class SampleIntegrationTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class SampleIntegrationJupiterTest {
     static {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
     }
 
-    @Rule
-    public final GriffonAssertjRule griffon = new GriffonAssertjRule();
-
-    private FrameFixture window;
+    @RegisterExtension
+    public static final GriffonAssertjExtension griffon = GriffonAssertjExtension.builder()
+        .build();
 
     @Test
-    public void typeNameAndClickButton() {
+    void typeNameAndClickButton() {
         // given:
-        window.textBox("inputField").enterText("Griffon");
+        griffon.getWindow().textBox("inputField").enterText("Griffon");
 
         // when:
-        window.button("sayHelloButton").click();
+        griffon.getWindow().button("sayHelloButton").click();
 
         // then:
-        window.label("outputLabel").requireText("Hello Griffon");
+        griffon.getWindow().label("outputLabel").requireText("Hello Griffon");
     }
 
     @Test
-    public void doNotTypeNameAndClickButton() {
+    void doNotTypeNameAndClickButton() {
         // given:
-        window.textBox("inputField").enterText("");
+        griffon.getWindow().textBox("inputField").enterText("");
 
         // when:
-        window.button("sayHelloButton").click();
+        griffon.getWindow().button("sayHelloButton").click();
 
         // then:
-        window.label("outputLabel").requireText("Howdy stranger!");
+        griffon.getWindow().label("outputLabel").requireText("Howdy stranger!");
     }
 }

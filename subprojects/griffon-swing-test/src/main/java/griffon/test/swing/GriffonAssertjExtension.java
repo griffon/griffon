@@ -28,7 +28,7 @@ import org.codehaus.griffon.test.core.TestApplicationBootstrapper;
 import org.codehaus.griffon.test.swing.AssertjAwareSwingGriffonApplication;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import java.awt.Frame;
+import java.awt.*;
 
 import static org.assertj.swing.core.BasicRobot.robotWithNewAwtHierarchy;
 

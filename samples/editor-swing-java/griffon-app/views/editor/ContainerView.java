@@ -19,11 +19,11 @@ package editor;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
-import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ import static griffon.core.util.GriffonApplicationUtils.isMacOSX;
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class ContainerView extends AbstractSwingGriffonView {
     @MVCMember @Nonnull
     private ContainerModel model;

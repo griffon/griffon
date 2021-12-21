@@ -17,9 +17,9 @@
  */
 package griffon.swing.converters;
 
+import griffon.converter.ConversionException;
 import org.codehaus.griffon.converter.AbstractConverter;
 
-import griffon.converter.ConversionException;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;

@@ -17,12 +17,10 @@
  */
 package griffon.swing.converters;
 
+import griffon.converter.ConversionException;
 import org.codehaus.griffon.converter.AbstractConverter;
 
-import griffon.converter.ConversionException;
-import java.awt.Color;
-import java.awt.LinearGradientPaint;
-import java.awt.MultipleGradientPaint;
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;

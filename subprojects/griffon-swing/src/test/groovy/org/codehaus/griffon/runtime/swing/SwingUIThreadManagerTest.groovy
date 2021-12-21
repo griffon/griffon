@@ -32,7 +32,7 @@ import tck.griffon.core.threading.ThreadingHandlerTest
 
 import javax.inject.Inject
 import javax.inject.Singleton
-import javax.swing.SwingUtilities
+import javax.swing.*
 import java.util.concurrent.ExecutorService
 
 import static griffon.util.AnnotationUtils.named

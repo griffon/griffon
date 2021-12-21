@@ -17,12 +17,13 @@
  */
 package console
 
+import griffon.annotations.beans.Observable
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Observable
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonModel)
-class ConsoleModel {
+@ServiceProviderFor(GriffonModel)
+class ConsoleModel extends AbstractSwingGriffonModel {
     String scriptSource                                  //<1>
     @Observable Object scriptResult                      //<2>
     @Observable boolean enabled = true                   //<3>

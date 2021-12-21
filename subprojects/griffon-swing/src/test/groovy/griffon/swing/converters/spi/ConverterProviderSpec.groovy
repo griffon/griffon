@@ -17,6 +17,8 @@
  */
 package griffon.swing.converters.spi
 
+import griffon.converter.Converter
+import griffon.converter.spi.ConverterProvider
 import griffon.swing.converters.BufferedImageConverter
 import griffon.swing.converters.ColorConverter
 import griffon.swing.converters.DimensionConverter
@@ -35,20 +37,8 @@ import griffon.swing.converters.RectangleConverter
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import griffon.converter.Converter
-import griffon.converter.spi.ConverterProvider
-import javax.swing.Icon
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Font
-import java.awt.GradientPaint
-import java.awt.Image
-import java.awt.Insets
-import java.awt.LinearGradientPaint
-import java.awt.Point
-import java.awt.Polygon
-import java.awt.RadialGradientPaint
-import java.awt.Rectangle
+import javax.swing.*
+import java.awt.*
 import java.awt.geom.Point2D
 import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage

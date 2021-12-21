@@ -17,28 +17,31 @@
  */
 package sample.javafx.java;
 
-import griffon.test.javafx.GriffonTestFXRule;
-import org.junit.Rule;
-import org.junit.Test;
+import griffon.test.javafx.GriffonIntegrationTestFXExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
-public class SampleIntegrationTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class SampleIntegrationJupiterTest {
     static {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
     }
 
-    @Rule
-    public GriffonTestFXRule testfx = new GriffonTestFXRule("mainWindow");
+    @RegisterExtension
+    public static final GriffonIntegrationTestFXExtension TESTFX = GriffonIntegrationTestFXExtension.builder()
+        .build();
 
     @Test
     public void typeNameAndClickButton() {
         // given:
-        testfx.clickOn("#input").write("Griffon");
+        TESTFX.clickOn("#input").write("Griffon");
 
         // when:
-        testfx.clickOn("#sayHelloActionTarget");
+        TESTFX.clickOn("#sayHelloActionTarget");
 
         // then:
         verifyThat("#output", hasText("Hello Griffon"));
@@ -47,10 +50,10 @@ public class SampleIntegrationTest {
     @Test
     public void doNotTypeNameAndClickButton() {
         // given:
-        testfx.clickOn("#input").write("");
+        TESTFX.clickOn("#input").write("");
 
         // when:
-        testfx.clickOn("#sayHelloActionTarget");
+        TESTFX.clickOn("#sayHelloActionTarget");
 
         // then:
         verifyThat("#output", hasText("Howdy stranger!"));

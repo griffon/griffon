@@ -21,7 +21,7 @@ import griffon.annotations.core.Nonnull;
 import griffon.swing.support.SwingUtils;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
-import java.awt.Toolkit;
+import java.awt.*;
 import java.util.Map;
 
 /**

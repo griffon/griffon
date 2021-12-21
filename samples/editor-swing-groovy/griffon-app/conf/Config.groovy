@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 application {
-    title = 'Simple Editor'
+    title = 'editor-swing-groovy'
     startupGroups = ['container']
     autoShutdown = true
 }

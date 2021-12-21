@@ -15,10 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// apply plugin: 'java-library'
+// apply plugin: 'application'
+// apply plugin: 'org.kordamp.gradle.integration-test'
+// apply plugin: 'org.kordamp.gradle.functional-test'
 
 dependencies {
-    annotationProcessor project(':griffon-core-compile')
-    compileOnly project(':griffon-core-compile')
     compileOnly project(':griffon-groovy-compile')
 
     api project(':griffon-guice')
@@ -28,7 +30,11 @@ dependencies {
     testImplementation project(':griffon-core-test')
 
     functionalTestImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"
-    functionalTestImplementation "junit:junit:$junitVersion"
+    functionalTestImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    functionalTestRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    functionalTestRuntimeOnly("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+        exclude module: 'junit', group: 'junit'
+    }
     functionalTestImplementation("org.spockframework:spock-core:$spockVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
@@ -50,6 +56,8 @@ sourceSets {
 }
 
 test {
+    useJUnitPlatform()
+
     testLogging {
         events 'passed', 'skipped', 'failed'
     }
@@ -61,6 +69,7 @@ test {
 
 integrationTest {
     enabled = false
+    useJUnitPlatform()
 
     ignoreFailures = !rootProject.fullBuild
 
@@ -71,6 +80,7 @@ integrationTest {
 
 functionalTest {
     enabled = false
+    useJUnitPlatform()
 
     ignoreFailures = !rootProject.fullBuild
 

@@ -21,8 +21,8 @@ import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import griffon.core.view.WindowManager;
 
-import javax.swing.JInternalFrame;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Set;
 
 /**

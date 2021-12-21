@@ -17,11 +17,11 @@
  */
 package editor;
 
-import org.codehaus.griffon.runtime.core.AbstractObservable;
+import org.codehaus.griffon.runtime.core.properties.AbstractPropertySource;
 
 import java.io.File;
 
-public class Document extends AbstractObservable {
+public class Document extends AbstractPropertySource {
     private String title;
     private String contents;
     private boolean dirty;

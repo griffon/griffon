@@ -17,12 +17,12 @@
  */
 package editor;
 
-import griffon.annotations.core.Nonnull;
-import griffon.core.artifact.GriffonController;
 import griffon.annotations.controller.ControllerAction;
+import griffon.annotations.core.Nonnull;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import griffon.core.artifact.GriffonController;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Map;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.io.FileUtils.writeStringToFile;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class EditorController extends AbstractGriffonController {
     @MVCMember @Nonnull
     private EditorModel model;
@@ -40,10 +40,10 @@ public class EditorController extends AbstractGriffonController {
     @Override
     public void mvcGroupInit(@Nonnull Map<String, Object> args) {
         model.setDocument((Document) args.get("document"));
-        runOutsideUI(() -> {
+        executeOutsideUI(() -> {
             try {
                 final String content = readFileToString(model.getDocument().getFile());
-                runInsideUIAsync(() -> model.getDocument().setContents(content));
+                executeInsideUIAsync(() -> model.getDocument().setContents(content));
             } catch (IOException e) {
                 getLog().warn("Can't open file", e);
             }
@@ -54,7 +54,7 @@ public class EditorController extends AbstractGriffonController {
     public void saveFile() {
         try {
             writeStringToFile(model.getDocument().getFile(), view.getEditor().getText());
-            runInsideUIAsync(() -> model.getDocument().setContents(view.getEditor().getText()));
+            executeInsideUIAsync(() -> model.getDocument().setContents(view.getEditor().getText()));
         } catch (IOException e) {
             getLog().warn("Can't save file", e);
         }

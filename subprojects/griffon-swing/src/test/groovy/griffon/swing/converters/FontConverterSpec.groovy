@@ -17,13 +17,13 @@
  */
 package griffon.swing.converters
 
+import griffon.converter.ConversionException
 import griffon.swing.TestUtils
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import griffon.converter.ConversionException
-import java.awt.Font
+import java.awt.*
 
 @Unroll
 @IgnoreIf({ TestUtils.headless })

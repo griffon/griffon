@@ -17,11 +17,10 @@
  */
 package griffon.swing.converters;
 
-import griffon.swing.formatters.ColorFormatter;
+import griffon.converter.ConversionException;
 import griffon.formatter.Formatter;
 import griffon.formatter.ParseException;
-
-import griffon.converter.ConversionException;
+import griffon.swing.formatters.ColorFormatter;
 import org.codehaus.griffon.converter.AbstractFormattingConverter;
 
 import java.awt.*;

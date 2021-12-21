@@ -18,25 +18,13 @@
 mainClassName = 'browser.Launcher'
 
 dependencies {
-    compileOnly project(':griffon-core-compile')
     compileOnly project(':griffon-groovy-compile')
 
-    api project(':griffon-groovy')
     api project(':griffon-javafx-groovy')
 
     runtimeOnly project(':griffon-guice')
 
     runtimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-simple')
-
-    runtimeOnly('log4j:log4j:1.2.17') {
-        exclude group: 'ant',         module: 'ant-nodeps'
-        exclude group: 'ant',         module: 'ant-junit'
-        exclude group: 'ant-contrib', module: 'ant-contrib'
-    }
-    runtimeOnly(config.dependencyManagement.gav('slf4j', 'slf4j-log4j12')) {
-        exclude group: 'org.slf4j', module: 'slf4j-api'
-        exclude group: 'log4j',     module: 'log4j'
-    }
 }
 
 sourceSets {

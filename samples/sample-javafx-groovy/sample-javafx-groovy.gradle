@@ -24,6 +24,9 @@ application {
 ext.hasIntegrationTests = true
 ext.hasFunctionalTests = true
 ext.depProjects = [
+    ':griffon-converter-api',
+    ':griffon-converter-impl',
+    ':griffon-core-api',
     ':griffon-core-impl',
     ':griffon-javafx',
     ':griffon-guice',
@@ -35,9 +38,7 @@ ext.depProjects.each { evaluationDependsOn it }
 apply from: rootProject.file('gradle/coverage-samples.gradle')
 
 dependencies {
-    api project(':griffon-groovy')
-    api project(':griffon-javafx')
-
+    api project(':griffon-javafx-groovy')
     api "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
     api "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
     api "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"

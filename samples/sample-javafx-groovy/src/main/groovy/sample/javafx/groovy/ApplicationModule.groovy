@@ -18,8 +18,8 @@
 package sample.javafx.groovy
 
 import griffon.core.injection.Module
+import org.codehaus.griffon.runtime.core.bundles.ResourceBundleProvider
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
-import org.codehaus.griffon.runtime.util.bundles.ResourceBundleProvider
 import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 import static griffon.util.AnnotationUtils.named

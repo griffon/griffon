@@ -17,42 +17,48 @@
  */
 package sample.javafx.java;
 
-import griffon.test.javafx.GriffonTestFXRule;
-import org.junit.Rule;
-import org.junit.Test;
+import griffon.test.javafx.GriffonFunctionalTestFXExtension;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.control.LabeledMatchers.hasText;
 
-public class SampleIntegrationTest {
+@TestMethodOrder(MethodOrderer.Alphanumeric.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class SampleFunctionalJupiterTest {
     static {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
     }
 
-    @Rule
-    public GriffonTestFXRule testfx = new GriffonTestFXRule("mainWindow");
+    @RegisterExtension
+    public static final GriffonFunctionalTestFXExtension TESTFX = GriffonFunctionalTestFXExtension.builder()
+        .build();
 
     @Test
-    public void typeNameAndClickButton() {
+    public void _01_doNotTypeNameAndClickButton() {
         // given:
-        testfx.clickOn("#input").write("Griffon");
+        TESTFX.clickOn("#input").write("");
 
         // when:
-        testfx.clickOn("#sayHelloActionTarget");
-
-        // then:
-        verifyThat("#output", hasText("Hello Griffon"));
-    }
-
-    @Test
-    public void doNotTypeNameAndClickButton() {
-        // given:
-        testfx.clickOn("#input").write("");
-
-        // when:
-        testfx.clickOn("#sayHelloActionTarget");
+        TESTFX.clickOn("#sayHelloActionTarget");
 
         // then:
         verifyThat("#output", hasText("Howdy stranger!"));
+    }
+
+    @Test
+    public void _02_typeNameAndClickButton() {
+        // given:
+        TESTFX.clickOn("#input").write("Griffon");
+
+        // when:
+        TESTFX.clickOn("#sayHelloActionTarget");
+
+        // then:
+        verifyThat("#output", hasText("Hello Griffon"));
     }
 }

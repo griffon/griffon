@@ -17,7 +17,7 @@
  */
 package editor
 
-import griffon.transform.Observable
+import griffon.annotations.beans.Observable
 
 @Observable
 class Document {

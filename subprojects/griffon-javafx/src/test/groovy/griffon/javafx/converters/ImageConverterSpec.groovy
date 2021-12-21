@@ -17,13 +17,12 @@
  */
 package griffon.javafx.converters
 
+import griffon.converter.ConversionException
 import javafx.embed.swing.JFXPanel
 import javafx.scene.image.Image
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import griffon.converter.ConversionException
 
 @Unroll
 class ImageConverterSpec extends Specification {

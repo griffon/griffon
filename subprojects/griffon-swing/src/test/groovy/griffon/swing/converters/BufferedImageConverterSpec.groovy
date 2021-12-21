@@ -17,10 +17,9 @@
  */
 package griffon.swing.converters
 
+import griffon.converter.ConversionException
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import griffon.converter.ConversionException
 
 @Unroll
 class BufferedImageConverterSpec extends Specification {

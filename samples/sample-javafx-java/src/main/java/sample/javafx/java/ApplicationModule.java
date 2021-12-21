@@ -18,8 +18,8 @@
 package sample.javafx.java;
 
 import griffon.core.injection.Module;
-import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.core.bundles.ResourceBundleProvider;
+import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.util.ResourceBundle;

@@ -18,17 +18,17 @@
 package editor;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import griffon.core.artifact.GriffonView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.util.Objects;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class EditorView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     private EditorModel model;
@@ -61,6 +61,6 @@ public class EditorView extends AbstractJavaFXGriffonView {
 
     @Override
     public void mvcGroupDestroy() {
-        runInsideUISync(() -> parentView.getTabGroup().getTabs().remove(tab));
+        executeInsideUISync(() -> parentView.getTabGroup().getTabs().remove(tab));
     }
 }

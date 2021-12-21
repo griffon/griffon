@@ -19,6 +19,8 @@ package org.codehaus.griffon.runtime.swing.controller;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
@@ -27,8 +29,6 @@ import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
-import griffon.converter.Converter;
-import griffon.converter.ConverterRegistry;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 

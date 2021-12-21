@@ -17,11 +17,10 @@
  */
 package griffon.javafx.converters
 
+import griffon.converter.ConversionException
 import javafx.scene.paint.Color
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import griffon.converter.ConversionException
 
 @Unroll
 class ColorConverterSpec extends Specification {

@@ -20,8 +20,8 @@ package org.codehaus.griffon.runtime.swing.groovy;
 import griffon.annotations.inject.DependsOn;
 import griffon.builder.swing.SwingBuilderCustomizer;
 import griffon.core.injection.Module;
-import griffon.swing.SwingWindowDisplayHandler;
 import griffon.core.util.groovy.BuilderCustomizer;
+import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.kordamp.jipsy.annotations.ServiceProviderFor;
 

@@ -18,10 +18,10 @@
 package sample.swing.java;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import griffon.core.artifact.GriffonView;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -34,7 +34,7 @@ import java.util.Collections;
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class SampleView extends AbstractSwingGriffonView {
     private SampleController controller;                                         //<1>
     private SampleModel model;                                                   //<1>

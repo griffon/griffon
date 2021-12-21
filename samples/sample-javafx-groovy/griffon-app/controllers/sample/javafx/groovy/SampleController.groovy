@@ -17,16 +17,17 @@
  */
 package sample.javafx.groovy
 
-import griffon.annotations.core.Nonnull
-import griffon.core.artifact.GriffonController
 import griffon.annotations.controller.ControllerAction
+import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonController
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 import javax.inject.Inject
 
-@ArtifactProviderFor(GriffonController)
-class SampleController {
+@ServiceProviderFor(GriffonController)
+class SampleController extends AbstractGriffonController {
     @MVCMember @Nonnull
     SampleModel model                                                      //<1>
 
@@ -36,6 +37,6 @@ class SampleController {
     @ControllerAction
     void sayHello() {                                                      //<3>
         String result = sampleService.sayHello(model.input)
-        runInsideUIAsync { model.output = result }                         //<4>
+        executeInsideUIAsync { model.output = result }                         //<4>
     }
 }

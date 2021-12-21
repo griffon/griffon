@@ -17,14 +17,13 @@
  */
 package griffon.javafx.converters
 
+import griffon.converter.ConversionException
 import javafx.scene.paint.CycleMethod
 import javafx.scene.paint.RadialGradient
 import javafx.scene.paint.Stop
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import griffon.converter.ConversionException
 
 import static javafx.scene.paint.Color.BLACK
 import static javafx.scene.paint.Color.WHITE

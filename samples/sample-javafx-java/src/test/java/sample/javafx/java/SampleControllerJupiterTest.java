@@ -18,21 +18,23 @@
 package sample.javafx.java;
 
 import griffon.core.artifact.ArtifactManager;
-import griffon.test.core.GriffonUnitRule;
+import griffon.test.core.GriffonUnitExtension;
 import griffon.test.core.TestFor;
 import javafx.embed.swing.JFXPanel;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.inject.Inject;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
 
+@ExtendWith(GriffonUnitExtension.class)
 @TestFor(SampleController.class)
-public class SampleControllerTest {
+public class SampleControllerJupiterTest {
     static {
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
         // force initialization JavaFX Toolkit
@@ -44,31 +46,35 @@ public class SampleControllerTest {
 
     private SampleController controller;
 
-    @Rule
-    public final GriffonUnitRule griffon = new GriffonUnitRule();
-
     @Test
     public void executeSayHelloActionWithNoInput() {
+        // given:
         final SampleModel model = artifactManager.newInstance(SampleModel.class);
-
         controller.setModel(model);
-        controller.invokeAction("sayHello");
 
+        // when:
+        controller.invokeAction("sayHello");
         await().atMost(2, SECONDS)
             .until(model::getOutput, notNullValue());
-        assertEquals("Howdy stranger!", model.getOutput());
+
+        // then:
+        assertThat("Howdy stranger!", equalTo(model.getOutput()));
     }
 
     @Test
     public void executeSayHelloActionWithInput() {
+        // given:
         final SampleModel model = artifactManager.newInstance(SampleModel.class);
         model.setInput("Griffon");
-
         controller.setModel(model);
-        controller.invokeAction("sayHello");
 
+        // when:
+        controller.invokeAction("sayHello");
         await().atMost(2, SECONDS)
             .until(model::getOutput, notNullValue());
-        assertEquals("Hello Griffon", model.getOutput());
+
+        // then:
+        assertThat("Hello Griffon", equalTo(model.getOutput()));
     }
 }
+

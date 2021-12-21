@@ -17,9 +17,9 @@
  */
 package griffon.swing.converters;
 
+import griffon.converter.ConversionException;
 import org.codehaus.griffon.converter.AbstractConverter;
 
-import griffon.converter.ConversionException;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;

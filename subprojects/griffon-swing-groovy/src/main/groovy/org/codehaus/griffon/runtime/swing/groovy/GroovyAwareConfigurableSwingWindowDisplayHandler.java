@@ -26,7 +26,7 @@ import org.codehaus.griffon.runtime.swing.ConfigurableSwingWindowDisplayHandler;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.awt.Window;
+import java.awt.*;
 
 /**
  * @author Andres Almiray

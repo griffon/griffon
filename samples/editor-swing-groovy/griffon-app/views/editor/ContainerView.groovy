@@ -18,17 +18,18 @@
 package editor
 
 import griffon.annotations.core.Nonnull
-import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonView
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 import javax.swing.event.ChangeListener
 import java.awt.*
 
 import static griffon.core.util.GriffonApplicationUtils.isMacOSX
 
-@ArtifactProviderFor(GriffonView)
-class ContainerView {
+@ServiceProviderFor(GriffonView)
+class ContainerView extends AbstractSwingGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder
     @MVCMember @Nonnull

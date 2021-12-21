@@ -19,10 +19,9 @@ package editor;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
-import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -33,11 +32,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.io.File;
 import java.util.Collections;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class ContainerView extends AbstractJavaFXGriffonView {
     private ContainerController controller;
     private ContainerModel model;
@@ -80,7 +80,7 @@ public class ContainerView extends AbstractJavaFXGriffonView {
     private Scene init() {
         Scene scene = new Scene(new Group());
         scene.setFill(Color.WHITE);
-        scene.getStylesheets().add("bootstrapfx.css");
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
 
         Node node = loadFromFXML();
         ((Group) scene.getRoot()).getChildren().addAll(node);

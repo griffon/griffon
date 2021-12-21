@@ -27,12 +27,7 @@ dependencies {
     api "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
     api "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
 
-    runtimeOnly('log4j:log4j:1.2.17') {
-        exclude group: 'ant',         module: 'ant-nodeps'
-        exclude group: 'ant',         module: 'ant-junit'
-        exclude group: 'ant-contrib', module: 'ant-contrib'
-    }
-    runtimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-log4j12')
+    runtimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-simple')
 
     testImplementation project(':griffon-core-test')
 }

@@ -17,16 +17,17 @@
  */
 package console
 
-import griffon.annotations.core.Nonnull
-import griffon.core.artifact.GriffonController
 import griffon.annotations.controller.ControllerAction
+import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonController
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 import javax.inject.Inject
 
-@ArtifactProviderFor(GriffonController)
-class ConsoleController {
+@ServiceProviderFor(GriffonController)
+class ConsoleController extends AbstractGriffonController {
     @MVCMember @Nonnull
     ConsoleModel model                                       //<1>
 

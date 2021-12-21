@@ -17,11 +17,11 @@
  */
 package griffon.swing.converters
 
+import griffon.converter.ConversionException
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import griffon.converter.ConversionException
 import java.awt.geom.Point2D
 
 @Unroll

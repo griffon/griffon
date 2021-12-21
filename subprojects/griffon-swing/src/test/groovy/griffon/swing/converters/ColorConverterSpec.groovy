@@ -17,12 +17,12 @@
  */
 package griffon.swing.converters
 
+import griffon.converter.ConversionException
 import griffon.swing.support.Colors
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import griffon.converter.ConversionException
-import java.awt.Color
+import java.awt.*
 
 @Unroll
 class ColorConverterSpec extends Specification {

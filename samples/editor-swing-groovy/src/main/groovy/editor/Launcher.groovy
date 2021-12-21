@@ -21,6 +21,7 @@ import griffon.swing.SwingGriffonApplication
 
 class Launcher {
     static void main(String[] args) throws Exception {
+        System.setProperty('griffon.full.stacktrace', 'true')
         SwingGriffonApplication.run(SwingGriffonApplication, args)
     }
 }

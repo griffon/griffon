@@ -17,11 +17,12 @@
  */
 package editor
 
+import griffon.annotations.beans.Observable
 import griffon.core.artifact.GriffonModel
-import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Observable
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonModel)
-class EditorModel {
+@ServiceProviderFor(GriffonModel)
+class EditorModel extends AbstractSwingGriffonModel {
     @Observable Document document
 }

@@ -23,7 +23,7 @@ import griffon.formatter.ParseException;
 import griffon.swing.support.Colors;
 import org.codehaus.griffon.formatter.AbstractFormatter;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Arrays;
 
 import static griffon.util.StringUtils.requireNonBlank;

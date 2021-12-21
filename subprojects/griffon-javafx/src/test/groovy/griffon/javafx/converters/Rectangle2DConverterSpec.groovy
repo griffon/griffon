@@ -17,12 +17,11 @@
  */
 package griffon.javafx.converters
 
+import griffon.converter.ConversionException
 import javafx.geometry.Rectangle2D
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import griffon.converter.ConversionException
 
 @Unroll
 class Rectangle2DConverterSpec extends Specification {

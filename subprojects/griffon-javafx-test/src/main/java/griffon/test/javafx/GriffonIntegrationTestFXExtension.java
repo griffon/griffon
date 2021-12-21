@@ -25,7 +25,6 @@ import griffon.core.events.WindowShownEvent;
 import griffon.exceptions.GriffonException;
 import griffon.javafx.JavaFXGriffonApplication;
 import javafx.stage.Window;
-import java.time.Duration;
 import org.codehaus.griffon.test.core.DefaultGriffonApplication;
 import org.codehaus.griffon.test.javafx.TestJavaFXGriffonApplication;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.testfx.api.FxToolkit;
 
+import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
 import static griffon.util.StringUtils.isBlank;

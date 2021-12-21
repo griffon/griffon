@@ -17,14 +17,15 @@
  */
 package editor
 
-import griffon.annotations.core.Nonnull
-import griffon.core.artifact.GriffonController
 import griffon.annotations.controller.ControllerAction
+import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonController
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonController)
-class EditorController {
+@ServiceProviderFor(GriffonController)
+class EditorController extends AbstractGriffonController {
     @MVCMember @Nonnull
     EditorModel model
     @MVCMember @Nonnull
@@ -32,11 +33,11 @@ class EditorController {
 
     void mvcGroupInit(Map<String, Object> args) {
         model.document = args.document
-        runOutsideUI {
+        executeOutsideUI {
             // load the file's text, outside the EDT
             String text = model.document.file.text
             // update the model inside the EDT
-            runInsideUIAsync { model.document.contents = text }
+            executeInsideUIAsync { model.document.contents = text }
         }
     }
 
@@ -45,7 +46,7 @@ class EditorController {
         // write text to file, outside the EDT
         model.document.file.text = builder.editor.text
         // update model.text, inside EDT
-        runInsideUIAsync { model.document.contents = builder.editor.text }
+        executeInsideUIAsync { model.document.contents = builder.editor.text }
     }
 
     @ControllerAction

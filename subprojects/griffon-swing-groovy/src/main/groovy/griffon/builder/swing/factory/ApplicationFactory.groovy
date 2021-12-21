@@ -19,13 +19,8 @@ package griffon.builder.swing.factory
 
 import org.codehaus.groovy.runtime.InvokerHelper
 
-import javax.swing.JApplet
-import javax.swing.JButton
-import javax.swing.JMenuBar
-import javax.swing.JToolBar
-import javax.swing.SwingUtilities
-import java.awt.Component
-import java.awt.Window
+import javax.swing.*
+import java.awt.*
 
 /**
  * Created by IntelliJ IDEA.

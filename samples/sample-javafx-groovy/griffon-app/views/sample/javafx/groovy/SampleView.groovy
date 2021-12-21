@@ -18,12 +18,13 @@
 package sample.javafx.groovy
 
 import griffon.annotations.core.Nonnull
-import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonView
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonView)
-class SampleView {
+@ServiceProviderFor(GriffonView)
+class SampleView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder                                                              //<1>
     @MVCMember @Nonnull
@@ -33,7 +34,7 @@ class SampleView {
         builder.application(title: application.configuration['application.title'],
             name: 'mainWindow', sizeToScene: true, centerOnScreen: true) {                     //<2>
             scene(fill: WHITE, width: 400, height: 120,
-                stylesheets: ['/bootstrapfx.css', '/sample/javafx/groovy/sample.css']) {
+                stylesheets: ['/org/kordamp/bootstrapfx/bootstrapfx.css', '/sample/javafx/groovy/sample.css']) {
                 anchorPane {
                     label(leftAnchor: 14, topAnchor: 11,
                           text: application.messageSource.getMessage('name.label'))

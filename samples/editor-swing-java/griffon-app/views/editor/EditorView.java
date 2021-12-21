@@ -18,17 +18,17 @@
 package editor;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.artifact.GriffonView;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
+import griffon.core.artifact.GriffonView;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.util.Objects;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class EditorView extends AbstractSwingGriffonView {
     @MVCMember @Nonnull
     private EditorModel model;

@@ -24,6 +24,9 @@ application {
 ext.hasIntegrationTests = true
 ext.hasFunctionalTests = false
 ext.depProjects = [
+    ':griffon-converter-api',
+    ':griffon-converter-impl',
+    ':griffon-core-api',
     ':griffon-core-impl',
     ':griffon-javafx',
     ':griffon-guice',
@@ -47,12 +50,18 @@ config {
 
 dependencies {
     api project(':griffon-javafx')
-
     api "org.kordamp.ikonli:ikonli-javafx:$ikonliVersion"
     api "org.kordamp.ikonli:ikonli-fontawesome-pack:$ikonliVersion"
     api "org.kordamp.bootstrapfx:bootstrapfx-core:$bootstrapfxVersion"
 
     testImplementation project(':griffon-javafx-test')
+
+    testImplementation "org.hamcrest:java-hamcrest:$hamcrestVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
+    testImplementation("org.junit.vintage:junit-vintage-engine:$junit5Version") {
+        exclude module: 'junit', group: 'junit'
+    }
 
     functionalTestImplementation project(':griffon-javafx-test')
 }

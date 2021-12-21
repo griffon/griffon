@@ -18,8 +18,8 @@
 package sample.javafx.groovy
 
 import griffon.core.artifact.ArtifactManager
-import griffon.core.test.GriffonUnitRule
-import griffon.core.test.TestFor
+import griffon.test.core.GriffonUnitRule
+import griffon.test.core.TestFor
 import javafx.embed.swing.JFXPanel
 import org.junit.Rule
 import org.junit.Test

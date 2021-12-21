@@ -17,6 +17,8 @@
  */
 package griffon.javafx.converters.spi
 
+import griffon.converter.Converter
+import griffon.converter.spi.ConverterProvider
 import griffon.javafx.converters.ColorConverter
 import griffon.javafx.converters.Dimension2DConverter
 import griffon.javafx.converters.GraphicConverter
@@ -39,9 +41,6 @@ import javafx.scene.paint.Paint
 import javafx.scene.paint.RadialGradient
 import spock.lang.Specification
 import spock.lang.Unroll
-
-import griffon.converter.Converter
-import griffon.converter.spi.ConverterProvider
 
 @Unroll
 class ConverterProviderSpec extends Specification {

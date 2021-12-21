@@ -17,16 +17,17 @@
  */
 package browser
 
-import griffon.annotations.core.Nonnull
-import griffon.core.artifact.GriffonController
 import griffon.annotations.controller.ControllerAction
+import griffon.annotations.core.Nonnull
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
 import griffon.annotations.threading.Threading
+import griffon.core.artifact.GriffonController
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 @Threading(Threading.Policy.SKIP)
-@ArtifactProviderFor(GriffonController)
-class BrowserController {
+@ServiceProviderFor(GriffonController)
+class BrowserController extends AbstractGriffonController {
     @MVCMember @Nonnull
     BrowserModel model
     @MVCMember @Nonnull

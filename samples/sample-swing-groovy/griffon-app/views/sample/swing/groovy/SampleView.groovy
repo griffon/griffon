@@ -18,12 +18,13 @@
 package sample.swing.groovy
 
 import griffon.annotations.core.Nonnull
-import griffon.core.artifact.GriffonView
 import griffon.annotations.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
+import griffon.core.artifact.GriffonView
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonView)
-class SampleView {
+@ServiceProviderFor(GriffonView)
+class SampleView extends AbstractSwingGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder                                                              //<1>
     @MVCMember @Nonnull

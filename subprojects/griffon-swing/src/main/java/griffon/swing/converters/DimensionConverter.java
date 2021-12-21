@@ -17,10 +17,10 @@
  */
 package griffon.swing.converters;
 
+import griffon.converter.ConversionException;
 import org.codehaus.griffon.converter.AbstractConverter;
 
-import griffon.converter.ConversionException;
-import java.awt.Dimension;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 

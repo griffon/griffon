@@ -17,21 +17,21 @@
  */
 package editor;
 
+import griffon.annotations.controller.ControllerAction;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.artifact.GriffonController;
-import griffon.annotations.controller.ControllerAction;
 import griffon.annotations.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
 import griffon.annotations.threading.Threading;
+import griffon.core.artifact.GriffonController;
 import griffon.util.CollectionUtils;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.io.File;
 
 import static griffon.util.StringUtils.isNotBlank;
 
-@ArtifactProviderFor(GriffonController.class)
+@ServiceProviderFor(GriffonController.class)
 public class ContainerController extends AbstractGriffonController {
     @MVCMember @Nonnull
     private ContainerModel model;
