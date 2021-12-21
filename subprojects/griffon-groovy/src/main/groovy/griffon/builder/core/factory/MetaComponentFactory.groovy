@@ -17,10 +17,10 @@
  */
 package griffon.builder.core.factory
 
-import griffon.annotations.core.Nullable
-import griffon.core.ApplicationEvent
+import griffon.annotations.core.Nonnull
+import griffon.annotations.event.EventHandler
 import griffon.core.GriffonApplication
-import griffon.core.RunnableWithArgs
+import griffon.core.events.DestroyMVCGroupEvent
 import griffon.core.mvc.MVCGroup
 import griffon.core.mvc.MVCGroupManager
 
@@ -83,7 +83,7 @@ class MetaComponentFactory extends AbstractFactory {
         (attributes.remove('mvcArgs') ?: [:]) + [metaComponentArgs: attributes]
     }
 
-    private static class DestroyEventHandler implements RunnableWithArgs {
+    private static class DestroyEventHandler {
         private final String parentId
         private final MVCGroup childGroup
         private final GriffonApplication application
@@ -92,15 +92,15 @@ class MetaComponentFactory extends AbstractFactory {
             this.parentId = parentId
             this.childGroup = childGroup
             this.application = application
-            application.eventRouter.addEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)
+            application.eventRouter.subscribe(this)
         }
 
-        @Override
-        void run(@Nullable Object... args) {
-            Object destroyedGroup = args[0]
+        @EventHandler
+        void handleDestroyMVCGroupEvent(@Nonnull DestroyMVCGroupEvent event) {
+            MVCGroup destroyedGroup = event.group
             if (destroyedGroup.mvcId == parentId) {
                 childGroup.destroy()
-                application.eventRouter.removeEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)
+                application.eventRouter.unsubscribe(this)
             }
         }
     }

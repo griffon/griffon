@@ -18,11 +18,11 @@
 package org.codehaus.griffon.runtime.core.artifact;
 
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.Typed;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.GriffonArtifact;
-import griffon.inject.Typed;
-import griffon.util.ServiceLoaderUtils;
+import org.kordamp.jipsy.util.TypeLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +59,7 @@ public class DefaultArtifactManager extends AbstractArtifactManager {
             final String artifactType = e.getKey();
             ArtifactHandler<?> artifactHandler = e.getValue();
             Class<?> klass = artifactHandler.getClass().getAnnotation(Typed.class).value();
-            ServiceLoaderUtils.load(applicationClassLoader.get(), "META-INF/griffon/", klass, (classLoader, type, line) -> {
+            TypeLoader.load(applicationClassLoader.get(), "META-INF/services/", klass, (classLoader, type, line) -> {
                 List<Class<? extends GriffonArtifact>> list = artifacts.computeIfAbsent(artifactType, k -> new ArrayList<>());
 
                 try {

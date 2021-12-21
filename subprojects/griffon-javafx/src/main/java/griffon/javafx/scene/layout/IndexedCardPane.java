@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.ObjectUtils.requireState;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -110,10 +110,12 @@ public class IndexedCardPane extends StackPane {
         }
     }
 
+    @Nonnull
     public ReadOnlyIntegerProperty selectedIndexProperty() {
         return selectedIndex;
     }
 
+    @Nonnull
     public ReadOnlyObjectProperty<Node> selectedNodeProperty() {
         return selectedNode;
     }

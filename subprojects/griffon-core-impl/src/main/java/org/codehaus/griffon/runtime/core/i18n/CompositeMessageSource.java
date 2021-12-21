@@ -20,7 +20,7 @@ package org.codehaus.griffon.runtime.core.i18n;
 import griffon.annotations.core.Nonnull;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
-import griffon.util.CompositeResourceBundle;
+import org.codehaus.griffon.runtime.core.bundles.CompositeResourceBundle;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static griffon.util.GriffonClassUtils.requireNonEmpty;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.ObjectUtils.requireNonEmpty;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

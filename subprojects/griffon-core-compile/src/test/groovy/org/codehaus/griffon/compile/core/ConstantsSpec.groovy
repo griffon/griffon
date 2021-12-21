@@ -40,36 +40,14 @@ class ConstantsSpec extends Specification implements BaseConstants {
         ThreadingAwareConstants        | THREADING_METHODS
     }
 
-    void "Verify methods of org.codehaus.griffon.compile.core.ObservableConstants"() {
-        given:
-        def actualMethods = ObservableConstants.OBSERVABLE_METHODS + ObservableConstants.OBSERVABLE_FIRE_METHODS
-
-        expect:
-        actualMethods.size() == OBSERVABLE_METHODS.size()
-        actualMethods.each { assert OBSERVABLE_METHODS.contains(it.toString()) }
-    }
-
-    void "Verify methods of org.codehaus.griffon.compile.core.VetoableConstants"() {
-        given:
-        def actualMethods = VetoableConstants.VETOABLE_METHODS + VetoableConstants.VETOABLE_FIRE_METHODS
-
-        expect:
-        actualMethods.size() == VETOABLE_METHODS.size()
-        actualMethods.each { assert VETOABLE_METHODS.contains(it.toString()) }
-    }
-
     private static final List<String> EVENT_PUBLISHER_METHODS = [
         'public void addEventListener(@griffon.annotations.core.Nonnull java.lang.Object arg0)',
-        'public void addEventListener(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.CallableWithArgs<?> arg1)',
         'public void addEventListener(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.RunnableWithArgs<?> arg1)',
         'public void addEventListener(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0)',
-        'public <E extends griffon.core.event.Event> void addEventListener(@griffon.annotations.core.Nonnull java.lang.Class<E> arg0, @griffon.annotations.core.Nonnull griffon.core.CallableWithArgs<?> arg1)',
         'public <E extends griffon.core.event.Event> void addEventListener(@griffon.annotations.core.Nonnull java.lang.Class<E> arg0, @griffon.annotations.core.Nonnull griffon.core.RunnableWithArgs<?> arg1)',
         'public void removeEventListener(@griffon.annotations.core.Nonnull java.lang.Object arg0)',
-        'public void removeEventListener(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.CallableWithArgs<?> arg1)',
         'public void removeEventListener(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.RunnableWithArgs<?> arg1)',
         'public void removeEventListener(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0)',
-        'public <E extends griffon.core.event.Event> void removeEventListener(@griffon.annotations.core.Nonnull java.lang.Class<E> arg0, @griffon.annotations.core.Nonnull griffon.core.CallableWithArgs<?> arg1)',
         'public <E extends griffon.core.event.Event> void removeEventListener(@griffon.annotations.core.Nonnull java.lang.Class<E> arg0, @griffon.annotations.core.Nonnull griffon.core.RunnableWithArgs<?> arg1)',
         'public void publishEvent(@griffon.annotations.core.Nonnull java.lang.String arg0)',
         'public void publishEvent(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.util.List<?> arg1)',
@@ -129,30 +107,30 @@ class ConstantsSpec extends Specification implements BaseConstants {
         '@griffon.annotations.core.Nonnull public java.util.List<? extends griffon.core.artifact.GriffonMvcArtifact> createMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1)',
         '@griffon.annotations.core.Nonnull public java.util.List<? extends griffon.core.artifact.GriffonMvcArtifact> createMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.lang.String arg2)',
         '@griffon.annotations.core.Nonnull public java.util.List<? extends griffon.core.artifact.GriffonMvcArtifact> createMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2)',
-        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg1)',
-        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg2)',
-        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg3)',
-        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg3)',
-        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg2)',
-        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg2)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg1)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg2)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg3)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg3)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg2)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCFunction<M, V, C> arg2)',
-        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupFunction arg1)',
-        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupFunction arg2)',
-        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupFunction arg3)',
-        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupFunction arg3)',
-        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupFunction arg2)',
-        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupFunction arg2)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupFunction<MVC> arg1)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupFunction<MVC> arg2)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupFunction<MVC> arg3)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupFunction<MVC> arg3)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupFunction<MVC> arg2)',
-        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupFunction<MVC> arg2)',
+        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg1)',
+        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg2)',
+        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg3)',
+        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg3)',
+        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg2)',
+        'public <M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg2)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg1)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg2)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg3)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg3)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg2)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup, M extends griffon.core.artifact.GriffonModel, V extends griffon.core.artifact.GriffonView, C extends griffon.core.artifact.GriffonController> void withMVC(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCConsumer<M, V, C> arg2)',
+        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupConsumer arg1)',
+        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupConsumer arg2)',
+        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupConsumer arg3)',
+        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupConsumer arg3)',
+        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupConsumer arg2)',
+        'public void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.MVCGroupConsumer arg2)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupConsumer<MVC> arg1)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupConsumer<MVC> arg2)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.lang.String arg1, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupConsumer<MVC> arg3)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull java.lang.String arg2, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupConsumer<MVC> arg3)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.lang.Class<MVC> arg0, @griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupConsumer<MVC> arg2)',
+        'public <MVC extends griffon.core.mvc.TypedMVCGroup> void withMVCGroup(@griffon.annotations.core.Nonnull java.util.Map<java.lang.String, java.lang.Object> arg0, @griffon.annotations.core.Nonnull java.lang.Class<MVC> arg1, @griffon.annotations.core.Nonnull griffon.core.mvc.TypedMVCGroupConsumer<MVC> arg2)',
     ]
 
     private static final List<String> RESOURCES_METHODS = [
@@ -203,34 +181,12 @@ class ConstantsSpec extends Specification implements BaseConstants {
 
     private static final List<String> THREADING_METHODS = [
         'public boolean isUIThread()',
-        'public void runInsideUIAsync(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
-        'public void runInsideUISync(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
-        'public void runOutsideUI(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
-        'public void runOutsideUIAsync(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
-        '@griffon.annotations.core.Nonnull public <R> java.util.concurrent.Future<R> runFuture(@griffon.annotations.core.Nonnull java.util.concurrent.ExecutorService arg0, @griffon.annotations.core.Nonnull java.util.concurrent.Callable<R> arg1)',
-        '@griffon.annotations.core.Nonnull public <R> java.util.concurrent.Future<R> runFuture(@griffon.annotations.core.Nonnull java.util.concurrent.Callable<R> arg0)',
-        '@griffon.annotations.core.Nullable public <R> R runInsideUISync(@griffon.annotations.core.Nonnull java.util.concurrent.Callable<R> arg0)'
-    ]
-
-    private static final List<String> OBSERVABLE_METHODS = [
-        'public void addPropertyChangeListener(@griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg0)',
-        'public void addPropertyChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg1)',
-        'public void removePropertyChangeListener(@griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg0)',
-        'public void removePropertyChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.PropertyChangeListener arg1)',
-        '@griffon.annotations.core.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners()',
-        '@griffon.annotations.core.Nonnull public java.beans.PropertyChangeListener[] getPropertyChangeListeners(@griffon.annotations.core.Nullable java.lang.String arg0)',
-        'protected void firePropertyChange(@griffon.annotations.core.Nonnull java.beans.PropertyChangeEvent arg0)',
-        'protected void firePropertyChange(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nullable java.lang.Object arg1, @griffon.annotations.core.Nullable java.lang.Object arg2)'
-    ]
-
-    private static final List<String> VETOABLE_METHODS = [
-        'public void addVetoableChangeListener(@griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg0)',
-        'public void addVetoableChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg1)',
-        'public void removeVetoableChangeListener(@griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg0)',
-        'public void removeVetoableChangeListener(@griffon.annotations.core.Nullable java.lang.String arg0, @griffon.annotations.core.Nullable java.beans.VetoableChangeListener arg1)',
-        '@griffon.annotations.core.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners()',
-        '@griffon.annotations.core.Nonnull public java.beans.VetoableChangeListener[] getVetoableChangeListeners(@griffon.annotations.core.Nullable java.lang.String arg0)',
-        'protected void fireVetoableChange(@griffon.annotations.core.Nonnull java.beans.PropertyChangeEvent arg0) throws java.beans.PropertyVetoException',
-        'protected void fireVetoableChange(@griffon.annotations.core.Nonnull java.lang.String arg0, @griffon.annotations.core.Nullable java.lang.Object arg1, @griffon.annotations.core.Nullable java.lang.Object arg2) throws java.beans.PropertyVetoException'
+        'public void executeInsideUIAsync(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
+        'public void executeInsideUISync(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
+        'public void executeOutsideUI(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
+        'public void executeOutsideUIAsync(@griffon.annotations.core.Nonnull java.lang.Runnable arg0)',
+        '@griffon.annotations.core.Nonnull public <R> java.util.concurrent.Future<R> executeFuture(@griffon.annotations.core.Nonnull java.util.concurrent.ExecutorService arg0, @griffon.annotations.core.Nonnull java.util.concurrent.Callable<R> arg1)',
+        '@griffon.annotations.core.Nonnull public <R> java.util.concurrent.Future<R> executeFuture(@griffon.annotations.core.Nonnull java.util.concurrent.Callable<R> arg0)',
+        '@griffon.annotations.core.Nullable public <R> R executeInsideUISync(@griffon.annotations.core.Nonnull java.util.concurrent.Callable<R> arg0)'
     ]
 }

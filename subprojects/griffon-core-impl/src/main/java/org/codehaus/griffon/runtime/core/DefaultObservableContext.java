@@ -19,9 +19,10 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.ConverterRegistry;
 import griffon.core.Context;
 import griffon.core.ObservableContext;
-import griffon.util.TypeUtils;
+import griffon.core.util.TypeUtils;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -43,12 +44,12 @@ public class DefaultObservableContext extends DefaultContext implements Observab
         }
     };
 
-    public DefaultObservableContext() {
-        super();
+    public DefaultObservableContext(@Nonnull ConverterRegistry converterRegistry) {
+        super(converterRegistry);
     }
 
-    public DefaultObservableContext(@Nullable Context parentContext) {
-        super(parentContext);
+    public DefaultObservableContext(@Nonnull ConverterRegistry converterRegistry, @Nullable Context parentContext) {
+        super(converterRegistry, parentContext);
         if (parentContext instanceof ObservableContext) {
             ObservableContext observableParent = (ObservableContext) parentContext;
             observableParent.addContextEventListener(parentListener);
@@ -58,7 +59,9 @@ public class DefaultObservableContext extends DefaultContext implements Observab
     @Override
     public void addContextEventListener(@Nonnull ContextEventListener listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
-        if (!listeners.contains(listener)) { listeners.add(listener); }
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
     }
 
     @Override
@@ -82,7 +85,9 @@ public class DefaultObservableContext extends DefaultContext implements Observab
         boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
 
         if (parentKey) {
-            if (!valuesAreEqual) { fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value); }
+            if (!valuesAreEqual) {
+                fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
+            }
         } else {
             if (localKey) {
                 fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
@@ -107,7 +112,9 @@ public class DefaultObservableContext extends DefaultContext implements Observab
                 if (containsKey) {
                     Object value = get(key);
                     boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
-                    if (!valuesAreEqual) { fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value); }
+                    if (!valuesAreEqual) {
+                        fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
+                    }
                 } else {
                     fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);
                 }
@@ -130,7 +137,9 @@ public class DefaultObservableContext extends DefaultContext implements Observab
                 if (containsKey) {
                     T value = getAs(key);
                     boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
-                    if (!valuesAreEqual) { fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value); }
+                    if (!valuesAreEqual) {
+                        fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
+                    }
                 } else {
                     fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);
                 }
@@ -153,7 +162,9 @@ public class DefaultObservableContext extends DefaultContext implements Observab
                 if (containsKey) {
                     T value = getConverted(key, type);
                     boolean valuesAreEqual = TypeUtils.equals(oldValue, value);
-                    if (!valuesAreEqual) { fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value); }
+                    if (!valuesAreEqual) {
+                        fireContextEvent(ContextEvent.Type.UPDATE, key, oldValue, value);
+                    }
                 } else {
                     fireContextEvent(ContextEvent.Type.REMOVE, key, oldValue, null);
                 }

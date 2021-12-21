@@ -19,10 +19,9 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.Converter;
 
-import java.beans.PropertyEditor;
-
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 
 /**
  * @author Andres Almiray
@@ -33,14 +32,14 @@ public abstract class ConfigurationDescriptor {
     private final String key;
     private final String defaultValue;
     private final String format;
-    private final Class<? extends PropertyEditor> editor;
+    private final Class<? extends Converter> converter;
 
-    public ConfigurationDescriptor(@Nonnull String configuration, @Nonnull String key, @Nullable String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
+    public ConfigurationDescriptor(@Nonnull String configuration, @Nonnull String key, @Nullable String defaultValue, @Nonnull String format, @Nonnull Class<? extends Converter> converter) {
         this.configuration = configuration;
         this.key = requireNonBlank(key, "Argument 'key' must not be blank");
         this.defaultValue = defaultValue;
         this.format = format;
-        this.editor = editor;
+        this.converter = converter;
     }
 
     @Nonnull
@@ -64,8 +63,8 @@ public abstract class ConfigurationDescriptor {
     }
 
     @Nonnull
-    public Class<? extends PropertyEditor> getEditor() {
-        return editor;
+    public Class<? extends Converter> getConverter() {
+        return converter;
     }
 
     @Nonnull

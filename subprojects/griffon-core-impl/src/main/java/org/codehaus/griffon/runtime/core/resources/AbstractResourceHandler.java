@@ -30,7 +30,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * Base implementation of the {@link griffon.core.resources.ResourceHandler} interface.
+ * Base implementation of the {@link ResourceHandler} interface.
  *
  * @author Andres Almiray
  * @since 2.0.0

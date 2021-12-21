@@ -37,7 +37,7 @@ public class DefaultAction extends AbstractAction {
         requireNonNull(uiThreadManager, "Argument 'uiThreadManager' must not be null");
 
         toolkitAction = new DefaultToolkitAction(() -> actionManager.invokeAction(controller, actionMetadata.getActionName()));
-        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> toolkitAction.setName(String.valueOf(evt.getNewValue()))));
+        addPropertyChangeListener(evt -> uiThreadManager.executeInsideUIAsync(() -> toolkitAction.setName(String.valueOf(evt.getNewValue()))));
     }
 
     @Nonnull

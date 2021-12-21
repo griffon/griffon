@@ -21,7 +21,7 @@ import griffon.core.artifact.GriffonService
 import griffon.core.i18n.MessageSource
 import griffon.metadata.ArtifactProviderFor
 
-import static griffon.util.GriffonNameUtils.isBlank
+import static griffon.util.StringUtils.isBlank
 
 @javax.inject.Singleton
 @ArtifactProviderFor(GriffonService)

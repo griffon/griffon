@@ -24,7 +24,7 @@ import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.TypedMVCGroup;
 
-import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.ObjectUtils.requireState;
 
 /**
  * @author Andres Almiray

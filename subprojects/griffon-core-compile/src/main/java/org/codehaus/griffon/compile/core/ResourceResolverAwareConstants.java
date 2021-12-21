@@ -41,368 +41,368 @@ public interface ResourceResolverAwareConstants extends BaseConstants {
 
     MethodDescriptor[] METHODS = new MethodDescriptor[]{
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE_VALUE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING)),
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_OBJECT),
             METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(JAVA_LANG_OBJECT),
-            METHOD_RESOLVE_RESOURCE,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
-        ),
-
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
-            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE)),
             throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NULLABLE),
-            type(T),
-            typeParams(typeParam(T)),
-            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            annotations(ANNOTATION_NULLABLE),
+            type(JAVA_LANG_OBJECT),
+            METHOD_RESOLVE_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
-                annotatedType(annotations(JAVAX_ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T)),
+            throwing(type(NO_SUCH_RESOURCE_EXCEPTION_TYPE))
+        ),
+
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NULLABLE),
+            type(T),
+            typeParams(typeParam(T)),
+            METHOD_RESOLVE_RESOURCE_CONVERTED,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LOCALE),
+                annotatedType(annotations(ANNOTATION_NULLABLE), JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, T))
+        ),
+
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_OBJECT, 1),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_LIST, WILDCARD))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(JAVA_LANG_STRING),
             METHOD_FORMAT_RESOURCE,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         )
     };
 }

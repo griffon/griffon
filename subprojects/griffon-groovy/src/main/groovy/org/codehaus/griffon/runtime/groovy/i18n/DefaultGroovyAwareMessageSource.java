@@ -18,15 +18,15 @@
 package org.codehaus.griffon.runtime.groovy.i18n;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.i18n.GroovyAwareMessageSource;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
+import griffon.core.i18n.groovy.GroovyAwareMessageSource;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static griffon.util.GriffonClassUtils.requireNonEmpty;
+import static griffon.util.ObjectUtils.requireNonEmpty;
 
 /**
  * @author Andres Almiray

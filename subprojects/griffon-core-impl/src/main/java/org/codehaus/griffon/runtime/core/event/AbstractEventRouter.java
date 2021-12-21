@@ -18,16 +18,15 @@
 package org.codehaus.griffon.runtime.core.event;
 
 import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
-import griffon.core.CallableWithArgs;
+import griffon.annotations.event.EventFilter;
+import griffon.annotations.event.EventHandler;
+import griffon.annotations.event.EventMetadata;
 import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
-import griffon.core.RunnableWithArgs;
-import griffon.core.event.Event;
+import griffon.core.Instantiator;
 import griffon.core.event.EventRouter;
-import griffon.util.GriffonClassUtils;
+import griffon.core.util.MethodUtils;
 import griffon.util.MethodDescriptor;
-import griffon.util.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,23 +34,19 @@ import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static griffon.util.GriffonClassUtils.convertToTypeArray;
-import static griffon.util.GriffonNameUtils.capitalize;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static java.util.Collections.EMPTY_LIST;
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableCollection;
+import static griffon.core.util.GriffonClassUtils.isEventHandler;
+import static griffon.util.AnnotationUtils.findAnnotation;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -59,20 +54,15 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractEventRouter implements EventRouter {
     protected static final Object[] LOCK = new Object[0];
-    private static final String ERROR_EVENT_NAME_BLANK = "Argument 'eventName' must not be blank";
-    private static final String ERROR_EVENT_HANDLER_BLANK = "Argument 'eventHandler' must not be blank";
     private static final String ERROR_MODE_BLANK = "Argument 'mode' must not be blank";
-    private static final String ERROR_LISTENER_NULL = "Argument 'listener' must not be null";
-    private static final String ERROR_EVENT_CLASS_NULL = "Argument 'eventClass' must not be null";
+    private static final String ERROR_HANDLER_NULL = "Argument 'handler' must not be null";
     private static final String ERROR_EVENT_NULL = "Argument 'event' must not be null";
-    private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
+    private static final String ERROR_EVENT_METADATA_NULL = "Argument 'metadata' must not be null";
+    private static final String ERROR_METHOD_NULL = "Argument 'method' must not be null";
     private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
-    private static final String ERROR_PARAMS_NULL = "Argument 'params' must not be null";
     private static final String ERROR_INSTANCE_NULL = "Argument 'instance' must not be null";
-    private static final String ERROR_OWNER_NULL = "Argument 'owner' must not be null";
     private static final Logger LOG = LoggerFactory.getLogger(AbstractEventRouter.class);
     protected final Map<String, List<Object>> instanceListeners = new ConcurrentHashMap<>();
-    protected final Map<String, List<Object>> functionalListeners = new ConcurrentHashMap<>();
     private final MethodCache methodCache = new MethodCache();
     private boolean enabled = true;
 
@@ -83,7 +73,9 @@ public abstract class AbstractEventRouter implements EventRouter {
     protected final int eventRouterId;
 
     @Inject
-    private ExceptionHandler exceptionHandler;
+    protected ExceptionHandler exceptionHandler;
+    @Inject
+    protected Instantiator instantiator;
 
     public AbstractEventRouter() {
         eventRouterId = EVENT_ROUTER_ID.getAndIncrement();
@@ -106,7 +98,7 @@ public abstract class AbstractEventRouter implements EventRouter {
             try {
                 runnable.run();
             } catch (Throwable throwable) {
-                exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                exceptionHandler.handleUncaught(Thread.currentThread(), throwable);
             }
         });
     }
@@ -126,383 +118,144 @@ public abstract class AbstractEventRouter implements EventRouter {
     }
 
     @Override
-    public void publishEvent(@Nonnull String eventName) {
-        publishEvent(eventName, EMPTY_LIST);
-    }
-
-    @Override
-    public void publishEvent(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEventPublishingEnabled()) { return; }
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        if (params == null) { params = EMPTY_LIST; }
-        buildPublisher(eventName, params, "synchronously").run();
-    }
-
-    @Override
-    public void publishEventOutsideUI(@Nonnull String eventName) {
-        publishEventOutsideUI(eventName, EMPTY_LIST);
-    }
-
-    @Override
-    public void publishEventOutsideUI(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEventPublishingEnabled()) { return; }
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        if (params == null) { params = EMPTY_LIST; }
-        final Runnable publisher = buildPublisher(eventName, params, "outside UI");
-        doPublishOutsideUI(publisher);
-    }
-
-    protected abstract void doPublishOutsideUI(@Nonnull Runnable publisher);
-
-    @Override
-    public void publishEventAsync(@Nonnull String eventName) {
-        publishEventAsync(eventName, EMPTY_LIST);
-    }
-
-    @Override
-    public void publishEventAsync(@Nonnull String eventName, @Nullable List<?> params) {
-        if (!isEventPublishingEnabled()) { return; }
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        if (params == null) { params = EMPTY_LIST; }
-        final Runnable publisher = buildPublisher(eventName, params, "asynchronously");
-        doPublishAsync(publisher);
-    }
-
-    protected abstract void doPublishAsync(@Nonnull Runnable publisher);
-
-    @Override
-    public void publishEvent(@Nonnull Event event) {
-        requireNonNull(event, ERROR_EVENT_NULL);
-        publishEvent(event.getClass().getSimpleName(), singletonList(event));
-    }
-
-    @Override
-    public void publishEventOutsideUI(@Nonnull Event event) {
-        requireNonNull(event, ERROR_EVENT_NULL);
-        publishEventOutsideUI(event.getClass().getSimpleName(), singletonList(event));
-    }
-
-    @Override
-    public void publishEventAsync(@Nonnull Event event) {
-        requireNonNull(event, ERROR_EVENT_NULL);
-        publishEventAsync(event.getClass().getSimpleName(), singletonList(event));
-    }
-
-    @Override
-    public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        removeEventListener(eventClass.getSimpleName(), listener);
-    }
-
-    @Override
-    public <E extends Event> void removeEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        removeEventListener(eventClass.getSimpleName(), listener);
-    }
-
-    protected void fireEvent(@Nonnull RunnableWithArgs runnable, @Nonnull List<?> params) {
-        requireNonNull(runnable, ERROR_RUNNABLE_NULL);
-        requireNonNull(params, ERROR_PARAMS_NULL);
-        runnable.run(asArray(params));
-    }
-
-    protected void fireEvent(@Nonnull CallableWithArgs<?> callable, @Nonnull List<?> params) {
-        requireNonNull(callable, ERROR_CALLABLE_NULL);
-        requireNonNull(params, ERROR_PARAMS_NULL);
-        callable.call(asArray(params));
-    }
-
-    protected void fireEvent(@Nonnull Object instance, @Nonnull String eventHandler, @Nonnull List<?> params) {
-        requireNonNull(instance, ERROR_INSTANCE_NULL);
-        requireNonBlank(eventHandler, ERROR_EVENT_HANDLER_BLANK);
-        requireNonNull(params, ERROR_PARAMS_NULL);
-
-        Class[] argTypes = convertToTypeArray(asArray(params));
-        MethodDescriptor target = new MethodDescriptor(eventHandler, argTypes);
-        Method method = methodCache.findMatchingMethodFor(instance.getClass(), target);
-
-        if (method != null) {
-            MethodUtils.invokeUnwrapping(method, instance, asArray(params));
-        }
-    }
-
-    @Override
-    public <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull CallableWithArgs<?> listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        addEventListener(eventClass.getSimpleName(), listener);
-    }
-
-    @Override
-    public <E extends Event> void addEventListener(@Nonnull Class<E> eventClass, @Nonnull RunnableWithArgs listener) {
-        requireNonNull(eventClass, ERROR_EVENT_CLASS_NULL);
-        addEventListener(eventClass.getSimpleName(), listener);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void addEventListener(@Nonnull Object listener) {
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        if (listener instanceof RunnableWithArgs) {
-            throw new IllegalArgumentException("Cannot add an event listener of type " + RunnableWithArgs.class.getName() +
-                " because the target event name is missing. " + listener);
-        }
-        if (listener instanceof CallableWithArgs) {
-            throw new IllegalArgumentException("Cannot add an event listener of type " + CallableWithArgs.class.getName() +
-                " because the target event name is missing. " + listener);
-        }
-
-        if (listener instanceof Map) {
-            addEventListener((Map) listener);
-            return;
-        }
-
-        if (!methodCache.isEventListener(listener.getClass())) {
+    public void subscribe(Object handler) {
+        requireNonNull(handler, ERROR_HANDLER_NULL);
+        if (!methodCache.isEventListener(handler.getClass())) {
             return;
         }
 
         boolean added = false;
-        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {
-            eventName = eventName.substring(2); // cut off "on" from the name
-            List<Object> instances = instanceListeners.computeIfAbsent(eventName, (k) -> new ArrayList<>());
-            if (!instances.contains(listener)) {
+        for (String eventType : methodCache.fetchMethodMetadata(handler.getClass()).keySet()) {
+            List<Object> instances = instanceListeners.computeIfAbsent(eventType, (k) -> new ArrayList<>());
+            if (!instances.contains(handler)) {
                 added = true;
-                instances.add(listener);
+                instances.add(handler);
             }
         }
 
         if (added) {
             try {
-                LOG.debug("Adding listener {}", listener);
+                LOG.debug("Adding listener {}", handler);
             } catch (UnsupportedOperationException uoe) {
-                LOG.debug("Adding listener {}", listener.getClass().getName());
+                LOG.debug("Adding listener {}", handler.getClass().getName());
             }
         }
     }
 
     @Override
-    public void addEventListener(@Nonnull Map<String, Object> listener) {
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        for (Map.Entry<String, Object> entry : listener.entrySet()) {
-            Object eventHandler = entry.getValue();
-            if (eventHandler instanceof RunnableWithArgs) {
-                addEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);
-            } else if (eventHandler instanceof CallableWithArgs) {
-                addEventListener(entry.getKey(), (CallableWithArgs) eventHandler);
-            } else {
-                throw new IllegalArgumentException("Unsupported functional event listener " + eventHandler);
-            }
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void removeEventListener(@Nonnull Object listener) {
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        if (listener instanceof RunnableWithArgs) {
-            throw new IllegalArgumentException("Cannot remove an event listener of type " + RunnableWithArgs.class.getName() +
-                " because the target event name is missing. " + listener);
-        }
-        if (listener instanceof CallableWithArgs) {
-            throw new IllegalArgumentException("Cannot remove an event listener of type " + CallableWithArgs.class.getName() +
-                " because the target event name is missing. " + listener);
-        }
-
-        if (listener instanceof Map) {
-            removeEventListener((Map) listener);
+    public void unsubscribe(Object handler) {
+        requireNonNull(handler, ERROR_HANDLER_NULL);
+        if (!methodCache.isEventListener(handler.getClass())) {
             return;
         }
 
         boolean removed = false;
-        for (String eventName : methodCache.fetchMethodMetadata(listener.getClass()).keySet()) {
-            eventName = eventName.substring(2); // cut off "on" from the name
-            List<Object> instances = instanceListeners.get(eventName);
-            if (instances != null && instances.contains(listener)) {
-                instances.remove(listener);
+        for (String eventType : methodCache.fetchMethodMetadata(handler.getClass()).keySet()) {
+            List<Object> instances = instanceListeners.get(eventType);
+            if (instances != null && instances.contains(handler)) {
+                instances.remove(handler);
                 removed = true;
                 if (instances.isEmpty()) {
-                    instanceListeners.remove(eventName);
+                    instanceListeners.remove(eventType);
                 }
             }
         }
 
-        boolean nestedRemoved = removeNestedListeners(listener);
-
-        if (removed || nestedRemoved) {
+        if (removed) {
             try {
-                LOG.debug("Removing listener {}", listener);
+                LOG.debug("Removing listener {}", handler);
             } catch (UnsupportedOperationException uoe) {
-                LOG.debug("Removing listener {}", listener.getClass().getName());
+                LOG.debug("Removing listener {}", handler.getClass().getName());
             }
         }
     }
 
     @Override
-    public void removeEventListener(@Nonnull Map<String, Object> listener) {
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        for (Map.Entry<String, Object> entry : listener.entrySet()) {
-            Object eventHandler = entry.getValue();
-            if (eventHandler instanceof RunnableWithArgs) {
-                removeEventListener(entry.getKey(), (RunnableWithArgs) eventHandler);
-            } else if (eventHandler instanceof CallableWithArgs) {
-                removeEventListener(entry.getKey(), (CallableWithArgs) eventHandler);
-            } else {
-                throw new IllegalArgumentException("Unsupported functional event listener " + eventHandler);
-            }
-        }
-    }
-
-    @Override
-    public void addEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.computeIfAbsent(capitalize(eventName), k -> new ArrayList<>());
-            if (list.contains(listener)) { return; }
-            LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
-            list.add(listener);
-        }
-    }
-
-    @Override
-    public void addEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.computeIfAbsent(capitalize(eventName), k -> new ArrayList<>());
-            if (list.contains(listener)) { return; }
-            LOG.debug("Adding listener {} on {}", listener.getClass().getName(), capitalize(eventName));
-            list.add(listener);
-        }
-    }
-
-    @Override
-    public void removeEventListener(@Nonnull String eventName, @Nonnull CallableWithArgs<?> listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.get(capitalize(eventName));
-            if (list != null) {
-                LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
-                list.remove(listener);
-            }
-        }
-    }
-
-    @Override
-    public void removeEventListener(@Nonnull String eventName, @Nonnull RunnableWithArgs listener) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        synchronized (functionalListeners) {
-            List<Object> list = functionalListeners.get(capitalize(eventName));
-            if (list != null) {
-                LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
-                list.remove(listener);
-            }
-        }
-    }
-
-    @Nonnull
-    @Override
-    public Collection<Object> getEventListeners() {
-        List<Object> listeners = new ArrayList<>();
-        synchronized (instanceListeners) {
-            Set<Object> instances = new HashSet<>();
-            for (List<Object> objects : instanceListeners.values()) {
-                instances.addAll(objects);
-            }
-            listeners.addAll(instances);
-        }
-
-        synchronized (functionalListeners) {
-            for (List<Object> objects : functionalListeners.values()) {
-                listeners.addAll(objects);
-            }
-        }
-
-        return unmodifiableCollection(listeners);
-    }
-
-    @Nonnull
-    @Override
-    public Collection<Object> getEventListeners(@Nonnull String eventName) {
-        requireNonBlank(eventName, ERROR_EVENT_NAME_BLANK);
-        List<Object> listeners = new ArrayList<>();
-        List<Object> instances = instanceListeners.get(eventName);
-        if (instances != null) { listeners.addAll(instances); }
-        instances = functionalListeners.get(eventName);
-        if (instances != null) { listeners.addAll(instances); }
-        return unmodifiableCollection(listeners);
-    }
-
-    protected Runnable buildPublisher(@Nonnull final String event, @Nonnull final List<?> params, @Nonnull final String mode) {
+    public <E> void publishEvent(E event) {
+        if (!isEventPublishingEnabled()) { return; }
         requireNonNull(event, ERROR_EVENT_NULL);
-        requireNonNull(params, ERROR_PARAMS_NULL);
+        buildPublisher(event, "synchronously").run();
+    }
+
+    @Override
+    public <E> void publishEventAsync(E event) {
+        if (!isEventPublishingEnabled()) { return; }
+        requireNonNull(event, ERROR_EVENT_NULL);
+        Runnable publisher = buildPublisher(event, "asynchronously");
+        doPublishAsync(publisher);
+    }
+
+    @Override
+    public <E> void publishEventOutsideUI(E event) {
+        if (!isEventPublishingEnabled()) { return; }
+        requireNonNull(event, ERROR_EVENT_NULL);
+        Runnable publisher = buildPublisher(event, "outside UI");
+        doPublishOutsideUI(publisher);
+    }
+
+    protected abstract void doPublishOutsideUI(@Nonnull Runnable publisher);
+
+    protected abstract void doPublishAsync(@Nonnull Runnable publisher);
+
+    protected <E> void fireEvent(@Nonnull E event, @Nonnull EventPair pair) {
+        requireNonNull(event, ERROR_EVENT_NULL);
+        requireNonNull(pair, "Argument 'pair' must not be null\"");
+
+        MethodUtils.setMethodAccessible(pair.method);
+        MethodUtils.invokeUnwrapping(pair.method, pair.instance, new Object[]{event});
+    }
+
+    @Nonnull
+    protected <E> Collection<Method> findEventHandlers(@Nonnull Object instance, @Nonnull E event) {
+        requireNonNull(instance, ERROR_INSTANCE_NULL);
+        requireNonNull(event, ERROR_EVENT_NULL);
+
+        return methodCache.findMatchingMethodsFor(instance.getClass(), event.getClass());
+    }
+
+    @Nonnull
+    protected <E> boolean applyFilters(@Nonnull Method method, @Nonnull EventMetadata<E> metadata) {
+        requireNonNull(metadata, ERROR_EVENT_METADATA_NULL);
+
+        EventHandler annotation = findAnnotation(method, EventHandler.class);
+        for (Class<? extends EventFilter> filterClass : annotation.filters()) {
+            EventFilter<E> filter = instantiator.instantiate(filterClass);
+            if (!filter.apply(metadata)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Nonnull
+    protected <E> EventMetadata<E> createEventMetadata(@Nonnull E event) {
+        requireNonNull(event, ERROR_EVENT_NULL);
+        return new DefaultEventMetadata<>(event);
+    }
+
+    protected <E> Runnable buildPublisher(@Nonnull final E event, @Nonnull final String mode) {
+        requireNonNull(event, ERROR_EVENT_NULL);
         requireNonBlank(mode, ERROR_MODE_BLANK);
         return () -> {
-            String eventName = capitalize(event);
-            LOG.debug("Triggering event '{}' {}", eventName, mode);
-            String eventHandler = "on" + eventName;
+            String eventType = event.getClass().getName();
+            LOG.debug("Triggering event '{}' {}", event.getClass().getSimpleName(), mode);
             // defensive copying to avoid CME during event dispatching
             List<Object> listenersCopy = new ArrayList<>();
-            List<Object> instances = instanceListeners.get(eventName);
+            List<Object> instances = instanceListeners.get(eventType);
             if (instances != null) {
                 listenersCopy.addAll(instances);
             }
-            synchronized (functionalListeners) {
-                List<?> list = functionalListeners.get(eventName);
-                if (list != null) {
-                    listenersCopy.addAll(list);
-                }
-            }
 
-            for (Object listener : listenersCopy) {
-                if (listener instanceof RunnableWithArgs) {
-                    fireEvent((RunnableWithArgs) listener, params);
-                } else if (listener instanceof CallableWithArgs) {
-                    fireEvent((CallableWithArgs<?>) listener, params);
-                } else {
-                    fireEvent(listener, eventHandler, params);
-                }
+            EventMetadata<E> metadata = createEventMetadata(event);
+            for (Object instance : listenersCopy) {
+                findEventHandlers(instance, event).stream()
+                    .filter(m -> applyFilters(m, metadata))
+                    .map(m -> new EventPair(instance, m))
+                    .sorted(Comparator.comparingInt(pair -> findAnnotation(pair.method, EventHandler.class).priority()))
+                    .forEach(pair -> fireEvent(event, pair));
             }
         };
-    }
-
-    protected boolean removeNestedListeners(@Nonnull Object owner) {
-        requireNonNull(owner, ERROR_OWNER_NULL);
-
-        boolean removed = false;
-        synchronized (functionalListeners) {
-            for (Map.Entry<String, List<Object>> event : functionalListeners.entrySet()) {
-                String eventName = event.getKey();
-                List<Object> listenerList = event.getValue();
-                List<Object> toRemove = new ArrayList<>();
-                for (Object listener : listenerList) {
-                    if (isNestedListener(listener, owner)) {
-                        toRemove.add(listener);
-                    }
-                }
-                removed = !toRemove.isEmpty();
-                for (Object listener : toRemove) {
-                    LOG.debug("Removing listener {} on {}", listener.getClass().getName(), capitalize(eventName));
-                    listenerList.remove(listener);
-                }
-            }
-        }
-
-        return removed;
-    }
-
-    protected boolean isNestedListener(@Nonnull Object listener, @Nonnull Object owner) {
-        requireNonNull(listener, ERROR_LISTENER_NULL);
-        requireNonNull(owner, ERROR_OWNER_NULL);
-        Class<?> listenerClass = listener.getClass();
-        return (listenerClass.isMemberClass() || listenerClass.isAnonymousClass() || listenerClass.isLocalClass()) &&
-            owner.getClass().equals(listenerClass.getEnclosingClass()) &&
-            owner.equals(GriffonClassUtils.getFieldValue(listener, "this$0"));
-    }
-
-    protected Object[] asArray(@Nonnull List<?> list) {
-        return list.toArray(new Object[list.size()]);
     }
 
     protected static class MethodCache {
@@ -521,20 +274,22 @@ public abstract class AbstractEventRouter implements EventRouter {
             return methodMetadata != null;
         }
 
-        @Nullable
-        public Method findMatchingMethodFor(@Nonnull Class<?> klass, @Nonnull MethodDescriptor target) {
+        @Nonnull
+        public Collection<Method> findMatchingMethodsFor(@Nonnull Class<?> klass, @Nonnull Class<?> eventType) {
             Map<String, List<MethodInfo>> methodMetadata = methodMap.get(klass);
 
-            List<MethodInfo> descriptors = methodMetadata.get(target.getName());
-            if (descriptors != null) {
+            List<Method> matches = new ArrayList<>();
+
+            Class[] otherParamTypes = {eventType};
+            for (List<MethodInfo> descriptors : methodMetadata.values()) {
                 for (MethodInfo info : descriptors) {
-                    if (info.descriptor.matches(target)) {
-                        return info.method;
+                    if (info.descriptor.matches(otherParamTypes)) {
+                        matches.add(info.method);
                     }
                 }
             }
 
-            return null;
+            return matches;
         }
 
         private Map<String, List<MethodInfo>> fetchMethodMetadata(Class<?> klass) {
@@ -542,9 +297,9 @@ public abstract class AbstractEventRouter implements EventRouter {
 
             for (Method method : klass.getMethods()) {
                 MethodDescriptor descriptor = MethodDescriptor.forMethod(method);
-                if (GriffonClassUtils.isEventHandler(descriptor)) {
-                    String methodName = method.getName();
-                    List<MethodInfo> descriptors = methodMetadata.computeIfAbsent(methodName, k -> new ArrayList<>());
+                if (isEventHandler(descriptor)) {
+                    String eventType = method.getParameterTypes()[0].getName();
+                    List<MethodInfo> descriptors = methodMetadata.computeIfAbsent(eventType, k -> new ArrayList<>());
                     descriptors.add(new MethodInfo(descriptor, method));
                 }
             }
@@ -588,6 +343,16 @@ public abstract class AbstractEventRouter implements EventRouter {
             if (t.isDaemon()) { t.setDaemon(false); }
             if (t.getPriority() != Thread.NORM_PRIORITY) { t.setPriority(Thread.NORM_PRIORITY); }
             return t;
+        }
+    }
+
+    protected static class EventPair {
+        private final Object instance;
+        private final Method method;
+
+        private EventPair(Object instance, Method method) {
+            this.instance = instance;
+            this.method = method;
         }
     }
 }

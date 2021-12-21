@@ -41,6 +41,7 @@ public abstract class DelegatingObservableMap<K, V> extends ObservableMapBase<K,
         this.delegate.addListener(new WeakMapChangeListener<>(getListener()));
     }
 
+    @Nonnull
     protected ObservableMap<K, V> getDelegate() {
         return delegate;
     }

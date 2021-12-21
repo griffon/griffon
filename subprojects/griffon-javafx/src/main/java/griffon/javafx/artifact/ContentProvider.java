@@ -17,6 +17,7 @@
  */
 package griffon.javafx.artifact;
 
+import griffon.annotations.core.Nonnull;
 import javafx.scene.Node;
 
 /**
@@ -24,5 +25,6 @@ import javafx.scene.Node;
  * @since 2.13.0
  */
 public interface ContentProvider {
+    @Nonnull
     Node getContent();
 }

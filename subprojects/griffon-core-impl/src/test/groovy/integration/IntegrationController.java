@@ -17,14 +17,17 @@
  */
 package integration;
 
-import griffon.inject.Contextual;
-import griffon.inject.MVCMember;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.Contextual;
+import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonController;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
+@ServiceProviderFor(GriffonController.class)
 public class IntegrationController extends AbstractGriffonController {
     private IntegrationModel model;
     private String key;
@@ -43,7 +46,7 @@ public class IntegrationController extends AbstractGriffonController {
 
     public void sayHello() {
         final String result = sampleService.sayHello(model.getInput());
-        runInsideUIAsync(() -> model.setOutput(result));
+        executeInsideUIAsync(() -> model.setOutput(result));
     }
 
     public void throwException() {

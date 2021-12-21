@@ -27,7 +27,7 @@ import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.swing.controller.SwingActionFactory;
 import org.codehaus.griffon.runtime.swing.controller.SwingActionManager;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 

@@ -39,8 +39,10 @@ public class TableCellFactories {
     private static final String ERROR_ITEMS_NULL = "Argument 'items' must not be null";
     private static final String ERROR_ENUMTYPE_NULL = "Argument 'enumType' must not be null";
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> checkboxTableCellFactory() {
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -51,15 +53,18 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableCheckboxTableCellFactory() {
         return new EditableTableCellFactory<E, T>(checkboxTableCellFactory());
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         final ObservableList<E> observableItems = observableArrayList(items);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -71,10 +76,12 @@ public class TableCellFactories {
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         final ObservableList<E> observableItems = observableArrayList(items);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -85,9 +92,11 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull final ObservableList<E> observableItems) {
         requireNonNull(observableItems, ERROR_ITEMS_NULL);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -98,9 +107,11 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull final ObservableList<E> observableItems) {
         requireNonNull(observableItems, ERROR_ITEMS_NULL);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -111,10 +122,12 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull Class<E> enumType) {
         requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -125,10 +138,12 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> choiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull Class<E> enumType) {
         requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -140,36 +155,44 @@ public class TableCellFactories {
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(items));
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(converter, items));
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull final ObservableList<E> observableItems) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(observableItems));
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull final ObservableList<E> observableItems) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(converter, observableItems));
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull Class<E> enumType) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(enumType));
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> editableChoiceBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull Class<E> enumType) {
         return new EditableTableCellFactory<E, T>(choiceBoxTableCellFactory(converter, enumType));
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         final ObservableList<E> observableItems = observableArrayList(items);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -181,10 +204,12 @@ public class TableCellFactories {
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         final ObservableList<E> observableItems = observableArrayList(items);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -195,9 +220,11 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull final ObservableList<E> observableItems) {
         requireNonNull(observableItems, ERROR_ITEMS_NULL);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -208,9 +235,11 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull final ObservableList<E> observableItems) {
         requireNonNull(observableItems, ERROR_ITEMS_NULL);
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -221,10 +250,12 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull Class<E> enumType) {
         requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -235,10 +266,12 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> comboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull Class<E> enumType) {
         requireNonNull(enumType, ERROR_ENUMTYPE_NULL);
         final ObservableList<E> observableItems = observableArrayList(enumType.getEnumConstants());
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -250,33 +283,41 @@ public class TableCellFactories {
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(items));
     }
 
     @SafeVarargs
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull E... items) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(converter, items));
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull final ObservableList<E> observableItems) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(observableItems));
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull final ObservableList<E> observableItems) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(converter, observableItems));
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull Class<E> enumType) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(enumType));
     }
 
+    @Nonnull
     public static <E extends Enum, T> TableCellFactory<E, T> editableComboBoxTableCellFactory(@Nonnull final StringConverter<E> converter, @Nonnull Class<E> enumType) {
         return new EditableTableCellFactory<E, T>(comboBoxTableCellFactory(converter, enumType));
     }
 
+    @Nonnull
     public static <E> TableCellFactory<E, Double> progressBarTableCellFactory() {
         return new TableCellFactory<E, Double>() {
+            @Nonnull
             @Override
             public TableCell<E, Double> createTableCell(@Nonnull TableColumn<E, Double> tableColumn) {
                 return new ProgressBarTableCell<>();
@@ -284,8 +325,10 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> textFieldTableCellFactory() {
         return new TableCellFactory<E, T>() {
+            @Nonnull
             @Override
             @SuppressWarnings("unchecked")
             public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
@@ -296,6 +339,7 @@ public class TableCellFactories {
         };
     }
 
+    @Nonnull
     public static <E, T> TableCellFactory<E, T> editableTextFieldTableCellFactory() {
         return new EditableTableCellFactory<E, T>(textFieldTableCellFactory());
     }
@@ -307,6 +351,7 @@ public class TableCellFactories {
             this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
         }
 
+        @Nonnull
         @Override
         public TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn) {
             TableCell<E, T> cell = delegate.createTableCell(tableColumn);

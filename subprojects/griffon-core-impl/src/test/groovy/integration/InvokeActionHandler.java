@@ -17,12 +17,12 @@
  */
 package integration;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionExecutionStatus;
 import org.codehaus.griffon.runtime.core.controller.AbstractActionHandler;
 
-import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
 import java.lang.reflect.Method;
 
 public class InvokeActionHandler extends AbstractActionHandler {

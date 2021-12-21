@@ -22,6 +22,7 @@ import griffon.annotations.core.Nonnull
 import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
 import griffon.core.GriffonApplication
+import griffon.core.Instantiator
 import griffon.core.event.EventRouter
 import griffon.core.injection.Binding
 import griffon.core.injection.Key
@@ -36,6 +37,7 @@ import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager
+import org.codehaus.griffon.runtime.util.DefaultInstantiator
 import spock.lang.Specification
 
 import javax.inject.Provider
@@ -234,6 +236,10 @@ class GuiceInjectorFactorySpec extends Specification {
                     .toProvider(GriffonExceptionHandlerProvider)
                     .asSingleton()
 
+                bind(Instantiator)
+                    .to(DefaultInstantiator)
+                    .asSingleton()
+
                 bind(Animal).to(Dog).asSingleton()
                 bind(Animal).withClassifier(Special).to(Dog).asSingleton()
                 bind(Animal).withClassifier(named('amber')).to(Dog).asSingleton()
@@ -276,6 +282,7 @@ class InvalidBinding<T> implements Binding<T> {
 
 interface Animal {}
 
+@SuppressWarnings('EmptyClass')
 class Dog implements Animal {}
 
 class DogProvider implements Provider<Dog> {

@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -34,15 +35,16 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 public class ReadOnlyFloatPropertyDecorator extends ReadOnlyFloatProperty {
     private final ReadOnlyFloatProperty delegate;
 
-    public ReadOnlyFloatPropertyDecorator(ReadOnlyFloatProperty delegate) {
+    public ReadOnlyFloatPropertyDecorator(@Nonnull ReadOnlyFloatProperty delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final ReadOnlyFloatProperty getDelegate() {
         return delegate;
     }

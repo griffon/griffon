@@ -17,8 +17,11 @@
  */
 package integration;
 
+import griffon.core.artifact.GriffonModel;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
+@ServiceProviderFor(GriffonModel.class)
 public class IntegrationModel extends AbstractGriffonModel {
     private String input;
     private String output;
@@ -28,7 +31,8 @@ public class IntegrationModel extends AbstractGriffonModel {
     }
 
     public void setInput(String input) {
-        firePropertyChange("input", this.input, this.input = input);
+        // firePropertyChange("input", this.input, this.input = input);
+        this.input = input;
     }
 
     public String getOutput() {
@@ -36,6 +40,7 @@ public class IntegrationModel extends AbstractGriffonModel {
     }
 
     public void setOutput(String output) {
-        firePropertyChange("output", this.output, this.output = output);
+        // firePropertyChange("output", this.output, this.output = output);
+        this.output = output;
     }
 }

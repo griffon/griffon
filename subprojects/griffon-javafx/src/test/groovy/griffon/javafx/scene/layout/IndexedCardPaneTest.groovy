@@ -26,8 +26,8 @@ import javafx.scene.control.Label
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.StackPane
 import javafx.stage.Stage
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import org.testfx.framework.junit.ApplicationTest
 import org.testfx.service.support.WaitUntilSupport
 
@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.equalTo
 import static org.testfx.api.FxAssert.verifyThat
 import static org.testfx.matcher.base.NodeMatchers.isVisible
 
-@Ignore
+@Disabled
 class IndexedCardPaneTest extends ApplicationTest {
     @Override
     void start(Stage stage) throws Exception {

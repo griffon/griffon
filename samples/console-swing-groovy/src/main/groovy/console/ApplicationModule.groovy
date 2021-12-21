@@ -18,10 +18,10 @@
 package console
 
 import griffon.core.injection.Module
-import griffon.inject.DependsOn
+import griffon.annotations.inject.DependsOn
 import griffon.swing.SwingWindowDisplayHandler
 import org.codehaus.griffon.runtime.core.injection.AbstractModule
-import org.kordamp.jipsy.ServiceProviderFor
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
 import static griffon.util.AnnotationUtils.named
 

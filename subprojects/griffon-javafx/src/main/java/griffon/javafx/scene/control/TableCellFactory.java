@@ -26,5 +26,6 @@ import javafx.scene.control.TableColumn;
  * @since 2.11.0
  */
 public interface TableCellFactory<E, T> {
+    @Nonnull
     TableCell<E, T> createTableCell(@Nonnull TableColumn<E, T> tableColumn);
 }

@@ -18,8 +18,8 @@
 package integration;
 
 import griffon.annotations.core.Nonnull;
-import griffon.util.AbstractMapResourceBundle;
 import griffon.util.CollectionUtils;
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle;
 
 import java.util.Map;
 

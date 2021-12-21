@@ -25,7 +25,7 @@ import griffon.core.artifact.GriffonController
 import griffon.core.artifact.GriffonModel
 import griffon.core.artifact.GriffonView
 import griffon.core.env.ApplicationPhase
-import griffon.core.mvc.MVCFunction
+import griffon.core.mvc.MVCConsumer
 import griffon.core.mvc.MVCGroup
 import integration.SimpleController
 import integration.SimpleModel
@@ -78,8 +78,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -98,8 +98,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', 'simple-1', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', 'simple-1', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -118,8 +118,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', 'simple-2', [key: 'griffon'], new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', 'simple-2', [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -138,8 +138,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', [key: 'griffon'], new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -158,8 +158,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', 'simple-2', key: 'griffon', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', 'simple-2', key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -178,8 +178,8 @@ class GriffonArtifactSpec extends Specification {
         List checks = []
 
         when:
-        resolveMVCHandler().withMVC('simple', key: 'griffon', new MVCFunction() {
-            void apply(
+        resolveMVCHandler().withMVC('simple', key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -389,7 +389,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        resolveMVCHandler().runInsideUISync {
+        resolveMVCHandler().executeInsideUISync {
             invoked = true
         }
 
@@ -402,7 +402,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        resolveMVCHandler().runInsideUIAsync {
+        resolveMVCHandler().executeInsideUIAsync {
             invoked = true
         }
 
@@ -415,7 +415,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        resolveMVCHandler().runOutsideUI() {
+        resolveMVCHandler().executeOutsideUI() {
             invoked = true
         }
 
@@ -428,7 +428,7 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = resolveMVCHandler().runFuture {
+        Future future = resolveMVCHandler().executeFuture {
             invoked = true
         }
         future.get()
@@ -442,9 +442,9 @@ class GriffonArtifactSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = resolveMVCHandler().runFuture(Executors.newFixedThreadPool(1)) {
+        Future future = resolveMVCHandler().executeFuture(Executors.newFixedThreadPool(1), {
             invoked = true
-        }
+        })
         future.get()
 
         then:

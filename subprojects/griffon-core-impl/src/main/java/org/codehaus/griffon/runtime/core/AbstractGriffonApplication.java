@@ -19,10 +19,10 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.event.EventHandler;
 import griffon.core.ApplicationBootstrapper;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
-import griffon.core.ApplicationEvent;
 import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.ExecutorServiceManager;
@@ -36,7 +36,15 @@ import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionManager;
 import griffon.core.env.ApplicationPhase;
 import griffon.core.env.Lifecycle;
+import griffon.core.event.Event;
 import griffon.core.event.EventRouter;
+import griffon.core.events.ReadyEndEvent;
+import griffon.core.events.ReadyStartEvent;
+import griffon.core.events.ShutdownAbortedEvent;
+import griffon.core.events.ShutdownRequestedEvent;
+import griffon.core.events.ShutdownStartEvent;
+import griffon.core.events.StartupEndEvent;
+import griffon.core.events.StartupStartEvent;
 import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
@@ -45,6 +53,7 @@ import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
+import org.codehaus.griffon.runtime.core.properties.AbstractPropertySource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,10 +63,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static griffon.core.util.GriffonApplicationUtils.parseLocale;
 import static griffon.util.AnnotationUtils.named;
-import static griffon.util.GriffonApplicationUtils.parseLocale;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -66,13 +75,13 @@ import static java.util.Objects.requireNonNull;
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public abstract class AbstractGriffonApplication extends AbstractObservable implements GriffonApplication {
+public abstract class AbstractGriffonApplication extends AbstractPropertySource implements GriffonApplication {
     public static final String[] EMPTY_ARGS = new String[0];
     private static final String ERROR_SHUTDOWN_HANDLER_NULL = "Argument 'shutdownHandler' must not be null";
     private static final Class<?>[] CTOR_ARGS = new Class<?>[]{String[].class};
     protected final Object[] lock = new Object[0];
     protected final List<ShutdownHandler> shutdownHandlers = new ArrayList<>();
-    protected final String[] startupArgs;
+    protected final String[] startupArguments;
     protected final Object shutdownLock = new Object();
     protected final Logger log;
     protected Locale locale = Locale.getDefault();
@@ -85,7 +94,7 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
     public AbstractGriffonApplication(@Nonnull String[] args) {
         requireNonNull(args, "Argument 'args' must not be null");
-        startupArgs = Arrays.copyOf(args, args.length);
+        startupArguments = Arrays.copyOf(args, args.length);
         log = LoggerFactory.getLogger(getClass());
     }
 
@@ -102,10 +111,12 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     @Nonnull
+    @Override
     public Locale getLocale() {
         return locale;
     }
 
+    @Override
     public void setLocale(@Nonnull Locale locale) {
         Locale oldValue = this.locale;
         this.locale = locale;
@@ -114,30 +125,36 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     @Nonnull
-    public String[] getStartupArgs() {
-        return startupArgs;
+    @Override
+    public String[] getStartupArguments() {
+        return startupArguments;
     }
 
     @Nonnull
+    @Override
     public Logger getLog() {
         return log;
     }
 
+    @Override
     public void setLocaleAsString(@Nullable String locale) {
         setLocale(parseLocale(locale));
     }
 
+    @Override
     public void addShutdownHandler(@Nonnull ShutdownHandler handler) {
         requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);
         if (!shutdownHandlers.contains(handler)) { shutdownHandlers.add(handler); }
     }
 
+    @Override
     public void removeShutdownHandler(@Nonnull ShutdownHandler handler) {
         requireNonNull(handler, ERROR_SHUTDOWN_HANDLER_NULL);
         shutdownHandlers.remove(handler);
     }
 
     @Nonnull
+    @Override
     public ApplicationPhase getPhase() {
         synchronized (lock) {
             return this.phase;
@@ -259,21 +276,25 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return injector.getInstance(ApplicationConfigurer.class);
     }
 
+    @Override
     public void initialize() {
         if (getPhase() == ApplicationPhase.INITIALIZE) {
             getApplicationConfigurer().init();
         }
     }
 
+    @Override
     public void ready() {
         if (getPhase() != ApplicationPhase.STARTUP) { return; }
 
         showStartingWindow();
 
         setPhase(ApplicationPhase.READY);
-        event(ApplicationEvent.READY_START, singletonList(this));
+        event(ReadyStartEvent.of(this));
+
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.READY);
-        event(ApplicationEvent.READY_END, singletonList(this));
+        event(ReadyEndEvent.of(this));
+
         setPhase(ApplicationPhase.MAIN);
     }
 
@@ -284,12 +305,13 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         }
     }
 
+    @Override
     public boolean canShutdown() {
-        event(ApplicationEvent.SHUTDOWN_REQUESTED, singletonList(this));
+        event(ShutdownRequestedEvent.of(this));
         synchronized (shutdownLock) {
             for (ShutdownHandler handler : shutdownHandlers) {
                 if (!handler.canShutdown(this)) {
-                    event(ApplicationEvent.SHUTDOWN_ABORTED, singletonList(this));
+                    event(ShutdownAbortedEvent.of(this));
                     try {
                         log.debug("Shutdown aborted by {}", handler);
                     } catch (UnsupportedOperationException uoe) {
@@ -302,6 +324,14 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         return true;
     }
 
+    private AtomicReference<CountDownLatch> latch = new AtomicReference<>();
+
+    @EventHandler
+    public void handleShutdownStartEvent(ShutdownStartEvent event) {
+        latch.get().countDown();
+    }
+
+    @Override
     public boolean shutdown() {
         // avoids reentrant calls to shutdown()
         // once permission to quit has been granted
@@ -319,13 +349,11 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
         // the ui thread
         log.debug("Shutdown stage 1: notify all event listeners");
         if (getEventRouter().isEventPublishingEnabled()) {
-            final CountDownLatch latch = new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0);
-            getEventRouter().addEventListener(ApplicationEvent.SHUTDOWN_START.getName(), args -> {
-                latch.countDown();
-            });
-            event(ApplicationEvent.SHUTDOWN_START, singletonList(this));
+            getEventRouter().subscribe(this);
+            latch.set(new CountDownLatch(getUIThreadManager().isUIThread() ? 1 : 0));
+            event(ShutdownStartEvent.of(this));
             try {
-                latch.await();
+                latch.get().await();
             } catch (InterruptedException e) {
                 // ignore
             }
@@ -357,11 +385,12 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public void startup() {
         if (getPhase() != ApplicationPhase.INITIALIZE) { return; }
 
         setPhase(ApplicationPhase.STARTUP);
-        event(ApplicationEvent.STARTUP_START, singletonList(this));
+        event(StartupStartEvent.of(this));
 
         Object startupGroups = getConfiguration().get("application.startupGroups", null);
         if (startupGroups instanceof List) {
@@ -402,10 +431,10 @@ public abstract class AbstractGriffonApplication extends AbstractObservable impl
 
         getApplicationConfigurer().runLifecycleHandler(Lifecycle.STARTUP);
 
-        event(ApplicationEvent.STARTUP_END, singletonList(this));
+        event(StartupEndEvent.of(this));
     }
 
-    protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
-        getEventRouter().publishEvent(event.getName(), args);
+    protected <E extends Event> void event(@Nonnull E event) {
+        getEventRouter().publishEvent(event);
     }
 }

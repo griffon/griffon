@@ -17,16 +17,15 @@
  */
 package griffon.builder.javafx.factory
 
-import griffon.core.ApplicationEvent
+import griffon.annotations.core.Nonnull
+import griffon.annotations.event.EventHandler
 import griffon.core.GriffonApplication
-import griffon.core.RunnableWithArgs
+import griffon.core.events.DestroyMVCGroupEvent
 import griffon.core.mvc.MVCGroup
 import griffon.core.mvc.MVCGroupManager
 import griffon.javafx.artifact.ContentProvider
 import groovyx.javafx.factory.AbstractNodeFactory
 import javafx.scene.Node
-
-import griffon.annotations.core.Nullable
 
 import static org.codehaus.griffon.runtime.groovy.mvc.GroovyAwareMVCGroup.CURRENT_MVCGROUP
 
@@ -57,7 +56,7 @@ class FXMetaComponentFactory extends AbstractNodeFactory {
         def receiver = parentGroup ?: builder.application.mvcGroupManager
         MVCGroup mvcGroup = receiver.createMVCGroup(mvcType, mvcId, mvcArgs)
         def view = mvcGroup.view
-        def root = view instanceof ContentProvider? view.content : mvcGroup.rootNode
+        def root = view instanceof ContentProvider ? view.content : mvcGroup.rootNode
 
         new DestroyEventHandler(mvcId, mvcGroup, builder.application)
 
@@ -93,7 +92,7 @@ class FXMetaComponentFactory extends AbstractNodeFactory {
         (attributes.remove('mvcArgs') ?: [:]) + [metaComponentArgs: attributes]
     }
 
-    private static class DestroyEventHandler implements RunnableWithArgs {
+    private static class DestroyEventHandler {
         private final String parentId
         private final MVCGroup childGroup
         private final GriffonApplication application
@@ -102,15 +101,15 @@ class FXMetaComponentFactory extends AbstractNodeFactory {
             this.parentId = parentId
             this.childGroup = childGroup
             this.application = application
-            application.eventRouter.addEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)
+            application.eventRouter.subscribe(this)
         }
 
-        @Override
-        void run(@Nullable Object... args) {
-            Object destroyedGroup = args[0]
+        @EventHandler
+        void handleDestroyMVCGroupEvent(@Nonnull DestroyMVCGroupEvent event) {
+            MVCGroup destroyedGroup = event.group
             if (destroyedGroup.mvcId == parentId) {
                 childGroup.destroy()
-                application.eventRouter.removeEventListener(ApplicationEvent.DESTROY_MVC_GROUP.name, this)
+                application.eventRouter.unsubscribe(this)
             }
         }
     }

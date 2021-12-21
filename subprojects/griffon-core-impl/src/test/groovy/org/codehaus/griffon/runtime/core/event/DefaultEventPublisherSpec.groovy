@@ -20,11 +20,10 @@ package org.codehaus.griffon.runtime.core.event
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
-import griffon.annotations.core.Nullable
-import griffon.core.CallableWithArgs
+import griffon.annotations.event.EventHandler
 import griffon.core.ExceptionHandler
 import griffon.core.ExecutorServiceManager
-import griffon.core.RunnableWithArgs
+import griffon.core.Instantiator
 import griffon.core.event.Event
 import griffon.core.event.EventPublisher
 import griffon.core.event.EventRouter
@@ -34,10 +33,12 @@ import org.codehaus.griffon.runtime.core.DefaultExecutorServiceManager
 import org.codehaus.griffon.runtime.core.ExceptionHandlerProvider
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider
 import org.codehaus.griffon.runtime.core.threading.UIThreadManagerTestSupport
+import org.codehaus.griffon.runtime.util.SimpleInstantiator
 import org.junit.Rule
 import spock.lang.Specification
 
 import javax.inject.Inject
+import javax.inject.Singleton
 import java.util.concurrent.ExecutorService
 
 class DefaultEventPublisherSpec extends Specification {
@@ -47,643 +48,62 @@ class DefaultEventPublisherSpec extends Specification {
     @Inject
     private EventPublisher eventPublisher
 
-    def 'Invoking an event by name in synchronous mode with a callable listener'() {
+    def 'Invoking an event in synchronous mode with listener'() {
         given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
+        TestMyEvent1Handler eventHandler = new TestMyEvent1Handler()
+        eventPublisher.subscribe(eventHandler)
 
         when:
-
-        eventPublisher.publishEvent(eventName1)
-        eventPublisher.publishEvent(eventName2)
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
+        eventPublisher.publishEvent(new MyEvent1())
+        eventPublisher.publishEvent(new MyEvent2())
 
         then:
-
-        eventHandler.args == [1, 'one']
-        eventHandler.called == 2
+        eventHandler.event instanceof MyEvent1
     }
 
-    def 'Invoking an event by name in asynchronous mode with a callable listener'() {
+    def 'Invoking an event in asynchronous mode with listener'() {
         given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
+        TestMyEvent1Handler eventHandler = new TestMyEvent1Handler()
+        eventPublisher.subscribe(eventHandler)
 
         when:
-
-        eventPublisher.publishEventAsync(eventName1)
-        eventPublisher.publishEventAsync(eventName2)
-        eventPublisher.publishEventAsync(eventName1, [1, 'one'])
-        eventPublisher.publishEventAsync(eventName2, [2, 'two'])
+        eventPublisher.publishEventAsync(new MyEvent1())
+        eventPublisher.publishEventAsync(new MyEvent2())
         Thread.sleep(200L)
 
         then:
-
-        eventHandler.args == [1, 'one']
-        eventHandler.called == 2
+        eventHandler.event instanceof MyEvent1
     }
 
-    def 'Invoking an event by name in outside mode with a callable listener'() {
+    def 'Invoking an event in outside mode with listener'() {
         given:
+        TestMyEvent1Handler eventHandler = new TestMyEvent1Handler()
+        eventPublisher.subscribe(eventHandler)
 
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
+        when:
+        eventPublisher.publishEventOutsideUI(new MyEvent1())
+        eventPublisher.publishEventOutsideUI(new MyEvent2())
+
+        then:
+        eventHandler.event instanceof MyEvent1
+    }
+
+    def 'Register and unregister listener'() {
+        given:
+        TestMyEvent1Handler eventHandler = new TestMyEvent1Handler()
+        eventPublisher.subscribe(eventHandler)
+        eventPublisher.unsubscribe(eventHandler)
 
         when:
 
-        eventPublisher.publishEventOutsideUI(eventName1)
-        eventPublisher.publishEventOutsideUI(eventName2)
-        eventPublisher.publishEventOutsideUI(eventName1, [1, 'one'])
-        eventPublisher.publishEventOutsideUI(eventName2, [2, 'two'])
+        eventPublisher.publishEvent(new MyEvent1())
+        eventPublisher.publishEvent(new MyEvent2())
 
         then:
-
-        eventHandler.args == [1, 'one']
-        eventHandler.called == 2
+        !eventHandler.event
     }
 
-    def 'Invoking an event by name in synchronous mode with a runnable listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in asynchronous mode with a runnable listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventAsync(eventName1, [1, 'one'])
-        eventPublisher.publishEventAsync(eventName2, [2, 'two'])
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in outside mode with a runnable listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(eventName1, [1, 'one'])
-        eventPublisher.publishEventOutsideUI(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in synchronous mode with a Map listener (callable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in asynchronous mode with a Map listener (callable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEventAsync(eventName1, [1, 'one'])
-        eventPublisher.publishEventAsync(eventName2, [2, 'two'])
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in outside mode with a Map listener (callable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(eventName1, [1, 'one'])
-        eventPublisher.publishEventOutsideUI(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in synchronous mode with a Map listener (runnable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in asynchronous mode with a Map listener (runnable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEventAsync(eventName1, [1, 'one'])
-        eventPublisher.publishEventAsync(eventName2, [2, 'two'])
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in outside mode with a Map listener (runnable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(eventName1, [1, 'one'])
-        eventPublisher.publishEventOutsideUI(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in synchronous mode with a bean listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        EventHandler eventHandler = new EventHandler()
-        eventPublisher.addEventListener(eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in asynchronous mode with a bean listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        EventHandler eventHandler = new EventHandler()
-        eventPublisher.addEventListener(eventHandler)
-
-        when:
-
-        eventPublisher.publishEventAsync(eventName1, [1, 'one'])
-        eventPublisher.publishEventAsync(eventName2, [2, 'two'])
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event by name in outside mode with a bean listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        EventHandler eventHandler = new EventHandler()
-        eventPublisher.addEventListener(eventHandler)
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(eventName1, [1, 'one'])
-        eventPublisher.publishEventOutsideUI(eventName2, [2, 'two'])
-
-        then:
-
-        eventHandler.args == [1, 'one']
-    }
-
-    def 'Invoking an event in synchronous mode with a callable listener'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(event1)
-        eventPublisher.publishEvent(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in asynchronous mode with a callable listener'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventAsync(event1)
-        eventPublisher.publishEventAsync(event2)
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in outside mode with a callable listener'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(event1)
-        eventPublisher.publishEventOutsideUI(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in synchronous mode with a runnable listener'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(event1)
-        eventPublisher.publishEvent(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in asynchronous mode with a runnable listener'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventAsync(event1)
-        eventPublisher.publishEventAsync(event2)
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in outside mode with a runnable listener'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(event1)
-        eventPublisher.publishEventOutsideUI(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in synchronous mode with a Map listener (callable)'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(event1)
-        eventPublisher.publishEvent(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in asynchronous mode with a Map listener (callable)'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventAsync(event1)
-        eventPublisher.publishEventAsync(event2)
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in outside mode with a Map listener (callable)'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(event1)
-        eventPublisher.publishEventOutsideUI(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in synchronous mode with a Map listener (runnable)'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(event1)
-        eventPublisher.publishEvent(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in asynchronous mode with a Map listener (runnable)'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventAsync(event1)
-        eventPublisher.publishEventAsync(event2)
-        Thread.sleep(200L)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Invoking an event in outside mode with a Map listener (runnable)'() {
-        given:
-
-        Event event1 = new MyEvent1(new Object())
-        Event event2 = new MyEvent2(new Object())
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(event1.class, eventHandler)
-
-        when:
-
-        eventPublisher.publishEventOutsideUI(event1)
-        eventPublisher.publishEventOutsideUI(event2)
-
-        then:
-
-        eventHandler.args == [event1]
-    }
-
-    def 'Register and unregister a callable listener by name'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
-        eventPublisher.removeEventListener(eventName1, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        !eventHandler.args
-    }
-
-    def 'Register and unregister a runnable listener by name'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(eventName1, eventHandler)
-        eventPublisher.removeEventListener(eventName1, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        !eventHandler.args
-    }
-
-    def 'Register and unregister a Map listener by name (callable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-        eventPublisher.removeEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        !eventHandler.args
-    }
-
-    def 'Register and unregister a Map listener by name (runnable)'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener([(eventName1): eventHandler])
-        eventPublisher.removeEventListener([(eventName1): eventHandler])
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        !eventHandler.args
-    }
-
-    def 'Register and unregister a callable listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
-        eventPublisher.addEventListener(MyEvent1, eventHandler)
-        eventPublisher.removeEventListener(MyEvent1, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        !eventHandler.args
-    }
-
-    def 'Register and unregister a runnable listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler = new TestRunnableEventHandler()
-        eventPublisher.addEventListener(MyEvent1, eventHandler)
-        eventPublisher.removeEventListener(MyEvent1, eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
-        eventPublisher.publishEvent(eventName2, [2, 'two'])
-
-        then:
-
-        !eventHandler.args
-    }
-
-    def 'Register and unregister a bean listener'() {
-        given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        EventHandler eventHandler = new EventHandler()
-        eventPublisher.addEventListener(eventHandler)
-        eventPublisher.removeEventListener(eventHandler)
-
-        when:
-
-        eventPublisher.publishEvent(eventName1)
-        eventPublisher.publishEvent(eventName2)
-
-        then:
-
-        !eventHandler.args
-    }
-
+    /*
     def 'Register and unregister a bean listener with nested listeners'() {
         given:
 
@@ -703,61 +123,53 @@ class DefaultEventPublisherSpec extends Specification {
 
         !subject.args
     }
+    */
 
-    def 'Register and unregister an invalid bean listener'() {
+    def 'Register and unregister an invalid listener'() {
         given:
-
-        def eventHandler = new Object()
+        Object eventHandler = new Object()
 
         expect:
-
-        eventPublisher.addEventListener(eventHandler)
-        eventPublisher.removeEventListener(eventHandler)
+        eventPublisher.subscribe(eventHandler)
+        eventPublisher.unsubscribe(eventHandler)
     }
 
     def 'Triggering an event with event published disabled does not notify listener'() {
         given:
-
-        String eventName1 = MyEvent1.simpleName
-        TestCallableEventHandler eventHandler = new TestCallableEventHandler()
+        TestEventHandler eventHandler = new TestEventHandler()
 
         when:
-
         eventPublisher.eventPublishingEnabled = false
-        eventPublisher.publishEvent(eventName1, [1, 'one'])
+        eventPublisher.publishEvent(new MyEvent1())
 
         then:
-
-        !eventHandler.args
+        !eventHandler.event
         eventHandler.called == 0
         !eventPublisher.eventPublishingEnabled
     }
 
+    /*
     def 'Query existing listeners by event name'() {
         given:
-
-        String eventName1 = MyEvent1.simpleName
-        String eventName2 = MyEvent2.simpleName
-        TestRunnableEventHandler eventHandler1 = new TestRunnableEventHandler()
-        TestRunnableEventHandler eventHandler2 = new TestRunnableEventHandler()
+        TestMyEvent1Handler eventHandler1 = new TestMyEvent1Handler()
+        TestMyEvent2Handler eventHandler2 = new TestMyEvent2Handler()
 
         expect:
-
         !eventPublisher.eventListeners
 
         when:
 
-        eventPublisher.addEventListener(eventName1, eventHandler1)
-        eventPublisher.addEventListener([(eventName2): eventHandler2])
-        eventPublisher.addEventListener(new EventHandler())
-        eventPublisher.addEventListener(new Subject().events)
+        eventPublisher.subscribe(eventHandler1)
+        eventPublisher.subscribe(eventHandler2)
+        eventPublisher.subscribe(new TestEventHandler())
 
         then:
 
-        eventPublisher.eventListeners.size() == 5
-        eventPublisher.getEventListeners(eventName1).size() == 3
-        eventPublisher.getEventListeners(eventName2).size() == 2
+        eventPublisher.eventListeners.size() == 4
+        eventPublisher.getEventListeners(MyEvent1.class.name).size() == 2
+        eventPublisher.getEventListeners(MyEvent2.class.name).size() == 2
     }
+     */
 
     static final class TestModule extends AbstractModule {
         @Override
@@ -769,54 +181,48 @@ class DefaultEventPublisherSpec extends Specification {
             bind(EventPublisher).to(DefaultEventPublisher)
             bind(ExceptionHandler).toProvider(ExceptionHandlerProvider)
             bind(ExecutorService).annotatedWith(AnnotationUtils.named('defaultExecutorService')).toProvider(DefaultExecutorServiceProvider)
-        }
-    }
-    
-    static class TestCallableEventHandler implements CallableWithArgs<Void> {
-        int called
-        Object[] args
-
-        @Override
-        @Nullable
-        Void call(@Nullable Object... args) {
-            called++
-            this.args = args
-            null
+            bind(Instantiator).to(SimpleInstantiator).in(Singleton)
         }
     }
 
-    static class TestRunnableEventHandler implements RunnableWithArgs {
+    static abstract class AbstractTestEventHandler {
         int called
-        Object[] args
+        Object event
+    }
 
-        @Override
-        void run(@Nullable Object... args) {
-            called++
-            this.args = args
+    static class TestMyEvent1Handler extends AbstractTestEventHandler {
+        @EventHandler
+        void handleMyEvent1(MyEvent1 event) {
+            this.event = event
+            this.called++
+        }
+    }
+
+    static class TestMyEvent2Handler extends AbstractTestEventHandler {
+        @EventHandler
+        void handleMyEvent2(MyEvent2 event) {
+            this.event = event
+            this.called++
+        }
+    }
+
+    static class TestEventHandler extends AbstractTestEventHandler {
+        @EventHandler
+        void handleMyEvent1(MyEvent1 event) {
+            this.event = event
+            this.called++
+        }
+
+        @EventHandler
+        void handleMyEvent2(MyEvent2 event) {
+            this.event = event
+            this.called++
         }
     }
 
     static class MyEvent1 extends Event {
-        MyEvent1(Object source) {
-            super(source)
-        }
     }
 
     static class MyEvent2 extends Event {
-        MyEvent2(Object source) {
-            super(source)
-        }
-    }
-
-    static class EventHandler {
-        List args
-
-        void onMyEvent1(int arg0, String arg1) {
-            this.args = [arg0, arg1]
-        }
-
-        void onMyEvent1(MyEvent1 event) {
-            this.args = [event]
-        }
     }
 }

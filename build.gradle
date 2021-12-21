@@ -124,7 +124,6 @@ config {
                 addBooleanOption('javafx', true)
                 links 'https://www.slf4j.org/apidocs/'
                 links 'https://junit.org/junit4/javadoc/latest/'
-                links 'https://aalmiray.github.io/jsr-305/apidocs/'
                 links 'https://javax-inject.github.io/javax-inject/api/'
                 links 'https://docs.oracle.com/javase/8/docs/api/'
                 links 'https://docs.oracle.com/javase/8/javafx/api/'
@@ -180,8 +179,9 @@ config {
         dependency("org.kordamp.gipsy:gipsy:$jipsyVersion")
         dependency('jipsy') {
             groupId    = 'org.kordamp.jipsy'
-            artifactId = 'jipsy'
+            artifactId = 'jipsy-processor'
             version    = jipsyVersion
+            modules    = ['jipsy-util']
         }
         dependency('slf4j') {
             groupId    = 'org.slf4j'
@@ -208,7 +208,7 @@ config {
             groupId    = 'org.testfx'
             artifactId = 'testfx-core'
             version    = testfxVersion
-            modules    = ['testfx-junit']
+            modules    = ['testfx-junit5', 'testfx-junit']
         }
         dependency("com.google.guava:guava:$guavaVersion")
         dependency('cglib') {
@@ -233,6 +233,7 @@ allprojects {
 
 subprojects { Project subproj ->
     boolean isCoreProject = subproj.projectDir.absolutePath.contains('subprojects')
+    boolean isTckProject = subproj.projectDir.absolutePath.contains('tcks')
     boolean isSampleProject = subproj.projectDir.absolutePath.contains('samples')
     boolean isDocProject = subproj.projectDir.absolutePath.contains('docs')
     boolean isArchetypeProject = subproj.name.endsWith('-archetype')
@@ -246,10 +247,10 @@ subprojects { Project subproj ->
             name        = subproj.name
             description = subproj.project_description
             specification {
-                enabled = !isArchetypeProject && !isDocProject
+                enabled = isCoreProject || isGradlePlugin
             }
             implementation {
-                enabled = !isArchetypeProject && !isDocProject
+                enabled = isCoreProject || isGradlePlugin
             }
         }
 
@@ -292,11 +293,11 @@ subprojects { Project subproj ->
         }
 
         licensing {
-            enabled = !isArchetypeProject && !isDocProject
+            enabled = isCoreProject || isGradlePlugin
         }
 
         stats {
-            enabled = !isArchetypeProject && !isDocProject
+            enabled = isCoreProject || isGradlePlugin || isSampleProject
         }
     }
 
@@ -339,6 +340,9 @@ subprojects { Project subproj ->
             }
             testImplementation("com.google.guiceberry:guiceberry:$guiceBerryVersion") {
                 exclude group: 'junit', module: 'junit'
+            }
+            testImplementation("name.falgout.jeffrey.testing.junit5:guice-extension:$guiceExtensionVersion") {
+                transitive = false
             }
             testImplementation("com.google.inject:guice:$guiceVersion") {
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
@@ -437,7 +441,6 @@ subprojects { Project subproj ->
                 }
             }
         }
-
     }
 }
 

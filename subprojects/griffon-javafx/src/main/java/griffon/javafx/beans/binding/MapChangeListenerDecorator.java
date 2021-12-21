@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.MapChangeListener;
 
 import static java.util.Objects.requireNonNull;
@@ -28,10 +29,11 @@ import static java.util.Objects.requireNonNull;
 public class MapChangeListenerDecorator<K, V> implements MapChangeListener<K, V> {
     private final MapChangeListener<K, V> delegate;
 
-    public MapChangeListenerDecorator(MapChangeListener<K, V> delegate) {
+    public MapChangeListenerDecorator(@Nonnull MapChangeListener<K, V> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final MapChangeListener<K, V> getDelegate() {
         return delegate;
     }

@@ -20,7 +20,7 @@ package griffon.core;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

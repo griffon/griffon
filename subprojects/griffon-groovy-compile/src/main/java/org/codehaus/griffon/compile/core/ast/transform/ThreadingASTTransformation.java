@@ -17,9 +17,9 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.threading.Threading;
 import griffon.core.artifact.GriffonController;
-import griffon.transform.Threading;
-import griffon.util.GriffonClassUtils;
+import griffon.core.util.GriffonClassUtils;
 import griffon.util.MethodDescriptor;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
@@ -118,16 +118,16 @@ public class ThreadingASTTransformation extends AbstractASTTransformation implem
     }
 
     private String resolveThreadingMethod(Threading.Policy threadingPolicy) {
-        String threadingMethod = METHOD_RUN_OUTSIDE_UI;
+        String threadingMethod = METHOD_EXECUTE_OUTSIDE_UI;
         switch (threadingPolicy) {
             case INSIDE_UITHREAD_SYNC:
-                threadingMethod = METHOD_RUN_INSIDE_UI_SYNC;
+                threadingMethod = METHOD_EXECUTE_INSIDE_UI_SYNC;
                 break;
             case INSIDE_UITHREAD_ASYNC:
-                threadingMethod = METHOD_RUN_INSIDE_UI_ASYNC;
+                threadingMethod = METHOD_EXECUTE_INSIDE_UI_ASYNC;
                 break;
             case OUTSIDE_UITHREAD_ASYNC:
-                threadingMethod = METHOD_RUN_OUTSIDE_UI_ASYNC;
+                threadingMethod = METHOD_EXECUTE_OUTSIDE_UI_ASYNC;
                 break;
             case OUTSIDE_UITHREAD:
             default:

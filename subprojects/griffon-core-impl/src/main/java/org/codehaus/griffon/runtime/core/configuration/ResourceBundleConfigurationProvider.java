@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core.configuration;
 
+import griffon.converter.ConverterRegistry;
 import griffon.core.Configuration;
 
 import javax.inject.Inject;
@@ -37,11 +38,14 @@ public class ResourceBundleConfigurationProvider implements Provider<Configurati
     @Inject
     private ConfigurationDecoratorFactory configurationDecoratorFactory;
 
+    @Inject
+    private ConverterRegistry converterRegistry;
+
     @Override
     public Configuration get() {
         requireNonNull(resourceBundle, "Argument 'resourceBundle' must not be null");
         requireNonNull(configurationDecoratorFactory, "Argument 'configurationDecoratorFactory' must not be null");
-        ResourceBundleConfiguration configuration = new ResourceBundleConfiguration(resourceBundle);
+        ResourceBundleConfiguration configuration = new ResourceBundleConfiguration(converterRegistry, resourceBundle);
         return configurationDecoratorFactory.create(configuration);
     }
 }

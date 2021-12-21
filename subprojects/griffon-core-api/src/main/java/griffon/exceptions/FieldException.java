@@ -26,6 +26,7 @@ import griffon.annotations.core.Nullable;
  */
 public class FieldException extends GriffonException {
     private static final long serialVersionUID = 4319304904847269368L;
+
     private static final String CAUSE = "cause";
     private static final String BEAN = "bean";
     private static final String FIELD_NAME = "fieldName";

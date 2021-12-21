@@ -26,7 +26,7 @@ import javafx.scene.control.TableView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.ObjectUtils.requireState;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -63,14 +63,17 @@ public class DefaultTableViewModel<E> implements TableViewModel<E> {
         }
     }
 
+    @Nonnull
     public ObservableList<E> getSource() {
         return source;
     }
 
+    @Nonnull
     public TableViewFormat<E> getFormat() {
         return format;
     }
 
+    @Nonnull
     @Override
     public TableColumn<E, ?> getColumnAt(int index) {
         requireState(index >= 0, "Argument 'index' must be greater or equal to zero");

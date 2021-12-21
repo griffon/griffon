@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlySetProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,10 +26,10 @@ import javafx.collections.SetChangeListener;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareReadOnlySetProperty<E> extends ReadOnlySetPropertyDecorator<E> implements UIThreadAware {
-    UIThreadAwareReadOnlySetProperty(ReadOnlySetProperty<E> delegate) {
+    UIThreadAwareReadOnlySetProperty(@Nonnull ReadOnlySetProperty<E> delegate) {
         super(delegate);
     }
 

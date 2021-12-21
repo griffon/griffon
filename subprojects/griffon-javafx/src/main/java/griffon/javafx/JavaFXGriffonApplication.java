@@ -53,6 +53,7 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
         run(JavaFXGriffonApplication.class, args);
     }
 
+    @Nonnull
     @Override
     public Object createApplicationContainer(@Nonnull Map<String, Object> attributes) {
         if (primaryStageDispensed) {
@@ -74,6 +75,7 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
         initialize();
     }
 
+    @Nonnull
     protected ApplicationBootstrapper createApplicationBootstrapper() {
         return new DefaultApplicationBootstrapper(this);
     }
@@ -87,7 +89,7 @@ public class JavaFXGriffonApplication extends AbstractJavaFXGriffonApplication {
     }
 
     protected void afterStart() {
-        getUIThreadManager().runOutsideUI(() -> {
+        getUIThreadManager().executeOutsideUI(() -> {
             startup();
             ready();
             afterReady();

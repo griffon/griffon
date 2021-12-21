@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonControllerClass;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
@@ -25,9 +26,7 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.kordamp.jipsy.ServiceProviderFor;
-
-import griffon.annotations.core.Nonnull;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 /**
  * Handles generation of code for Griffon controllers.

@@ -19,16 +19,16 @@ package org.codehaus.griffon.runtime.core.controller;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.inject.Contextual;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.controller.ActionParameter;
-import griffon.inject.Contextual;
 
 import javax.inject.Named;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
-import static griffon.util.GriffonClassUtils.requireState;
-import static griffon.util.GriffonNameUtils.isNotBlank;
+import static griffon.util.ObjectUtils.requireState;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.lang.System.arraycopy;
 
 /**

@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 

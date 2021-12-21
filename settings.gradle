@@ -43,6 +43,7 @@ projects {
     layout = 'explicit'
 
     includeProjects('subprojects')
+    includeProjects('tcks')
     includeProjects('plugins')
     includeProjects('samples').includeIf(fullBuild)
     includeProjects('poms').includeIf(fullBuild)
@@ -61,6 +62,9 @@ projects {
             id 'java-library'
             id 'groovy'
             id('org.kordamp.gradle.jdeps').includeIf({-> false && fullBuild})
+        }
+        dir('tcks') {
+            id 'java-library'
         }
         dir('archetypes') {
             excludeDir('archetypes')
@@ -101,10 +105,11 @@ enforce {
     }
     rule(enforcer.rules.ForceDependencies) { r ->
         r.dependencies.addAll "com.google.guava:guava:$guavaVersion",
+            "jline:jline:$jlineVersion",
             "junit:junit:$junitVersion",
             "cglib:cglib-nodep:$cglibVersion",
             "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
-            "org.codehau.groovy:groovy:$groovyVersion",
+            "org.codehau.groovy:groovy-all:$groovyVersion",
             "org.codehaus.groovy:groovy:$groovyVersion",
             "org.codehaus.groovy:groovy-json:$groovyVersion",
             "org.codehaus.groovy:groovy-macro:$groovyVersion",
@@ -117,7 +122,10 @@ enforce {
             "org.slf4j:slf4j-simple:$slf4jVersion",
             "com.google.code.findbugs:jsr305:$jsr305Version",
             "commons-io:commons-io:$commonsIoVersion",
+            "commons-lang:commons-lang:$commonsLangVersion",
+            "commons-logging:commons-logging:$commonsLoggingVersion",
             "org.apache.commons:commons-lang3:$commonsLang3Version",
+            "com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:$concurrentLHMVersion",
             "org.ow2.asm:asm:$asmVersion",
             "org.ow2.asm:asm-commons:$asmVersion",
             "org.ow2.asm:asm-tree:$asmVersion",
@@ -126,6 +134,39 @@ enforce {
             "net.bytebuddy:byte-buddy-agent:$bytebuddyVersion",
             "org.junit.jupiter:junit-jupiter-engine:$junit5Version",
             "org.junit.platform:junit-platform-engine:$junitPlatformVersion",
-            "org.junit.platform:junit-platform-launcher:$junitPlatformVersion"
+            "org.junit.platform:junit-platform-launcher:$junitPlatformVersion",
+            "org.apiguardian:apiguardian-api:$apiguardianVersion",
+            "org.apache.ant:ant:$antVersion",
+            "commons-collections:commons-collections:$commonsCollectionsVersion",
+            "com.vladsch.flexmark:flexmark:$flexmarkVersion",
+            "com.vladsch.flexmark:flexmark-profile-pegdown:$flexmarkVersion",
+            "org.jruby:jruby-complete:$jrubyVersion",
+            "org.eclipse.jgit:org.eclipse.jgit.ui:$jgitVersion",
+            "org.eclipse.jgit:org.eclipse.jgit:$jgitVersion",
+            "com.jcraft:jsch.agentproxy.pageant:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.sshagent:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.usocket-jna:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.usocket-nc:$jschAgentproxyVersion",
+            "com.jcraft:jsch.agentproxy.core:$jschAgentproxyVersion",
+            "com.jcraft:jsch:$jschVersion",
+            "org.codehaus.plexus:plexus-utils:3.3.0",
+            "org.codehaus.plexus:plexus-interpolation:1.26",
+            "org.apache.ant:ant-launcher:1.9.13",
+            "org.apache.maven:maven-settings:$mavenVersion",
+            "org.apache.maven:maven-settings-builder:$mavenVersion",
+            "org.codehaus.groovy.modules.http-builder:http-builder:0.7.2",
+            "org.apache.httpcomponents:httpclient:4.5.12",
+            "com.trilead:trilead-ssh2:1.0.0-build220",
+            "org.apache.httpcomponents:httpcore:4.4.13",
+            "org.eclipse.sisu:org.eclipse.sisu.plexus:0.3.4",
+            "org.codehaus.plexus:plexus-component-annotations:2.1.0",
+            "org.apache.maven.resolver:maven-resolver-api:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-util:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-impl:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-connector-basic:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-transport-classpath:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-transport-file:1.4.1",
+            "org.apache.maven.resolver:maven-resolver-transport-http:1.4.1",
+            "org.apache.maven:maven-resolver-provider:3.6.3"
     }
 }

@@ -17,27 +17,29 @@
  */
 package org.codehaus.griffon.runtime.groovy.resources
 
-import com.google.guiceberry.GuiceBerryModule
-import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
+import griffon.converter.ConverterRegistry
 import griffon.core.ApplicationClassLoader
+import griffon.core.Instantiator
+import griffon.core.bundles.CompositeResourceBundleBuilder
+import griffon.core.bundles.ResourceBundleLoader
 import griffon.core.injection.Injector
 import griffon.core.resources.ResourceHandler
 import griffon.core.resources.ResourceResolver
 import griffon.util.AnnotationUtils
-import griffon.util.CompositeResourceBundleBuilder
-import griffon.util.Instantiator
-import griffon.util.ResourceBundleLoader
+import name.falgout.jeffrey.testing.junit.guice.GuiceExtension
+import name.falgout.jeffrey.testing.junit.guice.IncludeModule
+import org.codehaus.griffon.converter.DefaultConverterRegistry
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
+import org.codehaus.griffon.runtime.core.bundles.DefaultCompositeResourceBundleBuilder
+import org.codehaus.griffon.runtime.core.bundles.PropertiesResourceBundleLoader
 import org.codehaus.griffon.runtime.core.resources.DefaultResourceHandler
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecoratorFactory
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider
-import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder
 import org.codehaus.griffon.runtime.util.DefaultInstantiator
-import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 import javax.inject.Inject
 import javax.inject.Named
@@ -48,16 +50,16 @@ import static com.google.inject.util.Providers.guicify
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
+@ExtendWith(GuiceExtension)
+@IncludeModule(TestModule)
 class DefaultGroovyAwareResourceResolverTest {
-    @Rule
-    public final GuiceBerryRule guiceBerry = new GuiceBerryRule(TestModule)
 
     @Inject private CompositeResourceBundleBuilder bundleBuilder
     @Inject private ResourceResolver resourceResolver
     @Inject private Provider<Injector> injector
     @Inject @Named('properties') private ResourceBundleLoader propertiesResourceBundleLoader
 
-    @Before
+    @BeforeEach
     void setup() {
         when(injector.get().getInstances(ResourceBundleLoader)).thenReturn([propertiesResourceBundleLoader])
     }
@@ -75,7 +77,6 @@ class DefaultGroovyAwareResourceResolverTest {
     static final class TestModule extends AbstractModule {
         @Override
         protected void configure() {
-            install(new GuiceBerryModule())
             bind(ApplicationClassLoader).to(DefaultApplicationClassLoader).in(Singleton)
             bind(ResourceHandler).to(DefaultResourceHandler).in(Singleton)
             bind(CompositeResourceBundleBuilder).to(DefaultCompositeResourceBundleBuilder).in(Singleton)
@@ -87,6 +88,7 @@ class DefaultGroovyAwareResourceResolverTest {
                 .in(Singleton)
             bind(Instantiator).to(DefaultInstantiator).in(Singleton)
             bind(ResourceBundleLoader).annotatedWith(AnnotationUtils.named('properties')).to(PropertiesResourceBundleLoader).in(Singleton)
+            bind(ConverterRegistry).to(DefaultConverterRegistry).in(Singleton)
             bind(Injector).toProvider(guicify({ mock(Injector) } as Provider<Injector>)).in(Singleton)
         }
     }

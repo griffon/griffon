@@ -35,9 +35,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static griffon.util.GriffonClassUtils.requireState;
-import static griffon.util.GriffonNameUtils.isBlank;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.ObjectUtils.requireState;
+import static griffon.util.StringUtils.isBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -120,10 +120,12 @@ public class NamedCardPane extends StackPane {
         }
     }
 
+    @Nonnull
     public ReadOnlyStringProperty selectedNodeIdProperty() {
         return selectedNodeId;
     }
 
+    @Nonnull
     public ReadOnlyObjectProperty<Node> selectedNodeProperty() {
         return selectedNode;
     }

@@ -19,7 +19,7 @@ package org.codehaus.griffon.compile.core.ast.transform;
 
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.mvc.MVCHandler;
-import griffon.transform.MVCAware;
+import griffon.annotations.mvc.MVCAware;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.griffon.compile.core.MVCAwareConstants;

@@ -31,7 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -102,10 +102,6 @@ public class Metadata {
      */
     public String getEnvironment() {
         return get(Environment.KEY);
-    }
-
-    public String getRunMode() {
-        return get(RunMode.KEY);
     }
 
     /**

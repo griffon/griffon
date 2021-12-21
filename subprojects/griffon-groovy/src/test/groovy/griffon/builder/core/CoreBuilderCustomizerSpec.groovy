@@ -17,8 +17,8 @@
  */
 package griffon.builder.core
 
-import griffon.util.BuilderCustomizer
-import griffon.util.CompositeBuilder
+import griffon.core.util.groovy.BuilderCustomizer
+import griffon.core.util.groovy.CompositeBuilder
 import groovy.swing.factory.CollectionFactory
 import groovy.swing.factory.MapFactory
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager
@@ -42,7 +42,7 @@ class CoreBuilderCustomizerSpec extends Specification {
         methodName in builder.explicitMethods.keySet()
 
         where:
-        methodName << ['runOutsideUI', 'runOutsideUIAsync', 'runInsideUISync', 'runInsideUIAsync', 'runFuture', 'isUIThread']
+        methodName << ['executeOutsideUI', 'executeOutsideUIAsync', 'executeInsideUISync', 'executeInsideUIAsync', 'executeFuture', 'isUIThread']
     }
 
     void "Root node should be implicitly identified"() {

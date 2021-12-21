@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.MapExpression;
 import javafx.beans.value.ChangeListener;
@@ -25,10 +26,10 @@ import javafx.collections.ObservableMap;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareMapExpression<K, V> extends MapExpressionDecorator<K, V> implements UIThreadAware {
-    UIThreadAwareMapExpression(MapExpression<K, V> delegate) {
+    UIThreadAwareMapExpression(@Nonnull MapExpression<K, V> delegate) {
         super(delegate);
     }
 

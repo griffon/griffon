@@ -35,19 +35,18 @@ limitations under the License.
 
 package org.kordamp.jipsy.processor.testutils;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 
-@Ignore
+@Disabled
 public abstract class NoOutputTestBase {
-
-    @Before
+    @BeforeEach
     public void disableOutput() {
         TestOutput.disableAll();
     }
 
-    @After
+    @AfterEach
     public void enableOutput() {
         TestOutput.enableAll();
     }

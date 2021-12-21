@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

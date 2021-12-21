@@ -32,9 +32,9 @@ import javax.inject.Named;
 import java.util.Collections;
 import java.util.Map;
 
+import static griffon.core.util.ConfigUtils.getConfigValue;
 import static griffon.util.AnnotationUtils.named;
-import static griffon.util.ConfigUtils.getConfigValue;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -63,13 +63,17 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         this.operations.addAll(operations);
     }
 
+    @Nonnull
     protected abstract <E> ObservableStream<E> createInstance(@Nonnull List<StreamOp> operations);
 
+    @Nonnull
     protected abstract Stream createStream();
 
+    @Nonnull
     @Override
     public ObservableStream<T> limit(final long maxSize) {
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.limit(maxSize);
@@ -77,10 +81,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> limit(@Nonnull final ObservableLongValue maxSize) {
         requireNonNull(maxSize, ERROR_OBSERVABLE_NULL);
         return createInstance(push(operations, new StreamOp() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.limit(maxSize.get());
@@ -94,9 +100,11 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> skip(final long n) {
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.skip(n);
@@ -104,10 +112,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> skip(@Nonnull final ObservableLongValue n) {
         requireNonNull(n, ERROR_OBSERVABLE_NULL);
         return createInstance(push(operations, new StreamOp() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.skip(n.get());
@@ -121,9 +131,11 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> distinct() {
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.distinct();
@@ -131,9 +143,11 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> sorted() {
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.sorted();
@@ -141,10 +155,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> sorted(@Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.sorted(comparator);
@@ -152,10 +168,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> sorted(@Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createInstance(push(operations, new StreamOp() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 Comparator<? super T> c = comparator.getValue();
@@ -171,9 +189,11 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     public ObservableStream<T> filter(@Nonnull final Predicate<? super T> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.filter(predicate);
@@ -181,10 +201,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public <R> ObservableStream<R> map(@Nonnull final Function<? super T, ? extends R> mapper) {
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.map(mapper);
@@ -192,10 +214,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public <R> ObservableStream<R> flatMap(@Nonnull final Function<? super T, ? extends ObservableStream<? extends R>> mapper) {
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createInstance(push(operations, new StreamOpAdapter() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 return stream.flatMap(mapper);
@@ -203,10 +227,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObservableStream<T> filter(@Nonnull final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createInstance(push(operations, new StreamOp() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 Predicate<? super T> p = predicate.getValue();
@@ -222,10 +248,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public <R> ObservableStream<R> map(@Nonnull final ObservableValue<Function<? super T, ? extends R>> mapper) {
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createInstance(push(operations, new StreamOp() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 Function<? super T, ? extends R> m = mapper.getValue();
@@ -241,10 +269,12 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public <R> ObservableStream<R> flatMap(@Nonnull final ObservableValue<Function<? super T, ? extends ObservableStream<? extends R>>> mapper) {
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createInstance(push(operations, new StreamOp() {
+            @Nonnull
             @Override
             public Stream apply(@Nonnull Stream stream) {
                 Function<? super T, ? extends ObservableStream<? extends R>> m = mapper.getValue();
@@ -260,18 +290,21 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> reduce(@Nonnull final BinaryOperator<T> accumulator) {
         requireNonNull(accumulator, ERROR_ACCUMULATOR);
         return createObjectBinding(() -> (T) stream().reduce(accumulator).orElse(null), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> reduce(@Nullable final T defaultValue, @Nonnull final BinaryOperator<T> accumulator) {
         requireNonNull(accumulator, ERROR_ACCUMULATOR);
         return createObjectBinding(() -> (T) stream().reduce(accumulator).orElse(defaultValue), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> reduce(@Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> accumulator) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -279,12 +312,14 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         return createObjectBinding(() -> (T) stream().reduce(accumulator).orElseGet(supplier), dependencies());
     }
 
+    @Nonnull
     @Override
     public <U> ObjectBinding<U> reduce(@Nullable final U identity, @Nonnull final BiFunction<U, ? super T, U> accumulator, @Nonnull final BinaryOperator<U> combiner) {
         requireNonNull(combiner, ERROR_COMBINER_NULL);
         return createObjectBinding(() -> (U) stream().reduce(identity, accumulator, combiner), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> reduce(@Nonnull final ObservableValue<BinaryOperator<T>> accumulator) {
         requireNonNull(accumulator, ERROR_ACCUMULATOR);
@@ -295,6 +330,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(accumulator));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> reduce(@Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> accumulator) {
         requireNonNull(accumulator, ERROR_ACCUMULATOR);
@@ -305,6 +341,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(accumulator));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> reduce(@Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> accumulator) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -316,6 +353,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(accumulator));
     }
 
+    @Nonnull
     @Override
     public <U> ObjectBinding<U> reduce(@Nonnull final ObservableValue<U> identity, @Nonnull final ObservableValue<BiFunction<U, ? super T, U>> accumulator, @Nonnull final ObservableValue<BinaryOperator<U>> combiner) {
         requireNonNull(identity, ERROR_IDENTITY_NULL);
@@ -332,30 +370,35 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(identity, accumulator, combiner));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> min(@Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createObjectBinding(() -> (T) stream().min(comparator).orElse(null), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> max(@Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createObjectBinding(() -> (T) stream().max(comparator).orElse(null), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> min(@Nullable final T defaultValue, @Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createObjectBinding(() -> (T) stream().min(comparator).orElse(defaultValue), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> max(@Nullable final T defaultValue, @Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
         return createObjectBinding(() -> (T) stream().max(comparator).orElse(defaultValue), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> min(@Nonnull final Supplier<T> supplier, @Nonnull final Comparator<? super T> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
@@ -363,6 +406,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         return createObjectBinding(() -> (T) stream().min(comparator).orElseGet(supplier), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> max(@Nonnull final Supplier<T> supplier, @Nonnull final Comparator<? super T> comparator) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -370,24 +414,28 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         return createObjectBinding(() -> (T) stream().max(comparator).orElseGet(supplier), dependencies());
     }
 
+    @Nonnull
     @Override
     public BooleanBinding anyMatch(@Nonnull final Predicate<? super T> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> stream().anyMatch(predicate), dependencies());
     }
 
+    @Nonnull
     @Override
     public BooleanBinding allMatch(@Nonnull final Predicate<? super T> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> stream().allMatch(predicate), dependencies());
     }
 
+    @Nonnull
     @Override
     public BooleanBinding noneMatch(@Nonnull final Predicate<? super T> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
         return createBooleanBinding(() -> stream().noneMatch(predicate), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> min(@Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
@@ -398,6 +446,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(comparator));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> max(@Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
@@ -408,6 +457,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(comparator));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> min(@Nullable final T defaultValue, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
@@ -418,6 +468,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(comparator));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> max(@Nullable final T defaultValue, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
@@ -428,6 +479,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(comparator));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> min(@Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
@@ -439,6 +491,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(comparator));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> max(@Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<Comparator<? super T>> comparator) {
         requireNonNull(comparator, ERROR_COMPARATOR_NULL);
@@ -450,6 +503,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(comparator));
     }
 
+    @Nonnull
     @Override
     public BooleanBinding anyMatch(@Nonnull final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -460,6 +514,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(predicate));
     }
 
+    @Nonnull
     @Override
     public BooleanBinding allMatch(@Nonnull final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -470,6 +525,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(predicate));
     }
 
+    @Nonnull
     @Override
     public BooleanBinding noneMatch(@Nonnull final ObservableValue<Predicate<? super T>> predicate) {
         requireNonNull(predicate, ERROR_PREDICATE_NULL);
@@ -480,38 +536,45 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         }, dependencies(predicate));
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> findFirst() {
         return createObjectBinding(() -> (T) stream().findFirst().orElse(null), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> findFirst(@Nullable final T defaultValue) {
         return createObjectBinding(() -> (T) stream().findFirst().orElse(defaultValue), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> findFirst(@Nonnull final Supplier<T> supplier) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createObjectBinding(() -> (T) stream().findFirst().orElseGet(supplier), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> findAny() {
         return createObjectBinding(() -> (T) stream().findAny().orElse(null), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> findAny(@Nullable final T defaultValue) {
         return createObjectBinding(() -> (T) stream().findAny().orElse(defaultValue), dependencies());
     }
 
+    @Nonnull
     @Override
     public ObjectBinding<T> findAny(@Nonnull final Supplier<T> supplier) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         return createObjectBinding(() -> (T) stream().findAny().orElseGet(supplier), dependencies());
     }
 
+    @Nonnull
     private Stream stream() {
         Stream stream = createStream();
 
@@ -522,6 +585,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
         return stream;
     }
 
+    @Nonnull
     private Observable[] dependencies(Observable... deps) {
         List<Observable> dependencies = new ArrayList<>();
         dependencies.add(observable);
@@ -546,6 +610,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
     }
 
     interface StreamOp {
+        @Nonnull
         Stream apply(@Nonnull Stream stream);
 
         @Nullable
@@ -553,6 +618,7 @@ abstract class AbstractObservableStream<T> implements ObservableStream<T> {
     }
 
     static class StreamOpAdapter implements StreamOp {
+        @Nonnull
         @Override
         public Stream apply(@Nonnull Stream stream) {
             return stream;

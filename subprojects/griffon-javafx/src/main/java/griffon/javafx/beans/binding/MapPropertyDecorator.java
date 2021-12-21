@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.ObjectBinding;
@@ -43,10 +44,11 @@ import static java.util.Objects.requireNonNull;
 public class MapPropertyDecorator<K, V> extends MapProperty<K, V> {
     private final MapProperty<K, V> delegate;
 
-    public MapPropertyDecorator(MapProperty<K, V> delegate) {
+    public MapPropertyDecorator(@Nonnull MapProperty<K, V> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final MapProperty<K, V> getDelegate() {
         return delegate;
     }

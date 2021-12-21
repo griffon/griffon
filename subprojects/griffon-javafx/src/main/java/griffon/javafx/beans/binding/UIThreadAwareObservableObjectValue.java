@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.value.ObservableValue;
 
 /**
@@ -24,7 +25,7 @@ import javafx.beans.value.ObservableValue;
  * @since 2.13.0
  */
 class UIThreadAwareObservableObjectValue<T> extends UIThreadAwareObservableValue<T> {
-    UIThreadAwareObservableObjectValue(ObservableValue<T> delegate) {
+    UIThreadAwareObservableObjectValue(@Nonnull ObservableValue<T> delegate) {
         super(delegate);
     }
 

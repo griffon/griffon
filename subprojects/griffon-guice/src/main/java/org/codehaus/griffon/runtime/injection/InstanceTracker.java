@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.inject.Scopes.isSingleton;
-import static griffon.util.GriffonClassUtils.hasMethodAnnotatedwith;
-import static griffon.util.GriffonClassUtils.invokeAnnotatedMethod;
+import static griffon.core.util.GriffonClassUtils.hasMethodAnnotatedwith;
+import static griffon.core.util.GriffonClassUtils.invokeAnnotatedMethod;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Objects.requireNonNull;
 
@@ -47,13 +47,13 @@ class InstanceTracker {
 
     private com.google.inject.Injector injector;
 
-    public void setInjector(@Nonnull Injector injector) {
-        this.injector = injector;
-    }
-
     @Nonnull
     public Injector getInjector() {
         return injector;
+    }
+
+    public void setInjector(@Nonnull Injector injector) {
+        this.injector = injector;
     }
 
     @Nonnull

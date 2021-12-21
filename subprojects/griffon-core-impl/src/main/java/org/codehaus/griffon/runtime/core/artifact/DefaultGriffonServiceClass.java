@@ -20,7 +20,7 @@ package org.codehaus.griffon.runtime.core.artifact;
 import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonServiceClass;
-import griffon.util.GriffonClassUtils;
+import griffon.core.util.GriffonClassUtils;
 
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -50,7 +50,7 @@ public class DefaultGriffonServiceClass extends DefaultGriffonClass implements G
                 String methodName = method.getName();
                 if (!serviceCache.contains(methodName) &&
                     GriffonClassUtils.isPlainMethod(method) &&
-                    !GriffonClassUtils.isEventHandler(methodName)) {
+                    !GriffonClassUtils.isEventHandler(method)) {
                     serviceCache.add(methodName);
                 }
             }

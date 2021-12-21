@@ -17,8 +17,10 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.transform.ChangeListener;
+import griffon.annotations.javafx.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -56,8 +58,9 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(ChangeListener.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class ChangeListenerASTTransformation extends AbstractASTTransformation {
+public class ChangeListenerASTTransformation extends AbstractASTTransformation implements AnnotationHandler {
     private static final ClassNode CHANGE_LISTENER_CLASS = makeClassSafe(ChangeListener.class);
     private static final ClassNode JAVAFX_CHANGE_LISTENER_CLASS = makeClassSafe(javafx.beans.value.ChangeListener.class);
     private static final ClassNode JAVAFX_WEAK_CHANGE_LISTENER_CLASS = makeClassSafe(WeakChangeListener.class);

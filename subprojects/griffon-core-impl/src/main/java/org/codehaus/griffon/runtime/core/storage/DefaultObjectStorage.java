@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.StringUtils.isBlank;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 

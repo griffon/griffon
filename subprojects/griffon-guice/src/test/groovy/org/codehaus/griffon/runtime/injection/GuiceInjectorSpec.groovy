@@ -144,6 +144,7 @@ class GuiceInjectorSpec extends Specification {
         @Inject Engine engine
     }
 
+    @SuppressWarnings('EmptyClass')
     static class Engine {
 
     }

@@ -21,9 +21,9 @@ import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import griffon.core.Configuration;
 import griffon.core.MutableConfiguration;
-import griffon.util.AbstractMapResourceBundle;
-import griffon.util.CompositeResourceBundle;
-import griffon.util.ConfigUtils;
+import griffon.core.util.ConfigUtils;
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle;
+import org.codehaus.griffon.runtime.core.bundles.CompositeResourceBundle;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -32,8 +32,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import static griffon.util.ConfigUtils.getConfigValue;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.core.util.ConfigUtils.getConfigValue;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
@@ -62,23 +62,16 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
 
     @Nullable
     @Override
-    public Object remove(@Nonnull String key) {
+    public <T> T remove(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);
         if (mutableKeyValues.containsKey(key)) {
             removedKeys.add(key);
-            return mutableKeyValues.remove(key);
+            return (T) mutableKeyValues.remove(key);
         } else if (!removedKeys.contains(key) && delegate.containsKey(key)) {
             removedKeys.add(key);
             return delegate.get(key);
         }
         return null;
-    }
-
-    @Nullable
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T removeAs(@Nonnull String key) {
-        return (T) remove(key);
     }
 
     @Nullable
@@ -107,7 +100,7 @@ public class DelegatingMutableConfiguration extends ConfigurationDecorator imple
 
     @Nullable
     @Override
-    public Object get(@Nonnull String key) {
+    public <T> T get(@Nonnull String key) {
         requireNonBlank(key, ERROR_KEY_BLANK);
         try {
             return getConfigValue(mutableKeyValues, key);

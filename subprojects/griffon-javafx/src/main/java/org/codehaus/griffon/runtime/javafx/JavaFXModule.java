@@ -27,7 +27,7 @@ import griffon.javafx.support.ActionMatcher;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
 import org.codehaus.griffon.runtime.javafx.controller.JavaFXActionFactory;
 import org.codehaus.griffon.runtime.javafx.controller.JavaFXActionManager;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.inject.Named;
 

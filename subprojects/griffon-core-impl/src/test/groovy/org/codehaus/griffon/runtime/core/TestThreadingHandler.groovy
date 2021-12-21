@@ -17,10 +17,18 @@
  */
 package org.codehaus.griffon.runtime.core
 
+import griffon.annotations.core.Nonnull
+import griffon.core.threading.UIThreadManager
 import org.codehaus.griffon.runtime.core.threading.AbstractThreadingHandler
+
+import javax.inject.Inject
 
 /**
  * @author Andres Almiray
  */
 class TestThreadingHandler extends AbstractThreadingHandler {
+    @Inject
+    TestThreadingHandler(@Nonnull UIThreadManager uiThreadManager) {
+        super(uiThreadManager)
+    }
 }

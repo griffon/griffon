@@ -17,16 +17,17 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.LongExpression;
 import javafx.beans.value.ChangeListener;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareLongExpression extends LongExpressionDecorator implements UIThreadAware {
-    UIThreadAwareLongExpression(LongExpression delegate) {
+    UIThreadAwareLongExpression(@Nonnull LongExpression delegate) {
         super(delegate);
     }
 

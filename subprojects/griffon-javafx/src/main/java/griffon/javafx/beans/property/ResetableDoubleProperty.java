@@ -49,11 +49,13 @@ public class ResetableDoubleProperty extends AbstractResetableProperty<Number> {
         super(bean, name, baseValue);
     }
 
+    @Nonnull
     @Override
     protected Property<Number> writableBaseValueProperty() {
         return writableBaseValueDoubleProperty();
     }
 
+    @Nonnull
     protected DoubleProperty writableBaseValueDoubleProperty() {
         if (baseValue == null) {
             baseValue = new SimpleDoubleProperty(this, "baseValue");
@@ -61,20 +63,24 @@ public class ResetableDoubleProperty extends AbstractResetableProperty<Number> {
         return baseValue;
     }
 
+    @Nonnull
     @Override
     public ReadOnlyProperty<Number> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
+    @Nonnull
     public ReadOnlyDoubleProperty baseValueDoubleProperty() {
         return writableBaseValueDoubleProperty();
     }
 
+    @Nonnull
     @Override
     public Property<Number> valueProperty() {
         return valueDoubleProperty();
     }
 
+    @Nonnull
     public DoubleProperty valueDoubleProperty() {
         if (value == null) {
             value = new SimpleDoubleProperty(this, "value");

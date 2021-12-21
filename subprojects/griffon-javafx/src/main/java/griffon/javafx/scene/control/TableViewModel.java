@@ -27,11 +27,14 @@ import javafx.scene.control.TableView;
  * @since 2.11.0
  */
 public interface TableViewModel<E> {
+    @Nonnull
     ObservableList<E> getSource();
 
+    @Nonnull
     TableViewFormat<E> getFormat();
 
-    TableColumn<E, ?> getColumnAt(int index);
+    @Nonnull
+    TableColumn<E,?> getColumnAt(int index);
 
     void attachTo(@Nonnull TableView<E> tableView);
 

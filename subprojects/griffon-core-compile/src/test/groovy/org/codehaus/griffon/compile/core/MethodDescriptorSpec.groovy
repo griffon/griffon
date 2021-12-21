@@ -30,7 +30,7 @@ import static org.codehaus.griffon.compile.core.MethodDescriptor.typeParams
 import static org.codehaus.griffon.compile.core.MethodDescriptor.types
 
 @Unroll
-class MethodDescriptorSpec extends Specification  {
+class MethodDescriptorSpec extends Specification implements BaseConstants {
     void "Can build a type descriptor with #args"() {
         expect:
         new MethodDescriptor.Type(* args).signature() == signature
@@ -51,11 +51,11 @@ class MethodDescriptorSpec extends Specification  {
         wildcard.super == issuper
 
         where:
-        args                                                          | signature                  | isextends | issuper
-        []                                                            | '?'                        | false     | false
-        [types(type(BaseConstants.JAVA_UTIL_LIST))]                   | '? extends java.util.List' | true      | false
-        [Wildcard.EXTENDS, types(type(BaseConstants.JAVA_UTIL_LIST))] | '? extends java.util.List' | true      | false
-        [Wildcard.SUPER, types(type(BaseConstants.JAVA_UTIL_LIST))]   | '? super java.util.List'   | false     | true
+        args                                            | signature                  | isextends | issuper
+        []                                              | '?'                        | false     | false
+        [types(type(JAVA_UTIL_LIST))]                   | '? extends java.util.List' | true      | false
+        [Wildcard.EXTENDS, types(type(JAVA_UTIL_LIST))] | '? extends java.util.List' | true      | false
+        [Wildcard.SUPER, types(type(JAVA_UTIL_LIST))]   | '? super java.util.List'   | false     | true
     }
 
     void "Can build a method descriptor with #args"() {
@@ -77,63 +77,63 @@ class MethodDescriptorSpec extends Specification  {
     }
 
     @Shared
-    private static List TYPE_ARGUMENTS = [
+    private List TYPE_ARGUMENTS = [
         [
-            BaseConstants.JAVA_LANG_STRING
+            JAVA_LANG_STRING
         ],
         [
-            BaseConstants.JAVA_LANG_STRING,
+            JAVA_LANG_STRING,
             1
         ],
         [
-            BaseConstants.JAVA_UTIL_LIST,
+            JAVA_UTIL_LIST,
             0
         ],
         [
-            BaseConstants.JAVA_UTIL_LIST,
+            JAVA_UTIL_LIST,
             1,
-            type(BaseConstants.T)
+            type(T)
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            BaseConstants.JAVA_LANG_STRING
+            types(type(ANNOTATION_NONNULL)),
+            JAVA_LANG_STRING
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            BaseConstants.JAVA_LANG_STRING,
+            types(type(ANNOTATION_NONNULL)),
+            JAVA_LANG_STRING,
             1
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            BaseConstants.JAVA_UTIL_LIST,
+            types(type(ANNOTATION_NONNULL)),
+            JAVA_UTIL_LIST,
             0
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            BaseConstants.JAVA_UTIL_LIST,
+            types(type(ANNOTATION_NONNULL)),
+            JAVA_UTIL_LIST,
             1,
-            type(BaseConstants.T)
+            type(T)
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            BaseConstants.JAVA_UTIL_LIST,
-            type(BaseConstants.T)
+            types(type(ANNOTATION_NONNULL)),
+            JAVA_UTIL_LIST,
+            type(T)
         ],
         [
             null,
-            BaseConstants.JAVA_UTIL_LIST,
+            JAVA_UTIL_LIST,
             1,
             null
         ],
         [
-            BaseConstants.JAVA_UTIL_MAP,
+            JAVA_UTIL_MAP,
             0,
             types("K", "V")
         ],
     ]
 
     @Shared
-    private static List TYPE_SIGNATURES = [
+    private List TYPE_SIGNATURES = [
         "java.lang.String",
         "java.lang.String[]",
         "java.util.List",
@@ -148,89 +148,89 @@ class MethodDescriptorSpec extends Specification  {
     ]
 
     @Shared
-    private static String METHOD_NAME = 'doSomething'
+    private String METHOD_NAME = 'doSomething'
 
     @Shared
-    private static String JAVA_LANG_EXCEPTION = 'java.lang.Exception'
+    private String JAVA_LANG_EXCEPTION = 'java.lang.Exception'
 
     @Shared
-    private static List METHOD_ARGUMENTS = [
+    private List METHOD_ARGUMENTS = [
         [
-            type(BaseConstants.JAVA_LANG_STRING),
+            type(JAVA_LANG_STRING),
             METHOD_NAME
         ],
         [
-            type(BaseConstants.JAVA_LANG_STRING),
+            type(JAVA_LANG_STRING),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
+            types(type(JAVA_LANG_STRING))
         ],
         [
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(T),
+            typeParams(T),
             METHOD_NAME
         ],
         [
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(T),
+            typeParams(T),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
+            types(type(JAVA_LANG_STRING))
         ],
         [
             Modifier.PRIVATE,
-            type(BaseConstants.JAVA_LANG_STRING),
-            METHOD_NAME
-        ],
-        [
-            Modifier.PRIVATE,
-            type(BaseConstants.JAVA_LANG_STRING),
-            METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
-        ],
-        [
-            Modifier.PRIVATE,
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(JAVA_LANG_STRING),
             METHOD_NAME
         ],
         [
             Modifier.PRIVATE,
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(JAVA_LANG_STRING),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
+            types(type(JAVA_LANG_STRING))
         ],
         [
-            type(BaseConstants.JAVA_LANG_STRING),
+            Modifier.PRIVATE,
+            type(T),
+            typeParams(T),
+            METHOD_NAME
+        ],
+        [
+            Modifier.PRIVATE,
+            type(T),
+            typeParams(T),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
+            types(type(JAVA_LANG_STRING))
+        ],
+        [
+            type(JAVA_LANG_STRING),
+            METHOD_NAME,
+            types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(T),
+            typeParams(T),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
-            throwing(type(JAVA_LANG_EXCEPTION))
-        ],
-        [
-            Modifier.PRIVATE,
-            type(BaseConstants.JAVA_LANG_STRING),
-            METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
+            types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
             Modifier.PRIVATE,
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(JAVA_LANG_STRING),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
+            types(type(JAVA_LANG_STRING)),
+            throwing(type(JAVA_LANG_EXCEPTION))
+        ],
+        [
+            Modifier.PRIVATE,
+            type(T),
+            typeParams(T),
+            METHOD_NAME,
+            types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
     ]
 
     @Shared
-    private static List METHOD_SIGNATURES = [
+    private List METHOD_SIGNATURES = [
         'public java.lang.String doSomething()',
         'public java.lang.String doSomething(java.lang.String arg0)',
         'public <T> T doSomething()',
@@ -246,95 +246,95 @@ class MethodDescriptorSpec extends Specification  {
     ]
 
     @Shared
-    private static List ANNOTATED_METHOD_ARGUMENTS = [
+    private List ANNOTATED_METHOD_ARGUMENTS = [
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            type(BaseConstants.JAVA_LANG_STRING),
+            types(type(ANNOTATION_NONNULL)),
+            type(JAVA_LANG_STRING),
             METHOD_NAME
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            type(BaseConstants.JAVA_LANG_STRING),
+            types(type(ANNOTATION_NONNULL)),
+            type(JAVA_LANG_STRING),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
+            types(type(JAVA_LANG_STRING))
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            types(type(ANNOTATION_NONNULL)),
+            type(T),
+            typeParams(T),
             METHOD_NAME
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            types(type(ANNOTATION_NONNULL)),
+            type(T),
+            typeParams(T),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
+            types(type(JAVA_LANG_STRING))
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
-            type(BaseConstants.JAVA_LANG_STRING),
+            type(JAVA_LANG_STRING),
             METHOD_NAME
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
-            type(BaseConstants.JAVA_LANG_STRING),
+            type(JAVA_LANG_STRING),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
+            types(type(JAVA_LANG_STRING))
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(T),
+            typeParams(T),
             METHOD_NAME
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(T),
+            typeParams(T),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING))
+            types(type(JAVA_LANG_STRING))
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            type(BaseConstants.JAVA_LANG_STRING),
+            types(type(ANNOTATION_NONNULL)),
+            type(JAVA_LANG_STRING),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
+            types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            types(type(ANNOTATION_NONNULL)),
+            type(T),
+            typeParams(T),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
+            types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
-            type(BaseConstants.JAVA_LANG_STRING),
+            type(JAVA_LANG_STRING),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
+            types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
         [
-            types(type(BaseConstants.JAVAX_ANNOTATION_NONNULL)),
+            types(type(ANNOTATION_NONNULL)),
             Modifier.PRIVATE,
-            type(BaseConstants.T),
-            typeParams(BaseConstants.T),
+            type(T),
+            typeParams(T),
             METHOD_NAME,
-            types(type(BaseConstants.JAVA_LANG_STRING)),
+            types(type(JAVA_LANG_STRING)),
             throwing(type(JAVA_LANG_EXCEPTION))
         ],
     ]
 
     @Shared
-    private static List ANNOTATED_METHOD_SIGNATURES = [
+    private List ANNOTATED_METHOD_SIGNATURES = [
         '@griffon.annotations.core.Nonnull public java.lang.String doSomething()',
         '@griffon.annotations.core.Nonnull public java.lang.String doSomething(java.lang.String arg0)',
         '@griffon.annotations.core.Nonnull public <T> T doSomething()',

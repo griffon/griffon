@@ -19,6 +19,7 @@ package griffon.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.ConverterRegistry;
 
 import java.util.Map;
 import java.util.Properties;
@@ -32,10 +33,224 @@ public interface Configuration {
     /**
      * Searches for the key in this configuration.
      *
-     * @param key the key to search
-     * @return true if the context (or its parent) contains the given key, false otherwise
+     * @param key the key to search. Must not be {@code null}.
+     * @return {@code true} if the context (or its parent) contains the given key, {@code false} otherwise.
      */
     boolean containsKey(@Nonnull String key);
+
+    /**
+     * /**
+     * Finds a value associated with the given key. The value is
+     * blindly cast to type {@code T} if found.
+     *
+     * @param key the key to search. Must not be {@code null}.
+     * @return the value associated with {@code key}, {@code null} otherwise.
+     * @throws ClassCastException if the value is not of the expected type.
+     */
+    @Nullable
+    <T> T get(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * blindly cast to type {@code T} if found. If not found then the
+     * supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found. May be {@code null}.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws ClassCastException if the value is not of the expected type.
+     */
+    @Nullable
+    <T> T get(@Nonnull String key, @Nullable T defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code boolean} if found.
+     *
+     * @param key the key to search. Must not be {@code null}.
+     * @return the value associated with {@code key}, or {@code false} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code boolean}.
+     */
+    boolean getAsBoolean(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code boolean} if found. If not found then the
+     * supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code boolean}.
+     */
+    boolean getAsBoolean(@Nonnull String key, boolean defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to an {@code int} if found.
+     *
+     * @param key the key to search. Must not be {@code null}.
+     * @return the value associated with {@code key}, or {@code 0} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to an {@code int}.
+     */
+    int getAsInt(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to an {@code int} if found. If not found then the
+     * supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to an {@code int}.
+     */
+    int getAsInt(@Nonnull String key, int defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code long} if found.
+     *
+     * @param key the key to search. Must not be {@code null}.
+     * @return the value associated with {@code key}, or {@code 0L} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code long}.
+     */
+    long getAsLong(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code long} if found. If not found then the
+     * supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code long}.
+     */
+    long getAsLong(@Nonnull String key, long defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code float} if found.
+     *
+     * @param key the key to search. Must not be {@code null}.
+     * @return the value associated with {@code key}, or {@code 0.0f} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code float}.
+     */
+    float getAsFloat(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code float} if found. If not found then the
+     * supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code float}.
+     */
+    float getAsFloat(@Nonnull String key, float defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code double} if found.
+     *
+     * @param key the key to search. Must not be {@code null}.
+     * @return the value associated with {@code key}, or {@code 0.0d} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code double}.
+     */
+    double getAsDouble(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code double} if found. If not found then the
+     * supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to a {@code double}.
+     */
+    double getAsDouble(@Nonnull String key, double defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code String} if found.
+     *
+     * @param key the key to search. Must not be {@code null}.
+     * @return the literal value associated with {@code key}, or {@code null} if it was not found.
+     */
+    @Nullable
+    String getAsString(@Nonnull String key);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to a {@code String} if found. If not found then the
+     * supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found. May be {@code null}.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     */
+    @Nullable
+    String getAsString(@Nonnull String key, @Nullable String defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to type {@code T} if found using a {@code Converter}.
+     *
+     * @param key  the key to search. Must not be {@code null}.
+     * @param type the type to be returned. Must not be {@code null}.
+     * @return the value associated with {@code key}, {@code null} otherwise.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to the target type {@code T}.
+     */
+    @Nullable
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to type {@code T}if found using a {@code Converter}.
+     *
+     * @param key    the key to search. Must not be {@code null}.
+     * @param type   the type to be returned. Must not be {@code null}.
+     * @param format format used to convert the value. Must not be {@code null}.
+     * @return the value associated with {@code key}, {@code null} otherwise.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to the target type {@code T}.
+     */
+    @Nullable
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to type {@code T} if found using a {@code Converter}.
+     * If not found then the supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param type         the type to be returned. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found. May be {@code null}.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to the target type {@code T}.
+     */
+    @Nullable
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
+
+    /**
+     * Finds a value associated with the given key. The value is
+     * converted to type {@code T} if found using a {@code Converter}.
+     * If not found then the supplied {@code defaultValue} will be returned.
+     *
+     * @param key          the key to search. Must not be {@code null}.
+     * @param type         the type to be returned. Must not be {@code null}.
+     * @param format       format used to convert the value. Must not be {@code null}.
+     * @param defaultValue the value to be returned if the key is not found. May be {@code null}.
+     * @return the value associated with {@code key}, or {@code defaultValue} if it was not found.
+     * @throws griffon.converter.ConversionException if the resource could not be converted to the target type {@code T}.
+     */
+    @Nullable
+    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format, @Nullable T defaultValue);
+
+    @Nonnull
+    ConverterRegistry getConverterRegistry();
 
     @Nonnull
     Map<String, Object> asFlatMap();
@@ -48,33 +263,13 @@ public interface Configuration {
 
     /**
      * Returns the value associated with the given key.
-     *
-     * @param key the key to search
-     * @return the value associated with the key or <tt>null<</tt> if not found.
-     */
-    @Nullable
-    Object get(@Nonnull String key);
-
-    /**
-     * Returns the value associated with the given key.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key was not found
-     * @param <T>          the type of the value
-     * @return returns the value associated with the key, <tt>defaultValue</tt> if the key was not found
-     */
-    @Nullable
-    <T> T get(@Nonnull String key, @Nullable T defaultValue);
-
-    /**
-     * Returns the value associated with the given key.
      * Convenience method to use in Groovy aware environments.
      *
      * @param key the key to search
      * @return the value associated with the key or <tt>null<</tt> if not found.
      */
     @Nullable
-    Object getAt(@Nonnull String key);
+    <T> T getAt(@Nonnull String key);
 
     /**
      * Returns the value associated with the given key.
@@ -86,187 +281,4 @@ public interface Configuration {
      */
     @Nullable
     <T> T getAt(@Nonnull String key, @Nullable T defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>boolean</tt> if found.
-     *
-     * @param key the key to search
-     */
-    boolean getAsBoolean(@Nonnull String key);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>boolean</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key is not found
-     */
-    boolean getAsBoolean(@Nonnull String key, boolean defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to an <tt>int</tt> if found.
-     *
-     * @param key the key to search
-     */
-    int getAsInt(@Nonnull String key);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to an <tt>int</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key is not found
-     */
-    int getAsInt(@Nonnull String key, int defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>long</tt> if found.
-     *
-     * @param key the key to search
-     */
-    long getAsLong(@Nonnull String key);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>long</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key is not found
-     */
-    long getAsLong(@Nonnull String key, long defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>float</tt> if found.
-     *
-     * @param key the key to search
-     */
-    float getAsFloat(@Nonnull String key);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>float</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key is not found
-     */
-    float getAsFloat(@Nonnull String key, float defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>double</tt> if found.
-     *
-     * @param key the key to search
-     */
-    double getAsDouble(@Nonnull String key);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>double</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key is not found
-     */
-    double getAsDouble(@Nonnull String key, double defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>String</tt> if found.
-     *
-     * @param key the key to search
-     */
-    @Nullable
-    String getAsString(@Nonnull String key);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to a <tt>String</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key is not found
-     */
-    @Nullable
-    String getAsString(@Nonnull String key, @Nullable String defaultValue);
-
-    /**
-     * /**
-     * Finds a value associated with the given key. The value is
-     * blindly cast to type <tt>T</tt> if found.
-     *
-     * @param key the key to search
-     * @since 2.5.0
-     */
-    @Nullable
-    <T> T getAs(@Nonnull String key);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * blindly cast to type <tt>T</tt> if found. If not found then the
-     * supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param defaultValue the value to be returned if the key is not found
-     * @since 2.5.0
-     */
-    @Nullable
-    <T> T getAs(@Nonnull String key, @Nullable T defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
-     *
-     * @param key  the key to search
-     * @param type the type to be returned
-     * @since 2.5.0
-     */
-    @Nullable
-    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
-     *
-     * @param key  the key to search
-     * @param type the type to be returned
-     * @param format format used to convert the value
-     * @since 2.11.0
-     */
-    @Nullable
-    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
-     * If not found then the supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param type         the type to be returned
-     * @param defaultValue the value to be returned if the key is not found
-     * @since 2.5.0
-     */
-    @Nullable
-    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nullable T defaultValue);
-
-    /**
-     * Finds a value associated with the given key. The value is
-     * converted to type <tt>T</tt> if found using a {@code PropertyEditor}.
-     * If not found then the supplied <tt>defaultValue</tt> will be returned.
-     *
-     * @param key          the key to search
-     * @param type         the type to be returned
-     * @param format format used to convert the value
-     * @param defaultValue the value to be returned if the key is not found
-     * @since 2.11.0
-     */
-    @Nullable
-    <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type, @Nonnull String format, @Nullable T defaultValue);
 }

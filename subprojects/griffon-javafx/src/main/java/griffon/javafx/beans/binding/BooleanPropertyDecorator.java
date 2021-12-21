@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.StringBinding;
@@ -36,10 +37,11 @@ import static java.util.Objects.requireNonNull;
 public class BooleanPropertyDecorator extends BooleanProperty {
     private final BooleanProperty delegate;
 
-    public BooleanPropertyDecorator(BooleanProperty delegate) {
+    public BooleanPropertyDecorator(@Nonnull BooleanProperty delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final BooleanProperty getDelegate() {
         return delegate;
     }

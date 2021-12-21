@@ -38,13 +38,13 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
     }
 
     @Override
-    public void runInsideUIAsync(@Nonnull Runnable runnable) {
+    public void executeInsideUIAsync(@Nonnull Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         Platform.runLater(runnable);
     }
 
     @Override
-    public void runInsideUISync(@Nonnull final Runnable runnable) {
+    public void executeInsideUISync(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         if (isUIThread()) {
             runnable.run();
@@ -53,7 +53,7 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
                 try {
                     runnable.run();
                 } catch (Throwable throwable) {
-                    getExceptionHandler().uncaughtException(Thread.currentThread(), throwable);
+                    getExceptionHandler().handleUncaught(Thread.currentThread(), throwable);
                 }
             }, null);
 
@@ -61,7 +61,7 @@ public class JavaFXUIThreadManager extends AbstractUIThreadManager {
             try {
                 task.get();
             } catch (InterruptedException | ExecutionException e) {
-                getExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                getExceptionHandler().handleUncaught(Thread.currentThread(), e);
             }
         }
     }

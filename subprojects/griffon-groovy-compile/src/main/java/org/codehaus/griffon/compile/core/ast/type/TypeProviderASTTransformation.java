@@ -17,9 +17,8 @@
  */
 package org.codehaus.griffon.compile.core.ast.type;
 
-import griffon.metadata.TypeProviderFor;
-import org.codehaus.griffon.compile.core.processor.type.Type;
-import org.codehaus.griffon.compile.core.processor.type.TypeCollector;
+import org.kordamp.jipsy.processor.type.Type;
+import org.kordamp.jipsy.processor.type.TypeCollector;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.ModuleNode;
@@ -29,7 +28,8 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.kordamp.gipsy.transform.GipsyASTTransformation;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.TypeProviderFor;
 import org.kordamp.jipsy.processor.CheckResult;
 import org.kordamp.jipsy.processor.LogLocation;
 import org.kordamp.jipsy.processor.Persistence;

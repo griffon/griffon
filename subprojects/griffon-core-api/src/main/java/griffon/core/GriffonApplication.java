@@ -28,6 +28,7 @@ import griffon.core.event.EventRouter;
 import griffon.core.i18n.MessageSource;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupManager;
+import griffon.core.properties.PropertySource;
 import griffon.core.resources.ResourceHandler;
 import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
@@ -45,7 +46,7 @@ import java.util.Map;
  * @author Andres Almiray
  * @since 0.0.0
  */
-public interface GriffonApplication extends Observable {
+public interface GriffonApplication extends PropertySource {
     String PROPERTY_LOCALE = "locale";
     String PROPERTY_PHASE = "phase";
 
@@ -55,6 +56,11 @@ public interface GriffonApplication extends Observable {
     @Nonnull
     ApplicationClassLoader getApplicationClassLoader();
 
+    /**
+     * Retrieves the {@code Configuration} of this application.
+     *
+     * @return the {@code Configuration} used by this application. Never returns {@code null}.
+     */
     @Nonnull
     Configuration getConfiguration();
 
@@ -103,47 +109,52 @@ public interface GriffonApplication extends Observable {
     // --== Lifecycle ==--
 
     /**
-     * Executes the 'Initialize' life cycle phase.
+     * Lifecycle method. Signals the application to bootstrap itself and load its configuration.
+     * {@code ApplicationPhase} should be set automatically to {@code ApplicationPhase.INITIALIZE}.
      */
     void initialize();
 
     /**
-     * Executes the 'Startup' life cycle phase.
+     * Lifecycle method. Signals the application to assemble its components/artifacts.
+     * {@code ApplicationPhase} should be set automatically to {@code ApplicationPhase.STARTUP}.
      */
     void startup();
 
     /**
-     * Executes the 'Ready' life cycle phase.
+     * Lifecycle method. Signals the application to display its main entry point (Window).
+     * {@code ApplicationPhase} should be set automatically to {@code ApplicationPhase.READY}, followed
+     * immediately with {@code ApplicationPhase.MAIN} once the ready sequence has finished.
      */
     void ready();
 
     /**
-     * Executes the 'Shutdown' life cycle phase.
+     * Lifecycle method. Shutdowns the application gracefully.
+     * {@code ApplicationPhase} should be set automatically to {@code ApplicationPhase.SHUTDOWN}.
      *
-     * @return false if the shutdown sequence was aborted
+     * @return the exit code that may be sent to the underlying platform process as exit value. Never returns {@code null}.
      */
     boolean shutdown();
 
     /**
-     * Queries any available ShutdownHandlers.
+     * Queries any available {@code ShutdownHandler}s do determine if the application can be shutdown.
      *
-     * @return true if the shutdown sequence can proceed, false otherwise
+     * @return {@code true} if the shutdown sequence can proceed, (@code false} otherwise
      */
     boolean canShutdown();
 
     /**
-     * Registers a ShutdownHandler on this application
+     * Registers a {@code ShutdownHandler} on this application
      *
-     * @param handler the shutdown handler to be registered; null and/or
-     *                duplicated values should be ignored
+     * @param handler the shutdown handler to be registered. Must not be {@code null}.
+     *                Duplicate values must be ignored.
      */
     void addShutdownHandler(@Nonnull ShutdownHandler handler);
 
     /**
-     * Removes a ShutdownHandler from this application
+     * Removes a {@code ShutdownHandler} from this application
      *
-     * @param handler the shutdown handler to be removed; null and/or
-     *                duplicated values should be ignored
+     * @param handler the shutdown handler to be removed. Must not be {@code null}.
+     *                Duplicate values must be ignored.
      */
     void removeShutdownHandler(@Nonnull ShutdownHandler handler);
 
@@ -152,7 +163,7 @@ public interface GriffonApplication extends Observable {
     /**
      * Gets the application locale.
      *
-     * @return the current Locale used by the application. Never returns null.
+     * @return the current Locale used by the application. Never returns {@code null}.
      */
     @Nonnull
     Locale getLocale();
@@ -176,7 +187,7 @@ public interface GriffonApplication extends Observable {
     /**
      * Returns the current phase.
      *
-     * @return returns the current ApplicationPhase. Never returns null.
+     * @return returns the current {@code ApplicationPhase}. Never returns {@code null}.
      */
     @Nonnull
     ApplicationPhase getPhase();
@@ -184,10 +195,10 @@ public interface GriffonApplication extends Observable {
     /**
      * Returns the arguments set on the command line (if any).<p>
      *
-     * @return an array of command line arguments. Never returns null.
+     * @return an array of command line arguments. Never returns {@code null}.
      */
     @Nonnull
-    String[] getStartupArgs();
+    String[] getStartupArguments();
 
     /**
      * Returns a Logger instance suitable for this application.

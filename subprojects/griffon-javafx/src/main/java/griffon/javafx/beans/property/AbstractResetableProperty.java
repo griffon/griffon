@@ -25,7 +25,7 @@ import javafx.beans.property.Property;
 
 import java.util.Objects;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.StringUtils.isBlank;
 
 /**
  * @author Andres Almiray
@@ -82,6 +82,7 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         dirty = createDirtyBinding();
     }
 
+    @Nonnull
     protected BooleanBinding createDirtyBinding() {
         return Bindings.createBooleanBinding(this::checkValuesAreNotEqual, baseValueProperty(), valueProperty());
     }
@@ -90,8 +91,10 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return !Objects.equals(getBaseValue(), getValue());
     }
 
+    @Nonnull
     protected abstract Property<T> writableBaseValueProperty();
 
+    @Nonnull
     @Override
     public BooleanBinding dirtyProperty() {
         return dirty;
@@ -109,6 +112,7 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return valueProperty().getValue();
     }
 
+    @Nonnull
     @Override
     public ResetableProperty<T> setValue(@Nullable T value) {
         valueProperty().setValue(value);
@@ -120,12 +124,14 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return dirty.get();
     }
 
+    @Nonnull
     @Override
     public ResetableProperty<T> rebase() {
         writableBaseValueProperty().setValue(getValue());
         return this;
     }
 
+    @Nonnull
     @Override
     public ResetableProperty<T> reset() {
         setValue(getBaseValue());
@@ -138,6 +144,7 @@ public abstract class AbstractResetableProperty<T> implements ResetableProperty<
         return bean;
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return name;

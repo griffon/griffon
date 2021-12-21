@@ -19,10 +19,10 @@ package browser
 
 import griffon.annotations.core.Nonnull
 import griffon.core.artifact.GriffonController
-import griffon.core.controller.ControllerAction
-import griffon.inject.MVCMember
+import griffon.annotations.controller.ControllerAction
+import griffon.annotations.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Threading
+import griffon.annotations.threading.Threading
 
 @Threading(Threading.Policy.SKIP)
 @ArtifactProviderFor(GriffonController)

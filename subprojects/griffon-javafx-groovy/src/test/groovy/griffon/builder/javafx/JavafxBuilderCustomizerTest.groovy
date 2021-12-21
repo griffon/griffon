@@ -17,12 +17,18 @@
  */
 package griffon.builder.javafx
 
-import org.junit.Test
+import javafx.embed.swing.JFXPanel
+import org.junit.jupiter.api.Test
 
 /**
  * @author Andres Almiray
  */
 class JavafxBuilderCustomizerTest {
+    static {
+        // initialize UI toolkit
+        new JFXPanel()
+    }
+
     @Test
     void builderInstanceSuccessfullyCreated() {
         new JavafxBuilderCustomizer()

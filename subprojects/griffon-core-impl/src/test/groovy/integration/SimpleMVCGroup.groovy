@@ -17,10 +17,10 @@
  */
 package integration
 
+import griffon.annotations.core.Nonnull
 import griffon.core.mvc.MVCGroup
 import org.codehaus.griffon.runtime.core.mvc.AbstractTypedMVCGroup
 
-import griffon.annotations.core.Nonnull
 import javax.inject.Named
 
 @Named('simple')

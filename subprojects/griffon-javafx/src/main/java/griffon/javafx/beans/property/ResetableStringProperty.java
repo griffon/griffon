@@ -49,11 +49,13 @@ public class ResetableStringProperty extends AbstractResetableProperty<String> {
         super(bean, name, baseValue);
     }
 
+    @Nonnull
     @Override
     protected Property<String> writableBaseValueProperty() {
         return writableBaseValueStringProperty();
     }
 
+    @Nonnull
     protected StringProperty writableBaseValueStringProperty() {
         if (baseValue == null) {
             baseValue = new SimpleStringProperty(this, "baseValue");
@@ -61,20 +63,24 @@ public class ResetableStringProperty extends AbstractResetableProperty<String> {
         return baseValue;
     }
 
+    @Nonnull
     @Override
     public ReadOnlyProperty<String> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
+    @Nonnull
     public ReadOnlyStringProperty baseValueStringProperty() {
         return writableBaseValueStringProperty();
     }
 
+    @Nonnull
     @Override
     public Property<String> valueProperty() {
         return valueStringProperty();
     }
 
+    @Nonnull
     public StringProperty valueStringProperty() {
         if (value == null) {
             value = new SimpleStringProperty(this, "value");

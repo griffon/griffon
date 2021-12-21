@@ -29,10 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-import static griffon.util.GriffonApplicationUtils.isMacOSX;
-import static griffon.util.GriffonNameUtils.getNaturalName;
-import static griffon.util.GriffonNameUtils.isNotBlank;
-import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.core.util.GriffonApplicationUtils.isMacOSX;
+import static griffon.core.util.TypeUtils.castToBoolean;
+import static griffon.util.StringUtils.getNaturalName;
+import static griffon.util.StringUtils.isNotBlank;
 
 /**
  * @author Andres Almiray

@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.core.Vetoable;
+import griffon.beans.Vetoable;
+import org.codehaus.griffon.compile.beans.VetoableConstants;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
-import org.codehaus.griffon.compile.core.VetoableConstants;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -48,8 +48,8 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeSupport;
 import java.lang.reflect.Modifier;
 
-import static griffon.util.GriffonNameUtils.getGetterName;
-import static griffon.util.GriffonNameUtils.getSetterName;
+import static griffon.util.StringUtils.getGetterName;
+import static griffon.util.StringUtils.getSetterName;
 import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PROTECTED;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
@@ -79,13 +79,13 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
-@AnnotationHandlerFor(griffon.transform.Vetoable.class)
+@AnnotationHandlerFor(griffon.annotations.beans.Vetoable.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class VetoableASTTransformation extends AbstractASTTransformation implements VetoableConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(VetoableASTTransformation.class);
     private static final ClassNode VETOABLE_CNODE = makeClassSafe(Vetoable.class);
     private static final ClassNode PROPERTY_VETO_EXCEPTION_CNODE = makeClassSafe(PropertyVetoException.class);
-    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Vetoable.class);
+    private static final ClassNode VETOABLE_ANNOTATION_CNODE = makeClassSafe(griffon.annotations.beans.Vetoable.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @Vetoable}.
@@ -119,7 +119,7 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
         } else {
             if ((((FieldNode) nodes[1]).getModifiers() & Modifier.FINAL) != 0) {
                 source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                    new SyntaxException("@griffon.transform.Vetoable cannot annotate a final property.",
+                    new SyntaxException("@griffon.transform.beans.Vetoable cannot annotate a final property.",
                         node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
                     source));
             }
@@ -161,7 +161,7 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
             if (propertyNode.getName().equals(fieldName)) {
                 if (field.isStatic()) {
                     source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                        new SyntaxException("@griffon.transform.Vetoable cannot annotate a static property.",
+                        new SyntaxException("@griffon.transform.beans.Vetoable cannot annotate a static property.",
                             node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
                         source));
                 } else {
@@ -171,7 +171,7 @@ public class VetoableASTTransformation extends AbstractASTTransformation impleme
             }
         }
         source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-            new SyntaxException("@griffon.transform.Vetoable must be on a property, not a field.  Try removing the private, protected, or public modifier.",
+            new SyntaxException("@griffon.transform.beans.Vetoable must be on a property, not a field.  Try removing the private, protected, or public modifier.",
                 node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
             source));
     }

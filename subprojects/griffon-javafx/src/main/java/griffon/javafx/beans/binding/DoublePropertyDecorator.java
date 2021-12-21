@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -39,10 +40,11 @@ import static java.util.Objects.requireNonNull;
 public class DoublePropertyDecorator extends DoubleProperty {
     private final DoubleProperty delegate;
 
-    public DoublePropertyDecorator(DoubleProperty delegate) {
+    public DoublePropertyDecorator(@Nonnull DoubleProperty delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final DoubleProperty getDelegate() {
         return delegate;
     }

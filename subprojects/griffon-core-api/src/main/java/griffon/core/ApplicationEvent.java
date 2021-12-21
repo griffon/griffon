@@ -17,7 +17,7 @@
  */
 package griffon.core;
 
-import static griffon.util.GriffonNameUtils.getClassNameForLowerCaseHyphenSeparatedName;
+import static griffon.util.StringUtils.getClassNameForLowerCaseHyphenSeparatedName;
 
 /**
  * Defines all the events triggered by the application.

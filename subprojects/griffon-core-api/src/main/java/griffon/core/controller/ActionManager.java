@@ -103,14 +103,4 @@ public interface ActionManager {
      * @since 2.1.0
      */
     void addActionHandler(@Nonnull ActionHandler actionHandler);
-
-    /**
-     * Register an {@code ActionInterceptor} with this instance.
-     *
-     * @param actionInterceptor the interceptor to be added to this ActionManager
-     *
-     * @deprecated use {@code addActionHandler} instead.
-     */
-    @Deprecated
-    void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor);
 }

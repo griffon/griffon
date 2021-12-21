@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.property;
 
+import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
@@ -30,16 +31,19 @@ public interface ResetableProperty<T> {
     /**
      * A property that tracks the base value of this {@code ResetableProperty}.
      */
+    @Nonnull
     ReadOnlyProperty<T> baseValueProperty();
 
     /**
      * A property that tracks the current value of this {@code ResetableProperty}.
      */
+    @Nonnull
     Property<T> valueProperty();
 
     /**
      * A property that tracks if the current value differs form the base value.
      */
+    @Nonnull
     BooleanBinding dirtyProperty();
 
     /**
@@ -63,6 +67,7 @@ public interface ResetableProperty<T> {
      *
      * @param value the new value
      */
+    @Nonnull
     ResetableProperty<T> setValue(@Nullable T value);
 
     /**
@@ -77,6 +82,7 @@ public interface ResetableProperty<T> {
      *
      * @return this {@code ResetableProperty}
      */
+    @Nonnull
     ResetableProperty<T> rebase();
 
     /**
@@ -84,6 +90,7 @@ public interface ResetableProperty<T> {
      *
      * @return this {@code ResetableProperty}
      */
+    @Nonnull
     ResetableProperty<T> reset();
 
     /**
@@ -101,5 +108,6 @@ public interface ResetableProperty<T> {
      *
      * @return the name or an empty {@code String}
      */
+    @Nonnull
     String getName();
 }

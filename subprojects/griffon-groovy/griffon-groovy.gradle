@@ -17,11 +17,12 @@
  */
 dependencies {
     api project(':griffon-core-impl')
-    api "org.codehaus.groovy:groovy:$groovyVersion"
-    api "org.codehaus.groovy:groovy-xml:$groovyVersion"
-
-    testImplementation "org.codehaus.groovy:groovy-swing:$groovyVersion"
+    api("org.codehaus.groovy:groovy-all:$groovyVersion") {
+        exclude group: 'junit', module: 'junit'
+    }
 
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')
+
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
 }

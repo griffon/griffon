@@ -26,20 +26,21 @@ import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
-import griffon.core.ApplicationEvent;
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.Contextual;
 import griffon.core.Context;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.events.NewInstanceEvent;
 import griffon.core.injection.Binding;
 import griffon.core.injection.Injector;
 import griffon.core.injection.InjectorFactory;
 import griffon.exceptions.FieldException;
 import griffon.exceptions.NewInstanceException;
-import griffon.inject.Contextual;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
-import griffon.annotations.core.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,17 +58,17 @@ import java.util.Map;
 import java.util.ServiceLoader;
 
 import static com.google.inject.util.Providers.guicify;
+import static griffon.core.util.GriffonClassUtils.getAllDeclaredFields;
+import static griffon.core.util.GriffonClassUtils.getPropertyDescriptors;
+import static griffon.core.util.GriffonClassUtils.invokeAnnotatedMethod;
+import static griffon.core.util.GriffonClassUtils.setFieldValue;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.namesFor;
-import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
-import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
-import static griffon.util.GriffonClassUtils.invokeAnnotatedMethod;
-import static griffon.util.GriffonClassUtils.setFieldValue;
 import static integration.GuiceInjector.moduleFromBindings;
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
+@ServiceProviderFor(InjectorFactory.class)
 public class GuiceInjectorFactory implements InjectorFactory {
     @Nonnull
     @Override
@@ -81,10 +82,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
     }
 
     private GuiceInjector createModules(@Nonnull final GriffonApplication application, @Nonnull final InjectorProvider injectorProvider, @Nonnull Iterable<Binding<?>> bindings) {
-        final InjectionListener<GriffonArtifact> injectionListener = injectee -> application.getEventRouter().publishEvent(
-            ApplicationEvent.NEW_INSTANCE.getName(),
-            asList(injectee.getClass(), injectee)
-        );
+        final InjectionListener<GriffonArtifact> injectionListener = injectee -> application.getEventRouter()
+            .publishEvent(NewInstanceEvent.of((Class<GriffonArtifact>) injectee.getClass(), injectee));
 
         final InjectionListener<Object> postConstructorInjectorListener = injectee -> {
             resolveContextualInjections(injectee, application);
@@ -151,7 +150,9 @@ public class GuiceInjectorFactory implements InjectorFactory {
         Map<String, InjectionPoint> injectionPoints = new LinkedHashMap<>();
         for (PropertyDescriptor descriptor : getPropertyDescriptors(injectee.getClass())) {
             Method method = descriptor.getWriteMethod();
-            if (method == null || isInjectable(method)) { continue; }
+            if (method == null || isInjectable(method)) {
+                continue;
+            }
             boolean nullable = method.getAnnotation(Nonnull.class) == null && findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) == null;
             InjectionPoint.Type type = resolveType(method);
             Field field = fields.get(descriptor.getName());
@@ -163,7 +164,9 @@ public class GuiceInjectorFactory implements InjectorFactory {
         }
 
         for (Field field : getAllDeclaredFields(injectee.getClass())) {
-            if (Modifier.isStatic(field.getModifiers()) || isInjectable(field)) { continue; }
+            if (Modifier.isStatic(field.getModifiers()) || isInjectable(field)) {
+                continue;
+            }
             if (!injectionPoints.containsKey(field.getName())) {
                 boolean nullable = field.getAnnotation(Nonnull.class) == null;
                 InjectionPoint.Type type = resolveType(field);
@@ -211,12 +214,12 @@ public class GuiceInjectorFactory implements InjectorFactory {
             this.type = type;
         }
 
+        protected abstract void apply(@Nonnull Context context, @Nonnull Object instance);
+
         protected enum Type {
             CONTEXTUAL,
             OTHER
         }
-
-        protected abstract void apply(@Nonnull Context context, @Nonnull Object instance);
     }
 
     protected static class FieldInjectionPoint extends InjectionPoint {
@@ -287,7 +290,8 @@ public class GuiceInjectorFactory implements InjectorFactory {
                                 method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
                                 "' in the application context to be injected on property '" + name +
                                 "' in " + instance.getClass().getName() + "). Property does not accept null values.");
-                        } return;
+                        }
+                        return;
                     }
 
                     method.invoke(instance, argValue);

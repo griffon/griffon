@@ -22,14 +22,13 @@ import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.Action;
 import griffon.core.controller.ActionHandler;
-import griffon.core.controller.ActionInterceptor;
 import griffon.core.controller.ActionManager;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static griffon.util.GriffonNameUtils.uncapitalize;
+import static griffon.util.StringUtils.requireNonBlank;
+import static griffon.util.StringUtils.uncapitalize;
 
 /**
  * @author Andres Almiray
@@ -95,12 +94,6 @@ public class NoopActionManager implements ActionManager {
 
     @Override
     public void addActionHandler(@Nonnull ActionHandler actionHandler) {
-
-    }
-
-    @Deprecated
-    @Override
-    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
 
     }
 }

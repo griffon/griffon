@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.MapProperty;
 import javafx.beans.value.ChangeListener;
@@ -31,7 +32,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwareMapProperty<K, V> extends MapPropertyDecorator<K, V> implements UIThreadAware {
-    UIThreadAwareMapProperty(MapProperty<K, V> delegate) {
+    UIThreadAwareMapProperty(@Nonnull MapProperty<K, V> delegate) {
         super(delegate);
     }
 

@@ -19,9 +19,12 @@ package org.codehaus.griffon.runtime.javafx.controller;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
+import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.javafx.support.JavaFXAction;
 import javafx.event.ActionEvent;
@@ -29,12 +32,8 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyEditor;
-
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
-import static griffon.util.GriffonNameUtils.isNotBlank;
-import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.core.util.TypeUtils.castToBoolean;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -73,7 +72,7 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
         toolkitAction.setOnAction(actionEvent -> actionManager.invokeAction(controller, actionMetadata.getActionName(), actionEvent));
 
-        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
+        addPropertyChangeListener(evt -> uiThreadManager.executeInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     protected JavaFXAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
@@ -199,9 +198,13 @@ public class JavaFXGriffonControllerAction extends AbstractAction {
 
     @Nullable
     public Image getImage() {
-        PropertyEditor editor = findEditor(Image.class);
-        editor.setValue(image);
-        return (Image) editor.getValue();
+        ConverterRegistry converterRegistry = getController().getApplication()
+            .getInjector().getInstance(ConverterRegistry.class);
+        Converter<Image> converter = converterRegistry.findConverter(Image.class);
+        if (converter != null) {
+            return converter.fromObject(image);
+        }
+        return null;
     }
 
     public void setImage(@Nullable String image) {

@@ -27,6 +27,7 @@ import griffon.core.artifact.GriffonClass;
  */
 public class ArtifactNotFoundException extends GriffonException {
     private static final long serialVersionUID = -7881105306242340254L;
+
     private static final String CAUSE = "cause";
     private static final String CLAZZ = "clazz";
 

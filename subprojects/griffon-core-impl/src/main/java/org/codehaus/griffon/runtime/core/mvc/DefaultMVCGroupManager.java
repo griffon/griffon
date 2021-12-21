@@ -19,17 +19,25 @@ package org.codehaus.griffon.runtime.core.mvc;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.inject.Contextual;
+import griffon.annotations.inject.MVCMember;
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
+import griffon.converter.FormattingConverter;
+import griffon.converter.NoopConverter;
 import griffon.core.ApplicationClassLoader;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
+import griffon.core.Instantiator;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonArtifact;
 import griffon.core.artifact.GriffonClass;
 import griffon.core.artifact.GriffonController;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
-import griffon.core.editors.ExtendedPropertyEditor;
-import griffon.core.editors.PropertyEditorResolver;
+import griffon.core.events.CreateMVCGroupEvent;
+import griffon.core.events.DestroyInstanceEvent;
+import griffon.core.events.DestroyMVCGroupEvent;
+import griffon.core.events.InitializeMVCGroupEvent;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
 import griffon.exceptions.FieldException;
@@ -37,17 +45,13 @@ import griffon.exceptions.GriffonException;
 import griffon.exceptions.GriffonViewInitializationException;
 import griffon.exceptions.MVCGroupInstantiationException;
 import griffon.exceptions.NewInstanceException;
-import griffon.inject.Contextual;
-import griffon.inject.MVCMember;
 import griffon.util.CollectionUtils;
-import griffon.util.Instantiator;
 import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -59,21 +63,18 @@ import java.util.List;
 import java.util.Map;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
+import static griffon.core.util.ConfigUtils.getConfigValueAsBoolean;
+import static griffon.core.util.GriffonClassUtils.getAllDeclaredFields;
+import static griffon.core.util.GriffonClassUtils.getPropertyDescriptors;
+import static griffon.core.util.GriffonClassUtils.setFieldValue;
+import static griffon.core.util.GriffonClassUtils.setPropertiesOrFieldsNoException;
+import static griffon.core.util.GriffonClassUtils.setPropertyOrFieldValueNoException;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.namesFor;
 import static griffon.util.AnnotationUtils.parameterTypeAt;
-import static griffon.util.ConfigUtils.getConfigValueAsBoolean;
-import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
-import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
-import static griffon.util.GriffonClassUtils.setFieldValue;
-import static griffon.util.GriffonClassUtils.setPropertiesOrFieldsNoException;
-import static griffon.util.GriffonClassUtils.setPropertyOrFieldValueNoException;
-import static griffon.util.GriffonNameUtils.capitalize;
-import static griffon.util.GriffonNameUtils.isBlank;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static griffon.util.StringUtils.capitalize;
+import static griffon.util.StringUtils.isBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -83,8 +84,6 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);
-
     protected static final String ERROR_VALUE_NULL = "Argument 'value' must not be null";
     protected static final String CONFIG_KEY_COMPONENT = "component";
     protected static final String CONFIG_KEY_EVENTS_LIFECYCLE = "events.lifecycle";
@@ -92,12 +91,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     protected static final String CONFIG_KEY_EVENTS_DESTRUCTION = "events.destruction";
     protected static final String CONFIG_KEY_EVENTS_LISTENER = "events.listener";
     protected static final String KEY_PARENT_GROUP = "parentGroup";
-
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultMVCGroupManager.class);
     protected final ApplicationClassLoader applicationClassLoader;
     protected final Instantiator instantiator;
 
     @Inject
-    public DefaultMVCGroupManager(@Nonnull GriffonApplication application, @Nonnull ApplicationClassLoader applicationClassLoader, @Nonnull Instantiator instantiator) {
+    public DefaultMVCGroupManager(@Nonnull GriffonApplication application,
+                                  @Nonnull ApplicationClassLoader applicationClassLoader,
+                                  @Nonnull Instantiator instantiator) {
         super(application);
         this.applicationClassLoader = requireNonNull(applicationClassLoader, "Argument 'applicationClassLoader' must not be null");
         this.instantiator = requireNonNull(instantiator, "Argument 'instantiator' must not be null");
@@ -156,14 +157,14 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
         boolean fireEvents = isConfigFlagEnabled(configuration, CONFIG_KEY_EVENTS_LIFECYCLE);
         if (fireEvents) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.INITIALIZE_MVC_GROUP.getName(), asList(configuration, group));
+            getApplication().getEventRouter().publishEvent(InitializeMVCGroupEvent.of(configuration, group));
         }
 
         // special case -- controllers are added as application listeners
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
             GriffonController controller = group.getController();
             if (controller != null) {
-                getApplication().getEventRouter().addEventListener(controller);
+                getApplication().getEventRouter().subscribe(controller);
             }
         }
 
@@ -178,7 +179,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         }
 
         if (fireEvents) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.CREATE_MVC_GROUP.getName(), singletonList(group));
+            getApplication().getEventRouter().publishEvent(CreateMVCGroupEvent.of(group));
         }
 
         return group;
@@ -299,7 +300,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
 
     protected void initializeArtifactMember(@Nonnull final MVCGroup group, @Nonnull String type, @Nonnull final GriffonArtifact member, @Nonnull final Map<String, Object> args) {
         if (member instanceof GriffonView) {
-            getApplication().getUIThreadManager().runInsideUISync(() -> {
+            getApplication().getUIThreadManager().executeInsideUISync(() -> {
                 try {
                     GriffonView view = (GriffonView) member;
                     view.initUI();
@@ -317,186 +318,6 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         // empty
     }
 
-    protected abstract static class InjectionPoint {
-        protected final String name;
-        protected final boolean nullable;
-        protected final Kind kind;
-        protected final Class<?> type;
-        protected final String format;
-        protected final Class<? extends PropertyEditor> editor;
-
-        protected InjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, String format, Class<? extends PropertyEditor> editor) {
-            this.name = name;
-            this.nullable = nullable;
-            this.kind = kind;
-            this.type = type; this.format = format;
-            this.editor = editor;
-        }
-
-        protected enum Kind {
-            MEMBER,
-            CONTEXTUAL,
-            OTHER
-        }
-
-        protected abstract void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args);
-
-        @Nonnull
-        protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
-            requireNonNull(type, ERROR_TYPE_NULL);
-            requireNonNull(value, ERROR_VALUE_NULL);
-
-            PropertyEditor propertyEditor = resolvePropertyEditor(type, format, editor);
-            if (isNoopPropertyEditor(propertyEditor.getClass())) { return value; }
-            if (value instanceof CharSequence) {
-                propertyEditor.setAsText(String.valueOf(value));
-            } else {
-                propertyEditor.setValue(value);
-            }
-            return propertyEditor.getValue();
-        }
-
-        @Nonnull
-        protected PropertyEditor resolvePropertyEditor(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
-            requireNonNull(type, ERROR_TYPE_NULL);
-
-            PropertyEditor propertyEditor = null;
-            if (isNoopPropertyEditor(editor)) {
-                propertyEditor = findEditor(type);
-            } else {
-                try {
-                    propertyEditor = editor.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    throw new GriffonException("Could not instantiate editor with " + editor, e);
-                }
-            }
-
-            if (propertyEditor instanceof ExtendedPropertyEditor) {
-                ((ExtendedPropertyEditor) propertyEditor).setFormat(format);
-            }
-            return propertyEditor;
-        }
-
-        protected boolean isNoopPropertyEditor(@Nonnull Class<? extends PropertyEditor> editor) {
-            return PropertyEditorResolver.NoopPropertyEditor.class.isAssignableFrom(editor);
-        }
-    }
-
-    protected static class FieldInjectionPoint extends InjectionPoint {
-        protected final Field field;
-
-        protected FieldInjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, Field field, String format, Class<? extends PropertyEditor> editor) {
-            super(name, nullable, kind, type, format, editor);
-            this.field = field;
-        }
-
-        @Override
-        protected void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args) {
-            String[] keys = namesFor(field);
-            Object argValue = args.get(name);
-
-            if (kind == Kind.CONTEXTUAL) {
-                for (String key : keys) {
-                    if (group.getContext().containsKey(key)) {
-                        argValue = group.getContext().get(key);
-                        break;
-                    }
-                }
-            }
-
-            try {
-                if (argValue == null) {
-                    if (!nullable) {
-                        if (kind == Kind.CONTEXTUAL) {
-                            throw new IllegalStateException("Could not find an instance of type " +
-                                field.getType().getName() + " under keys '" + Arrays.toString(keys) +
-                                "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
-                                "] to be injected on field '" + field.getName() +
-                                "' in " + kind + " (" + resolveMemberClass(instance).getName() + "). Field does not accept null values.");
-                        } else if (kind == Kind.MEMBER) {
-                            throw new IllegalStateException("Could not inject argument on field '"
-                                + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
-                                "). Field does not accept null values.");
-                        }
-                    }
-                    return;
-                } else if (kind == Kind.MEMBER && (!isNoopPropertyEditor(editor) || !type.isAssignableFrom(argValue.getClass()))) {
-                    argValue = convertValue(type, argValue, format, editor);
-                }
-
-                setFieldValue(instance, name, argValue);
-                if (kind == Kind.OTHER) {
-                    LOG.warn("Field '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
-                        ") must be annotated with @" + MVCMember.class.getName() + ".");
-                }
-            } catch (Exception e) {
-                throw new MVCGroupInstantiationException("Unexpected error when setting value for " + resolveMemberClass(instance).getName() + "." + field.getName(), group.getMvcType(), group.getMvcId(), e);
-            }
-        }
-    }
-
-    protected static class MethodInjectionPoint extends InjectionPoint {
-        protected final Method method;
-
-        protected MethodInjectionPoint(String name, boolean nullable, Kind kind, Class<?> type, Method method, String format, Class<? extends PropertyEditor> editor) {
-            super(name, nullable, kind, type, format, editor);
-            this.method = method;
-        }
-
-        @Override
-        protected void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args) {
-            if (kind == Kind.CONTEXTUAL) {
-                String[] keys = namesFor(method);
-                Object argValue = args.get(name);
-
-                for (String key : keys) {
-                    if (group.getContext().containsKey(key)) {
-                        argValue = group.getContext().get(key);
-                        break;
-                    }
-                }
-
-                try {
-                    if (argValue == null && !nullable) {
-                        throw new IllegalStateException("Could not find an instance of type " +
-                            method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
-                            "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
-                            "] to be injected on property '" + name +
-                            "' in " + kind + " (" + resolveMemberClass(instance).getName() + "). Property does not accept null values.");
-                    }
-
-                    method.invoke(instance, argValue);
-                } catch (Exception e) {
-                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
-                }
-            } else {
-                try {
-                    Object argValue = args.get(name);
-                    if (argValue == null) {
-                        if (!nullable) {
-                            if (kind == Kind.MEMBER) {
-                                throw new IllegalStateException("Could not inject argument on property '" +
-                                    name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
-                                    "). Property does not accept null values.");
-                            }
-                        }
-                        return;
-                    } else if (kind == Kind.MEMBER && (!isNoopPropertyEditor(editor) || !type.isAssignableFrom(argValue.getClass()))) {
-                        argValue = convertValue(type, argValue, format, editor);
-                    }
-
-                    method.invoke(instance, argValue);
-                    if (kind == Kind.OTHER) {
-                        LOG.warn("Property '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
-                            ") must be annotated with @" + MVCMember.class.getName() + ".");
-                    }
-                } catch (Exception e) {
-                    throw new MVCGroupInstantiationException("Unexpected error when invoking " + resolveMemberClass(instance).getName() + "." + method.getName(), group.getMvcType(), group.getMvcId(), e);
-                }
-            }
-        }
-    }
-
     protected void fillReferencedProperties(@Nonnull MVCGroup group, @Nonnull Map<String, Object> args) {
         for (Map.Entry<String, Object> memberEntry : group.getMembers().entrySet()) {
             String memberType = memberEntry.getKey();
@@ -511,32 +332,36 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
             Map<String, InjectionPoint> injectionPoints = new LinkedHashMap<>();
             for (PropertyDescriptor descriptor : getPropertyDescriptors(resolveMemberClass(member))) {
                 Method method = descriptor.getWriteMethod();
-                if (method == null || isInjectable(method)) { continue; }
+                if (method == null || isInjectable(method)) {
+                    continue;
+                }
                 Class<?> type = parameterTypeAt(method, 0);
                 boolean nullable = method.getAnnotation(Nonnull.class) == null && findAnnotation(annotationsOfMethodParameter(method, 0), Nonnull.class) == null;
                 InjectionPoint.Kind kind = resolveKind(method);
                 String format = resolveFormat(method);
-                Class<? extends PropertyEditor> editor = resolveEditor(method);
+                Class<? extends Converter> converter = resolveEditor(method);
                 Field field = fields.get(descriptor.getName());
                 if (field != null && kind == InjectionPoint.Kind.OTHER) {
                     kind = resolveKind(field);
                     nullable = field.getAnnotation(Nonnull.class) == null;
                     type = field.getType();
                     format = resolveFormat(field);
-                    editor = resolveEditor(field);
+                    converter = resolveEditor(field);
                 }
-                injectionPoints.put(descriptor.getName(), new MethodInjectionPoint(descriptor.getName(), nullable, kind, type, method, format, editor));
+                injectionPoints.put(descriptor.getName(), new MethodInjectionPoint(converterRegistry, descriptor.getName(), nullable, kind, type, method, format, converter));
             }
 
             for (Field field : getAllDeclaredFields(resolveMemberClass(member))) {
-                if (Modifier.isStatic(field.getModifiers()) || isInjectable(field)) { continue; }
+                if (Modifier.isStatic(field.getModifiers()) || isInjectable(field)) {
+                    continue;
+                }
                 if (!injectionPoints.containsKey(field.getName())) {
                     boolean nullable = field.getAnnotation(Nonnull.class) == null;
                     InjectionPoint.Kind kind = resolveKind(field);
                     Class<?> type = field.getType();
                     String format = resolveFormat(field);
-                    Class<? extends PropertyEditor> editor = resolveEditor(field);
-                    injectionPoints.put(field.getName(), new FieldInjectionPoint(field.getName(), nullable, kind, type, field, format, editor));
+                    Class<? extends Converter> converter = resolveEditor(field);
+                    injectionPoints.put(field.getName(), new FieldInjectionPoint(converterRegistry, field.getName(), nullable, kind, type, field, format, converter));
                 }
             }
 
@@ -579,11 +404,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
     }
 
     @Nonnull
-    protected Class<? extends PropertyEditor> resolveEditor(@Nonnull AnnotatedElement element) {
+    protected Class<? extends Converter> resolveEditor(@Nonnull AnnotatedElement element) {
         if (isMvcMember(element)) {
-            return element.getAnnotation(MVCMember.class).editor();
+            return element.getAnnotation(MVCMember.class).converter();
         }
-        return PropertyEditorResolver.NoopPropertyEditor.class;
+        return NoopConverter.class;
     }
 
     protected boolean isContextual(AnnotatedElement element) {
@@ -606,14 +431,16 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         MVCGroup group = findGroup(mvcId);
         LOG.debug("Group '{}' points to {}", mvcId, group);
 
-        if (group == null) { return; }
+        if (group == null) {
+            return;
+        }
 
         LOG.debug("Destroying MVC group identified by '{}'", mvcId);
 
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LISTENER)) {
             GriffonController controller = group.getController();
             if (controller != null) {
-                getApplication().getEventRouter().removeEventListener(controller);
+                getApplication().getEventRouter().unsubscribe(controller);
             }
         }
 
@@ -625,7 +452,7 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         group.destroy();
 
         if (isConfigFlagEnabled(group.getConfiguration(), CONFIG_KEY_EVENTS_LIFECYCLE)) {
-            getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_MVC_GROUP.getName(), singletonList(group));
+            getApplication().getEventRouter().publishEvent(DestroyMVCGroupEvent.of(group));
         }
     }
 
@@ -653,11 +480,11 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         if (member instanceof GriffonMvcArtifact) {
             final GriffonMvcArtifact artifact = (GriffonMvcArtifact) member;
             if (fireDestructionEvents) {
-                getApplication().getEventRouter().publishEvent(ApplicationEvent.DESTROY_INSTANCE.getName(), asList(artifact.getTypeClass(), artifact));
+                getApplication().getEventRouter().publishEvent(DestroyInstanceEvent.of((Class<GriffonMvcArtifact>) artifact.getTypeClass(), artifact));
             }
 
             if (artifact instanceof GriffonView) {
-                getApplication().getUIThreadManager().runInsideUISync(() -> {
+                getApplication().getUIThreadManager().executeInsideUISync(() -> {
                     try {
                         artifact.mvcGroupDestroy();
                     } catch (RuntimeException e) {
@@ -702,6 +529,16 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         return getConfigValueAsBoolean(configuration.getConfig(), key, true);
     }
 
+    @Nullable
+    protected Class<?> loadClass(@Nonnull String className) {
+        try {
+            return applicationClassLoader.get().loadClass(className);
+        } catch (ClassNotFoundException e) {
+            // #39 do not ignore this CNFE
+            throw new GriffonException(e.toString(), e);
+        }
+    }
+
     @Nonnull
     private static Class<?> resolveMemberClass(@Nonnull Object member) {
         if (member instanceof GriffonArtifact) {
@@ -710,13 +547,187 @@ public class DefaultMVCGroupManager extends AbstractMVCGroupManager {
         return member.getClass();
     }
 
-    @Nullable
-    protected Class<?> loadClass(@Nonnull String className) {
-        try {
-            return applicationClassLoader.get().loadClass(className);
-        } catch (ClassNotFoundException e) {
-            // #39 do not ignore this CNFE
-            throw new GriffonException(e.toString(), e);
+    protected abstract static class InjectionPoint {
+        protected final ConverterRegistry converterRegistry;
+        protected final String name;
+        protected final boolean nullable;
+        protected final Kind kind;
+        protected final Class<?> type;
+        protected final String format;
+        protected final Class<? extends Converter> converter;
+
+        protected InjectionPoint(ConverterRegistry converterRegistry, String name, boolean nullable, Kind kind, Class<?> type, String format, Class<? extends Converter> converter) {
+            this.converterRegistry = converterRegistry;
+            this.name = name;
+            this.nullable = nullable;
+            this.kind = kind;
+            this.type = type;
+            this.format = format;
+            this.converter = converter;
+        }
+
+        protected abstract void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args);
+
+        @Nonnull
+        protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends Converter> converter) {
+            requireNonNull(type, ERROR_TYPE_NULL);
+            requireNonNull(value, ERROR_VALUE_NULL);
+
+            Converter resolvedConverter = resolveConverter(type, format, converter);
+            if (isNoopConverter(resolvedConverter.getClass())) {
+                return value;
+            }
+            if (value instanceof CharSequence) {
+                return resolvedConverter.fromObject(String.valueOf(value));
+            } else {
+                return resolvedConverter.fromObject(value);
+            }
+        }
+
+        @Nonnull
+        protected Converter resolveConverter(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends Converter> converter) {
+            requireNonNull(type, ERROR_TYPE_NULL);
+
+            Converter resolvedConverter = null;
+            if (isNoopConverter(converter)) {
+                resolvedConverter = converterRegistry.findConverter(type);
+            } else {
+                try {
+                    resolvedConverter = converter.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    throw new GriffonException("Could not instantiate converter with " + converter, e);
+                }
+            }
+
+            if (resolvedConverter instanceof FormattingConverter) {
+                ((FormattingConverter) resolvedConverter).setFormat(format);
+            }
+            return resolvedConverter;
+        }
+
+        protected boolean isNoopConverter(@Nonnull Class<? extends Converter> converter) {
+            return NoopConverter.class.isAssignableFrom(converter);
+        }
+
+        protected enum Kind {
+            MEMBER,
+            CONTEXTUAL,
+            OTHER
+        }
+    }
+
+    protected static class FieldInjectionPoint extends InjectionPoint {
+        protected final Field field;
+
+        protected FieldInjectionPoint(ConverterRegistry converterRegistry, String name, boolean nullable, Kind kind, Class<?> type, Field field, String format, Class<? extends Converter> converter) {
+            super(converterRegistry, name, nullable, kind, type, format, converter);
+            this.field = field;
+        }
+
+        @Override
+        protected void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args) {
+            String[] keys = namesFor(field);
+            Object argValue = args.get(name);
+
+            if (kind == Kind.CONTEXTUAL) {
+                for (String key : keys) {
+                    if (group.getContext().containsKey(key)) {
+                        argValue = group.getContext().get(key);
+                        break;
+                    }
+                }
+            }
+
+            try {
+                if (argValue == null) {
+                    if (!nullable) {
+                        if (kind == Kind.CONTEXTUAL) {
+                            throw new IllegalStateException("Could not find an instance of type " +
+                                field.getType().getName() + " under keys '" + Arrays.toString(keys) +
+                                "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
+                                "] to be injected on field '" + field.getName() +
+                                "' in " + kind + " (" + resolveMemberClass(instance).getName() + "). Field does not accept null values.");
+                        } else if (kind == Kind.MEMBER) {
+                            throw new IllegalStateException("Could not inject argument on field '"
+                                + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
+                                "). Field does not accept null values.");
+                        }
+                    }
+                    return;
+                } else if (kind == Kind.MEMBER && (!isNoopConverter(converter) || !type.isAssignableFrom(argValue.getClass()))) {
+                    argValue = convertValue(type, argValue, format, converter);
+                }
+
+                setFieldValue(instance, name, argValue);
+                if (kind == Kind.OTHER) {
+                    LOG.warn("Field '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
+                        ") must be annotated with @" + MVCMember.class.getName() + ".");
+                }
+            } catch (Exception e) {
+                throw new MVCGroupInstantiationException("Unexpected error when setting value for " + resolveMemberClass(instance).getName() + "." + field.getName(), group.getMvcType(), group.getMvcId(), e);
+            }
+        }
+    }
+
+    protected static class MethodInjectionPoint extends InjectionPoint {
+        protected final Method method;
+
+        protected MethodInjectionPoint(ConverterRegistry converterRegistry, String name, boolean nullable, Kind kind, Class<?> type, Method method, String format, Class<? extends Converter> converter) {
+            super(converterRegistry, name, nullable, kind, type, format, converter);
+            this.method = method;
+        }
+
+        @Override
+        protected void apply(@Nonnull MVCGroup group, @Nonnull String memberType, @Nonnull Object instance, @Nonnull Map<String, Object> args) {
+            if (kind == Kind.CONTEXTUAL) {
+                String[] keys = namesFor(method);
+                Object argValue = args.get(name);
+
+                for (String key : keys) {
+                    if (group.getContext().containsKey(key)) {
+                        argValue = group.getContext().get(key);
+                        break;
+                    }
+                }
+
+                try {
+                    if (argValue == null && !nullable) {
+                        throw new IllegalStateException("Could not find an instance of type " +
+                            method.getParameterTypes()[0].getName() + " under keys '" + Arrays.toString(keys) +
+                            "' in the context of MVCGroup[" + group.getMvcType() + ":" + group.getMvcId() +
+                            "] to be injected on property '" + name +
+                            "' in " + kind + " (" + resolveMemberClass(instance).getName() + "). Property does not accept null values.");
+                    }
+
+                    method.invoke(instance, argValue);
+                } catch (Exception e) {
+                    throw new MVCGroupInstantiationException(group.getMvcType(), group.getMvcId(), e);
+                }
+            } else {
+                try {
+                    Object argValue = args.get(name);
+                    if (argValue == null) {
+                        if (!nullable) {
+                            if (kind == Kind.MEMBER) {
+                                throw new IllegalStateException("Could not inject argument on property '" +
+                                    name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
+                                    "). Property does not accept null values.");
+                            }
+                        }
+                        return;
+                    } else if (kind == Kind.MEMBER && (!isNoopConverter(converter) || !type.isAssignableFrom(argValue.getClass()))) {
+                        argValue = convertValue(type, argValue, format, converter);
+                    }
+
+                    method.invoke(instance, argValue);
+                    if (kind == Kind.OTHER) {
+                        LOG.warn("Property '" + name + "' in " + memberType + " (" + resolveMemberClass(instance).getName() +
+                            ") must be annotated with @" + MVCMember.class.getName() + ".");
+                    }
+                } catch (Exception e) {
+                    throw new MVCGroupInstantiationException("Unexpected error when invoking " + resolveMemberClass(instance).getName() + "." + method.getName(), group.getMvcType(), group.getMvcId(), e);
+                }
+            }
         }
     }
 

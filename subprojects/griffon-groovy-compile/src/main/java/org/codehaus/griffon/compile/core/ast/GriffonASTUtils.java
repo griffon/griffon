@@ -55,8 +55,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static griffon.util.GriffonNameUtils.getGetterName;
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.StringUtils.getGetterName;
+import static griffon.util.StringUtils.isBlank;
 
 /**
  * Helper methods for working with Groovy AST trees.

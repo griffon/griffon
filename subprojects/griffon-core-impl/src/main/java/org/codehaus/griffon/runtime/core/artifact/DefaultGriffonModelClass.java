@@ -22,15 +22,14 @@ import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonModel;
 import griffon.core.artifact.GriffonModelClass;
-import griffon.util.GriffonClassUtils;
+import griffon.core.util.GriffonClassUtils;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static griffon.util.GriffonClassUtils.isEventHandler;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -40,10 +39,9 @@ import static java.util.Objects.requireNonNull;
 public class DefaultGriffonModelClass extends DefaultGriffonClass implements GriffonModelClass {
     private static final String ERROR_MODEL_NULL = "Argument 'model' must not be null";
     private static final String ERROR_PROPERTY_NAME_BLANK = "Argument 'propertyName' must not be blank";
-
-    protected final Set<String> propertiesCache = new TreeSet<>();
     private static final Set<String> BINDABLE_PROPERTIES = new LinkedHashSet<>(
         Arrays.asList("propertyChangeListeners", "vetoableChangeListeners"));
+    protected final Set<String> propertiesCache = new TreeSet<>();
 
     public DefaultGriffonModelClass(@Nonnull GriffonApplication application, @Nonnull Class<?> clazz) {
         super(application, clazz, TYPE, TRAILING);
@@ -60,7 +58,6 @@ public class DefaultGriffonModelClass extends DefaultGriffonClass implements Gri
         if (propertiesCache.isEmpty()) {
             for (String propertyName : getPropertiesWithFields()) {
                 if (!propertiesCache.contains(propertyName) &&
-                    !isEventHandler(propertyName) &&
                     !STANDARD_PROPERTIES.contains(propertyName) &&
                     !BINDABLE_PROPERTIES.contains(propertyName)) {
                     propertiesCache.add(propertyName);

@@ -33,9 +33,9 @@ import static org.codehaus.griffon.compile.core.MethodDescriptor.wildcard;
  */
 public interface MVCAwareConstants extends BaseConstants {
     String MVC_GROUP_MANAGER_PROPERTY = "mvcGroupManager";
-    String MVC_FUNCTION_TYPE = "griffon.core.mvc.MVCFunction";
-    String MVC_GROUP_FUNCTION_TYPE = "griffon.core.mvc.MVCGroupFunction";
-    String TYPED_MVC_GROUP_FUNCTION_TYPE = "griffon.core.mvc.TypedMVCGroupFunction";
+    String MVC_CONSUMER_TYPE = "griffon.core.mvc.MVCConsumer";
+    String MVC_GROUP_CONSUMER_TYPE = "griffon.core.mvc.MVCGroupConsumer";
+    String TYPED_MVC_GROUP_CONSUMER_TYPE = "griffon.core.mvc.TypedMVCGroupConsumer";
     String GRIFFON_MODEL_TYPE = "griffon.core.artifact.GriffonModel";
     String GRIFFON_VIEW_TYPE = "griffon.core.artifact.GriffonView";
     String GRIFFON_CONTROLLER_TYPE = "griffon.core.artifact.GriffonController";
@@ -60,155 +60,155 @@ public interface MVCAwareConstants extends BaseConstants {
         method(
             type(VOID),
             METHOD_DESTROY_MVC_GROUP,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC_GROUP),
             METHOD_CREATE_MVC_GROUP,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC_GROUP),
             METHOD_CREATE_MVC_GROUP,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING), type(JAVA_LANG_STRING))
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING), type(JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
-            type(MVC_GROUP),
-            METHOD_CREATE_MVC_GROUP,
-            args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
-        ),
-        annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC_GROUP),
             METHOD_CREATE_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC_GROUP),
             METHOD_CREATE_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC_GROUP),
             METHOD_CREATE_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
+        ),
+        annotatedMethod(
+            annotations(ANNOTATION_NONNULL),
+            type(MVC_GROUP),
+            METHOD_CREATE_MVC_GROUP,
+            args(
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_CREATE_MVC_GROUP,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_CREATE_MVC_GROUP,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC), type(JAVA_LANG_STRING))
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC), type(JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_CREATE_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_CREATE_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_CREATE_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             type(MVC),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_CREATE_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
 
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
             METHOD_CREATE_MVC,
-            args(annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+            args(annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
             METHOD_CREATE_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
             METHOD_CREATE_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
             METHOD_CREATE_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
             METHOD_CREATE_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING))
         ),
         annotatedMethod(
-            annotations(JAVAX_ANNOTATION_NONNULL),
+            annotations(ANNOTATION_NONNULL),
             typeWithParams(JAVA_UTIL_LIST, wildcard(GRIFFON_MVC_ARTIFACT_TYPE)),
             METHOD_CREATE_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT))
         ),
 
         method(
@@ -220,8 +220,8 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -232,9 +232,9 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -245,10 +245,10 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -259,10 +259,10 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -273,9 +273,9 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -286,9 +286,9 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
 
         method(
@@ -301,8 +301,8 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -314,9 +314,9 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -328,10 +328,10 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -343,10 +343,10 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -358,9 +358,9 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
         method(
             type(VOID),
@@ -372,59 +372,59 @@ public interface MVCAwareConstants extends BaseConstants {
             ),
             METHOD_WITH_MVC,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_FUNCTION_TYPE, M, V, C))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_CONSUMER_TYPE, M, V, C))
         ),
 
         method(
             type(VOID),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_GROUP_CONSUMER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_GROUP_CONSUMER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_GROUP_CONSUMER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_GROUP_CONSUMER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_GROUP_CONSUMER_TYPE))
         ),
         method(
             type(VOID),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), MVC_GROUP_FUNCTION_TYPE))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), MVC_GROUP_CONSUMER_TYPE))
         ),
 
         method(
@@ -432,55 +432,55 @@ public interface MVCAwareConstants extends BaseConstants {
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), TYPED_MVC_GROUP_CONSUMER_TYPE, MVC))
         ),
         method(
             type(VOID),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), TYPED_MVC_GROUP_CONSUMER_TYPE, MVC))
         ),
         method(
             type(VOID),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), TYPED_MVC_GROUP_CONSUMER_TYPE, MVC))
         ),
         method(
             type(VOID),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_STRING),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_STRING),
+                annotatedType(annotations(ANNOTATION_NONNULL), TYPED_MVC_GROUP_CONSUMER_TYPE, MVC))
         ),
         method(
             type(VOID),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), TYPED_MVC_GROUP_CONSUMER_TYPE, MVC))
         ),
         method(
             type(VOID),
             typeParams(typeParam(MVC, TYPED_MVC_GROUP)),
             METHOD_WITH_MVC_GROUP,
             args(
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
-                annotatedType(annotations(JAVAX_ANNOTATION_NONNULL), TYPED_MVC_GROUP_FUNCTION_TYPE, MVC))
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_UTIL_MAP, JAVA_LANG_STRING, JAVA_LANG_OBJECT),
+                annotatedType(annotations(ANNOTATION_NONNULL), JAVA_LANG_CLASS, MVC),
+                annotatedType(annotations(ANNOTATION_NONNULL), TYPED_MVC_GROUP_CONSUMER_TYPE, MVC))
         )
     };
 }

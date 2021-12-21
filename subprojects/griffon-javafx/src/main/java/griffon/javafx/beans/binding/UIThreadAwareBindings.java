@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.BooleanBinding;
@@ -97,9 +98,10 @@ public final class UIThreadAwareBindings {
      *
      * @param property   the property that will be notified of value changes.
      * @param observable the observable on which the listener will be registered.
+     *
      * @return the wrapped change listener.
      */
-    public static <T> ChangeListener<T> uiThreadAwareBind(final Property<T> property, final ObservableValue<T> observable) {
+    public static <T> ChangeListener<T> uiThreadAwareBind(@Nonnull final Property<T> property, @Nonnull final ObservableValue<T> observable) {
         requireNonNull(property, ERROR_PROPERTY_NULL);
         property.setValue(observable.getValue());
         return uiThreadAwareChangeListener(observable, (v, o, n) -> property.setValue(n));
@@ -110,9 +112,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param listener   the wrapped change listener.
+     *
      * @return a {@code ChangeListener}.
      */
-    public static <T> ChangeListener<T> uiThreadAwareChangeListener(final ObservableValue<T> observable, ChangeListener<T> listener) {
+    public static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull final ObservableValue<T> observable, @Nonnull ChangeListener<T> listener) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         ChangeListener<T> uiListener = uiThreadAwareChangeListener(listener);
         observable.addListener(uiListener);
@@ -123,9 +126,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code ChangeListener} that always handles notifications inside the UI thread.
      *
      * @param listener the wrapped change listener.
+     *
      * @return a {@code ChangeListener}.
      */
-    public static <T> ChangeListener<T> uiThreadAwareChangeListener(ChangeListener<T> listener) {
+    @Nonnull
+    public static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull ChangeListener<T> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         return listener instanceof UIThreadAware ? listener : new UIThreadAwareChangeListener<>(listener);
     }
@@ -135,9 +140,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param consumer   the consumer of the {@code newValue} argument.
+     *
      * @return a {@code ChangeListener}.
      */
-    public static <T> ChangeListener<T> uiThreadAwareChangeListener(final ObservableValue<T> observable, final Consumer<T> consumer) {
+    public static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull final ObservableValue<T> observable, @Nonnull final Consumer<T> consumer) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         ChangeListener<T> listener = uiThreadAwareChangeListener(consumer);
         observable.addListener(listener);
@@ -148,9 +154,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code ChangeListener} that always handles notifications inside the UI thread.
      *
      * @param consumer the consumer of the {@code newValue} argument.
+     *
      * @return a {@code ChangeListener}.
      */
-    public static <T> ChangeListener<T> uiThreadAwareChangeListener(final Consumer<T> consumer) {
+    @Nonnull
+    public static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull final Consumer<T> consumer) {
         requireNonNull(consumer, ERROR_CONSUMER_NULL);
         return new UIThreadAwareChangeListener<>((observable, oldValue, newValue) -> consumer.accept(newValue));
     }
@@ -160,9 +168,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param runnable   the code to be executed when the listener is notified.
+     *
      * @return a {@code ChangeListener}.
      */
-    public static <T> ChangeListener<T> uiThreadAwareChangeListener(final ObservableValue<T> observable, final Runnable runnable) {
+    public static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull final ObservableValue<T> observable, @Nonnull final Runnable runnable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         ChangeListener<T> listener = uiThreadAwareChangeListener(runnable);
         observable.addListener(listener);
@@ -173,9 +182,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code ChangeListener} that always handles notifications inside the UI thread.
      *
      * @param runnable the code to be executed when the listener is notified.
+     *
      * @return a {@code ChangeListener}.
      */
-    public static <T> ChangeListener<T> uiThreadAwareChangeListener(final Runnable runnable) {
+    @Nonnull
+    public static <T> ChangeListener<T> uiThreadAwareChangeListener(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         return new UIThreadAwareChangeListener<>((observable, oldValue, newValue) -> runnable.run());
     }
@@ -185,9 +196,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param listener   the wrapped invalidation listener.
+     *
      * @return an {@code InvalidationListener}.
      */
-    public static InvalidationListener uiThreadAwareInvalidationListener(final Observable observable, InvalidationListener listener) {
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull final Observable observable, @Nonnull InvalidationListener listener) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         InvalidationListener uiListener = uiThreadAwareInvalidationListener(listener);
         observable.addListener(uiListener);
@@ -198,9 +210,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code InvalidationListener} that always handles notifications inside the UI thread.
      *
      * @param listener the wrapped invalidation listener.
+     *
      * @return a {@code InvalidationListener}.
      */
-    public static InvalidationListener uiThreadAwareInvalidationListener(InvalidationListener listener) {
+    @Nonnull
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull InvalidationListener listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         return listener instanceof UIThreadAware ? listener : new UIThreadAwareInvalidationListener(listener);
     }
@@ -210,9 +224,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param consumer   the consumer of the {@code observable} argument.
+     *
      * @return a {@code InvalidationListener}.
      */
-    public static InvalidationListener uiThreadAwareInvalidationListener(final Observable observable, final Consumer<Observable> consumer) {
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull final Observable observable, @Nonnull final Consumer<Observable> consumer) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         InvalidationListener listener = uiThreadAwareInvalidationListener(consumer);
         observable.addListener(listener);
@@ -223,9 +238,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code InvalidationListener} that always handles notifications inside the UI thread.
      *
      * @param consumer the consumer of the {@code observable} argument.
+     *
      * @return a {@code InvalidationListener}.
      */
-    public static InvalidationListener uiThreadAwareInvalidationListener(final Consumer<Observable> consumer) {
+    @Nonnull
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull final Consumer<Observable> consumer) {
         requireNonNull(consumer, ERROR_CONSUMER_NULL);
         return new UIThreadAwareInvalidationListener(consumer::accept);
     }
@@ -235,9 +252,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param runnable   the code to be executed when the listener is notified.
+     *
      * @return a {@code InvalidationListener}.
      */
-    public static InvalidationListener uiThreadAwareInvalidationListener(final Observable observable, final Runnable runnable) {
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull final Observable observable, @Nonnull final Runnable runnable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         InvalidationListener listener = uiThreadAwareInvalidationListener(runnable);
         observable.addListener(listener);
@@ -248,9 +266,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code InvalidationListener} that always handles notifications inside the UI thread.
      *
      * @param runnable the code to be executed when the listener is notified.
+     *
      * @return a {@code InvalidationListener}.
      */
-    public static InvalidationListener uiThreadAwareInvalidationListener(final Runnable runnable) {
+    @Nonnull
+    public static InvalidationListener uiThreadAwareInvalidationListener(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         return new UIThreadAwareInvalidationListener(observable -> runnable.run());
     }
@@ -260,9 +280,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param listener   the wrapped list change listener.
+     *
      * @return a {@code ListChangeListener}.
      */
-    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(final ObservableList<E> observable, ListChangeListener<E> listener) {
+    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull final ObservableList<E> observable, @Nonnull ListChangeListener<E> listener) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         ListChangeListener<E> uiListener = uiThreadAwareListChangeListener(listener);
         observable.addListener(uiListener);
@@ -273,9 +294,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code ListChangeListener} that always handles notifications inside the UI thread.
      *
      * @param listener the wrapped list change listener.
+     *
      * @return a {@code ListChangeListener}.
      */
-    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(ListChangeListener<E> listener) {
+    @Nonnull
+    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull ListChangeListener<E> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         return listener instanceof UIThreadAware ? listener : new UIThreadAwareListChangeListener<>(listener);
     }
@@ -285,9 +308,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param consumer   the consumer of the {@code newValue} argument.
+     *
      * @return a {@code ListChangeListener}.
      */
-    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(final ObservableList<E> observable, final Consumer<ListChangeListener.Change<? extends E>> consumer) {
+    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull final ObservableList<E> observable, @Nonnull final Consumer<ListChangeListener.Change<? extends E>> consumer) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         ListChangeListener<E> listener = uiThreadAwareListChangeListener(consumer);
         observable.addListener(listener);
@@ -298,9 +322,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code ListChangeListener} that always handles notifications inside the UI thread.
      *
      * @param consumer the consumer of the {@code change} argument.
+     *
      * @return a {@code ListChangeListener}.
      */
-    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(final Consumer<ListChangeListener.Change<? extends E>> consumer) {
+    @Nonnull
+    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull final Consumer<ListChangeListener.Change<? extends E>> consumer) {
         requireNonNull(consumer, ERROR_CONSUMER_NULL);
         return new UIThreadAwareListChangeListener<E>(consumer::accept);
     }
@@ -310,9 +336,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param runnable   the code to be executed when the listener is notified.
+     *
      * @return a {@code ListChangeListener}.
      */
-    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(final ObservableList<E> observable, final Runnable runnable) {
+    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull final ObservableList<E> observable, @Nonnull final Runnable runnable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         ListChangeListener<E> listener = uiThreadAwareListChangeListener(runnable);
         observable.addListener(listener);
@@ -323,9 +350,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code ListChangeListener} that always handles notifications inside the UI thread.
      *
      * @param runnable the code to be executed when the listener is notified.
+     *
      * @return a {@code ListChangeListener}.
      */
-    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(final Runnable runnable) {
+    @Nonnull
+    public static <E> ListChangeListener<E> uiThreadAwareListChangeListener(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         return new UIThreadAwareListChangeListener<>(change -> runnable.run());
     }
@@ -335,9 +364,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param listener   the wrapped map change listener.
+     *
      * @return a {@code MapChangeListener}.
      */
-    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(final ObservableMap<K, V> observable, MapChangeListener<K, V> listener) {
+    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull final ObservableMap<K, V> observable, @Nonnull MapChangeListener<K, V> listener) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         MapChangeListener<K, V> uiListener = uiThreadAwareMapChangeListener(listener);
         observable.addListener(uiListener);
@@ -348,9 +378,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code MapChangeListener} that always handles notifications inside the UI thread.
      *
      * @param listener the wrapped map change listener.
+     *
      * @return a {@code MapChangeListener}.
      */
-    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(MapChangeListener<K, V> listener) {
+    @Nonnull
+    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull MapChangeListener<K, V> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         return listener instanceof UIThreadAware ? listener : new UIThreadAwareMapChangeListener<>(listener);
     }
@@ -360,9 +392,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param consumer   the consumer of the {@code newValue} argument.
+     *
      * @return a {@code MapChangeListener}.
      */
-    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(final ObservableMap<K, V> observable, final Consumer<MapChangeListener.Change<? extends K, ? extends V>> consumer) {
+    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull final ObservableMap<K, V> observable, @Nonnull final Consumer<MapChangeListener.Change<? extends K, ? extends V>> consumer) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         MapChangeListener<K, V> listener = uiThreadAwareMapChangeListener(consumer);
         observable.addListener(listener);
@@ -373,9 +406,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code MapChangeListener} that always handles notifications inside the UI thread.
      *
      * @param consumer the consumer of the {@code change} argument.
+     *
      * @return a {@code MapChangeListener}.
      */
-    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(final Consumer<MapChangeListener.Change<? extends K, ? extends V>> consumer) {
+    @Nonnull
+    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull final Consumer<MapChangeListener.Change<? extends K, ? extends V>> consumer) {
         requireNonNull(consumer, ERROR_CONSUMER_NULL);
         return new UIThreadAwareMapChangeListener<K, V>(consumer::accept);
     }
@@ -385,9 +420,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param runnable   the code to be executed when the listener is notified.
+     *
      * @return a {@code MapChangeListener}.
      */
-    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(final ObservableMap<K, V> observable, final Runnable runnable) {
+    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull final ObservableMap<K, V> observable, @Nonnull final Runnable runnable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         MapChangeListener<K, V> listener = uiThreadAwareMapChangeListener(runnable);
         observable.addListener(listener);
@@ -398,9 +434,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code MapChangeListener} that always handles notifications inside the UI thread.
      *
      * @param runnable the code to be executed when the listener is notified.
+     *
      * @return a {@code MapChangeListener}.
      */
-    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(final Runnable runnable) {
+    @Nonnull
+    public static <K, V> MapChangeListener<K, V> uiThreadAwareMapChangeListener(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         return new UIThreadAwareMapChangeListener<>(change -> runnable.run());
     }
@@ -410,9 +448,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param listener   the wrapped set change listener.
+     *
      * @return a {@code SetChangeListener}.
      */
-    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(final ObservableSet<E> observable, SetChangeListener<E> listener) {
+    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull final ObservableSet<E> observable, @Nonnull SetChangeListener<E> listener) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         SetChangeListener<E> uiListener = uiThreadAwareSetChangeListener(listener);
         observable.addListener(uiListener);
@@ -423,9 +462,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code SetChangeListener} that always handles notifications inside the UI thread.
      *
      * @param listener the wrapped set change listener.
+     *
      * @return a {@code SetChangeListener}.
      */
-    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(SetChangeListener<E> listener) {
+    @Nonnull
+    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull SetChangeListener<E> listener) {
         requireNonNull(listener, ERROR_LISTENER_NULL);
         return listener instanceof UIThreadAware ? listener : new UIThreadAwareSetChangeListener<>(listener);
     }
@@ -435,9 +476,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param consumer   the consumer of the {@code newValue} argument.
+     *
      * @return a {@code SetChangeListener}.
      */
-    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(final ObservableSet<E> observable, final Consumer<SetChangeListener.Change<? extends E>> consumer) {
+    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull final ObservableSet<E> observable, @Nonnull final Consumer<SetChangeListener.Change<? extends E>> consumer) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         SetChangeListener<E> listener = uiThreadAwareSetChangeListener(consumer);
         observable.addListener(listener);
@@ -448,9 +490,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code SetChangeListener} that always handles notifications inside the UI thread.
      *
      * @param consumer the consumer of the {@code change} argument.
+     *
      * @return a {@code SetChangeListener}.
      */
-    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(final Consumer<SetChangeListener.Change<? extends E>> consumer) {
+    @Nonnull
+    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull final Consumer<SetChangeListener.Change<? extends E>> consumer) {
         requireNonNull(consumer, ERROR_CONSUMER_NULL);
         return new UIThreadAwareSetChangeListener<E>(consumer::accept);
     }
@@ -460,9 +504,10 @@ public final class UIThreadAwareBindings {
      *
      * @param observable the observable on which the listener will be registered.
      * @param runnable   the code to be executed when the listener is notified.
+     *
      * @return a {@code SetChangeListener}.
      */
-    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(final ObservableSet<E> observable, final Runnable runnable) {
+    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull final ObservableSet<E> observable, @Nonnull final Runnable runnable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         SetChangeListener<E> listener = uiThreadAwareSetChangeListener(runnable);
         observable.addListener(listener);
@@ -473,9 +518,11 @@ public final class UIThreadAwareBindings {
      * Creates a {@code SetChangeListener} that always handles notifications inside the UI thread.
      *
      * @param runnable the code to be executed when the listener is notified.
+     *
      * @return a {@code SetChangeListener}.
      */
-    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(final Runnable runnable) {
+    @Nonnull
+    public static <E> SetChangeListener<E> uiThreadAwareSetChangeListener(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         return new UIThreadAwareSetChangeListener<>(change -> runnable.run());
     }
@@ -484,9 +531,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable boolean property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable boolean property to wrap.
+     *
      * @return an observable boolean property.
      */
-    public static BooleanProperty uiThreadAwareBooleanProperty(BooleanProperty observable) {
+    @Nonnull
+    public static BooleanProperty uiThreadAwareBooleanProperty(@Nonnull BooleanProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareBooleanProperty(observable);
     }
@@ -495,9 +544,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable integer property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable integer property to wrap.
+     *
      * @return an observable integer property.
      */
-    public static IntegerProperty uiThreadAwareIntegerProperty(IntegerProperty observable) {
+    @Nonnull
+    public static IntegerProperty uiThreadAwareIntegerProperty(@Nonnull IntegerProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareIntegerProperty(observable);
     }
@@ -506,9 +557,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable long property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable long property to wrap.
+     *
      * @return an observable long property.
      */
-    public static LongProperty uiThreadAwareLongProperty(LongProperty observable) {
+    @Nonnull
+    public static LongProperty uiThreadAwareLongProperty(@Nonnull LongProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareLongProperty(observable);
     }
@@ -517,9 +570,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable float property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable float property to wrap.
+     *
      * @return an observable float property.
      */
-    public static FloatProperty uiThreadAwareFloatProperty(FloatProperty observable) {
+    @Nonnull
+    public static FloatProperty uiThreadAwareFloatProperty(@Nonnull FloatProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareFloatProperty(observable);
     }
@@ -528,9 +583,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable double property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable double property to wrap.
+     *
      * @return an observable double property.
      */
-    public static DoubleProperty uiThreadAwareDoubleProperty(DoubleProperty observable) {
+    @Nonnull
+    public static DoubleProperty uiThreadAwareDoubleProperty(@Nonnull DoubleProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareDoubleProperty(observable);
     }
@@ -539,9 +596,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable string property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable string property to wrap.
+     *
      * @return an observable string property.
      */
-    public static StringProperty uiThreadAwareStringProperty(StringProperty observable) {
+    @Nonnull
+    public static StringProperty uiThreadAwareStringProperty(@Nonnull StringProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareStringProperty(observable);
     }
@@ -550,9 +609,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable boolean property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable boolean property to wrap.
+     *
      * @return an observable boolean property.
      */
-    public static Property<Boolean> uiThreadAwarePropertyBoolean(Property<Boolean> observable) {
+    @Nonnull
+    public static Property<Boolean> uiThreadAwarePropertyBoolean(@Nonnull Property<Boolean> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyBoolean(observable);
     }
@@ -561,9 +622,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable integer property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable integer property to wrap.
+     *
      * @return an observable integer property.
      */
-    public static Property<Integer> uiThreadAwarePropertyInteger(Property<Integer> observable) {
+    @Nonnull
+    public static Property<Integer> uiThreadAwarePropertyInteger(@Nonnull Property<Integer> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyInteger(observable);
     }
@@ -572,9 +635,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable long property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable long property to wrap.
+     *
      * @return an observable long property.
      */
-    public static Property<Long> uiThreadAwarePropertyLong(Property<Long> observable) {
+    @Nonnull
+    public static Property<Long> uiThreadAwarePropertyLong(@Nonnull Property<Long> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyLong(observable);
     }
@@ -583,9 +648,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable float property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable float property to wrap.
+     *
      * @return an observable float property.
      */
-    public static Property<Float> uiThreadAwarePropertyFloat(Property<Float> observable) {
+    @Nonnull
+    public static Property<Float> uiThreadAwarePropertyFloat(@Nonnull Property<Float> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyFloat(observable);
     }
@@ -594,9 +661,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable double property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable double property to wrap.
+     *
      * @return an observable double property.
      */
-    public static Property<Double> uiThreadAwarePropertyDouble(Property<Double> observable) {
+    @Nonnull
+    public static Property<Double> uiThreadAwarePropertyDouble(@Nonnull Property<Double> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyDouble(observable);
     }
@@ -605,9 +674,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable string property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable string property to wrap.
+     *
      * @return an observable string property.
      */
-    public static Property<String> uiThreadAwarePropertyString(Property<String> observable) {
+    @Nonnull
+    public static Property<String> uiThreadAwarePropertyString(@Nonnull Property<String> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwarePropertyString(observable);
     }
@@ -616,9 +687,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable object property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable object property to wrap.
+     *
      * @return an observable object property.
      */
-    public static <T> ObjectProperty<T> uiThreadAwareObjectProperty(final ObjectProperty<T> observable) {
+    @Nonnull
+    public static <T> ObjectProperty<T> uiThreadAwareObjectProperty(@Nonnull final ObjectProperty<T> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObjectProperty<>(observable);
     }
@@ -627,9 +700,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable list property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable list property to wrap.
+     *
      * @return an observable list property.
      */
-    public static <E> ListProperty<E> uiThreadAwareListProperty(ListProperty<E> observable) {
+    @Nonnull
+    public static <E> ListProperty<E> uiThreadAwareListProperty(@Nonnull ListProperty<E> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareListProperty<>(observable);
     }
@@ -638,9 +713,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable set property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable set property to wrap.
+     *
      * @return an observable set property.
      */
-    public static <E> SetProperty<E> uiThreadAwareSetProperty(SetProperty<E> observable) {
+    @Nonnull
+    public static <E> SetProperty<E> uiThreadAwareSetProperty(@Nonnull SetProperty<E> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareSetProperty<>(observable);
     }
@@ -649,9 +726,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable map property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable map property to wrap.
+     *
      * @return an observable map property.
      */
-    public static <K, V> MapProperty<K, V> uiThreadAwareMapProperty(MapProperty<K, V> observable) {
+    @Nonnull
+    public static <K, V> MapProperty<K, V> uiThreadAwareMapProperty(@Nonnull MapProperty<K, V> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareMapProperty<>(observable);
     }
@@ -660,9 +739,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable value that notifies its listeners inside the UI thread.
      *
      * @param observable the observable to wrap.
+     *
      * @return an observable value.
      */
-    public static <T> ObservableValue<T> uiThreadAwareObservable(final ObservableValue<T> observable) {
+    @Nonnull
+    public static <T> ObservableValue<T> uiThreadAwareObservable(@Nonnull final ObservableValue<T> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableObjectValue<>(observable);
     }
@@ -671,9 +752,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable string value that notifies its listeners inside the UI thread.
      *
      * @param observable the observable string to wrap.
+     *
      * @return an observable string value.
      */
-    public static ObservableStringValue uiThreadAwareObservableString(final ObservableStringValue observable) {
+    @Nonnull
+    public static ObservableStringValue uiThreadAwareObservableString(@Nonnull final ObservableStringValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableStringValue(observable);
     }
@@ -682,9 +765,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable boolean value that notifies its listeners inside the UI thread.
      *
      * @param observable the observable boolean to wrap.
+     *
      * @return an observable boolean value.
      */
-    public static ObservableBooleanValue uiThreadAwareObservableBoolean(final ObservableBooleanValue observable) {
+    @Nonnull
+    public static ObservableBooleanValue uiThreadAwareObservableBoolean(@Nonnull final ObservableBooleanValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableBooleanValue(observable);
     }
@@ -693,9 +778,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable integer value that notifies its listeners inside the UI thread.
      *
      * @param observable the observable integer to wrap.
+     *
      * @return an observable integer value.
      */
-    public static ObservableIntegerValue uiThreadAwareObservableInteger(final ObservableIntegerValue observable) {
+    @Nonnull
+    public static ObservableIntegerValue uiThreadAwareObservableInteger(@Nonnull final ObservableIntegerValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableIntegerValue(observable);
     }
@@ -704,9 +791,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable long value that notifies its listeners inside the UI thread.
      *
      * @param observable the observable long to wrap.
+     *
      * @return an observable long value.
      */
-    public static ObservableLongValue uiThreadAwareObservableLong(final ObservableLongValue observable) {
+    @Nonnull
+    public static ObservableLongValue uiThreadAwareObservableLong(@Nonnull final ObservableLongValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableLongValue(observable);
     }
@@ -715,9 +804,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable float value that notifies its listeners inside the UI thread.
      *
      * @param observable the observable float to wrap.
+     *
      * @return an observable float value.
      */
-    public static ObservableFloatValue uiThreadAwareObservableFloat(final ObservableFloatValue observable) {
+    @Nonnull
+    public static ObservableFloatValue uiThreadAwareObservableFloat(@Nonnull final ObservableFloatValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableFloatValue(observable);
     }
@@ -726,9 +817,11 @@ public final class UIThreadAwareBindings {
      * Creates an observable double value that notifies its listeners inside the UI thread.
      *
      * @param observable the observable double to wrap.
+     *
      * @return an observable double value.
      */
-    public static ObservableDoubleValue uiThreadAwareObservableDouble(final ObservableDoubleValue observable) {
+    @Nonnull
+    public static ObservableDoubleValue uiThreadAwareObservableDouble(@Nonnull final ObservableDoubleValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObservableDoubleValue(observable);
     }
@@ -737,10 +830,13 @@ public final class UIThreadAwareBindings {
      * Creates a boolean binding that notifies its listeners inside the UI thread.
      *
      * @param binding the boolean binding to wrap.
+     *
      * @return a boolean binding.
+     *
      * @since 2.13.0
      */
-    public static BooleanBinding uiThreadAwareBooleanBinding(BooleanBinding binding) {
+    @Nonnull
+    public static BooleanBinding uiThreadAwareBooleanBinding(@Nonnull BooleanBinding binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareBooleanBinding(binding);
     }
@@ -749,10 +845,13 @@ public final class UIThreadAwareBindings {
      * Creates an integer binding that notifies its listeners inside the UI thread.
      *
      * @param binding the integer binding to wrap.
+     *
      * @return an integer binding.
+     *
      * @since 2.13.0
      */
-    public static IntegerBinding uiThreadAwareIntegerBinding(IntegerBinding binding) {
+    @Nonnull
+    public static IntegerBinding uiThreadAwareIntegerBinding(@Nonnull IntegerBinding binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareIntegerBinding(binding);
     }
@@ -761,10 +860,13 @@ public final class UIThreadAwareBindings {
      * Creates a long binding that notifies its listeners inside the UI thread.
      *
      * @param binding the long binding to wrap.
+     *
      * @return a long binding.
+     *
      * @since 2.13.0
      */
-    public static LongBinding uiThreadAwareLongBinding(LongBinding binding) {
+    @Nonnull
+    public static LongBinding uiThreadAwareLongBinding(@Nonnull LongBinding binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareLongBinding(binding);
     }
@@ -773,10 +875,13 @@ public final class UIThreadAwareBindings {
      * Creates a float binding that notifies its listeners inside the UI thread.
      *
      * @param binding the float binding to wrap.
+     *
      * @return a float binding.
+     *
      * @since 2.13.0
      */
-    public static FloatBinding uiThreadAwareFloatBinding(FloatBinding binding) {
+    @Nonnull
+    public static FloatBinding uiThreadAwareFloatBinding(@Nonnull FloatBinding binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareFloatBinding(binding);
     }
@@ -785,10 +890,13 @@ public final class UIThreadAwareBindings {
      * Creates a double binding that notifies its listeners inside the UI thread.
      *
      * @param binding the double binding to wrap.
+     *
      * @return a double binding.
+     *
      * @since 2.13.0
      */
-    public static DoubleBinding uiThreadAwareDoubleBinding(DoubleBinding binding) {
+    @Nonnull
+    public static DoubleBinding uiThreadAwareDoubleBinding(@Nonnull DoubleBinding binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareDoubleBinding(binding);
     }
@@ -797,10 +905,13 @@ public final class UIThreadAwareBindings {
      * Creates a string binding that notifies its listeners inside the UI thread.
      *
      * @param binding the string binding to wrap.
+     *
      * @return a string binding.
+     *
      * @since 2.13.0
      */
-    public static StringBinding uiThreadAwareStringBinding(StringBinding binding) {
+    @Nonnull
+    public static StringBinding uiThreadAwareStringBinding(@Nonnull StringBinding binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareStringBinding(binding);
     }
@@ -809,10 +920,13 @@ public final class UIThreadAwareBindings {
      * Creates an object binding that notifies its listeners inside the UI thread.
      *
      * @param binding the object binding to wrap.
+     *
      * @return an object binding.
+     *
      * @since 2.13.0
      */
-    public static <T> ObjectBinding<T> uiThreadAwareObjectBinding(ObjectBinding<T> binding) {
+    @Nonnull
+    public static <T> ObjectBinding<T> uiThreadAwareObjectBinding(@Nonnull ObjectBinding<T> binding) {
         requireNonNull(binding, ERROR_BINDING_NULL);
         return binding instanceof UIThreadAware ? binding : new UIThreadAwareObjectBinding<>(binding);
     }
@@ -821,10 +935,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable boolean property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable boolean property to wrap.
+     *
      * @return an observable read-only boolean property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static ReadOnlyBooleanProperty uiThreadAwareReadOnlyBooleanProperty(ReadOnlyBooleanProperty observable) {
+    @Nonnull
+    public static ReadOnlyBooleanProperty uiThreadAwareReadOnlyBooleanProperty(@Nonnull ReadOnlyBooleanProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyBooleanProperty(observable);
     }
@@ -833,10 +949,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable integer property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable integer property to wrap.
+     *
      * @return an observable read-only integer property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static ReadOnlyIntegerProperty uiThreadAwareReadOnlyIntegerProperty(ReadOnlyIntegerProperty observable) {
+    @Nonnull
+    public static ReadOnlyIntegerProperty uiThreadAwareReadOnlyIntegerProperty(@Nonnull ReadOnlyIntegerProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyIntegerProperty(observable);
     }
@@ -845,10 +963,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable long property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable long property to wrap.
+     *
      * @return an observable read-only long property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static ReadOnlyLongProperty uiThreadAwareReadOnlyLongProperty(ReadOnlyLongProperty observable) {
+    @Nonnull
+    public static ReadOnlyLongProperty uiThreadAwareReadOnlyLongProperty(@Nonnull ReadOnlyLongProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyLongProperty(observable);
     }
@@ -857,10 +977,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable float property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable float property to wrap.
+     *
      * @return an observable read-only float property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static ReadOnlyFloatProperty uiThreadAwareReadOnlyFloatProperty(ReadOnlyFloatProperty observable) {
+    @Nonnull
+    public static ReadOnlyFloatProperty uiThreadAwareReadOnlyFloatProperty(@Nonnull ReadOnlyFloatProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyFloatProperty(observable);
     }
@@ -869,10 +991,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable double property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable double property to wrap.
+     *
      * @return an observable read-only double property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static ReadOnlyDoubleProperty uiThreadAwareReadOnlyDoubleProperty(ReadOnlyDoubleProperty observable) {
+    @Nonnull
+    public static ReadOnlyDoubleProperty uiThreadAwareReadOnlyDoubleProperty(@Nonnull ReadOnlyDoubleProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyDoubleProperty(observable);
     }
@@ -881,10 +1005,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable string property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable string property to wrap.
+     *
      * @return an observable read-only string property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static ReadOnlyStringProperty uiThreadAwareReadOnlyStringProperty(ReadOnlyStringProperty observable) {
+    @Nonnull
+    public static ReadOnlyStringProperty uiThreadAwareReadOnlyStringProperty(@Nonnull ReadOnlyStringProperty observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyStringProperty(observable);
     }
@@ -893,10 +1019,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable object property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable object property to wrap.
+     *
      * @return an observable read-only object property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <T> ReadOnlyObjectProperty<T> uiThreadAwareReadOnlyObjectProperty(final ReadOnlyObjectProperty<T> observable) {
+    @Nonnull
+    public static <T> ReadOnlyObjectProperty<T> uiThreadAwareReadOnlyObjectProperty(@Nonnull final ReadOnlyObjectProperty<T> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyObjectProperty<>(observable);
     }
@@ -905,10 +1033,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable list property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable list property to wrap.
+     *
      * @return an observable read-only list property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <E> ReadOnlyListProperty<E> uiThreadAwareReadOnlyListProperty(ReadOnlyListProperty<E> observable) {
+    @Nonnull
+    public static <E> ReadOnlyListProperty<E> uiThreadAwareReadOnlyListProperty(@Nonnull ReadOnlyListProperty<E> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyListProperty<>(observable);
     }
@@ -917,10 +1047,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable set property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable set property to wrap.
+     *
      * @return an observable read-only set property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <E> ReadOnlySetProperty<E> uiThreadAwareReadOnlySetProperty(ReadOnlySetProperty<E> observable) {
+    @Nonnull
+    public static <E> ReadOnlySetProperty<E> uiThreadAwareReadOnlySetProperty(@Nonnull ReadOnlySetProperty<E> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlySetProperty<>(observable);
     }
@@ -929,10 +1061,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable map property that notifies its listeners inside the UI thread.
      *
      * @param observable the observable map property to wrap.
+     *
      * @return an observable read-only map property.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <K, V> ReadOnlyMapProperty<K, V> uiThreadAwareReadOnlyMapProperty(ReadOnlyMapProperty<K, V> observable) {
+    @Nonnull
+    public static <K, V> ReadOnlyMapProperty<K, V> uiThreadAwareReadOnlyMapProperty(@Nonnull ReadOnlyMapProperty<K, V> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareReadOnlyMapProperty<>(observable);
     }
@@ -941,10 +1075,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable boolean expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable boolean expression to wrap.
+     *
      * @return an observable  boolean expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static BooleanExpression uiThreadAwareBooleanExpression(BooleanExpression observable) {
+    @Nonnull
+    public static BooleanExpression uiThreadAwareBooleanExpression(@Nonnull BooleanExpression observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareBooleanExpression(observable);
     }
@@ -953,10 +1089,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable integer expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable integer expression to wrap.
+     *
      * @return an observable  integer expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static IntegerExpression uiThreadAwareIntegerExpression(IntegerExpression observable) {
+    @Nonnull
+    public static IntegerExpression uiThreadAwareIntegerExpression(@Nonnull IntegerExpression observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareIntegerExpression(observable);
     }
@@ -965,10 +1103,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable long expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable long expression to wrap.
+     *
      * @return an observable  long expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static LongExpression uiThreadAwareLongExpression(LongExpression observable) {
+    @Nonnull
+    public static LongExpression uiThreadAwareLongExpression(@Nonnull LongExpression observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareLongExpression(observable);
     }
@@ -977,10 +1117,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable float expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable float expression to wrap.
+     *
      * @return an observable  float expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static FloatExpression uiThreadAwareFloatExpression(FloatExpression observable) {
+    @Nonnull
+    public static FloatExpression uiThreadAwareFloatExpression(@Nonnull FloatExpression observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareFloatExpression(observable);
     }
@@ -989,10 +1131,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable double expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable double expression to wrap.
+     *
      * @return an observable  double expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static DoubleExpression uiThreadAwareDoubleExpression(DoubleExpression observable) {
+    @Nonnull
+    public static DoubleExpression uiThreadAwareDoubleExpression(@Nonnull DoubleExpression observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareDoubleExpression(observable);
     }
@@ -1001,10 +1145,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable string expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable string expression to wrap.
+     *
      * @return an observable  string expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static StringExpression uiThreadAwareStringExpression(StringExpression observable) {
+    @Nonnull
+    public static StringExpression uiThreadAwareStringExpression(@Nonnull StringExpression observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareStringExpression(observable);
     }
@@ -1013,10 +1159,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable object expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable object expression to wrap.
+     *
      * @return an observable  object expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <T> ObjectExpression<T> uiThreadAwareObjectExpression(final ObjectExpression<T> observable) {
+    @Nonnull
+    public static <T> ObjectExpression<T> uiThreadAwareObjectExpression(@Nonnull final ObjectExpression<T> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareObjectExpression<>(observable);
     }
@@ -1025,10 +1173,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable list expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable list expression to wrap.
+     *
      * @return an observable  list expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <E> ListExpression<E> uiThreadAwareListExpression(ListExpression<E> observable) {
+    @Nonnull
+    public static <E> ListExpression<E> uiThreadAwareListExpression(@Nonnull ListExpression<E> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareListExpression<>(observable);
     }
@@ -1037,10 +1187,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable set expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable set expression to wrap.
+     *
      * @return an observable  set expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <E> SetExpression<E> uiThreadAwareSetExpression(SetExpression<E> observable) {
+    @Nonnull
+    public static <E> SetExpression<E> uiThreadAwareSetExpression(@Nonnull SetExpression<E> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareSetExpression<>(observable);
     }
@@ -1049,10 +1201,12 @@ public final class UIThreadAwareBindings {
      * Creates an observable map expression that notifies its listeners inside the UI thread.
      *
      * @param observable the observable map expression to wrap.
+     *
      * @return an observable  map expression.
-     * @since 2.16.0
+     * @since 3.0.0
      */
-    public static <K, V> MapExpression<K, V> uiThreadAwareMapExpression(MapExpression<K, V> observable) {
+    @Nonnull
+    public static <K, V> MapExpression<K, V> uiThreadAwareMapExpression(@Nonnull MapExpression<K, V> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return observable instanceof UIThreadAware ? observable : new UIThreadAwareMapExpression<>(observable);
     }

@@ -49,11 +49,13 @@ public class ResetableObjectProperty<E> extends AbstractResetableProperty<E> {
         super(bean, name, baseValue);
     }
 
+    @Nonnull
     @Override
     protected Property<E> writableBaseValueProperty() {
         return writableBaseValueObjectProperty();
     }
 
+    @Nonnull
     protected ObjectProperty writableBaseValueObjectProperty() {
         if (baseValue == null) {
             baseValue = new SimpleObjectProperty<>(this, "baseValue");
@@ -61,20 +63,24 @@ public class ResetableObjectProperty<E> extends AbstractResetableProperty<E> {
         return baseValue;
     }
 
+    @Nonnull
     @Override
     public ReadOnlyProperty<E> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
+    @Nonnull
     public ReadOnlyObjectProperty baseValueObjectProperty() {
         return writableBaseValueObjectProperty();
     }
 
+    @Nonnull
     @Override
     public Property<E> valueProperty() {
         return valueObjectProperty();
     }
 
+    @Nonnull
     public ObjectProperty<E> valueObjectProperty() {
         if (value == null) {
             value = new SimpleObjectProperty<>(this, "value");

@@ -19,7 +19,7 @@ package editor;
 
 import griffon.annotations.core.Nonnull;
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;

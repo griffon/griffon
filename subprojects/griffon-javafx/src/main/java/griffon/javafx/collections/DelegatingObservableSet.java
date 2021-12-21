@@ -40,6 +40,7 @@ public abstract class DelegatingObservableSet<E> extends ObservableSetBase<E> im
         this.delegate.addListener(new WeakSetChangeListener<>(getListener()));
     }
 
+    @Nonnull
     protected ObservableSet<E> getDelegate() {
         return delegate;
     }

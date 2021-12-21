@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.ListExpression;
 import javafx.beans.value.ChangeListener;
@@ -25,10 +26,10 @@ import javafx.collections.ObservableList;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareListExpression<E> extends ListExpressionDecorator<E> implements UIThreadAware {
-    UIThreadAwareListExpression(ListExpression<E> delegate) {
+    UIThreadAwareListExpression(@Nonnull ListExpression<E> delegate) {
         super(delegate);
     }
 

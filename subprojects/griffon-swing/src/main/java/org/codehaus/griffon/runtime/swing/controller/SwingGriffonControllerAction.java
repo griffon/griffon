@@ -22,17 +22,17 @@ import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
-import griffon.core.editors.PropertyEditorResolver;
+import griffon.core.properties.PropertyChangeEvent;
 import griffon.core.threading.UIThreadManager;
 import griffon.swing.support.SwingAction;
 import org.codehaus.griffon.runtime.core.controller.AbstractAction;
 
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyEditor;
 
-import static griffon.util.GriffonNameUtils.isNotBlank;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -64,14 +64,12 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
         toolkitAction = createAction(actionManager, controller, actionMetadata.getActionName());
 
-        addPropertyChangeListener(evt -> uiThreadManager.runInsideUIAsync(() -> handlePropertyChange(evt)));
+        addPropertyChangeListener(evt -> uiThreadManager.executeInsideUIAsync(() -> handlePropertyChange(evt)));
     }
 
     @Nonnull
     protected SwingAction createAction(@Nonnull final ActionManager actionManager, @Nonnull final GriffonController controller, @Nonnull final String actionName) {
-        return new SwingAction(args -> {
-            actionManager.invokeAction(controller, actionName, args);
-        });
+        return new SwingAction(args -> actionManager.invokeAction(controller, actionName, args));
     }
 
     protected void handlePropertyChange(@Nonnull PropertyChangeEvent evt) {
@@ -106,9 +104,12 @@ public class SwingGriffonControllerAction extends AbstractAction {
 
     protected void handleIcon(@Nullable Object value, @Nonnull String key) {
         if (value != null) {
-            PropertyEditor editor = PropertyEditorResolver.findEditor(Icon.class);
-            editor.setValue(value);
-            toolkitAction.putValue(key, editor.getValue());
+            Converter<Icon> converter = getController().getApplication()
+                .getInjector().getInstance(ConverterRegistry.class)
+                .findConverter(Icon.class);
+            if (converter != null) {
+                toolkitAction.putValue(key, converter.fromObject(value));
+            }
         }
     }
 

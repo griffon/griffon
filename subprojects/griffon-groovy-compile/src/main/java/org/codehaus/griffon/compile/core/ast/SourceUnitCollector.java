@@ -17,16 +17,16 @@
  */
 package org.codehaus.griffon.compile.core.ast;
 
+import griffon.annotations.core.Nonnull;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.SourceUnit;
 
-import griffon.annotations.core.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

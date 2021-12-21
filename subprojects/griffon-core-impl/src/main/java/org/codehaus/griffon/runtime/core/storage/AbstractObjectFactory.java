@@ -17,19 +17,18 @@
  */
 package org.codehaus.griffon.runtime.core.storage;
 
-
 import griffon.annotations.core.Nonnull;
 import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
+import griffon.core.event.Event;
 import griffon.core.storage.ObjectFactory;
 
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
-import static griffon.util.ConfigUtils.getConfigValue;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.core.util.ConfigUtils.getConfigValue;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -62,8 +61,8 @@ public abstract class AbstractObjectFactory<T> implements ObjectFactory<T> {
     @Nonnull
     protected abstract String getPluralKey();
 
-    protected void event(@Nonnull String eventName, @Nonnull List<?> args) {
-        application.getEventRouter().publishEvent(eventName, args);
+    protected <E extends Event> void event(@Nonnull E event) {
+        application.getEventRouter().publishEvent(event);
     }
 
     @Nonnull

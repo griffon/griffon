@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 
@@ -28,7 +29,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwareInvalidationListener extends InvalidationListenerDecorator implements UIThreadAware {
-    UIThreadAwareInvalidationListener(InvalidationListener delegate) {
+    UIThreadAwareInvalidationListener(@Nonnull InvalidationListener delegate) {
         super(delegate);
     }
 

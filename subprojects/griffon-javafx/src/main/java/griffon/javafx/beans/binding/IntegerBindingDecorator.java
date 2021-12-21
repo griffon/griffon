@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -41,10 +42,11 @@ import static java.util.Objects.requireNonNull;
 public class IntegerBindingDecorator extends IntegerBinding {
     private final IntegerBinding delegate;
 
-    public IntegerBindingDecorator(IntegerBinding delegate) {
+    public IntegerBindingDecorator(@Nonnull IntegerBinding delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final IntegerBinding getDelegate() {
         return delegate;
     }

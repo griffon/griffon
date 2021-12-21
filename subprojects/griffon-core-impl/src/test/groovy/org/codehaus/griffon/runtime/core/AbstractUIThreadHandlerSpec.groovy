@@ -54,7 +54,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        invoked = threadingHandler.runInsideUISync({
+        invoked = threadingHandler.executeInsideUISync({
             true
         } as Callable)
 
@@ -67,7 +67,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        threadingHandler.runInsideUISync {
+        threadingHandler.executeInsideUISync {
             invoked = true
         }
 
@@ -80,7 +80,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        threadingHandler.runInsideUIAsync {
+        threadingHandler.executeInsideUIAsync {
             invoked = true
         }
 
@@ -93,7 +93,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        threadingHandler.runOutsideUI() {
+        threadingHandler.executeOutsideUI() {
             invoked = true
         }
 
@@ -106,7 +106,7 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = threadingHandler.runFuture {
+        Future future = threadingHandler.executeFuture {
             invoked = true
         }
         future.get()
@@ -120,9 +120,9 @@ class AbstractUIThreadHandlerSpec extends Specification {
         boolean invoked = false
 
         when:
-        Future future = threadingHandler.runFuture(Executors.newFixedThreadPool(1)) {
+        Future future = threadingHandler.executeFuture(Executors.newFixedThreadPool(1), {
             invoked = true
-        }
+        })
         future.get()
 
         then:

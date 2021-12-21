@@ -17,18 +17,20 @@
  */
 package org.codehaus.griffon.runtime.core;
 
-import com.apple.mrj.MRJAboutHandler;
-import com.apple.mrj.MRJApplicationUtils;
-import com.apple.mrj.MRJPrefsHandler;
-import com.apple.mrj.MRJQuitHandler;
 import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
+import griffon.core.events.OSXAboutEvent;
+import griffon.core.events.OSXPrefsEvent;
+import griffon.core.events.OSXQuitEvent;
+import griffon.core.util.GriffonApplicationUtils;
 
-import static griffon.util.GriffonNameUtils.capitalize;
-import static java.util.Collections.singletonList;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
- * Handles Linux integration.
+ * Handles OSX integration.
  *
  * @author Andres Almiray
  * @since 2.0.0
@@ -41,47 +43,80 @@ public class DefaultMacOSXPlatformHandler extends DefaultPlatformHandler {
         // use unified menu bar
         System.setProperty("apple.laf.useScreenMenuBar", "true");
 
+        try {
+            addEventHandlers(application);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+
+        /*
         // set menu bar title
         String title = application.getConfiguration().getAsString("application.title", "Griffon");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", capitalize(title));
+        */
+    }
 
+    private void addEventHandlers(@Nonnull GriffonApplication application) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+        InvocationTargetException, InstantiationException {
+
+        Class<?> applicationClass = Class.forName("com.apple.eawt.Application");
+        Class<?> quitHandlerClass;
+        Class<?> aboutHandlerClass;
+        Class<?> preferencesHandlerClass;
+
+        if (GriffonApplicationUtils.getIsJdk11Compatible()) {
+            quitHandlerClass = Class.forName("java.awt.desktop.QuitHandler");
+            aboutHandlerClass = Class.forName("java.awt.desktop.AboutHandler");
+            preferencesHandlerClass = Class.forName("java.awt.desktop.PreferencesHandler");
+        } else {
+            quitHandlerClass = Class.forName("com.apple.eawt.QuitHandler");
+            aboutHandlerClass = Class.forName("com.apple.eawt.AboutHandler");
+            preferencesHandlerClass = Class.forName("com.apple.eawt.PreferencesHandler");
+        }
+
+        Object app = applicationClass.getConstructor((Class[]) null).newInstance((Object[]) null);
+        Object proxy = Proxy.newProxyInstance(DefaultMacOSXPlatformHandler.class.getClassLoader(), new Class<?>[]{
+            quitHandlerClass, aboutHandlerClass, preferencesHandlerClass}, new PlatformInvocationHandler(application));
 
         boolean skipAbout = application.getConfiguration().getAsBoolean("osx.noabout", false);
         boolean skipPrefs = application.getConfiguration().getAsBoolean("osx.noprefs", false);
-        boolean skipQuit = application.getConfiguration().getAsBoolean("osx.noquit", false);
 
-        GriffonMacOSXSupport handler = new GriffonMacOSXSupport(application, skipQuit);
-        if (!skipAbout) { MRJApplicationUtils.registerAboutHandler(handler); }
-        if (!skipPrefs) { MRJApplicationUtils.registerPrefsHandler(handler); }
-        MRJApplicationUtils.registerQuitHandler(handler);
+        applicationClass.getDeclaredMethod("setQuitHandler", quitHandlerClass).invoke(app, proxy);
+        if (!skipAbout) {
+            applicationClass.getDeclaredMethod("setAboutHandler", aboutHandlerClass).invoke(app, proxy);
+        }
+        if (!skipPrefs) {
+            applicationClass.getDeclaredMethod("setPreferencesHandler", preferencesHandlerClass).invoke(app, proxy);
+        }
     }
 
-    private static class GriffonMacOSXSupport implements MRJAboutHandler, MRJQuitHandler, MRJPrefsHandler {
+    private static class PlatformInvocationHandler implements InvocationHandler {
         private final GriffonApplication application;
-        private final boolean noquit;
 
-        private GriffonMacOSXSupport(@Nonnull GriffonApplication application, boolean noquit) {
+        private PlatformInvocationHandler(@Nonnull GriffonApplication application) {
             this.application = application;
-            this.noquit = noquit;
         }
 
         @Override
-        public void handleAbout() {
-            application.getEventRouter().publishEvent("OSXAbout", singletonList(application));
-        }
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            boolean skipQuit = application.getConfiguration().getAsBoolean("osx.noquit", false);
 
-        @Override
-        public void handlePrefs() throws IllegalStateException {
-            application.getEventRouter().publishEvent("OSXPrefs", singletonList(application));
-        }
-
-        @Override
-        public void handleQuit() {
-            if (noquit) {
-                application.getEventRouter().publishEvent("OSXQuit", singletonList(application));
-            } else {
-                application.shutdown();
+            switch (method.getName()) {
+                case "handleQuitRequestWith":
+                    if (skipQuit) {
+                        application.getEventRouter().publishEvent(OSXQuitEvent.of(application));
+                    } else {
+                        application.shutdown();
+                    }
+                    break;
+                case "handleAbout":
+                    application.getEventRouter().publishEvent(OSXAboutEvent.of(application));
+                    break;
+                case "handlePreferences":
+                    application.getEventRouter().publishEvent(OSXPrefsEvent.of(application));
+                    break;
             }
+            return null;
         }
     }
 }

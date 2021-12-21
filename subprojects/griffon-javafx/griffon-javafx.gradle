@@ -21,11 +21,12 @@ dependencies {
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')
 
+    testImplementation project(':griffon-tck')
     testImplementation("org.awaitility:awaitility-groovy:$awaitilityVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy'
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        //exclude group: 'org.hamcrest', module: 'hamcrest-core'
-        //exclude group: 'org.hamcrest', module: 'hamcrest-library'
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+        exclude group: 'org.hamcrest', module: 'hamcrest-library'
     }
     testImplementation(config.dependencyManagement.gav('testfx', 'testfx-core')) {
         transitive = false

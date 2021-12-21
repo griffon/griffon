@@ -17,12 +17,11 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.mvc.MVCGroup;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.codehaus.groovy.ast.stmt.EmptyStatement;
-
-import griffon.annotations.core.Nonnull;
 
 import static java.lang.reflect.Modifier.PUBLIC;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;

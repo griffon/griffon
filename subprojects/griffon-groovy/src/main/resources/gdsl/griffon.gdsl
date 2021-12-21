@@ -25,7 +25,7 @@ import com.intellij.patterns.*
  * @author Andres Almiray
  */
 
-String artifactProviderForType = 'griffon.metadata.ArtifactProviderFor'
+String artifactProviderForType = 'org.kordamp.jipsy.annotations.ServiceProviderFor'
 
 contributor(scope: annotatedScope(ctype: artifactProviderForType)) {
     def clazz = enclosingClass()
@@ -48,7 +48,7 @@ contributor(scope: annotatedScope(ctype: 'griffon.transform.MVCAware')) {
     delegatesTo(findClass('griffon.core.mvc.MVCHandler'))
 }
 
-contributor(scope: annotatedScope(ctype: 'griffon.transform.ThreadingAware')) {
+contributor(scope: annotatedScope(ctype: 'javax.application.threading.ThreadingAware')) {
     delegatesTo(findClass('griffon.core.threading.ThreadingHandler'))
 }
 
@@ -65,9 +65,9 @@ contributor(scope: annotatedScope(ctype: 'griffon.transform.ResourceResolverAwar
 }
 
 contributor(scope: annotatedScope(ctype: 'griffon.transform.Observable')) {
-    delegatesTo(findClass('griffon.core.Observable'))
+    delegatesTo(findClass('griffon.beans.Observable'))
 }
 
 contributor(scope: annotatedScope(ctype: 'griffon.transform.Vetoable')) {
-    delegatesTo(findClass('griffon.core.Vetoable'))
+    delegatesTo(findClass('griffon.beans.Vetoable'))
 }

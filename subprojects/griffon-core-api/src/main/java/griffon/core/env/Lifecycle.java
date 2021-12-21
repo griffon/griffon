@@ -19,7 +19,7 @@ package griffon.core.env;
 
 import java.util.Locale;
 
-import static griffon.util.GriffonNameUtils.capitalize;
+import static griffon.util.StringUtils.capitalize;
 
 /**
  * Defines the names of the lifecycle scripts.

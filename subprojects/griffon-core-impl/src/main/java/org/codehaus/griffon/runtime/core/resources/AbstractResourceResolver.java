@@ -19,19 +19,20 @@ package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
 import griffon.core.CallableWithArgs;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
 
-import java.beans.PropertyEditor;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.function.Function;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -42,220 +43,235 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     protected static final String ERROR_LOCALE_NULL = "Argument 'locale' must not be null";
     protected static final String ERROR_ARGS_NULL = "Argument 'args' must not be null";
+    protected static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
     protected static final String ERROR_RESOURCE_NULL = "Argument 'resource' must not be null";
 
     protected static final Object[] EMPTY_OBJECT_ARGS = new Object[0];
 
+    private final ConverterRegistry converterRegistry;
+
+    protected AbstractResourceResolver(@Nonnull ConverterRegistry converterRegistry) {
+        this.converterRegistry = requireNonNull(converterRegistry, "Argument 'converterRegistry' must not be null");
+    }
+
+    protected final ConverterRegistry getConverterRegistry() {
+        return converterRegistry;
+    }
+
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key) throws NoSuchResourceException {
         return resolveResource(key, EMPTY_OBJECT_ARGS, Locale.getDefault());
     }
 
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Locale locale) throws NoSuchResourceException {
         return resolveResource(key, EMPTY_OBJECT_ARGS, locale);
     }
 
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Object[] args) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args) throws NoSuchResourceException {
         return resolveResource(key, args, Locale.getDefault());
     }
 
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale) throws NoSuchResourceException {
         requireNonBlank(key, ERROR_KEY_BLANK);
         requireNonNull(args, ERROR_ARGS_NULL);
         requireNonNull(locale, ERROR_LOCALE_NULL);
         Object resource = resolveResourceValue(key, locale);
         Object result = evalResourceWithArguments(resource, args);
-        if (result != null) return result;
+        if (result != null) {
+            return (T) result;
+        }
         throw new NoSuchResourceException(key, locale);
     }
 
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull List<?> args) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args) throws NoSuchResourceException {
         return resolveResource(key, toObjectArray(args), Locale.getDefault());
     }
 
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale) throws NoSuchResourceException {
         return resolveResource(key, toObjectArray(args), locale);
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nullable T defaultValue) {
         return resolveResource(key, EMPTY_OBJECT_ARGS, Locale.getDefault(), defaultValue);
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Locale locale, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Locale locale, @Nullable T defaultValue) {
         return resolveResource(key, EMPTY_OBJECT_ARGS, locale, defaultValue);
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nullable T defaultValue) {
         return resolveResource(key, args, Locale.getDefault(), defaultValue);
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable T defaultValue) {
         try {
             return resolveResource(key, args, locale);
         } catch (NoSuchResourceException nsre) {
-            return null == defaultValue ? key : defaultValue;
+            return defaultValue;
         }
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nullable T defaultValue) {
         return resolveResource(key, toObjectArray(args), Locale.getDefault(), defaultValue);
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nullable T defaultValue) {
         return resolveResource(key, toObjectArray(args), locale, defaultValue);
     }
 
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args) throws NoSuchResourceException {
         return resolveResource(key, args, Locale.getDefault());
     }
 
     @Nonnull
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale) throws NoSuchResourceException {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale) throws NoSuchResourceException {
         requireNonBlank(key, ERROR_KEY_BLANK);
         requireNonNull(args, ERROR_ARGS_NULL);
         requireNonNull(locale, ERROR_LOCALE_NULL);
         Object resource = resolveResourceValue(key, locale);
         Object result = evalResourceWithArguments(resource, args);
-        if (result != null) return result;
+        if (result != null) {
+            return (T) result;
+        }
         throw new NoSuchResourceException(key, locale);
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nullable T defaultValue) {
         return resolveResource(key, args, Locale.getDefault(), defaultValue);
     }
 
     @Nullable
     @Override
-    public Object resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable Object defaultValue) {
+    public <T> T resolveResource(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable T defaultValue) {
         try {
             return resolveResource(key, args, locale);
         } catch (NoSuchResourceException nsre) {
-            return null == defaultValue ? key : defaultValue;
+            return defaultValue;
         }
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, args, defaultValue), type);
+        return doResolveResourceConverted(key, toObjectArray(args), Locale.getDefault(), defaultValue, type);
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, args, locale, defaultValue), type);
+        return doResolveResourceConverted(key, toObjectArray(args), locale, defaultValue, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key, args, locale), type);
+        return doResolveResourceConverted(key, toObjectArray(args), locale, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull List<?> args, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key, args), type);
+        return doResolveResourceConverted(key, toObjectArray(args), Locale.getDefault(), type);
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, args, defaultValue), type);
+        return doResolveResourceConverted(key, args, Locale.getDefault(), defaultValue, type);
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, args, locale, defaultValue), type);
+        return doResolveResourceConverted(key, args, locale, defaultValue, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key, args, locale), type);
+        return doResolveResourceConverted(key, args, locale, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key, args), type);
+        return doResolveResourceConverted(key, args, Locale.getDefault(), type);
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, args, defaultValue), type);
+        return doResolveResourceConverted(key, args, Locale.getDefault(), defaultValue, type);
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, args, locale, defaultValue), type);
+        return doResolveResourceConverted(key, args, locale, defaultValue, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key, args, locale), type);
+        return doResolveResourceConverted(key, args, locale, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key, args), type);
+        return doResolveResourceConverted(key, args, Locale.getDefault(), type);
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, defaultValue), type);
+        return doResolveResourceConverted(key, EMPTY_OBJECT_ARGS, Locale.getDefault(), defaultValue, type);
     }
 
     @Nullable
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type) {
-        return convertValue(resolveResource(key, locale, defaultValue), type);
+        return doResolveResourceConverted(key, EMPTY_OBJECT_ARGS, locale, defaultValue, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key, locale), type);
+        return doResolveResourceConverted(key, EMPTY_OBJECT_ARGS, locale, type);
     }
 
     @Nonnull
     @Override
     public <T> T resolveResourceConverted(@Nonnull String key, @Nonnull Class<T> type) throws NoSuchResourceException {
-        return convertValue(resolveResource(key), type);
+        return doResolveResourceConverted(key, EMPTY_OBJECT_ARGS, Locale.getDefault(), type);
     }
 
     @Nonnull
@@ -291,7 +307,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     public String formatResource(@Nonnull String resource, @Nonnull Object[] args) {
         requireNonNull(resource, ERROR_RESOURCE_NULL);
         requireNonNull(args, ERROR_ARGS_NULL);
-        if (args.length == 0) return resource;
+        if (args.length == 0) {
+            return resource;
+        }
         return MessageFormat.format(resource, args);
     }
 
@@ -316,8 +334,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nullable
     protected Object evalResourceWithArguments(@Nonnull Object resource, @Nonnull Object[] args) {
         if (resource instanceof CallableWithArgs) {
-            CallableWithArgs<?> callable = (CallableWithArgs<?>) resource;
-            return callable.call(args);
+            return ((CallableWithArgs<?>) resource).call(args);
+        } else if (resource instanceof Function) {
+            return ((Function<Object[], ?>) resource).apply(args);
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
@@ -327,8 +346,9 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
     @Nullable
     protected Object evalResourceWithArguments(@Nonnull Object resource, @Nonnull Map<String, Object> args) {
         if (resource instanceof CallableWithArgs) {
-            CallableWithArgs<?> callable = (CallableWithArgs<?>) resource;
-            return callable.call(args);
+            return ((CallableWithArgs<?>) resource).call(args);
+        } else if (resource instanceof Function) {
+            return ((Function<Map<String, Object>, ?>) resource).apply(args);
         } else if (resource instanceof CharSequence) {
             return formatResource(String.valueOf(resource), args);
         }
@@ -343,17 +363,64 @@ public abstract class AbstractResourceResolver implements ResourceResolver {
         return args.toArray(new Object[args.size()]);
     }
 
-    @SuppressWarnings("unchecked")
+    @Nullable
     protected <T> T convertValue(@Nullable Object value, @Nonnull Class<T> type) {
+        requireNonNull(type, ERROR_TYPE_NULL);
+
         if (value != null) {
             if (type.isAssignableFrom(value.getClass())) {
                 return (T) value;
             } else {
-                PropertyEditor editor = findEditor(type);
-                editor.setValue(value);
-                return (T) editor.getValue();
+                Converter<T> converter = converterRegistry.findConverter(type);
+                if (null != converter) {
+                    return converter.fromObject(value);
+                }
             }
         }
         return null;
+    }
+
+    @Nonnull
+    protected <T> T doResolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException {
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        requireNonNull(args, ERROR_ARGS_NULL);
+        requireNonNull(locale, ERROR_LOCALE_NULL);
+        Object resource = resolveResourceValue(key, locale);
+        Object result = evalResourceWithArguments(resource, args);
+        if (result != null) {
+            return convertValue(result, type);
+        }
+        throw new NoSuchResourceException(key, locale);
+    }
+
+    @Nonnull
+    protected <T> T doResolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nonnull Class<T> type) throws NoSuchResourceException {
+        requireNonBlank(key, ERROR_KEY_BLANK);
+        requireNonNull(args, ERROR_ARGS_NULL);
+        requireNonNull(locale, ERROR_LOCALE_NULL);
+        Object resource = resolveResourceValue(key, locale);
+        Object result = evalResourceWithArguments(resource, args);
+        if (result != null) {
+            return convertValue(result, type);
+        }
+        throw new NoSuchResourceException(key, locale);
+    }
+
+    @Nonnull
+    protected <T> T doResolveResourceConverted(@Nonnull String key, @Nonnull Object[] args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type) throws NoSuchResourceException {
+        try {
+            return doResolveResourceConverted(key, args, locale, type);
+        } catch (NoSuchResourceException nsre) {
+            return defaultValue;
+        }
+    }
+
+    @Nonnull
+    protected <T> T doResolveResourceConverted(@Nonnull String key, @Nonnull Map<String, Object> args, @Nonnull Locale locale, @Nullable T defaultValue, @Nonnull Class<T> type) throws NoSuchResourceException {
+        try {
+            return doResolveResourceConverted(key, args, locale, type);
+        } catch (NoSuchResourceException nsre) {
+            return defaultValue;
+        }
     }
 }

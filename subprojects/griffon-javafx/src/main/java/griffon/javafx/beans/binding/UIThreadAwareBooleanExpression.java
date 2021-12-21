@@ -17,16 +17,17 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanExpression;
 import javafx.beans.value.ChangeListener;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareBooleanExpression extends BooleanExpressionDecorator implements UIThreadAware {
-    UIThreadAwareBooleanExpression(BooleanExpression delegate) {
+    UIThreadAwareBooleanExpression(@Nonnull BooleanExpression delegate) {
         super(delegate);
     }
 

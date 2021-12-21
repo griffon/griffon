@@ -17,8 +17,10 @@
  */
 package org.codehaus.griffon.runtime.core.controller;
 
+import griffon.annotations.controller.ControllerAction;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.threading.Threading;
 import griffon.core.Configuration;
 import griffon.core.Context;
 import griffon.core.GriffonApplication;
@@ -29,19 +31,16 @@ import griffon.core.controller.Action;
 import griffon.core.controller.ActionExecutionStatus;
 import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionHandler;
-import griffon.core.controller.ActionInterceptor;
 import griffon.core.controller.ActionManager;
 import griffon.core.controller.ActionMetadata;
 import griffon.core.controller.ActionMetadataFactory;
 import griffon.core.controller.ActionParameter;
-import griffon.core.controller.ControllerAction;
 import griffon.core.i18n.MessageSource;
 import griffon.core.i18n.NoSuchMessageException;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.threading.UIThreadManager;
 import griffon.exceptions.GriffonException;
 import griffon.exceptions.InstanceMethodInvocationException;
-import griffon.transform.Threading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,16 +58,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static griffon.core.GriffonExceptionHandler.sanitize;
+import static griffon.core.util.GriffonClassUtils.EMPTY_ARGS;
+import static griffon.core.util.GriffonClassUtils.invokeExactInstanceMethod;
+import static griffon.core.util.GriffonClassUtils.invokeInstanceMethod;
+import static griffon.core.util.TypeUtils.castToBoolean;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.isAnnotatedWith;
 import static griffon.util.CollectionUtils.reverse;
-import static griffon.util.GriffonClassUtils.EMPTY_ARGS;
-import static griffon.util.GriffonClassUtils.invokeExactInstanceMethod;
-import static griffon.util.GriffonClassUtils.invokeInstanceMethod;
-import static griffon.util.GriffonNameUtils.capitalize;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static griffon.util.GriffonNameUtils.uncapitalize;
-import static griffon.util.TypeUtils.castToBoolean;
+import static griffon.util.StringUtils.capitalize;
+import static griffon.util.StringUtils.requireNonBlank;
+import static griffon.util.StringUtils.uncapitalize;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Objects.requireNonNull;
@@ -102,19 +101,6 @@ public abstract class AbstractActionManager implements ActionManager {
         this.application = requireNonNull(application, "Argument 'application' must not be null");
         this.actionFactory = requireNonNull(actionFactory, "Argument 'actionFactory' must not be null");
         this.actionMetadataFactory = requireNonNull(actionMetadataFactory, "Argument 'actionMetadataFactory' must not be null");
-    }
-
-    @Nullable
-    private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
-        for (Method method : controller.getTypeClass().getMethods()) {
-            if (actionName.equals(method.getName()) &&
-                isPublic(method.getModifiers()) &&
-                !isStatic(method.getModifiers()) &&
-                (isAnnotatedWith(method, ControllerAction.class, true) || method.getReturnType() == Void.TYPE)) {
-                return method;
-            }
-        }
-        return null;
     }
 
     @Nonnull
@@ -302,7 +288,9 @@ public abstract class AbstractActionManager implements ActionManager {
             for (int i = 0; i < newArgs.length; i++) {
                 ActionParameter param = actionMetadata.getParameters()[i];
                 newArgs[i] = param.isContextual() ? context.get(param.getName()) : args[i];
-                if (param.isContextual() && newArgs[i] != null) { context.put(param.getName(), newArgs[i]); }
+                if (param.isContextual() && newArgs[i] != null) {
+                    context.put(param.getName(), newArgs[i]);
+                }
                 if (param.isContextual() && !param.isNullable() && newArgs[i] == null) {
                     throw new IllegalStateException("Could not find an instance of type " +
                         param.getType().getName() + " under key '" + param.getName() +
@@ -358,16 +346,16 @@ public abstract class AbstractActionManager implements ActionManager {
 
         switch (policy) {
             case OUTSIDE_UITHREAD:
-                getUiThreadManager().runOutsideUI(runnable);
+                getUiThreadManager().executeOutsideUI(runnable);
                 break;
             case OUTSIDE_UITHREAD_ASYNC:
-                getUiThreadManager().runOutsideUIAsync(runnable);
+                getUiThreadManager().executeOutsideUIAsync(runnable);
                 break;
             case INSIDE_UITHREAD_SYNC:
-                getUiThreadManager().runInsideUISync(runnable);
+                getUiThreadManager().executeInsideUISync(runnable);
                 break;
             case INSIDE_UITHREAD_ASYNC:
-                getUiThreadManager().runInsideUIAsync(runnable);
+                getUiThreadManager().executeInsideUIAsync(runnable);
                 break;
             case SKIP:
             default:
@@ -442,7 +430,9 @@ public abstract class AbstractActionManager implements ActionManager {
         while (!KEY_THREADING.equals(keyName)) {
             Object value = settings.get(keyName);
             keyName = keyName.substring(0, keyName.lastIndexOf('.'));
-            if (value != null && !castToBoolean(value)) { return true; }
+            if (value != null && !castToBoolean(value)) {
+                return true;
+            }
         }
 
         return false;
@@ -454,10 +444,6 @@ public abstract class AbstractActionManager implements ActionManager {
             return;
         }
         handlers.add(actionHandler);
-    }
-
-    public void addActionInterceptor(@Nonnull ActionInterceptor actionInterceptor) {
-        throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
     }
 
     @Nonnull
@@ -502,6 +488,19 @@ public abstract class AbstractActionManager implements ActionManager {
         } catch (NoSuchMessageException nsme) {
             return getMessageSource().getMessage("application.action." + actionName + "." + subkey, application.getLocale(), defaultValue);
         }
+    }
+
+    @Nullable
+    private static Method findActionAsMethod(@Nonnull GriffonController controller, @Nonnull String actionName) {
+        for (Method method : controller.getTypeClass().getMethods()) {
+            if (actionName.equals(method.getName()) &&
+                isPublic(method.getModifiers()) &&
+                !isStatic(method.getModifiers()) &&
+                (isAnnotatedWith(method, ControllerAction.class, true) || method.getReturnType() == Void.TYPE)) {
+                return method;
+            }
+        }
+        return null;
     }
 
     private static class ActionCache {

@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.MapExpression;
@@ -37,15 +38,16 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 public class MapExpressionDecorator<K, V> extends MapExpression<K, V> {
     private final MapExpression<K, V> delegate;
 
-    public MapExpressionDecorator(MapExpression<K, V> delegate) {
+    public MapExpressionDecorator(@Nonnull MapExpression<K, V> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final MapExpression<K, V> getDelegate() {
         return delegate;
     }

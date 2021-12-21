@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 
@@ -29,10 +30,11 @@ import static java.util.Objects.requireNonNull;
 public class InvalidationListenerDecorator implements InvalidationListener {
     private final InvalidationListener delegate;
 
-    public InvalidationListenerDecorator(InvalidationListener delegate) {
+    public InvalidationListenerDecorator(@Nonnull InvalidationListener delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final InvalidationListener getDelegate() {
         return delegate;
     }

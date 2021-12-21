@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
@@ -26,7 +27,7 @@ import javafx.beans.value.ChangeListener;
  * @since 2.9.0
  */
 abstract class AbstractUIThreadAwareProperty<T> extends PropertyDecorator<T> implements UIThreadAware {
-    AbstractUIThreadAwareProperty(Property<T> delegate) {
+    AbstractUIThreadAwareProperty(@Nonnull Property<T> delegate) {
         super(delegate);
     }
 

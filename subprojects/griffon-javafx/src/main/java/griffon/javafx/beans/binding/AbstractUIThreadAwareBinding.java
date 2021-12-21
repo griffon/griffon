@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Binding;
 import javafx.beans.value.ChangeListener;
@@ -26,7 +27,7 @@ import javafx.beans.value.ChangeListener;
  * @since 2.13.0
  */
 abstract class AbstractUIThreadAwareBinding<T> extends BindingDecorator<T> implements UIThreadAware {
-    AbstractUIThreadAwareBinding(Binding<T> delegate) {
+    AbstractUIThreadAwareBinding(@Nonnull Binding<T> delegate) {
         super(delegate);
     }
 

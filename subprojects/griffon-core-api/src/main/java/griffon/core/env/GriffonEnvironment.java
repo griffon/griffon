@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.Properties;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.StringUtils.isBlank;
 
 /**
  * @author Andres Almiray
@@ -55,11 +55,11 @@ public class GriffonEnvironment {
             }
 
             if (isBlank(buildDate) || isBlank(buildTime) || isBlank(version)) {
-                LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath?");
+                LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core-api JAR is in the classpath?");
                 buildDate = buildTime = buildRevision = version = "";
             }
         } catch (Exception e) {
-            LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core jar is in the classpath? " + e.getMessage(), e);
+            LOG.error("Unable to read Griffon version from META-INF/griffon-core.properties. Are you sure the griffon-core-api JAR is in the classpath? " + e.getMessage(), e);
             buildDate = buildTime = buildRevision = version = "";
         }
 

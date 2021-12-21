@@ -17,9 +17,9 @@
  */
 package integration;
 
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
-import griffon.annotations.core.Nonnull;
 import java.util.Map;
 
 public class TestGriffonApplication extends AbstractGriffonApplication {

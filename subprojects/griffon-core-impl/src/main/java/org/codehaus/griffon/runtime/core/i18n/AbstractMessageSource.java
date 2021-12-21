@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -18,7 +18,7 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.annotations.core.Nonnull;
-import griffon.util.AbstractMapResourceBundle;
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle;
 
 import java.util.Map;
 

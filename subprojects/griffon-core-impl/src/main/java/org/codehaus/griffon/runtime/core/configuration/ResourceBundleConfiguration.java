@@ -19,6 +19,7 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.ConverterRegistry;
 
 import javax.inject.Inject;
 import java.util.Enumeration;
@@ -27,8 +28,8 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static griffon.util.ConfigUtils.getConfigValue;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.core.util.ConfigUtils.getConfigValue;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
@@ -42,7 +43,8 @@ public class ResourceBundleConfiguration extends AbstractConfiguration {
     private final Map<String, Object> flatMap = new LinkedHashMap<>();
 
     @Inject
-    public ResourceBundleConfiguration(@Nonnull ResourceBundle resourceBundle) {
+    public ResourceBundleConfiguration(@Nonnull ConverterRegistry converterRegistry, @Nonnull ResourceBundle resourceBundle) {
+        super(converterRegistry);
         this.resourceBundle = requireNonNull(resourceBundle, "Argument 'resourceBundle' must not be null");
         Enumeration<String> keys = resourceBundle.getKeys();
         while (keys.hasMoreElements()) {
@@ -69,7 +71,7 @@ public class ResourceBundleConfiguration extends AbstractConfiguration {
 
     @Nullable
     @Override
-    public Object get(@Nonnull String key) {
+    public <T> T get(@Nonnull String key) {
         try {
             return getConfigValue(resourceBundle, key);
         } catch (MissingResourceException mre) {

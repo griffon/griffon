@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -28,7 +29,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwareChangeListener<T> extends ChangeListenerDecorator<T> implements UIThreadAware {
-    UIThreadAwareChangeListener(ChangeListener<? super T> delegate) {
+    UIThreadAwareChangeListener(@Nonnull ChangeListener<? super T> delegate) {
         super(delegate);
     }
 

@@ -26,7 +26,7 @@ import spock.lang.Unroll
 @Stepwise
 class DefaultObjectStorageSpec extends Specification {
     @Shared
-    private static StringStorage storage = new StringStorage()
+    private StringStorage storage = new StringStorage()
 
     void "Query empty storage with key '#key'"() {
         expect:

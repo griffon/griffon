@@ -18,6 +18,7 @@
 package griffon.core;
 
 import griffon.annotations.core.Nullable;
+import griffon.core.events.UncaughtExceptionThrownEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,16 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static griffon.util.GriffonNameUtils.getShortName;
-import static java.util.Collections.singletonList;
-
 /**
  * Catches and sanitizes all uncaught exceptions.
  *
  * @author Danno Ferrin
  * @author Andres Almiray
  */
-public class GriffonExceptionHandler implements ExceptionHandler {
+public class GriffonExceptionHandler implements ExceptionHandler, Thread.UncaughtExceptionHandler {
     private static final Logger LOG = LoggerFactory.getLogger(GriffonExceptionHandler.class);
 
     private static final String[] CONFIG_OPTIONS = {
@@ -80,19 +78,22 @@ public class GriffonExceptionHandler implements ExceptionHandler {
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        handle(e);
+        handleUncaught(t, e);
     }
 
     @Override
+    public void handleUncaught(Thread t, Throwable e) {
+        handle(e);
+    }
+
     @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-    public void handle(Throwable throwable) {
+    protected void handle(Throwable throwable) {
         try {
             sanitize(throwable);
             printStacktrace(throwable);
             logError("Uncaught Exception.", throwable);
             if (application != null) {
-                application.getEventRouter().publishEvent("Uncaught" + getShortName(throwable.getClass()), singletonList(throwable));
-                application.getEventRouter().publishEvent(ApplicationEvent.UNCAUGHT_EXCEPTION_THROWN.getName(), singletonList(throwable));
+                application.getEventRouter().publishEvent(UncaughtExceptionThrownEvent.of(throwable));
             }
         } catch (Throwable t) {
             sanitize(t);

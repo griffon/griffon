@@ -18,6 +18,8 @@
 package org.codehaus.griffon.converter;
 
 import griffon.converter.ConversionException;
+import griffon.converter.NumberConverter;
+import griffon.converter.PrimitiveConverter;
 import org.codehaus.griffon.ConversionSupport;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

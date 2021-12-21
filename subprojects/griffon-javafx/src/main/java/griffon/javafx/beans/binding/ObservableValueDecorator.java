@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,10 +31,11 @@ import static java.util.Objects.requireNonNull;
 public class ObservableValueDecorator<T> implements ObservableValue<T> {
     private final ObservableValue<T> delegate;
 
-    public ObservableValueDecorator(ObservableValue<T> delegate) {
+    public ObservableValueDecorator(@Nonnull ObservableValue<T> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final ObservableValue<T> getDelegate() {
         return delegate;
     }

@@ -20,6 +20,7 @@ package org.codehaus.griffon.converter;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import griffon.converter.ConversionException;
+import griffon.converter.PrimitiveConverter;
 
 /**
  * @author Andres Almiray

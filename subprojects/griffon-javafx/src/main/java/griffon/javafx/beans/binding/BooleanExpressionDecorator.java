@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.BooleanExpression;
@@ -29,15 +30,16 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 public class BooleanExpressionDecorator extends BooleanExpression {
     private final BooleanExpression delegate;
 
-    public BooleanExpressionDecorator(BooleanExpression delegate) {
+    public BooleanExpressionDecorator(@Nonnull BooleanExpression delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final BooleanExpression getDelegate() {
         return delegate;
     }

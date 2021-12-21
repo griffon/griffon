@@ -17,8 +17,10 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.transform.InvalidationListener;
+import griffon.annotations.javafx.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
+import org.codehaus.griffon.compile.core.AnnotationHandler;
+import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
 import org.codehaus.groovy.ast.AnnotationNode;
@@ -56,8 +58,9 @@ import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.stmnt;
  *
  * @author Andres Almiray
  */
+@AnnotationHandlerFor(InvalidationListener.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
-public class InvalidationListenerASTTransformation extends AbstractASTTransformation {
+public class InvalidationListenerASTTransformation extends AbstractASTTransformation implements AnnotationHandler {
     private static final ClassNode INVALIDATION_LISTENER_CLASS = makeClassSafe(InvalidationListener.class);
     private static final ClassNode JAVAFX_INVALIDATION_LISTENER_CLASS = makeClassSafe(javafx.beans.InvalidationListener.class);
     private static final ClassNode JAVAFX_WEAK_INVALIDATION_LISTENER_CLASS = makeClassSafe(WeakInvalidationListener.class);

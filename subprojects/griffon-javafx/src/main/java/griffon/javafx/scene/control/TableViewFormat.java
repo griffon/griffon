@@ -28,11 +28,13 @@ import javafx.beans.value.ObservableValue;
 public interface TableViewFormat<E> {
     int getColumnCount();
 
+    @Nonnull
     String getColumnName(int index);
 
     @Nullable
     Double getColumnSize(int index);
 
+    @Nonnull
     ObservableValue<?> getObservableValue(@Nonnull E instance, int index);
 
     @Nullable

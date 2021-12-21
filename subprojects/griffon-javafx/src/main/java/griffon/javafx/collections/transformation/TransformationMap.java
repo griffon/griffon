@@ -41,6 +41,7 @@ public abstract class TransformationMap<K, V, F> extends ObservableMapBase<K, V>
         source.addListener(new WeakMapChangeListener<>(getListener()));
     }
 
+    @Nonnull
     public final ObservableMap<K, ? extends F> getSource() {
         return source;
     }

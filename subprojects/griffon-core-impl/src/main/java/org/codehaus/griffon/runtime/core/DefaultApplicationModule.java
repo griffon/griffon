@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.runtime.core;
 
+import griffon.converter.ConverterRegistry;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
 import griffon.core.Configuration;
@@ -24,11 +25,14 @@ import griffon.core.Context;
 import griffon.core.ContextFactory;
 import griffon.core.ExceptionHandler;
 import griffon.core.ExecutorServiceManager;
+import griffon.core.Instantiator;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
 import griffon.core.addon.AddonManager;
 import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
+import griffon.core.bundles.CompositeResourceBundleBuilder;
+import griffon.core.bundles.ResourceBundleLoader;
 import griffon.core.configuration.ConfigurationManager;
 import griffon.core.controller.ActionFactory;
 import griffon.core.controller.ActionManager;
@@ -36,9 +40,8 @@ import griffon.core.controller.ActionMetadataFactory;
 import griffon.core.env.Environment;
 import griffon.core.env.Lifecycle;
 import griffon.core.env.Metadata;
-import griffon.core.env.RunMode;
-import griffon.core.event.EventHandler;
 import griffon.core.event.EventRouter;
+import griffon.core.event.XEventHandler;
 import griffon.core.i18n.MessageSource;
 import griffon.core.mvc.MVCGroupConfigurationFactory;
 import griffon.core.mvc.MVCGroupFactory;
@@ -48,17 +51,20 @@ import griffon.core.resources.ResourceInjector;
 import griffon.core.resources.ResourceResolver;
 import griffon.core.threading.UIThreadManager;
 import griffon.core.view.WindowManager;
-import griffon.util.CompositeResourceBundleBuilder;
-import griffon.util.Instantiator;
-import griffon.util.PropertiesReader;
-import griffon.util.ResourceBundleLoader;
-import griffon.util.ResourceBundleReader;
+import org.codehaus.griffon.converter.DefaultConverterRegistry;
 import org.codehaus.griffon.runtime.core.addon.DefaultAddonManager;
 import org.codehaus.griffon.runtime.core.artifact.ControllerArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.DefaultArtifactManager;
 import org.codehaus.griffon.runtime.core.artifact.ModelArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.ServiceArtifactHandler;
 import org.codehaus.griffon.runtime.core.artifact.ViewArtifactHandler;
+import org.codehaus.griffon.runtime.core.bundles.ClassResourceBundleLoader;
+import org.codehaus.griffon.runtime.core.bundles.DefaultCompositeResourceBundleBuilder;
+import org.codehaus.griffon.runtime.core.bundles.PropertiesReader;
+import org.codehaus.griffon.runtime.core.bundles.PropertiesResourceBundleLoader;
+import org.codehaus.griffon.runtime.core.bundles.ResourceBundleProvider;
+import org.codehaus.griffon.runtime.core.bundles.ResourceBundleReader;
+import org.codehaus.griffon.runtime.core.bundles.XmlResourceBundleLoader;
 import org.codehaus.griffon.runtime.core.configuration.ConfigurationDecoratorFactory;
 import org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationDecoratorFactory;
 import org.codehaus.griffon.runtime.core.configuration.DefaultConfigurationManager;
@@ -68,9 +74,8 @@ import org.codehaus.griffon.runtime.core.controller.DefaultActionManager;
 import org.codehaus.griffon.runtime.core.controller.DefaultActionMetadataFactory;
 import org.codehaus.griffon.runtime.core.env.EnvironmentProvider;
 import org.codehaus.griffon.runtime.core.env.MetadataProvider;
-import org.codehaus.griffon.runtime.core.env.RunModeProvider;
-import org.codehaus.griffon.runtime.core.event.DefaultEventHandler;
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter;
+import org.codehaus.griffon.runtime.core.event.DefaultXEventHandler;
 import org.codehaus.griffon.runtime.core.i18n.DefaultMessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceDecoratorFactory;
 import org.codehaus.griffon.runtime.core.i18n.MessageSourceProvider;
@@ -86,12 +91,7 @@ import org.codehaus.griffon.runtime.core.resources.ResourceResolverProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultExecutorServiceProvider;
 import org.codehaus.griffon.runtime.core.threading.DefaultUIThreadManager;
 import org.codehaus.griffon.runtime.core.view.NoopWindowManager;
-import org.codehaus.griffon.runtime.util.ClassResourceBundleLoader;
-import org.codehaus.griffon.runtime.util.DefaultCompositeResourceBundleBuilder;
 import org.codehaus.griffon.runtime.util.DefaultInstantiator;
-import org.codehaus.griffon.runtime.util.PropertiesResourceBundleLoader;
-import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
-import org.codehaus.griffon.runtime.util.XmlResourceBundleLoader;
 
 import javax.inject.Named;
 import java.util.ResourceBundle;
@@ -114,10 +114,6 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(Metadata.class)
             .toProvider(MetadataProvider.class)
-            .asSingleton();
-
-        bind(RunMode.class)
-            .toProvider(RunModeProvider.class)
             .asSingleton();
 
         bind(Environment.class)
@@ -202,6 +198,10 @@ public class DefaultApplicationModule extends AbstractModule {
 
         bind(MessageSourceDecoratorFactory.class)
             .to(DefaultMessageSourceDecoratorFactory.class);
+
+        bind(ConverterRegistry.class)
+            .to(DefaultConverterRegistry.class)
+            .asSingleton();
 
         bind(ResourceResolver.class)
             .withClassifier(named("applicationResourceResolver"))
@@ -290,8 +290,8 @@ public class DefaultApplicationModule extends AbstractModule {
             .to(DefaultAddonManager.class)
             .asSingleton();
 
-        bind(EventHandler.class)
-            .to(DefaultEventHandler.class)
+        bind(XEventHandler.class)
+            .to(DefaultXEventHandler.class)
             .asSingleton();
 
         bind(ExceptionHandler.class)

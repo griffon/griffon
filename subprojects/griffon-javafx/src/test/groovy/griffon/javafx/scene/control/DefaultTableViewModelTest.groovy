@@ -21,7 +21,7 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.embed.swing.JFXPanel
 import javafx.scene.control.TableView
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 import java.security.SecureRandom
 

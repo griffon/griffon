@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static griffon.util.GriffonNameUtils.isBlank;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.isBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -87,6 +87,7 @@ public class GriffonBuilderFactory implements BuilderFactory {
             return group.getContext().get(group.getMvcId() + "-rootNode");
         }
 
+        @Nonnull
         private Map<String, Object> toMap(@Nonnull List<MvcArg> mvcArgs) {
             Map<String, Object> args = new LinkedHashMap<>();
             mvcArgs.forEach(arg -> args.put(arg.getName(), arg.getValue()));

@@ -17,11 +17,15 @@
  */
 package integration;
 
-import griffon.inject.MVCMember;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
-
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.event.EventHandler;
+import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonView;
+import griffon.core.events.RandomEvent;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
+@ServiceProviderFor(GriffonView.class)
 public class IntegrationView extends AbstractGriffonView implements Invokable {
     private IntegrationController controller;
     private IntegrationModel model;
@@ -46,7 +50,8 @@ public class IntegrationView extends AbstractGriffonView implements Invokable {
         return invoked;
     }
 
-    public void onRandomEvent() {
+    @EventHandler
+    public void handleRandomEvent(RandomEvent event) {
 
     }
 }

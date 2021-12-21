@@ -17,10 +17,13 @@
  */
 package integration;
 
+import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonView;
 import griffon.core.mvc.MVCGroup;
-import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
+@ServiceProviderFor(GriffonView.class)
 public class ChildView extends AbstractGriffonView implements Invokable {
     private ChildController controller;
     private ChildModel model;

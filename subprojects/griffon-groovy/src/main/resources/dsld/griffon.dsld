@@ -74,7 +74,7 @@ contribute(enclosingClass(annotatedBy('griffon.transform.MVCAware'))) {
     delegatesTo "griffon.core.mvc.MVCHandler"
 }
 
-contribute(enclosingClass(annotatedBy('griffon.transform.ThreadingAware'))) {
+contribute(enclosingClass(annotatedBy('javax.application.threading.ThreadingAware'))) {
     provider = "Griffon DSL"
     delegatesTo "griffon.core.threading.ThreadingHandler"
 }
@@ -96,10 +96,10 @@ contribute(enclosingClass(annotatedBy('griffon.transform.ResourceResolverAware')
 
 contribute(enclosingClass(annotatedBy('griffon.transform.Observable'))) {
     provider = "Griffon DSL"
-    delegatesTo "griffon.core.Observable"
+    delegatesTo "griffon.beans.Observable"
 }
 
 contribute(enclosingClass(annotatedBy('griffon.transform.Vetoable'))) {
     provider = "Griffon DSL"
-    delegatesTo "griffon.core.Vetoable"
+    delegatesTo "griffon.beans.Vetoable"
 }

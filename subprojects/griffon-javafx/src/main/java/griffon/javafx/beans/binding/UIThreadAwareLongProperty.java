@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.LongProperty;
 import javafx.beans.value.ChangeListener;
@@ -29,7 +30,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwareLongProperty extends LongPropertyDecorator implements UIThreadAware {
-    UIThreadAwareLongProperty(LongProperty delegate) {
+    UIThreadAwareLongProperty(@Nonnull LongProperty delegate) {
         super(delegate);
     }
 

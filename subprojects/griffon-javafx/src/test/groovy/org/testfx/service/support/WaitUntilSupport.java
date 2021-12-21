@@ -16,13 +16,14 @@
  */
 package org.testfx.service.support;
 
-import javafx.scene.Node;
-import org.hamcrest.Matcher;
-import org.testfx.util.WaitForAsyncUtils;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
+
+import javafx.scene.Node;
+
+import org.hamcrest.Matcher;
+import org.testfx.util.WaitForAsyncUtils;
 
 /**
  * Provides methods that will wait for a given node or value to meet a given condition by repeatedly testing that item

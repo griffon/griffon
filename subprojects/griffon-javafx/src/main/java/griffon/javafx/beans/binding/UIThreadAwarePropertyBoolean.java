@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 
@@ -28,7 +29,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwarePropertyBoolean extends AbstractUIThreadAwareProperty<Boolean> implements Property<Boolean> {
-    UIThreadAwarePropertyBoolean(Property<Boolean> delegate) {
+    UIThreadAwarePropertyBoolean(@Nonnull Property<Boolean> delegate) {
         super(delegate);
     }
 

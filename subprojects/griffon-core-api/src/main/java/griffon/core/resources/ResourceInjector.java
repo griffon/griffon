@@ -24,5 +24,11 @@ import griffon.annotations.core.Nonnull;
  * @since 2.0.0
  */
 public interface ResourceInjector {
+    /**
+     * Performs resource injection into the given instance. Candidates for resource injection must be annotated with
+     * {@code @griffon.annotations.resources.InjectedResource}.
+     *
+     * @param instance the instance on which resource injection will be executed. Must not be {@code null}.
+     */
     void injectResources(@Nonnull Object instance);
 }

@@ -19,12 +19,14 @@ package org.codehaus.griffon.compile.core.processor.annotation;
 
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.kordamp.jipsy.processor.AbstractSpiProcessor;
 import org.kordamp.jipsy.processor.CheckResult;
 import org.kordamp.jipsy.processor.LogLocation;
 import org.kordamp.jipsy.processor.Options;
 import org.kordamp.jipsy.processor.Persistence;
 
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
@@ -44,6 +46,7 @@ import java.util.regex.Matcher;
 /**
  * @author Andres Almiray
  */
+@ServiceProviderFor(Processor.class)
 @SupportedAnnotationTypes("*")
 @SupportedOptions({Options.SPI_DIR_OPTION, Options.SPI_LOG_OPTION, Options.SPI_VERBOSE_OPTION, Options.SPI_DISABLED_OPTION})
 public class AnnotationHandlerProcessor extends AbstractSpiProcessor {

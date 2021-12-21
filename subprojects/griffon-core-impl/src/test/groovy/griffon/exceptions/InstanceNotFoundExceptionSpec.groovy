@@ -27,8 +27,8 @@ import static griffon.util.AnnotationUtils.named
 
 @Unroll
 class InstanceNotFoundExceptionSpec extends Specification {
-    @Shared private static Exception cause = new Exception()
-    @Shared private static Annotation qualifier = named('foo')
+    @Shared private Exception cause = new Exception()
+    @Shared private Annotation qualifier = named('foo')
 
     void 'Exception should have proper formatted message'() {
         setup:

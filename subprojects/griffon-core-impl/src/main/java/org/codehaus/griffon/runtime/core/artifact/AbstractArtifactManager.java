@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
@@ -120,7 +120,7 @@ public abstract class AbstractArtifactManager implements ArtifactManager {
         }
 
         if (GriffonView.class.isAssignableFrom(clazz)) {
-            return uiThreadManager.runInsideUISync(() -> (A) injectorProvider.get().getInstance(clazz));
+            return uiThreadManager.executeInsideUISync(() -> (A) injectorProvider.get().getInstance(clazz));
         }
 
         return (A) injectorProvider.get().getInstance(clazz);

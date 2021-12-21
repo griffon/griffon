@@ -17,6 +17,9 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
+import griffon.core.event.EventBus;
 import griffon.core.event.EventPublisher;
 import griffon.core.event.EventRouter;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
@@ -37,11 +40,8 @@ import org.codehaus.groovy.transform.GroovyASTTransformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
-
-import static griffon.util.GriffonNameUtils.isBlank;
-import static griffon.util.GriffonNameUtils.isNotBlank;
+import static griffon.util.StringUtils.isBlank;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Modifier.PRIVATE;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_EXCEPTIONS;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.args;
@@ -67,14 +67,15 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
-@AnnotationHandlerFor(griffon.transform.EventPublisher.class)
+@AnnotationHandlerFor(griffon.annotations.event.EventPublisher.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class EventPublisherASTTransformation extends AbstractASTTransformation implements EventPublisherConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(EventPublisherASTTransformation.class);
     private static final ClassNode EVENT_ROUTER_CNODE = makeClassSafe(EventRouter.class);
+    private static final ClassNode EVENT_BUS_CNODE = makeClassSafe(EventBus.class);
     private static final ClassNode EVENT_PUBLISHER_CNODE = makeClassSafe(EventPublisher.class);
     private static final ClassNode EVENT_PUBLISHER_FIELD_CNODE = makeClassSafe(DefaultEventPublisher.class);
-    private static final ClassNode EVENT_PUBLISHER_ANODE = makeClassSafe(griffon.transform.EventPublisher.class);
+    private static final ClassNode EVENT_PUBLISHER_ANODE = makeClassSafe(griffon.annotations.event.EventPublisher.class);
 
     /**
      * Convenience method to see if an annotated node is {@code @EventPublisher}.
@@ -147,6 +148,7 @@ public class EventPublisherASTTransformation extends AbstractASTTransformation i
         setter.addAnnotation(new AnnotationNode(INJECT_TYPE));
         injectMethod(declaringClass, setter);
 
+        addDelegateMethods(declaringClass, EVENT_BUS_CNODE, field(epField));
         addDelegateMethods(declaringClass, EVENT_PUBLISHER_CNODE, field(epField));
     }
 }

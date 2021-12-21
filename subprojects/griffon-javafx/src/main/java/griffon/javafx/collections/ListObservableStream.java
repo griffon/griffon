@@ -37,11 +37,13 @@ class ListObservableStream<T> extends AbstractObservableStream<T> {
         super(list, operations);
     }
 
+    @Nonnull
     @Override
     protected <E> ObservableStream<E> createInstance(@Nonnull List<StreamOp> operations) {
         return new ListObservableStream<>((ObservableList) observable, operations);
     }
 
+    @Nonnull
     @Override
     protected Stream createStream() {
         return ((ObservableList) observable).stream();

@@ -17,11 +17,13 @@
  */
 package integration;
 
+import griffon.core.artifact.GriffonModel;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 
+@ServiceProviderFor(GriffonModel.class)
 public class SimpleModel extends AbstractGriffonModel {
     private String value1;
     private String value2;
@@ -31,8 +33,9 @@ public class SimpleModel extends AbstractGriffonModel {
     }
 
     public void setValue1(String value1) throws PropertyVetoException {
-        fireVetoableChange("value1", this.value1, value1);
-        firePropertyChange("value1", this.value1, this.value1 = value1);
+        // fireVetoableChange("value1", this.value1, value1);
+        // firePropertyChange("value1", this.value1, this.value1 = value1);
+        this.value1 = value1;
     }
 
     public String getValue2() {
@@ -40,7 +43,8 @@ public class SimpleModel extends AbstractGriffonModel {
     }
 
     public void setValue2(String value2) throws PropertyVetoException {
-        fireVetoableChange(new PropertyChangeEvent(this, "value2", this.value2, value2));
-        firePropertyChange(new PropertyChangeEvent(this, "value2", this.value2, this.value2 = value2));
+        // fireVetoableChange(new PropertyChangeEvent(this, "value2", this.value2, value2));
+        // firePropertyChange(new PropertyChangeEvent(this, "value2", this.value2, this.value2 = value2));
+        this.value2 = value2;
     }
 }

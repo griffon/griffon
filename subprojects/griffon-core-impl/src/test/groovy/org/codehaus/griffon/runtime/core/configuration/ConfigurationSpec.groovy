@@ -20,16 +20,17 @@ package org.codehaus.griffon.runtime.core.configuration
 import com.google.guiceberry.GuiceBerryModule
 import com.google.guiceberry.junit4.GuiceBerryRule
 import com.google.inject.AbstractModule
-import com.google.inject.Inject
+import griffon.converter.ConverterRegistry
 import griffon.core.Configuration
-import griffon.core.editors.DatePropertyEditor
-import griffon.core.editors.IntegerPropertyEditor
-import griffon.core.editors.PropertyEditorResolver
+import org.codehaus.griffon.converter.DateConverter
+import org.codehaus.griffon.converter.DefaultConverterRegistry
+import org.codehaus.griffon.converter.IntegerConverter
 import org.codehaus.griffon.runtime.core.MapResourceBundle
 import org.junit.Rule
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import javax.inject.Inject
 import java.text.SimpleDateFormat
 
 import static com.google.inject.util.Providers.guicify
@@ -43,8 +44,11 @@ class ConfigurationSpec extends Specification {
     @Inject
     private Configuration configuration
 
+    @Inject
+    private ConverterRegistry converterRegistry
+
     def cleanup() {
-        PropertyEditorResolver.clear()
+        converterRegistry.clear()
     }
 
     def 'Calling configuration.get(#key, #defaultValue) returns #expectedValue'() {
@@ -61,23 +65,10 @@ class ConfigurationSpec extends Specification {
         'key.foo'      | 'foo'        || 'foo'
     }
 
-
-    def 'Calling configuration.getAs(#key) returns blindly casted #expectedValue'() {
-        when:
-        Integer value = configuration.getAs(key)
-
-        then:
-        value == expectedValue
-
-        where:
-        key            || expectedValue
-        'key.int.type' || 42
-    }
-
     def 'Calling configuration.getConverted(#key) returns converted #expectedValue'() {
         given:
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Integer, IntegerConverter)
 
         when:
         Integer value = configuration.getConverted(key, Integer)
@@ -94,8 +85,8 @@ class ConfigurationSpec extends Specification {
 
     def 'Calling configuration.getConverted(#key) with format returns converted #expectedValue'() {
         given:
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(Date, DatePropertyEditor)
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Date, DateConverter)
 
         when:
         Date value = configuration.getConverted(key, Date, 'YYYY-MM-dd')
@@ -133,6 +124,8 @@ class ConfigurationSpec extends Specification {
                 .to(DefaultConfigurationDecoratorFactory)
             bind(Configuration)
                 .toProvider(guicify(new ResourceBundleConfigurationProvider()))
+            bind(ConverterRegistry)
+                .to(DefaultConverterRegistry)
         }
     }
 }

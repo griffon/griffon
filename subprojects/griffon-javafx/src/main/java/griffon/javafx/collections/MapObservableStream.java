@@ -37,11 +37,13 @@ class MapObservableStream<T> extends AbstractObservableStream<T> {
         super(list, operations);
     }
 
+    @Nonnull
     @Override
     protected <E> ObservableStream<E> createInstance(@Nonnull List<StreamOp> operations) {
         return new MapObservableStream<>((ObservableMap) observable, operations);
     }
 
+    @Nonnull
     @Override
     protected Stream createStream() {
         return ((ObservableMap) observable).values().stream();

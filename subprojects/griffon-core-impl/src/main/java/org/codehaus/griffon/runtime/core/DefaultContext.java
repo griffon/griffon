@@ -19,6 +19,7 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.ConverterRegistry;
 import griffon.core.Context;
 
 import java.util.HashSet;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 
 /**
  * @author Andres Almiray
@@ -36,12 +37,12 @@ public class DefaultContext extends AbstractContext {
     protected static final String ERROR_KEY_BLANK = "Argument 'key' must not be blank";
     private final Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-    public DefaultContext() {
-        this(null);
+    public DefaultContext(@Nonnull ConverterRegistry converterRegistry) {
+        this(converterRegistry, null);
     }
 
-    public DefaultContext(@Nullable Context parentContext) {
-        super(parentContext);
+    public DefaultContext(@Nonnull ConverterRegistry converterRegistry, @Nullable Context parentContext) {
+        super(converterRegistry, parentContext);
     }
 
     @Nullable

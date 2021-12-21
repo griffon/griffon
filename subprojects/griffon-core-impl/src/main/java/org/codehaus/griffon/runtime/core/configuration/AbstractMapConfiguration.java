@@ -19,15 +19,16 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.util.AbstractMapResourceBundle;
+import griffon.converter.ConverterRegistry;
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static griffon.util.ConfigUtils.getConfigValue;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.core.util.ConfigUtils.getConfigValue;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -39,7 +40,8 @@ public abstract class AbstractMapConfiguration extends AbstractConfiguration {
     private static final String ERROR_MAP_NULL = "Argument 'map' must not be null";
     private final Map<String, Object> map;
 
-    protected AbstractMapConfiguration(@Nonnull Map<String, Object> map) {
+    protected AbstractMapConfiguration(@Nonnull ConverterRegistry converterRegistry, @Nonnull Map<String, Object> map) {
+        super(converterRegistry);
         this.map = requireNonNull(map, ERROR_MAP_NULL);
     }
 
@@ -67,7 +69,7 @@ public abstract class AbstractMapConfiguration extends AbstractConfiguration {
 
     @Nullable
     @Override
-    public Object get(@Nonnull String key) {
+    public <T> T get(@Nonnull String key) {
         try {
             return getConfigValue(map, key);
         } catch (MissingResourceException mre) {

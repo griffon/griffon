@@ -21,7 +21,7 @@ import griffon.annotations.core.Nonnull;
 import griffon.swing.support.SwingUtils;
 import org.codehaus.griffon.runtime.core.AbstractGriffonApplication;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.util.Map;
 
 /**
@@ -44,10 +44,10 @@ public class SwingGriffonApplication extends AbstractGriffonApplication {
         // wait for EDT to empty out.... somehow
         final boolean[] empty = {false};
         while (true) {
-            getUIThreadManager().runInsideUISync(() -> {
+            getUIThreadManager().executeInsideUISync(() -> {
                 empty[0] = Toolkit.getDefaultToolkit().getSystemEventQueue().peekEvent() == null;
             });
-            if (empty[0]) break;
+            if (empty[0]) { break; }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

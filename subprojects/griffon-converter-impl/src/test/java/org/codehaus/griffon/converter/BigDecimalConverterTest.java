@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.converter;
 
+import griffon.converter.NumberConverter;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.math.BigDecimal;

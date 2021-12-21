@@ -21,7 +21,7 @@ import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import griffon.core.artifact.GriffonView;
 import griffon.core.controller.Action;
-import griffon.inject.MVCMember;
+import griffon.annotations.inject.MVCMember;
 import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;

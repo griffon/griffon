@@ -26,6 +26,7 @@ import griffon.annotations.core.Nullable;
  */
 public class PropertyException extends GriffonException {
     private static final long serialVersionUID = 6721682115856360089L;
+
     private static final String CAUSE = "cause";
     private static final String BEAN = "bean";
     private static final String PROPERTY_NAME = "propertyName";

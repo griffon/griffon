@@ -49,11 +49,13 @@ public class ResetableBooleanProperty extends AbstractResetableProperty<Boolean>
         super(bean, name, baseValue);
     }
 
+    @Nonnull
     @Override
     protected Property<Boolean> writableBaseValueProperty() {
         return writableBaseValueBooleanProperty();
     }
 
+    @Nonnull
     protected BooleanProperty writableBaseValueBooleanProperty() {
         if (baseValue == null) {
             baseValue = new SimpleBooleanProperty(this, "baseValue");
@@ -61,20 +63,24 @@ public class ResetableBooleanProperty extends AbstractResetableProperty<Boolean>
         return baseValue;
     }
 
+    @Nonnull
     @Override
     public ReadOnlyProperty<Boolean> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
+    @Nonnull
     public ReadOnlyBooleanProperty baseValueBooleanProperty() {
         return writableBaseValueBooleanProperty();
     }
 
+    @Nonnull
     @Override
     public Property<Boolean> valueProperty() {
         return valueBooleanProperty();
     }
 
+    @Nonnull
     public BooleanProperty valueBooleanProperty() {
         if (value == null) {
             value = new SimpleBooleanProperty(this, "value");

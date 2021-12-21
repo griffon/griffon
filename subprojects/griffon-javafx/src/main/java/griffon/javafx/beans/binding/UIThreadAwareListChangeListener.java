@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.ListChangeListener;
 
 import static javafx.application.Platform.isFxApplicationThread;
@@ -27,7 +28,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwareListChangeListener<E> extends ListChangeListenerDecorator<E> implements UIThreadAware {
-    UIThreadAwareListChangeListener(ListChangeListener<E> delegate) {
+    UIThreadAwareListChangeListener(@Nonnull ListChangeListener<E> delegate) {
         super(delegate);
     }
 

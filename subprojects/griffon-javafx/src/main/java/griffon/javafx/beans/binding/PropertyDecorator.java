@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
@@ -31,10 +32,11 @@ import static java.util.Objects.requireNonNull;
 public class PropertyDecorator<T> implements Property<T> {
     private final Property<T> delegate;
 
-    public PropertyDecorator(Property<T> delegate) {
+    public PropertyDecorator(@Nonnull Property<T> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final Property<T> getDelegate() {
         return delegate;
     }

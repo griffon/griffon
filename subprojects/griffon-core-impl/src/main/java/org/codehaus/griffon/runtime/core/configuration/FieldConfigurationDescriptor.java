@@ -19,8 +19,8 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.Converter;
 
-import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 
 import static java.util.Objects.requireNonNull;
@@ -32,8 +32,8 @@ import static java.util.Objects.requireNonNull;
 public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
     private final Field field;
 
-    public FieldConfigurationDescriptor(@Nonnull Field field, @Nonnull String configuration, @Nonnull String key, @Nullable String defaultValue, @Nonnull String format, @Nonnull Class<? extends PropertyEditor> editor) {
-        super(configuration, key, defaultValue, format, editor);
+    public FieldConfigurationDescriptor(@Nonnull Field field, @Nonnull String configuration, @Nonnull String key, @Nullable String defaultValue, @Nonnull String format, @Nonnull Class<? extends Converter> converter) {
+        super(configuration, key, defaultValue, format, converter);
         this.field = requireNonNull(field, "Argument 'field' must not be null");
     }
 
@@ -44,7 +44,7 @@ public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
 
     @Nonnull
     public InjectionPoint asInjectionPoint() {
-        return new FieldInjectionPoint(field, getConfiguration(), getKey(), getFormat(), getEditor());
+        return new FieldInjectionPoint(field, getConfiguration(), getKey(), getFormat(), getConverter());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class FieldConfigurationDescriptor extends ConfigurationDescriptor {
         sb.append(", key='").append(getKey()).append('\'');
         sb.append(", defaultValue='").append(getDefaultValue()).append('\'');
         sb.append(", format='").append(getFormat()).append('\'');
-        sb.append(", editor='").append(getEditor()).append('\'');
+        sb.append(", converter='").append(getConverter()).append('\'');
         sb.append('}');
         return sb.toString();
     }

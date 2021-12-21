@@ -21,10 +21,12 @@ import griffon.annotations.core.Nonnull
 import griffon.core.Configuration
 import griffon.core.GriffonApplication
 import griffon.core.event.EventRouter
+import griffon.core.events.RandomEvent
 import griffon.core.storage.ObjectFactory
-import griffon.util.AbstractMapResourceBundle
-import griffon.util.ExpandableResourceBundle
 import integration.TestGriffonApplication
+import org.codehaus.griffon.converter.DefaultConverterRegistry
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle
+import org.codehaus.griffon.runtime.core.bundles.ExpandableResourceBundle
 import org.codehaus.griffon.runtime.core.configuration.AbstractConfiguration
 import org.codehaus.griffon.runtime.core.event.DefaultEventRouter
 import spock.lang.Specification
@@ -42,7 +44,7 @@ class DefaultObjectFactorySpec extends Specification {
         factory.singleKey = singleKey
         factory.pluralKey = pluralKey
         String actual = factory.create(key)
-        factory.event('RandomEvent', [])
+        factory.event(new RandomEvent())
 
         then:
         actual == expected
@@ -78,6 +80,7 @@ class TestConfiguration extends AbstractConfiguration {
     private ResourceBundle resourceBundle
 
     TestConfiguration() {
+        super(new DefaultConverterRegistry())
         resourceBundle = ExpandableResourceBundle.wrapResourceBundle(new AbstractMapResourceBundle() {
             @Override
             protected void initialize(@Nonnull Map<String, Object> entries) {
@@ -114,7 +117,7 @@ class TestConfiguration extends AbstractConfiguration {
     }
 
     @Override
-    Object get(@Nonnull String key) {
+    <T> T get(@Nonnull String key) {
         return resourceBundle.getObject(key)
     }
 }

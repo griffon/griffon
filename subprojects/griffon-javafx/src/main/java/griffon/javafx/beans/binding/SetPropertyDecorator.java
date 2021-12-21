@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.StringBinding;
@@ -41,10 +42,11 @@ import static java.util.Objects.requireNonNull;
 public class SetPropertyDecorator<E> extends SetProperty<E> {
     private final SetProperty<E> delegate;
 
-    public SetPropertyDecorator(SetProperty<E> delegate) {
+    public SetPropertyDecorator(@Nonnull SetProperty<E> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final SetProperty<E> getDelegate() {
         return delegate;
     }

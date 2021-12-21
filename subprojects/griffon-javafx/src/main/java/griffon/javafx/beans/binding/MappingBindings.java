@@ -17,6 +17,8 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.javafx.collections.MappingObservableList;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
@@ -69,10 +71,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return an object binding.
+     *
      * @since 2.11.0
      */
-    public static <T, R> ObjectBinding<R> mapAsObject(final ObservableValue<T> observable, final Function<T, R> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapAsObject(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, R> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> mapper.apply(observable.getValue()), observable);
@@ -83,10 +88,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return an object binding.
+     *
      * @since 2.11.0
      */
-    public static <T, R> ObjectBinding<R> mapAsObject(final ObservableValue<T> observable, final ObservableValue<Function<T, R>> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapAsObject(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, R>> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -101,10 +109,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a boolean binding.
+     *
      * @since 2.11.0
      */
-    public static <T> BooleanBinding mapAsBoolean(final ObservableValue<T> observable, final Function<T, Boolean> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding mapAsBoolean(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Boolean> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> mapper.apply(observable.getValue()), observable);
@@ -115,10 +126,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a boolean binding.
+     *
      * @since 2.11.0
      */
-    public static <T> BooleanBinding mapAsBoolean(final ObservableValue<T> observable, final ObservableValue<Function<T, Boolean>> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding mapAsBoolean(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Boolean>> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -133,10 +147,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return an integer binding.
+     *
      * @since 2.11.0
      */
-    public static <T> IntegerBinding mapAsInteger(final ObservableValue<T> observable, final Function<T, Integer> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding mapAsInteger(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Integer> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> mapper.apply(observable.getValue()), observable);
@@ -147,10 +164,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return an integer binding.
+     *
      * @since 2.11.0
      */
-    public static <T> IntegerBinding mapAsInteger(final ObservableValue<T> observable, final ObservableValue<Function<T, Integer>> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding mapAsInteger(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Integer>> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -165,10 +185,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a long binding.
+     *
      * @since 2.11.0
      */
-    public static <T> LongBinding mapAsLong(final ObservableValue<T> observable, final Function<T, Long> mapper) {
+    @Nonnull
+    public static <T> LongBinding mapAsLong(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Long> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> mapper.apply(observable.getValue()), observable);
@@ -179,10 +202,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a long binding.
+     *
      * @since 2.11.0
      */
-    public static <T> LongBinding mapAsLong(final ObservableValue<T> observable, final ObservableValue<Function<T, Long>> mapper) {
+    @Nonnull
+    public static <T> LongBinding mapAsLong(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Long>> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -197,10 +223,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a float binding.
+     *
      * @since 2.11.0
      */
-    public static <T> FloatBinding mapAsFloat(final ObservableValue<T> observable, final Function<T, Float> mapper) {
+    @Nonnull
+    public static <T> FloatBinding mapAsFloat(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Float> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> mapper.apply(observable.getValue()), observable);
@@ -211,10 +240,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a float binding.
+     *
      * @since 2.11.0
      */
-    public static <T> FloatBinding mapAsFloat(final ObservableValue<T> observable, final ObservableValue<Function<T, Float>> mapper) {
+    @Nonnull
+    public static <T> FloatBinding mapAsFloat(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Float>> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -229,10 +261,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a double binding.
+     *
      * @since 2.11.0
      */
-    public static <T> DoubleBinding mapAsDouble(final ObservableValue<T> observable, final Function<T, Double> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding mapAsDouble(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, Double> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> mapper.apply(observable.getValue()), observable);
@@ -243,10 +278,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a double binding.
+     *
      * @since 2.11.0
      */
-    public static <T> DoubleBinding mapAsDouble(final ObservableValue<T> observable, final ObservableValue<Function<T, Double>> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding mapAsDouble(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, Double>> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -261,10 +299,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a string binding.
+     *
      * @since 2.11.0
      */
-    public static <T> StringBinding mapAsString(final ObservableValue<T> observable, final Function<T, String> mapper) {
+    @Nonnull
+    public static <T> StringBinding mapAsString(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<T, String> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> mapper.apply(observable.getValue()), observable);
@@ -275,10 +316,13 @@ public final class MappingBindings {
      *
      * @param observable the observable to be converted.
      * @param mapper     a non-interfering, stateless function to apply to the observable value.
+     *
      * @return a string binding.
+     *
      * @since 2.11.0
      */
-    public static <T> StringBinding mapAsString(final ObservableValue<T> observable, final ObservableValue<Function<T, String>> mapper) {
+    @Nonnull
+    public static <T> StringBinding mapAsString(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<T, String>> mapper) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -292,9 +336,11 @@ public final class MappingBindings {
      * Converts a string object observable value into an object binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return an object binding.
      */
-    public static ObjectBinding<String> mapToObject(final ObservableStringValue observable) {
+    @Nonnull
+    public static ObjectBinding<String> mapToObject(@Nonnull final ObservableStringValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createObjectBinding(observable::get, observable);
     }
@@ -303,9 +349,11 @@ public final class MappingBindings {
      * Converts a boolean object observable value into an object binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return an object binding.
      */
-    public static ObjectBinding<Boolean> mapToObject(final ObservableBooleanValue observable) {
+    @Nonnull
+    public static ObjectBinding<Boolean> mapToObject(@Nonnull final ObservableBooleanValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createObjectBinding(observable::get, observable);
     }
@@ -314,9 +362,11 @@ public final class MappingBindings {
      * Converts a integer object observable value into an object binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return an object binding.
      */
-    public static ObjectBinding<Integer> mapToObject(final ObservableIntegerValue observable) {
+    @Nonnull
+    public static ObjectBinding<Integer> mapToObject(@Nonnull final ObservableIntegerValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createObjectBinding(observable::get, observable);
     }
@@ -325,9 +375,11 @@ public final class MappingBindings {
      * Converts a long object observable value into an object binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return an object binding.
      */
-    public static ObjectBinding<Long> mapToObject(final ObservableLongValue observable) {
+    @Nonnull
+    public static ObjectBinding<Long> mapToObject(@Nonnull final ObservableLongValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createObjectBinding(observable::get, observable);
     }
@@ -336,9 +388,11 @@ public final class MappingBindings {
      * Converts a float object observable value into an object binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return an object binding.
      */
-    public static ObjectBinding<Float> mapToObject(final ObservableFloatValue observable) {
+    @Nonnull
+    public static ObjectBinding<Float> mapToObject(@Nonnull final ObservableFloatValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createObjectBinding(observable::get, observable);
     }
@@ -347,9 +401,11 @@ public final class MappingBindings {
      * Converts a double object observable value into an object binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return an object binding.
      */
-    public static ObjectBinding<Double> mapToObject(final ObservableDoubleValue observable) {
+    @Nonnull
+    public static ObjectBinding<Double> mapToObject(@Nonnull final ObservableDoubleValue observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createObjectBinding(observable::get, observable);
     }
@@ -358,9 +414,11 @@ public final class MappingBindings {
      * Converts a boolean object observable value into a boolean binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return a boolean binding.
      */
-    public static BooleanBinding mapToBoolean(final ObservableObjectValue<Boolean> observable) {
+    @Nonnull
+    public static BooleanBinding mapToBoolean(@Nonnull final ObservableObjectValue<Boolean> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createBooleanBinding(observable::get, observable);
     }
@@ -369,9 +427,11 @@ public final class MappingBindings {
      * Converts a integer object observable value into a integer binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return a integer binding.
      */
-    public static IntegerBinding mapToInteger(final ObservableObjectValue<Integer> observable) {
+    @Nonnull
+    public static IntegerBinding mapToInteger(@Nonnull final ObservableObjectValue<Integer> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createIntegerBinding(observable::get, observable);
     }
@@ -380,9 +440,11 @@ public final class MappingBindings {
      * Converts a long object observable value into a long binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapToLong(final ObservableObjectValue<Long> observable) {
+    @Nonnull
+    public static LongBinding mapToLong(@Nonnull final ObservableObjectValue<Long> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createLongBinding(observable::get, observable);
     }
@@ -391,9 +453,11 @@ public final class MappingBindings {
      * Converts a float object observable value into a float binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapToFloat(final ObservableObjectValue<Float> observable) {
+    @Nonnull
+    public static FloatBinding mapToFloat(@Nonnull final ObservableObjectValue<Float> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createFloatBinding(observable::get, observable);
     }
@@ -402,9 +466,11 @@ public final class MappingBindings {
      * Converts a double object observable value into a double binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapToDouble(final ObservableObjectValue<Double> observable) {
+    @Nonnull
+    public static DoubleBinding mapToDouble(@Nonnull final ObservableObjectValue<Double> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createDoubleBinding(observable::get, observable);
     }
@@ -413,9 +479,11 @@ public final class MappingBindings {
      * Converts a literal object observable value into a string binding.
      *
      * @param observable the observable to be converted.
+     *
      * @return a string binding.
      */
-    public static StringBinding mapToString(final ObservableObjectValue<String> observable) {
+    @Nonnull
+    public static StringBinding mapToString(@Nonnull final ObservableObjectValue<String> observable) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         return createStringBinding(observable::get, observable);
     }
@@ -425,10 +493,12 @@ public final class MappingBindings {
      *
      * @param source the source list.
      * @param mapper a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an observable list.
      */
+    @Nonnull
     @SuppressWarnings("unchecked")
-    public static <S, T> ObservableList<T> mapList(final ObservableList<? super S> source, final Function<S, T> mapper) {
+    public static <S, T> ObservableList<T> mapList(@Nonnull final ObservableList<? super S> source, @Nonnull final Function<S, T> mapper) {
         return new MappingObservableList<>((ObservableList<? extends S>) source, mapper);
     }
 
@@ -437,9 +507,11 @@ public final class MappingBindings {
      *
      * @param source the source list.
      * @param mapper a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an observable list.
      */
-    public static <S, T> ObservableList<T> mapList(final ObservableList<S> source, final ObservableValue<Function<S, T>> mapper) {
+    @Nonnull
+    public static <S, T> ObservableList<T> mapList(@Nonnull final ObservableList<S> source, @Nonnull final ObservableValue<Function<S, T>> mapper) {
         return new MappingObservableList<>(source, mapper);
     }
 
@@ -448,9 +520,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding.
      */
-    public static <T, R> ObjectBinding<R> mapObject(final ObservableValue<T> observable, final Function<? super T, ? extends R> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<? super T, ? extends R> mapper) {
         return mapObject(observable, mapper, (R) null);
     }
 
@@ -460,9 +534,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return an object binding.
      */
-    public static <T, R> ObjectBinding<R> mapObject(final ObservableValue<T> observable, final Function<? super T, ? extends R> mapper,  final R defaultValue) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<? super T, ? extends R> mapper, @Nullable final R defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -477,9 +553,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an object binding.
      */
-    public static <T, R> ObjectBinding<R> mapObject(final ObservableValue<T> observable, final Function<? super T, ? extends R> mapper, final Supplier<R> supplier) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<T> observable, @Nonnull final Function<? super T, ? extends R> mapper, @Nonnull final Supplier<R> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -494,9 +572,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding.
      */
-    public static <T, R> ObjectBinding<R> mapObject(final ObservableValue<T> observable, final ObservableValue<Function<? super T, ? extends R>> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<? super T, ? extends R>> mapper) {
         return mapObject(observable, mapper, (R) null);
     }
 
@@ -506,9 +586,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return an object binding.
      */
-    public static <T, R> ObjectBinding<R> mapObject(final ObservableValue<T> observable, final ObservableValue<Function<? super T, ? extends R>> mapper,  final R defaultValue) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<? super T, ? extends R>> mapper, @Nullable final R defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -525,9 +607,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an object binding.
      */
-    public static <T, R> ObjectBinding<R> mapObject(final ObservableValue<T> observable, final ObservableValue<Function<? super T, ? extends R>> mapper, final Supplier<R> supplier) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapObject(@Nonnull final ObservableValue<T> observable, @Nonnull final ObservableValue<Function<? super T, ? extends R>> mapper, @Nonnull final Supplier<R> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -544,9 +628,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding.
      */
-    public static BooleanBinding mapBoolean(final ObservableValue<Boolean> observable, final Function<Boolean, Boolean> mapper) {
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable, @Nonnull final Function<Boolean, Boolean> mapper) {
         return mapBoolean(observable, mapper, false);
     }
 
@@ -556,9 +642,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a boolean binding.
      */
-    public static BooleanBinding mapBoolean(final ObservableValue<Boolean> observable, final Function<Boolean, Boolean> mapper, final Boolean defaultValue) {
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable, @Nonnull final Function<Boolean, Boolean> mapper, @Nonnull final Boolean defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -573,9 +661,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a boolean binding.
      */
-    public static BooleanBinding mapBoolean(final ObservableValue<Boolean> observable, final Function<Boolean, Boolean> mapper, final Supplier<Boolean> supplier) {
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable, @Nonnull final Function<Boolean, Boolean> mapper, @Nonnull final Supplier<Boolean> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -590,9 +680,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding.
      */
-    public static BooleanBinding mapBoolean(final ObservableValue<Boolean> observable, final ObservableValue<Function<Boolean, Boolean>> mapper) {
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable, @Nonnull final ObservableValue<Function<Boolean, Boolean>> mapper) {
         return mapBoolean(observable, mapper, false);
     }
 
@@ -602,9 +694,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a boolean binding.
      */
-    public static BooleanBinding mapBoolean(final ObservableValue<Boolean> observable, final ObservableValue<Function<Boolean, Boolean>> mapper, final Boolean defaultValue) {
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable, @Nonnull final ObservableValue<Function<Boolean, Boolean>> mapper, @Nonnull final Boolean defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -621,9 +715,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a boolean binding.
      */
-    public static BooleanBinding mapBoolean(final ObservableValue<Boolean> observable, final ObservableValue<Function<Boolean, Boolean>> mapper, final Supplier<Boolean> supplier) {
+    @Nonnull
+    public static BooleanBinding mapBoolean(@Nonnull final ObservableValue<Boolean> observable, @Nonnull final ObservableValue<Function<Boolean, Boolean>> mapper, @Nonnull final Supplier<Boolean> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -640,9 +736,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<Integer> observable, final Function<Integer, Integer> mapper) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<Integer> observable, @Nonnull final Function<Integer, Integer> mapper) {
         return mapInteger(observable, mapper, 0);
     }
 
@@ -652,9 +750,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<Integer> observable, final Function<Integer, Integer> mapper, final Integer defaultValue) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<Integer> observable, @Nonnull final Function<Integer, Integer> mapper, @Nonnull final Integer defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -670,9 +770,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<Integer> observable, final Function<Integer, Integer> mapper, final Supplier<Integer> supplier) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<Integer> observable, @Nonnull final Function<Integer, Integer> mapper, @Nonnull final Supplier<Integer> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -687,9 +789,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<Integer> observable, final ObservableValue<Function<Integer, Integer>> mapper) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<Integer> observable, @Nonnull final ObservableValue<Function<Integer, Integer>> mapper) {
         return mapInteger(observable, mapper, 0);
     }
 
@@ -699,9 +803,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<Integer> observable, final ObservableValue<Function<Integer, Integer>> mapper, final Integer defaultValue) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<Integer> observable, @Nonnull final ObservableValue<Function<Integer, Integer>> mapper, @Nonnull final Integer defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -718,9 +824,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<Integer> observable, final ObservableValue<Function<Integer, Integer>> mapper, final Supplier<Integer> supplier) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<Integer> observable, @Nonnull final ObservableValue<Function<Integer, Integer>> mapper, @Nonnull final Supplier<Integer> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -737,9 +845,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<Long> observable, final Function<Long, Long> mapper) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<Long> observable, @Nonnull final Function<Long, Long> mapper) {
         return mapLong(observable, mapper, 0L);
     }
 
@@ -749,9 +859,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<Long> observable, final Function<Long, Long> mapper, final Long defaultValue) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<Long> observable, @Nonnull final Function<Long, Long> mapper, @Nonnull final Long defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -767,9 +879,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<Long> observable, final Function<Long, Long> mapper, final Supplier<Long> supplier) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<Long> observable, @Nonnull final Function<Long, Long> mapper, @Nonnull final Supplier<Long> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -784,9 +898,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<Long> observable, final ObservableValue<Function<Long, Long>> mapper) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<Long> observable, @Nonnull final ObservableValue<Function<Long, Long>> mapper) {
         return mapLong(observable, mapper, 0L);
     }
 
@@ -796,9 +912,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<Long> observable, final ObservableValue<Function<Long, Long>> mapper, final Long defaultValue) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<Long> observable, @Nonnull final ObservableValue<Function<Long, Long>> mapper, @Nonnull final Long defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -815,9 +933,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<Long> observable, final ObservableValue<Function<Long, Long>> mapper, final Supplier<Long> supplier) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<Long> observable, @Nonnull final ObservableValue<Function<Long, Long>> mapper, @Nonnull final Supplier<Long> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -834,9 +954,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<Float> observable, final Function<Float, Float> mapper) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<Float> observable, @Nonnull final Function<Float, Float> mapper) {
         return mapFloat(observable, mapper, 0f);
     }
 
@@ -846,9 +968,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<Float> observable, final Function<Float, Float> mapper, final Float defaultValue) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<Float> observable, @Nonnull final Function<Float, Float> mapper, @Nonnull final Float defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -863,9 +987,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<Float> observable, final Function<Float, Float> mapper, final Supplier<Float> supplier) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<Float> observable, @Nonnull final Function<Float, Float> mapper, @Nonnull final Supplier<Float> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -880,9 +1006,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<Float> observable, final ObservableValue<Function<Float, Float>> mapper) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<Float> observable, @Nonnull final ObservableValue<Function<Float, Float>> mapper) {
         return mapFloat(observable, mapper, 0f);
     }
 
@@ -892,9 +1020,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<Float> observable, final ObservableValue<Function<Float, Float>> mapper,  final Float defaultValue) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<Float> observable, @Nonnull final ObservableValue<Function<Float, Float>> mapper, @Nullable final Float defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -911,9 +1041,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<Float> observable, final ObservableValue<Function<Float, Float>> mapper, final Supplier<Float> supplier) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<Float> observable, @Nonnull final ObservableValue<Function<Float, Float>> mapper, @Nonnull final Supplier<Float> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -930,9 +1062,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<Double> observable, final Function<Double, Double> mapper) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<Double> observable, @Nonnull final Function<Double, Double> mapper) {
         return mapDouble(observable, mapper, 0d);
     }
 
@@ -942,9 +1076,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<Double> observable, final Function<Double, Double> mapper,  final Double defaultValue) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<Double> observable, @Nonnull final Function<Double, Double> mapper, @Nullable final Double defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -959,9 +1095,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<Double> observable, final Function<Double, Double> mapper, final Supplier<Double> supplier) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<Double> observable, @Nonnull final Function<Double, Double> mapper, @Nonnull final Supplier<Double> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -976,9 +1114,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<Double> observable, final ObservableValue<Function<Double, Double>> mapper) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<Double> observable, @Nonnull final ObservableValue<Function<Double, Double>> mapper) {
         return mapDouble(observable, mapper, 0d);
     }
 
@@ -988,9 +1128,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<Double> observable, final ObservableValue<Function<Double, Double>> mapper, final Double defaultValue) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<Double> observable, @Nonnull final ObservableValue<Function<Double, Double>> mapper, @Nonnull final Double defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -1007,9 +1149,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<Double> observable, final ObservableValue<Function<Double, Double>> mapper, final Supplier<Double> supplier) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<Double> observable, @Nonnull final ObservableValue<Function<Double, Double>> mapper, @Nonnull final Supplier<Double> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1026,9 +1170,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding.
      */
-    public static StringBinding mapString(final ObservableValue<String> observable, final Function<String, String> mapper) {
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable, @Nonnull final Function<String, String> mapper) {
         return mapString(observable, mapper, "");
     }
 
@@ -1038,9 +1184,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a string binding.
      */
-    public static StringBinding mapString(final ObservableValue<String> observable, final Function<String, String> mapper, final String defaultValue) {
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable, @Nonnull final Function<String, String> mapper, @Nonnull final String defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -1055,9 +1203,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a string binding.
      */
-    public static StringBinding mapString(final ObservableValue<String> observable, final Function<String, String> mapper, final Supplier<String> supplier) {
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable, @Nonnull final Function<String, String> mapper, @Nonnull final Supplier<String> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1072,9 +1222,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding.
      */
-    public static StringBinding mapString(final ObservableValue<String> observable, final ObservableValue<Function<String, String>> mapper) {
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable, @Nonnull final ObservableValue<Function<String, String>> mapper) {
         return mapString(observable, mapper, "");
     }
 
@@ -1084,9 +1236,11 @@ public final class MappingBindings {
      * @param observable   the source observable.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a string binding.
      */
-    public static StringBinding mapString(final ObservableValue<String> observable, final ObservableValue<Function<String, String>> mapper, final String defaultValue) {
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable, @Nonnull final ObservableValue<Function<String, String>> mapper, @Nonnull final String defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -1103,9 +1257,11 @@ public final class MappingBindings {
      * @param observable the source observable.
      * @param mapper     a non-interfering, stateless function to apply to the reduced value.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a string binding.
      */
-    public static StringBinding mapString(final ObservableValue<String> observable, final ObservableValue<Function<String, String>> mapper, final Supplier<String> supplier) {
+    @Nonnull
+    public static StringBinding mapString(@Nonnull final ObservableValue<String> observable, @Nonnull final ObservableValue<Function<String, String>> mapper, @Nonnull final Supplier<String> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1124,9 +1280,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there are no values present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a boolean binding
      */
-    public static BooleanBinding mapBooleans(final ObservableValue<Boolean> observable1, final ObservableValue<Boolean> observable2, final Boolean defaultValue, final BiFunction<Boolean, Boolean, Boolean> mapper) {
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Boolean defaultValue, @Nonnull final BiFunction<Boolean, Boolean, Boolean> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1148,9 +1306,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a boolean binding
      */
-    public static BooleanBinding mapBooleans(final ObservableValue<Boolean> observable1, final ObservableValue<Boolean> observable2, final Supplier<Boolean> supplier, final BiFunction<Boolean, Boolean, Boolean> mapper) {
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Supplier<Boolean> supplier, @Nonnull final BiFunction<Boolean, Boolean, Boolean> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1172,9 +1332,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a boolean binding
      */
-    public static BooleanBinding mapBooleans(final ObservableValue<Boolean> observable1, final ObservableValue<Boolean> observable2, final Boolean defaultValue, final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Boolean defaultValue, @Nonnull final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1197,9 +1359,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no value is present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a boolean binding
      */
-    public static BooleanBinding mapBooleans(final ObservableValue<Boolean> observable1, final ObservableValue<Boolean> observable2, final Supplier<Boolean> supplier, final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
+    @Nonnull
+    public static BooleanBinding mapBooleans(@Nonnull final ObservableValue<Boolean> observable1, @Nonnull final ObservableValue<Boolean> observable2, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<BiFunction<Boolean, Boolean, Boolean>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1222,9 +1386,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there are no values present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an integer binding
      */
-    public static IntegerBinding mapIntegers(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Integer defaultValue, final BiFunction<? super Number, ? super Number, Integer> mapper) {
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Integer defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Integer> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1246,9 +1412,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an integer binding
      */
-    public static IntegerBinding mapIntegers(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Integer> supplier, final BiFunction<? super Number, ? super Number, Integer> mapper) {
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Integer> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Integer> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1270,9 +1438,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an integer binding
      */
-    public static IntegerBinding mapIntegers(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Integer defaultValue, final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Integer defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1295,9 +1465,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no value is present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an integer binding
      */
-    public static IntegerBinding mapIntegers(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Integer> supplier, final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
+    @Nonnull
+    public static IntegerBinding mapIntegers(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Integer>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1320,9 +1492,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there are no values present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a long binding
      */
-    public static LongBinding mapLongs(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Long defaultValue, final BiFunction<? super Number, ? super Number, Long> mapper) {
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Long defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Long> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1344,9 +1518,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a long binding
      */
-    public static LongBinding mapLongs(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Long> supplier, final BiFunction<? super Number, ? super Number, Long> mapper) {
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Long> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Long> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1368,9 +1544,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a long binding
      */
-    public static LongBinding mapLongs(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Long defaultValue, final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Long defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1393,9 +1571,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no value is present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a long binding
      */
-    public static LongBinding mapLongs(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Long> supplier, final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
+    @Nonnull
+    public static LongBinding mapLongs(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Long>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1418,9 +1598,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there are no values present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a float binding
      */
-    public static FloatBinding mapFloats(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Float defaultValue, final BiFunction<? super Number, ? super Number, Float> mapper) {
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Float defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Float> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1442,9 +1624,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a float binding
      */
-    public static FloatBinding mapFloats(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Float> supplier, final BiFunction<? super Number, ? super Number, Float> mapper) {
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Float> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Float> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1466,9 +1650,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a float binding
      */
-    public static FloatBinding mapFloats(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Float defaultValue, final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Float defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1491,9 +1677,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no value is present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a float binding
      */
-    public static FloatBinding mapFloats(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Float> supplier, final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
+    @Nonnull
+    public static FloatBinding mapFloats(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Float>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1516,9 +1704,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there are no values present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a double binding
      */
-    public static DoubleBinding mapDoubles(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Double defaultValue, final BiFunction<? super Number, ? super Number, Double> mapper) {
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Double defaultValue, @Nonnull final BiFunction<? super Number, ? super Number, Double> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1540,9 +1730,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a double binding
      */
-    public static DoubleBinding mapDoubles(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Double> supplier, final BiFunction<? super Number, ? super Number, Double> mapper) {
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Double> supplier, @Nonnull final BiFunction<? super Number, ? super Number, Double> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1564,9 +1756,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there is no value present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a double binding
      */
-    public static DoubleBinding mapDoubles(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Double defaultValue, final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Double defaultValue, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(defaultValue, ERROR_DEFAULT_VALUE_NULL);
@@ -1589,9 +1783,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no value is present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a double binding
      */
-    public static DoubleBinding mapDoubles(final ObservableValue<? extends Number> observable1, final ObservableValue<? extends Number> observable2, final Supplier<Double> supplier, final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
+    @Nonnull
+    public static DoubleBinding mapDoubles(@Nonnull final ObservableValue<? extends Number> observable1, @Nonnull final ObservableValue<? extends Number> observable2, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<BiFunction<? super Number, ? super Number, Double>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1614,9 +1810,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there are no values present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an object binding
      */
-    public static <A, B, R> ObjectBinding<R> mapObjects(final ObservableValue<A> observable1, final ObservableValue<B> observable2,  final R defaultValue, final BiFunction<? super A, ? super B, R> mapper) {
+    @Nonnull
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nullable final R defaultValue, @Nonnull final BiFunction<? super A, ? super B, R> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1637,9 +1835,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returnedif no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an object binding
      */
-    public static <A, B, R> ObjectBinding<R> mapObjects(final ObservableValue<A> observable1, final ObservableValue<B> observable2, final Supplier<R> supplier, final BiFunction<? super A, ? super B, R> mapper) {
+    @Nonnull
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nonnull final Supplier<R> supplier, @Nonnull final BiFunction<? super A, ? super B, R> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1661,9 +1861,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an object binding
      */
-    public static <A, B, R> ObjectBinding<R> mapObjects(final ObservableValue<A> observable1, final ObservableValue<B> observable2,  final R defaultValue, final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
+    @Nonnull
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nullable final R defaultValue, @Nonnull final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1685,9 +1887,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return an object binding
      */
-    public static <A, B, R> ObjectBinding<R> mapObjects(final ObservableValue<A> observable1, final ObservableValue<B> observable2, final Supplier<R> supplier, final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
+    @Nonnull
+    public static <A, B, R> ObjectBinding<R> mapObjects(@Nonnull final ObservableValue<A> observable1, @Nonnull final ObservableValue<B> observable2, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<BiFunction<? super A, ? super B, R>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1710,9 +1914,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there are no values present.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a string binding
      */
-    public static StringBinding mapStrings(final ObservableValue<String> observable1, final ObservableValue<String> observable2,  final String defaultValue, final BiFunction<String, String, String> mapper) {
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nullable final String defaultValue, @Nonnull final BiFunction<String, String, String> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1733,9 +1939,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a string binding
      */
-    public static StringBinding mapStrings(final ObservableValue<String> observable1, final ObservableValue<String> observable2, final Supplier<String> supplier, final BiFunction<String, String, String> mapper) {
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nonnull final Supplier<String> supplier, @Nonnull final BiFunction<String, String, String> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1757,9 +1965,11 @@ public final class MappingBindings {
      * @param observable2  the second observable value.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a string binding
      */
-    public static StringBinding mapStrings(final ObservableValue<String> observable1, final ObservableValue<String> observable2,  final String defaultValue, final ObservableValue<BiFunction<String, String, String>> mapper) {
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nullable final String defaultValue, @Nonnull final ObservableValue<BiFunction<String, String, String>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1781,9 +1991,11 @@ public final class MappingBindings {
      * @param observable2 the second observable value.
      * @param supplier    a {@code Supplier} whose result is returned if no values are present.
      * @param mapper      a non-interfering, stateless function to apply to the supplied values.
+     *
      * @return a string binding
      */
-    public static StringBinding mapStrings(final ObservableValue<String> observable1, final ObservableValue<String> observable2, final Supplier<String> supplier, final ObservableValue<BiFunction<String, String, String>> mapper) {
+    @Nonnull
+    public static StringBinding mapStrings(@Nonnull final ObservableValue<String> observable1, @Nonnull final ObservableValue<String> observable2, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<BiFunction<String, String, String>> mapper) {
         requireNonNull(observable1, ERROR_OBSERVABLE1_NULL);
         requireNonNull(observable2, ERROR_OBSERVABLE2_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1803,9 +2015,11 @@ public final class MappingBindings {
      * Creates an integer binding containing the value of the mapper function applied to the source observable.
      *
      * @param observable the source observable.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<? extends Number> observable) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<? extends Number> observable) {
         return mapInteger(observable, 0);
     }
 
@@ -1814,9 +2028,11 @@ public final class MappingBindings {
      *
      * @param observable   the source observable.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<? extends Number> observable,  final Integer defaultValue) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Integer defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         if (observable instanceof IntegerBinding) {
             return (IntegerBinding) observable;
@@ -1832,9 +2048,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an integer binding.
      */
-    public static IntegerBinding mapInteger(final ObservableValue<? extends Number> observable,  final Supplier<Integer> supplier) {
+    @Nonnull
+    public static IntegerBinding mapInteger(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Supplier<Integer> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         if (observable instanceof IntegerBinding) {
@@ -1850,9 +2068,11 @@ public final class MappingBindings {
      * Creates a long binding containing the value of the mapper function applied to the source observable.
      *
      * @param observable the source observable.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<? extends Number> observable) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<? extends Number> observable) {
         return mapLong(observable, 0L);
     }
 
@@ -1861,9 +2081,11 @@ public final class MappingBindings {
      *
      * @param observable   the source observable.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<? extends Number> observable,  final Long defaultValue) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Long defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         if (observable instanceof LongBinding) {
             return (LongBinding) observable;
@@ -1879,9 +2101,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a long binding.
      */
-    public static LongBinding mapLong(final ObservableValue<? extends Number> observable,  final Supplier<Long> supplier) {
+    @Nonnull
+    public static LongBinding mapLong(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Supplier<Long> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         if (observable instanceof LongBinding) {
@@ -1897,9 +2121,11 @@ public final class MappingBindings {
      * Creates a float binding containing the value of the mapper function applied to the source observable.
      *
      * @param observable the source observable.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<? extends Number> observable) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<? extends Number> observable) {
         return mapFloat(observable, 0f);
     }
 
@@ -1908,9 +2134,11 @@ public final class MappingBindings {
      *
      * @param observable   the source observable.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<? extends Number> observable,  final Float defaultValue) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Float defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         if (observable instanceof FloatBinding) {
             return (FloatBinding) observable;
@@ -1926,9 +2154,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a float binding.
      */
-    public static FloatBinding mapFloat(final ObservableValue<? extends Number> observable,  final Supplier<Float> supplier) {
+    @Nonnull
+    public static FloatBinding mapFloat(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Supplier<Float> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         if (observable instanceof FloatBinding) {
@@ -1944,9 +2174,11 @@ public final class MappingBindings {
      * Creates a double binding containing the value of the mapper function applied to the source observable.
      *
      * @param observable the source observable.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<? extends Number> observable) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<? extends Number> observable) {
         return mapDouble(observable, 0d);
     }
 
@@ -1955,9 +2187,11 @@ public final class MappingBindings {
      *
      * @param observable   the source observable.
      * @param defaultValue the value to be returned if there is no value present, may be null.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<? extends Number> observable,  final Double defaultValue) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Double defaultValue) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         if (observable instanceof DoubleBinding) {
             return (DoubleBinding) observable;
@@ -1973,9 +2207,11 @@ public final class MappingBindings {
      *
      * @param observable the source observable.
      * @param supplier   a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return a double binding.
      */
-    public static DoubleBinding mapDouble(final ObservableValue<? extends Number> observable,  final Supplier<Double> supplier) {
+    @Nonnull
+    public static DoubleBinding mapDouble(@Nonnull final ObservableValue<? extends Number> observable, @Nullable final Supplier<Double> supplier) {
         requireNonNull(observable, ERROR_OBSERVABLE_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         if (observable instanceof DoubleBinding) {

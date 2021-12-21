@@ -20,12 +20,12 @@ package sample.swing.java;
 import griffon.core.LifecycleHandler;
 import griffon.core.env.Lifecycle;
 import griffon.core.injection.Module;
-import griffon.inject.DependsOn;
+import griffon.annotations.inject.DependsOn;
 import griffon.swing.SwingWindowDisplayHandler;
 import org.codehaus.griffon.runtime.core.LifecycleHandlerProvider;
 import org.codehaus.griffon.runtime.core.injection.AbstractModule;
-import org.codehaus.griffon.runtime.util.ResourceBundleProvider;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.codehaus.griffon.runtime.core.bundles.ResourceBundleProvider;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.util.ResourceBundle;
 

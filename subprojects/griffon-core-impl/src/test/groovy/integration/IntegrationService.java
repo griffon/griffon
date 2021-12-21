@@ -17,12 +17,15 @@
  */
 package integration;
 
+import griffon.core.artifact.GriffonService;
 import griffon.core.i18n.MessageSource;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.StringUtils.isBlank;
 import static java.util.Collections.singletonList;
 
+@ServiceProviderFor(GriffonService.class)
 public class IntegrationService extends AbstractGriffonService {
     public String sayHello(String input) {
         MessageSource messageSource = getApplication().getMessageSource();

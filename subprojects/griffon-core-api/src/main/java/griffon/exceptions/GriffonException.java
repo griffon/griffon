@@ -17,7 +17,7 @@
  */
 package griffon.exceptions;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -31,16 +31,16 @@ public class GriffonException extends RuntimeException {
         super();
     }
 
-    public GriffonException(String arg0) {
-        super(arg0);
+    public GriffonException(String message) {
+        super(message);
     }
 
-    public GriffonException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
+    public GriffonException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public GriffonException(Throwable arg0) {
-        super(arg0);
+    public GriffonException(Throwable message) {
+        super(message);
     }
 
     protected static <T> T checkNonNull(T arg, String argName) {

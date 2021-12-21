@@ -18,13 +18,13 @@
 package org.codehaus.griffon.runtime.core.i18n;
 
 import griffon.annotations.core.Nonnull;
+import griffon.core.bundles.CompositeResourceBundleBuilder;
 import griffon.core.i18n.MessageSource;
-import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

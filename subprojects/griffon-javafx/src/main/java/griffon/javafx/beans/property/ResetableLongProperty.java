@@ -49,11 +49,13 @@ public class ResetableLongProperty extends AbstractResetableProperty<Number> {
         super(bean, name, baseValue);
     }
 
+    @Nonnull
     @Override
     protected Property<Number> writableBaseValueProperty() {
         return writableBaseValueLongProperty();
     }
 
+    @Nonnull
     protected LongProperty writableBaseValueLongProperty() {
         if (baseValue == null) {
             baseValue = new SimpleLongProperty(this, "baseValue");
@@ -61,20 +63,24 @@ public class ResetableLongProperty extends AbstractResetableProperty<Number> {
         return baseValue;
     }
 
+    @Nonnull
     @Override
     public ReadOnlyProperty<Number> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
+    @Nonnull
     public ReadOnlyLongProperty baseValueLongProperty() {
         return writableBaseValueLongProperty();
     }
 
+    @Nonnull
     @Override
     public Property<Number> valueProperty() {
         return valueLongProperty();
     }
 
+    @Nonnull
     public LongProperty valueLongProperty() {
         if (value == null) {
             value = new SimpleLongProperty(this, "value");

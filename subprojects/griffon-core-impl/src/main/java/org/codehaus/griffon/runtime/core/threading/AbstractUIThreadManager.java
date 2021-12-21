@@ -27,6 +27,8 @@ import griffon.exceptions.GriffonException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -69,9 +71,9 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
      */
     @Nonnull
     @Override
-    public <R> Future<R> runFuture(@Nonnull Callable<R> callable) {
+    public <R> Future<R> executeFuture(@Nonnull Callable<R> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
-        return runFuture(executorService, callable);
+        return executeFuture(executorService, callable);
     }
 
     /**
@@ -84,14 +86,14 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
      */
     @Nonnull
     @Override
-    public <R> Future<R> runFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
+    public <R> Future<R> executeFuture(@Nonnull ExecutorService executorService, @Nonnull Callable<R> callable) {
         requireNonNull(executorService, "Argument 'executorService' must not be null");
         requireNonNull(callable, ERROR_CALLABLE_NULL);
         return executorService.submit(callable);
     }
 
     @Override
-    public void runOutsideUI(@Nonnull final Runnable runnable) {
+    public void executeOutsideUI(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
         if (!isUIThread()) {
             runnable.run();
@@ -100,36 +102,66 @@ public abstract class AbstractUIThreadManager implements UIThreadManager {
                 try {
                     runnable.run();
                 } catch (Throwable throwable) {
-                    exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                    exceptionHandler.handleUncaught(Thread.currentThread(), throwable);
                 }
             });
         }
     }
 
     @Override
-    public void runOutsideUIAsync(@Nonnull final Runnable runnable) {
+    public void executeOutsideUIAsync(@Nonnull final Runnable runnable) {
         requireNonNull(runnable, ERROR_RUNNABLE_NULL);
 
         executorService.submit(() -> {
             try {
                 runnable.run();
             } catch (Throwable throwable) {
-                exceptionHandler.uncaughtException(Thread.currentThread(), throwable);
+                exceptionHandler.handleUncaught(Thread.currentThread(), throwable);
             }
         });
     }
 
     @Nullable
     @Override
-    public <R> R runInsideUISync(@Nonnull Callable<R> callable) {
+    public <R> R executeInsideUISync(@Nonnull Callable<R> callable) {
         requireNonNull(callable, ERROR_CALLABLE_NULL);
         FutureTask<R> ft = new FutureTask<>(callable);
-        runInsideUISync(ft);
+        executeInsideUISync(ft);
         try {
             return ft.get();
         } catch (InterruptedException | ExecutionException e) {
             throw new GriffonException("An error occurred while executing a task inside the UI thread", e);
         }
+    }
+
+    @Nonnull
+    @Override
+    public <R> CompletionStage<R> executeOutsideUIAsync(@Nonnull Callable<R> callable) {
+        requireNonNull(callable, ERROR_CALLABLE_NULL);
+        CompletableFuture<R> promise = new CompletableFuture<>();
+        getExecutorService().submit(() -> {
+            try {
+                promise.complete(callable.call());
+            } catch (Throwable throwable) {
+                promise.completeExceptionally(throwable);
+            }
+        });
+        return promise;
+    }
+
+    @Nonnull
+    @Override
+    public <R> CompletionStage<R> executeInsideUIAsync(@Nonnull Callable<R> callable) {
+        requireNonNull(callable, ERROR_CALLABLE_NULL);
+        CompletableFuture<R> promise = new CompletableFuture<>();
+        executeOutsideUIAsync(() -> {
+            try {
+                promise.complete(callable.call());
+            } catch (Throwable throwable) {
+                promise.completeExceptionally(throwable);
+            }
+        });
+        return promise;
     }
 
     @Nonnull

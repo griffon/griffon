@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
@@ -29,10 +30,11 @@ import static java.util.Objects.requireNonNull;
 public class ChangeListenerDecorator<T> implements ChangeListener<T> {
     private final ChangeListener<? super T> delegate;
 
-    public ChangeListenerDecorator(ChangeListener<? super T> delegate) {
+    public ChangeListenerDecorator(@Nonnull ChangeListener<? super T> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final ChangeListener<? super T> getDelegate() {
         return delegate;
     }

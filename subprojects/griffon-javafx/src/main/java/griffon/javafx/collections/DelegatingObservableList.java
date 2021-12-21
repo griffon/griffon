@@ -43,6 +43,7 @@ public abstract class DelegatingObservableList<E> extends ObservableListBase<E> 
         this.delegate.addListener(new WeakListChangeListener<>(getListener()));
     }
 
+    @Nonnull
     protected ObservableList<E> getDelegate() {
         return delegate;
     }

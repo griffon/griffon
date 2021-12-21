@@ -63,7 +63,7 @@ public interface ActionHandler {
      *
      * @return arguments to be sent to the action
      *
-     * @throws griffon.core.controller.AbortActionExecution if action execution should be aborted.
+     * @throws AbortActionExecution if action execution should be aborted.
      */
     @Nonnull
     Object[] before(@Nonnull Action action, @Nonnull Object[] args);

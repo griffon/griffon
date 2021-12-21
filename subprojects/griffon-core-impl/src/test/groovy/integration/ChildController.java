@@ -17,23 +17,26 @@
  */
 package integration;
 
-import griffon.core.mvc.MVCGroup;
-import griffon.inject.Contextual;
-import griffon.inject.MVCMember;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
-
 import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.Contextual;
+import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonController;
+import griffon.core.mvc.MVCGroup;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
+
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
+@ServiceProviderFor(GriffonController.class)
 public class ChildController extends AbstractGriffonController {
     private ChildModel model;
     private ChildView view;
     private MVCGroup parentGroup;
     private RootController parentController;
 
-    @MVCMember(editor = ListPropertyEditor.class)
+    @MVCMember(converter = ListConverter.class)
     private List<String> list1 = new ArrayList<>();
     private List<String> list2 = new ArrayList<>();
     private List<String> list3 = new ArrayList<>();
@@ -94,7 +97,7 @@ public class ChildController extends AbstractGriffonController {
         return list1;
     }
 
-    @MVCMember(editor = ListPropertyEditor.class)
+    @MVCMember(converter = ListConverter.class)
     public void setList2(List<String> list) {
         this.list2.addAll(list);
     }

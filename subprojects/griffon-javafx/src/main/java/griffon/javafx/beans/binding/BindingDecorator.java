@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Binding;
 import javafx.beans.value.ChangeListener;
@@ -31,10 +32,11 @@ import static java.util.Objects.requireNonNull;
 public class BindingDecorator<T> implements Binding<T> {
     private final Binding<T> delegate;
 
-    public BindingDecorator(Binding<T> delegate) {
+    public BindingDecorator(@Nonnull Binding<T> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final Binding<T> getDelegate() {
         return delegate;
     }

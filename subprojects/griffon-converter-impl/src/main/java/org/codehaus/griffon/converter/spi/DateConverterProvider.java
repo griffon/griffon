@@ -21,7 +21,7 @@ import griffon.annotations.core.Nonnull;
 import griffon.converter.Converter;
 import griffon.converter.spi.ConverterProvider;
 import org.codehaus.griffon.converter.DateConverter;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.util.Date;
 

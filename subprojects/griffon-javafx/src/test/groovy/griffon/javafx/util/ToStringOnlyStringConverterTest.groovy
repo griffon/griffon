@@ -17,7 +17,7 @@
  */
 package griffon.javafx.util
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ToStringOnlyStringConverterTest {
     @Test

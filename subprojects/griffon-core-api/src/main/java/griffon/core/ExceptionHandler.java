@@ -21,7 +21,7 @@ package griffon.core;
  * @author Andres Almiray
  * @since 2.5.0
  */
-public interface ExceptionHandler extends Thread.UncaughtExceptionHandler {
+public interface ExceptionHandler {
     /**
      * "griffon.full.stacktrace"
      */
@@ -32,7 +32,13 @@ public interface ExceptionHandler extends Thread.UncaughtExceptionHandler {
      */
     String GRIFFON_EXCEPTION_OUTPUT = "griffon.exception.output";
 
-    void uncaughtException(Thread t, Throwable e);
-
-    void handle(Throwable throwable);
+    /**
+     * Processes a {@code Throwable} thrown by application code but that was not caught earlier.
+     * Implementors must guarantee that no further exceptions or throwables will be thrown
+     * from this method.
+     *
+     * @param thread    the {@code Thread} on which the throwable was thrown. Must not be {@code null}.
+     * @param throwable an uncaught throwable. Must not be {@code null}.
+     */
+    void handleUncaught(Thread thread, Throwable throwable);
 }

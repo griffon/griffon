@@ -21,8 +21,8 @@ import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
-import griffon.util.GriffonClassUtils;
-import griffon.util.GriffonNameUtils;
+import griffon.core.util.GriffonClassUtils;
+import griffon.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +30,10 @@ import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static griffon.util.GriffonClassUtils.isEventHandler;
-import static griffon.util.GriffonClassUtils.isPlainMethod;
-import static griffon.util.GriffonNameUtils.getPropertyNameRepresentation;
-import static griffon.util.GriffonNameUtils.isBlank;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.core.util.GriffonClassUtils.isEventHandler;
+import static griffon.util.StringUtils.getPropertyNameRepresentation;
+import static griffon.util.StringUtils.isBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.runtime.core.artifact.ClassPropertyFetcher.forClass;
 
@@ -53,6 +52,9 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
     private static final String ERROR_APPLICATION_NULL = "Argument 'application' must not be null";
 
+    protected final Set<String> eventsCache = new TreeSet<>();
+    protected final Logger log;
+
     private final GriffonApplication application;
     private final Class<?> clazz;
     private final String artifactType;
@@ -65,9 +67,6 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     private final String logicalPropertyName;
     private final ClassPropertyFetcher classPropertyFetcher;
 
-    protected final Set<String> eventsCache = new TreeSet<>();
-    protected final Logger log;
-
     public AbstractGriffonClass(@Nonnull GriffonApplication application, @Nonnull Class<?> type, @Nonnull String artifactType, @Nonnull String trailingName) {
         this.application = requireNonNull(application, ERROR_APPLICATION_NULL);
         this.clazz = requireNonNull(type, ERROR_TYPE_NULL);
@@ -76,9 +75,9 @@ public abstract class AbstractGriffonClass implements GriffonClass {
         fullName = type.getName();
         log = LoggerFactory.getLogger(getClass().getSimpleName() + "[" + fullName + "]");
         packageName = GriffonClassUtils.getPackageName(type);
-        naturalName = GriffonNameUtils.getNaturalName(type.getName());
+        naturalName = StringUtils.getNaturalName(type.getName());
         shortName = GriffonClassUtils.getShortClassName(type);
-        name = GriffonNameUtils.getLogicalName(type, trailingName);
+        name = StringUtils.getLogicalName(type, trailingName);
         propertyName = getPropertyNameRepresentation(shortName);
         if (isBlank(name)) {
             logicalPropertyName = propertyName;
@@ -173,10 +172,15 @@ public abstract class AbstractGriffonClass implements GriffonClass {
     }
 
     public boolean equals(@Nullable Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (!obj.getClass().getName().equals(getClass().getName()))
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
+        }
+        if (!obj.getClass().getName().equals(getClass().getName())) {
+            return false;
+        }
 
         GriffonClass gc = (GriffonClass) obj;
         return clazz.getName().equals(gc.getClazz().getName());
@@ -196,9 +200,8 @@ public abstract class AbstractGriffonClass implements GriffonClass {
             for (Method method : getClazz().getMethods()) {
                 String methodName = method.getName();
                 if (!eventsCache.contains(methodName) &&
-                    isPlainMethod(method) &&
-                    isEventHandler(methodName)) {
-                    eventsCache.add(methodName.substring(2));
+                    isEventHandler(method)) {
+                    eventsCache.add(method.getParameterTypes()[0].getName());
                 }
             }
         }

@@ -17,7 +17,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.metadata.ArtifactProviderFor;
+import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.compile.core.BaseConstants;
 import org.codehaus.griffon.compile.core.ast.SourceUnitCollector;
 import org.codehaus.groovy.ast.ASTNode;
@@ -28,10 +28,10 @@ import org.codehaus.groovy.ast.ModuleNode;
 import org.codehaus.groovy.ast.expr.ClassExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.control.SourceUnit;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import griffon.annotations.core.Nonnull;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -56,7 +56,7 @@ public abstract class GriffonArtifactASTTransformation extends AbstractASTTransf
     protected static boolean isArtifact(@Nonnull ClassNode classNode, @Nonnull SourceUnit source, @Nonnull ClassNode artifactType) {
         requireNonNull(classNode, ERROR_CLASS_NODE_NULL);
         requireNonNull(source, ERROR_SOURCE_NULL);
-        List<AnnotationNode> annotations = classNode.getAnnotations(makeClassSafe(ArtifactProviderFor.class));
+        List<AnnotationNode> annotations = classNode.getAnnotations(makeClassSafe(ServiceProviderFor.class));
         if (annotations == null || annotations.isEmpty() || annotations.size() != 1) {
             return false;
         }

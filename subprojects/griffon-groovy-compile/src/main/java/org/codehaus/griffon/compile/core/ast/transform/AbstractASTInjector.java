@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.AnnotationNode;
 import org.codehaus.groovy.ast.ClassHelper;
@@ -27,14 +29,12 @@ import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.expr.Expression;
 import org.codehaus.groovy.ast.expr.FieldExpression;
 
-import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.lang.reflect.Modifier;
 
-import static griffon.util.GriffonNameUtils.getGetterName;
-import static griffon.util.GriffonNameUtils.isNotBlank;
+import static griffon.util.StringUtils.getGetterName;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Modifier.isPrivate;
 import static java.util.Objects.requireNonNull;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;

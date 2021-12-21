@@ -17,10 +17,13 @@
  */
 package integration;
 
+import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonModel;
 import griffon.core.mvc.MVCGroup;
-import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
+@ServiceProviderFor(GriffonModel.class)
 public class ChildModel extends AbstractGriffonModel {
     private MVCGroup parentGroup;
     private RootModel parentModel;

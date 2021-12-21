@@ -22,7 +22,7 @@ import griffon.javafx.JavaFXWindowDisplayHandler;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

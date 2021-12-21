@@ -18,10 +18,12 @@
 
 dependencies {
     api project(":griffon-core-api")
+    api project(":griffon-converter-impl")
     api 'mrj:MRJToolkitStubs:1.0'
     api "com.google.code.findbugs:jsr305:$jsr305Version"
-    api config.dependencyManagement.gav('jipsy')
+    api config.dependencyManagement.gav('jipsy', 'jipsy-util')
 
+    testImplementation project(':griffon-tck')
     testRuntimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-simple')
 
     testAnnotationProcessor config.dependencyManagement.gav('jipsy')

@@ -19,7 +19,7 @@
  * AST transformation for {@code @TypeProviderFor}.
  *
  * @since 2.1.0
- * @see griffon.metadata.TypeProviderFor
+ * @see org.kordamp.jipsy.annotations.TypeProviderFor
  */
 
 package org.codehaus.griffon.compile.core.ast.type;

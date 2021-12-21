@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.MapChangeListener;
 
 import static javafx.application.Platform.isFxApplicationThread;
@@ -27,7 +28,7 @@ import static javafx.application.Platform.runLater;
  * @since 2.9.0
  */
 class UIThreadAwareMapChangeListener<K, V> extends MapChangeListenerDecorator<K, V> implements UIThreadAware {
-    UIThreadAwareMapChangeListener(MapChangeListener<K, V> delegate) {
+    UIThreadAwareMapChangeListener(@Nonnull MapChangeListener<K, V> delegate) {
         super(delegate);
     }
 

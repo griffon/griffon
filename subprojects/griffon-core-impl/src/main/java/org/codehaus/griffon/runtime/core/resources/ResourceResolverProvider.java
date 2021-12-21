@@ -18,13 +18,14 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.annotations.core.Nonnull;
+import griffon.converter.ConverterRegistry;
+import griffon.core.bundles.CompositeResourceBundleBuilder;
 import griffon.core.resources.ResourceResolver;
-import griffon.util.CompositeResourceBundleBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -33,6 +34,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class ResourceResolverProvider implements Provider<ResourceResolver> {
     private final String basename;
+
+    @Inject
+    private ConverterRegistry converterRegistry;
 
     @Inject
     private CompositeResourceBundleBuilder resourceBundleBuilder;
@@ -48,7 +52,7 @@ public class ResourceResolverProvider implements Provider<ResourceResolver> {
     public ResourceResolver get() {
         requireNonNull(resourceBundleBuilder, "Argument 'resourceBundleBuilder' must not be null");
         requireNonNull(resourceResolverDecoratorFactory, "Argument 'resourceResolverDecoratorFactory' must not be null");
-        DefaultResourceResolver resourceResolver = new DefaultResourceResolver(resourceBundleBuilder, basename);
+        DefaultResourceResolver resourceResolver = new DefaultResourceResolver(converterRegistry, resourceBundleBuilder, basename);
         return resourceResolverDecoratorFactory.create(resourceResolver);
     }
 }

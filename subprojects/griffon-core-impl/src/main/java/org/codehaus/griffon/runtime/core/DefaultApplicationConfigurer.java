@@ -18,10 +18,9 @@
 package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
+import griffon.annotations.event.EventHandler;
 import griffon.core.ApplicationClassLoader;
 import griffon.core.ApplicationConfigurer;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.LifecycleHandler;
 import griffon.core.PlatformHandler;
@@ -29,31 +28,27 @@ import griffon.core.artifact.ArtifactHandler;
 import griffon.core.artifact.ArtifactManager;
 import griffon.core.artifact.GriffonController;
 import griffon.core.controller.ActionHandler;
-import griffon.core.controller.ActionInterceptor;
-import griffon.core.editors.PropertyEditorResolver;
 import griffon.core.env.Lifecycle;
-import griffon.core.event.EventHandler;
+import griffon.core.event.Event;
+import griffon.core.event.XEventHandler;
+import griffon.core.events.BootstrapEndEvent;
+import griffon.core.events.BootstrapStartEvent;
+import griffon.core.events.NewInstanceEvent;
 import griffon.core.injection.Injector;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.core.resources.ResourceInjector;
-import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.runtime.core.controller.NoopActionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.concurrent.GuardedBy;
 import javax.inject.Inject;
-import java.beans.PropertyEditor;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static griffon.core.GriffonExceptionHandler.sanitize;
 import static griffon.util.AnnotationUtils.named;
 import static griffon.util.AnnotationUtils.sortByDependencies;
-import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -71,7 +66,7 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
     private final Object lock = new Object();
     private final GriffonApplication application;
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private boolean initialized;
 
     @Inject
@@ -114,10 +109,8 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
     protected void doInitialize() {
         initializeEventHandler();
 
-        event(ApplicationEvent.BOOTSTRAP_START, singletonList(application));
+        event(BootstrapStartEvent.of(application));
 
-        initializePropertyEditors();
-        initializeResourcesInjector();
         initializeConfigurationManager();
         runLifecycleHandler(Lifecycle.INITIALIZE);
         applyPlatformTweaks();
@@ -126,62 +119,29 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
         initializeActionManager();
         initializeArtifactManager();
 
-        event(ApplicationEvent.BOOTSTRAP_END, singletonList(application));
+        event(BootstrapEndEvent.of(application));
     }
 
     protected void initializeEventHandler() {
-        Collection<EventHandler> handlerInstances = application.getInjector().getInstances(EventHandler.class);
-        Map<String, EventHandler> sortedHandlers = sortByDependencies(handlerInstances, "EventHandler", "handler");
-        for (EventHandler handler : sortedHandlers.values()) {
-            application.getEventRouter().addEventListener(handler);
+        Collection<XEventHandler> handlerInstances = application.getInjector().getInstances(XEventHandler.class);
+        Map<String, XEventHandler> sortedHandlers = sortByDependencies(handlerInstances, "EventHandler", "handler");
+        for (XEventHandler handler : sortedHandlers.values()) {
+            application.getEventRouter().subscribe(handler);
         }
+        application.getEventRouter().subscribe(this);
     }
 
-    protected void event(@Nonnull ApplicationEvent event, @Nullable List<?> args) {
-        application.getEventRouter().publishEvent(event.getName(), args);
+    protected <E extends Event> void event(@Nonnull E event) {
+        application.getEventRouter().publishEvent(event);
     }
 
-    protected void initializePropertyEditors() {
-        ServiceLoaderUtils.load(applicationClassLoader().get(), "META-INF/editors/", PropertyEditor.class, (classLoader, type, line) -> {
-            try {
-                String[] parts = line.trim().split("=");
-                Class<?> targetType = loadClass(parts[0].trim(), classLoader);
-                Class<? extends PropertyEditor> editorClass = (Class<? extends PropertyEditor>) loadClass(parts[1].trim(), classLoader);
+    @EventHandler
+    public void handleNewInstanceEvent(@Nonnull NewInstanceEvent event) {
+        application.getResourceInjector().injectResources(event.getInstance());
 
-                // Editor must have a no-args constructor
-                // CCE means the class can not be used
-                editorClass.newInstance();
-                PropertyEditorResolver.registerEditor(targetType, editorClass);
-                LOG.debug("Registering {} as editor for {}", editorClass.getName(), targetType.getName());
-            } catch (Exception e) {
-                if (LOG.isWarnEnabled()) {
-                    LOG.warn("Could not load " + type.getName() + " with " + line, sanitize(e));
-                }
-            }
-        });
-
-        Class<?>[][] pairs = new Class<?>[][]{
-            new Class<?>[]{Boolean.class, Boolean.TYPE},
-            new Class<?>[]{Byte.class, Byte.TYPE},
-            new Class<?>[]{Short.class, Short.TYPE},
-            new Class<?>[]{Integer.class, Integer.TYPE},
-            new Class<?>[]{Long.class, Long.TYPE},
-            new Class<?>[]{Float.class, Float.TYPE},
-            new Class<?>[]{Double.class, Double.TYPE}
-        };
-
-        for (Class<?>[] pair : pairs) {
-            PropertyEditor editor = PropertyEditorResolver.findEditor(pair[0]);
-            LOG.debug("Registering {} as editor for {}", editor.getClass().getName(), pair[1].getName());
-            PropertyEditorResolver.registerEditor(pair[1], editor.getClass());
+        if (GriffonController.class.isAssignableFrom(event.getType())) {
+            application.getActionManager().createActions((GriffonController) event.getInstance());
         }
-    }
-
-    protected void initializeResourcesInjector() {
-        final ResourceInjector injector = application.getResourceInjector();
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
-            injector.injectResources(args[1]);
-        });
     }
 
     protected void initializeArtifactManager() {
@@ -237,13 +197,6 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
             return;
         }
 
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
-            Class<?> klass = (Class) args[0];
-            if (GriffonController.class.isAssignableFrom(klass)) {
-                application.getActionManager().createActions((GriffonController) args[1]);
-            }
-        });
-
         Injector<?> injector = application.getInjector();
         Collection<ActionHandler> handlerInstances = injector.getInstances(ActionHandler.class);
         List<String> handlerOrder = application.getConfiguration().get(KEY_GRIFFON_CONTROLLER_ACTION_HANDLER_ORDER, Collections.<String>emptyList());
@@ -251,12 +204,6 @@ public class DefaultApplicationConfigurer implements ApplicationConfigurer {
 
         for (ActionHandler handler : sortedHandlers.values()) {
             application.getActionManager().addActionHandler(handler);
-        }
-
-        Collection<ActionInterceptor> interceptorInstances = injector.getInstances(ActionInterceptor.class);
-        if (!interceptorInstances.isEmpty()) {
-            application.getLog().error(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
-            throw new UnsupportedOperationException(ActionInterceptor.class.getName() + " has been deprecated and is no longer supported");
         }
     }
 

@@ -19,7 +19,7 @@ package editor;
 
 import java.beans.PropertyChangeListener;
 
-import static griffon.util.GriffonClassUtils.setPropertyValue;
+import static griffon.core.util.GriffonClassUtils.setPropertyValue;
 
 public class DocumentModel extends Document {
     private Document document;

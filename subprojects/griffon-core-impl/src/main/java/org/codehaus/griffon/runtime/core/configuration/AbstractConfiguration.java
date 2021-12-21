@@ -19,20 +19,19 @@ package org.codehaus.griffon.runtime.core.configuration;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
+import griffon.converter.FormattingConverter;
 import griffon.core.Configuration;
-import griffon.core.editors.ExtendedPropertyEditor;
 
-import java.beans.PropertyEditor;
 import java.util.Properties;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
+import static griffon.core.util.TypeUtils.castToBoolean;
+import static griffon.core.util.TypeUtils.castToDouble;
+import static griffon.core.util.TypeUtils.castToFloat;
+import static griffon.core.util.TypeUtils.castToInt;
+import static griffon.core.util.TypeUtils.castToLong;
 import static griffon.util.CollectionUtils.toProperties;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
-import static griffon.util.TypeUtils.castToBoolean;
-import static griffon.util.TypeUtils.castToDouble;
-import static griffon.util.TypeUtils.castToFloat;
-import static griffon.util.TypeUtils.castToInt;
-import static griffon.util.TypeUtils.castToLong;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -42,6 +41,18 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractConfiguration implements Configuration {
     private static final String ERROR_TYPE_NULL = "Argument 'type' must not be null";
     private static final String ERROR_FORMAT_BLANK = "Argument 'format' must not be blank";
+
+    protected ConverterRegistry converterRegistry;
+
+    public AbstractConfiguration(@Nonnull ConverterRegistry converterRegistry) {
+        this.converterRegistry = requireNonNull(converterRegistry, "Argument 'converterRegistry' must not be null");
+    }
+
+    @Nonnull
+    @Override
+    public ConverterRegistry getConverterRegistry() {
+        return converterRegistry;
+    }
 
     @Nullable
     @Override
@@ -53,7 +64,7 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Nullable
     @Override
-    public Object getAt(@Nonnull String key) {
+    public <T> T getAt(@Nonnull String key) {
         return get(key);
     }
 
@@ -121,21 +132,6 @@ public abstract class AbstractConfiguration implements Configuration {
 
     @Nullable
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getAs(@Nonnull String key) {
-        return (T) get(key);
-    }
-
-    @Nullable
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getAs(@Nonnull String key, @Nullable T defaultValue) {
-        Object value = get(key);
-        return (T) (value != null ? value : defaultValue);
-    }
-
-    @Nullable
-    @Override
     public <T> T getConverted(@Nonnull String key, @Nonnull Class<T> type) {
         requireNonNull(type, ERROR_TYPE_NULL);
         return convertValue(get(key), type);
@@ -168,9 +164,10 @@ public abstract class AbstractConfiguration implements Configuration {
             if (type.isAssignableFrom(value.getClass())) {
                 return (T) value;
             } else {
-                PropertyEditor editor = findEditor(type);
-                editor.setValue(value);
-                return (T) editor.getValue();
+                Converter<T> converter = converterRegistry.findConverter(type);
+                if (null != converter) {
+                    return converter.fromObject(value);
+                }
             }
         }
         return null;
@@ -182,13 +179,13 @@ public abstract class AbstractConfiguration implements Configuration {
             if (type.isAssignableFrom(value.getClass())) {
                 return (T) value;
             } else {
-                PropertyEditor editor = findEditor(type);
-                if (editor instanceof ExtendedPropertyEditor) {
-                    requireNonBlank(format, ERROR_FORMAT_BLANK);
-                    ((ExtendedPropertyEditor) editor).setFormat(format);
+                Converter<T> converter = converterRegistry.findConverter(type);
+                if (null != converter) {
+                    if (converter instanceof FormattingConverter) {
+                        ((FormattingConverter) converter).setFormat(format);
+                    }
+                    return converter.fromObject(value);
                 }
-                editor.setValue(value);
-                return (T) editor.getValue();
             }
         }
         return null;

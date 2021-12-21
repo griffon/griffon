@@ -17,8 +17,9 @@
  */
 package integration
 
+import griffon.annotations.core.Nonnull
+import griffon.annotations.core.Nullable
 import griffon.core.ApplicationBootstrapper
-import griffon.core.ApplicationEvent
 import griffon.core.GriffonApplication
 import griffon.core.LifecycleHandler
 import griffon.core.ShutdownHandler
@@ -35,16 +36,16 @@ import griffon.core.controller.ActionHandler
 import griffon.core.controller.ActionManager
 import griffon.core.env.ApplicationPhase
 import griffon.core.env.Lifecycle
-import griffon.core.mvc.MVCFunction
+import griffon.core.events.NewInstanceEvent
+import griffon.core.mvc.MVCConsumer
 import griffon.core.mvc.MVCGroup
 import griffon.exceptions.InstanceNotFoundException
 import org.codehaus.griffon.runtime.core.DefaultApplicationBootstrapper
+import org.codehaus.groovy.runtime.DateGroovyMethods
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-import griffon.annotations.core.Nonnull
-import griffon.annotations.core.Nullable
 import java.text.SimpleDateFormat
 
 import static griffon.util.AnnotationUtils.named
@@ -141,14 +142,14 @@ class GriffonApplicationSpec extends Specification {
         viewClass.resetCaches()
 
         expect:
-        viewClass.eventNames == ['RandomEvent']
+        viewClass.eventNames == ['griffon.core.events.RandomEvent']
     }
 
     def "Check groups"() {
-        // given:
+        given:
         InvokeActionHandler handler = application.injector.getInstance(ActionHandler)
         assert handler.configure
-        assert ['foo', 'bar'] == application.startupArgs
+        assert ['foo', 'bar'] == application.startupArguments
 
         when:
         MVCGroup group = application.mvcGroupManager.findGroup('integration')
@@ -357,7 +358,7 @@ class GriffonApplicationSpec extends Specification {
         !application.artifactManager.findGriffonClass(SimpleModel, 'domain')
         !application.artifactManager.findGriffonClass(SimpleModel, 'controller')
 
-        application.artifactManager.getClassesOfType('model').clazz == [IntegrationModel, SimpleModel, RootModel, ChildModel, ArgsModel]
+        application.artifactManager.getClassesOfType('model').clazz == [ArgsModel, ChildModel, IntegrationModel, RootModel, SimpleModel]
         !application.artifactManager.getClassesOfType('domain')
 
         application.artifactManager.allClasses*.clazz.sort() == [
@@ -372,7 +373,7 @@ class GriffonApplicationSpec extends Specification {
         modelHandler.trailing == 'Model'
         modelHandler.type == 'model'
         modelHandler.classesByName.keySet() == (['integration.IntegrationModel', 'integration.SimpleModel', 'integration.RootModel', 'integration.ChildModel', 'integration.ArgsModel'] as Set)
-        modelHandler.classes.clazz == [IntegrationModel, SimpleModel, RootModel, ChildModel, ArgsModel]
+        modelHandler.classes.clazz == [ArgsModel, ChildModel, IntegrationModel, RootModel, SimpleModel]
         modelHandler.findClassFor('integrationModel')
         modelHandler.findClassFor('integration')
         !modelHandler.findClassFor('sample')
@@ -390,8 +391,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC('simple', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -410,8 +411,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', 'simple-1', new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC('simple', 'simple-1', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -430,8 +431,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', 'simple-2', [key: 'griffon'], new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC('simple', 'simple-2', [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -450,8 +451,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', [key: 'griffon'], new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC('simple', [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -470,8 +471,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', 'simple-2', key: 'griffon', new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC('simple', 'simple-2', key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -490,8 +491,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC('simple', key: 'griffon', new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC('simple', key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -690,8 +691,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC(SimpleMVCGroup, new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC(SimpleMVCGroup, new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -710,8 +711,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC(SimpleMVCGroup, 'simple-1', new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC(SimpleMVCGroup, 'simple-1', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -730,8 +731,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC(SimpleMVCGroup, 'simple-2', [key: 'griffon'], new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC(SimpleMVCGroup, 'simple-2', [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -750,8 +751,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC(SimpleMVCGroup, [key: 'griffon'], new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC(SimpleMVCGroup, [key: 'griffon'], new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -770,8 +771,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC(SimpleMVCGroup, 'simple-2', key: 'griffon', new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC(SimpleMVCGroup, 'simple-2', key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -790,8 +791,8 @@ class GriffonApplicationSpec extends Specification {
         List checks = []
 
         when:
-        application.mvcGroupManager.withMVC(SimpleMVCGroup, key: 'griffon', new MVCFunction() {
-            void apply(
+        application.mvcGroupManager.withMVC(SimpleMVCGroup, key: 'griffon', new MVCConsumer() {
+            void accept(
                 @Nullable GriffonModel model, @Nullable GriffonView view, @Nullable GriffonController controller) {
                 checks << (model instanceof SimpleModel)
                 checks << (view instanceof SimpleView)
@@ -1008,12 +1009,12 @@ class GriffonApplicationSpec extends Specification {
         ConfigurableBean bean = new ConfigurableBean()
 
         when:
-        application.eventRouter.publishEvent(ApplicationEvent.NEW_INSTANCE.name, [ConfigurableBean, bean])
+        application.eventRouter.publishEvent(NewInstanceEvent.of(ConfigurableBean, bean))
 
         then:
         bean.pstring == 'value1'
         bean.pboolean
-        bean.pdate == new SimpleDateFormat('yyyy/MM/dd').parse('2000/02/01')
+        DateGroovyMethods.clearTime(bean.pdate) == DateGroovyMethods.clearTime(new SimpleDateFormat('yyyy/MM/dd').parse('2000/01/01'))
         bean.customString == 'custom'
     }
 

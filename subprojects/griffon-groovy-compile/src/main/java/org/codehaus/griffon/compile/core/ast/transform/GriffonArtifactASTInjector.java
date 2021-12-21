@@ -17,6 +17,7 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
 import griffon.core.GriffonApplication;
 import griffon.core.artifact.GriffonClass;
 import org.codehaus.griffon.compile.core.BaseConstants;
@@ -25,8 +26,6 @@ import org.codehaus.groovy.ast.FieldNode;
 import org.codehaus.groovy.ast.MethodNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import griffon.annotations.core.Nonnull;
 
 import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PRIVATE;

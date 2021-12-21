@@ -19,17 +19,23 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.converter.ConverterRegistry;
 import griffon.core.Context;
 import griffon.core.ContextFactory;
+
+import javax.inject.Inject;
 
 /**
  * @author Andres Almiray
  * @since 2.4.0
  */
 public class DefaultContextFactory implements ContextFactory {
+    @Inject
+    private ConverterRegistry converterRegistry;
+
     @Nonnull
     @Override
     public Context create(@Nullable Context parentContext) {
-        return new DefaultContext(parentContext);
+        return new DefaultContext(converterRegistry, parentContext);
     }
 }

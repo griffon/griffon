@@ -17,16 +17,17 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.value.ChangeListener;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareStringExpression extends StringExpressionDecorator implements UIThreadAware {
-    UIThreadAwareStringExpression(StringExpression delegate) {
+    UIThreadAwareStringExpression(@Nonnull StringExpression delegate) {
         super(delegate);
     }
 

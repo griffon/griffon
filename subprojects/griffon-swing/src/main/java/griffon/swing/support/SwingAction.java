@@ -19,13 +19,12 @@ package griffon.swing.support;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.CallableWithArgs;
 import griffon.core.RunnableWithArgs;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-import static griffon.util.GriffonNameUtils.isNotBlank;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -39,19 +38,6 @@ public class SwingAction extends AbstractAction {
     private static final String ERROR_CALLABLE_NULL = "Argument 'callable' must not be null";
     private static final String ERROR_RUNNABLE_NULL = "Argument 'runnable' must not be null";
     private final transient RunnableWithArgs runnable;
-
-    /**
-     * Creates a new action.
-     *
-     * @param callable the body of the action
-     *
-     * @deprecated use the {@code RunnableWithArgs} constructor instead.
-     */
-    @Deprecated
-    public SwingAction(@Nonnull final CallableWithArgs<?> callable) {
-        requireNonNull(callable, ERROR_CALLABLE_NULL);
-        this.runnable = callable::call;
-    }
 
     public SwingAction(@Nonnull RunnableWithArgs runnable) {
         this.runnable = requireNonNull(runnable, ERROR_RUNNABLE_NULL);
@@ -172,14 +158,6 @@ public class SwingAction extends AbstractAction {
         @Nonnull
         public ActionBuilder withLargeIcon(@Nullable Icon largeIcon) {
             this.largeIcon = largeIcon;
-            return this;
-        }
-
-        @Nonnull
-        @Deprecated
-        public ActionBuilder withRunnable(@Nullable final CallableWithArgs<?> callable) {
-            requireNonNull(callable, ERROR_CALLABLE_NULL);
-            this.runnable = callable::call;
             return this;
         }
 

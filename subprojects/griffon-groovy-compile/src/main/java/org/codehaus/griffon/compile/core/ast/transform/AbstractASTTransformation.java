@@ -17,6 +17,8 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import griffon.core.GriffonApplication;
 import org.codehaus.griffon.compile.core.MethodDescriptor;
 import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
@@ -38,8 +40,6 @@ import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
 import org.codehaus.groovy.transform.ASTTransformation;
 
-import griffon.annotations.core.Nonnull;
-import griffon.annotations.core.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.lang.reflect.Modifier;
@@ -47,8 +47,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static griffon.util.GriffonNameUtils.getGetterName;
-import static griffon.util.GriffonNameUtils.isNotBlank;
+import static griffon.util.StringUtils.getGetterName;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Modifier.PRIVATE;
 import static java.lang.reflect.Modifier.PUBLIC;
 import static java.lang.reflect.Modifier.isPrivate;

@@ -17,7 +17,6 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.util.ServiceLoaderUtils;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -31,10 +30,9 @@ import org.codehaus.groovy.control.CompilePhase;
 import org.codehaus.groovy.control.SourceUnit;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.kordamp.jipsy.ServiceProviderFor;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
+import org.kordamp.jipsy.util.TypeLoader;
 
-import griffon.annotations.core.Nonnull;
-import javax.annotation.concurrent.GuardedBy;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,9 +43,9 @@ import java.util.Map;
 @GroovyASTTransformation(phase = CompilePhase.SEMANTIC_ANALYSIS)
 public class AnnotationHandlerASTTransformation extends AbstractASTTransformation {
     private final Object lock = new Object();
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private boolean initialized;
-    @GuardedBy("lock")
+    // @GuardedBy("lock")
     private final Map<String, Class<? extends ASTTransformation>> transformations = new LinkedHashMap<>();
 
     @Override
@@ -79,9 +77,9 @@ public class AnnotationHandlerASTTransformation extends AbstractASTTransformatio
     private void visitAnnotationsOnNode(AnnotatedNode node, ClassNode owner) {
         for (AnnotationNode annotationNode : node.getAnnotations()) {
             Class<? extends ASTTransformation> transformationClass = transformations.get(annotationNode.getClassNode().getName());
-            if (transformationClass == null) continue;
+            if (transformationClass == null) { continue; }
             GroovyASTTransformation annotation = transformationClass.getAnnotation(GroovyASTTransformation.class);
-            if (annotation == null) continue;
+            if (annotation == null) { continue; }
             // Set<ASTNode> nodes = owner.getTransforms(annotation.phase()).get(transformationClass);
             // if (nodes != null && !nodes.isEmpty()) continue;
             owner.addTransform(transformationClass, annotationNode);
@@ -89,19 +87,15 @@ public class AnnotationHandlerASTTransformation extends AbstractASTTransformatio
     }
 
     private void initialize(final SourceUnit source) {
-        ServiceLoaderUtils.load(getClass().getClassLoader(), "META-INF/annotations/", AnnotationHandler.class, new ServiceLoaderUtils.LineProcessor() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public void process(@Nonnull ClassLoader classLoader, @Nonnull Class<?> type, @Nonnull String line) {
-                String[] parts = line.trim().split("=");
-                String annotationClassName = parts[0].trim();
-                String transformationClassName = parts[1].trim();
-                try {
-                    Class<?> transformationClass = classLoader.loadClass(transformationClassName);
-                    transformations.put(annotationClassName, (Class<? extends ASTTransformation>) transformationClass);
-                } catch (Exception e) {
-                    source.addException(e);
-                }
+        TypeLoader.load(getClass().getClassLoader(), "META-INF/annotations/", AnnotationHandler.class, (classLoader, type, line) -> {
+            String[] parts = line.trim().split("=");
+            String annotationClassName = parts[0].trim();
+            String transformationClassName = parts[1].trim();
+            try {
+                Class<?> transformationClass = classLoader.loadClass(transformationClassName);
+                transformations.put(annotationClassName, (Class<? extends ASTTransformation>) transformationClass);
+            } catch (Exception e) {
+                source.addException(e);
             }
         });
     }

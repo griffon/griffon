@@ -17,8 +17,8 @@
  */
 package org.codehaus.griffon.runtime.core.artifact;
 
-import griffon.util.GriffonClassUtils;
-import griffon.util.GriffonNameUtils;
+import griffon.core.util.GriffonClassUtils;
+import griffon.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.AccessibleObject;
@@ -44,43 +44,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2.0.0
  */
 public class ClassPropertyFetcher {
-    private final Class<?> clazz;
+    private static final Map<Class<?>, ClassPropertyFetcher> CACHED_CLASS_PROPERTY_FETCHERS = new ConcurrentHashMap<>();
     final Map<String, PropertyFetcher> staticFetchers = new LinkedHashMap<>();
     final Map<String, PropertyFetcher> instanceFetchers = new LinkedHashMap<>();
+    private final Class<?> clazz;
     private final ReferenceInstanceCallback callback;
     private PropertyDescriptor[] propertyDescriptors;
     private String[] propertiesWithFields;
-
-    private static final Map<Class<?>, ClassPropertyFetcher> CACHED_CLASS_PROPERTY_FETCHERS = new ConcurrentHashMap<>();
-
-    public static void clearClassPropertyFetcherCache() {
-        CACHED_CLASS_PROPERTY_FETCHERS.clear();
-    }
-
-    public static ClassPropertyFetcher forClass(Class<?> c) {
-        return forClass(c, null);
-    }
-
-    public static ClassPropertyFetcher forClass(final Class<?> c, ReferenceInstanceCallback callback) {
-        ClassPropertyFetcher cpf = CACHED_CLASS_PROPERTY_FETCHERS.get(c);
-        if (cpf == null) {
-            if (callback == null) {
-                callback = new ReferenceInstanceCallback() {
-                    private Object o;
-
-                    public Object getReferenceInstance() {
-                        if (o == null) {
-                            o = GriffonClassUtils.instantiateClass(c);
-                        }
-                        return o;
-                    }
-                };
-            }
-            cpf = new ClassPropertyFetcher(c, callback);
-            CACHED_CLASS_PROPERTY_FETCHERS.put(c, cpf);
-        }
-        return cpf;
-    }
 
     ClassPropertyFetcher(Class<?> clazz, ReferenceInstanceCallback callback) {
         this.clazz = clazz;
@@ -152,7 +122,7 @@ public class ClassPropertyFetcher {
                         PropertyFetcher fetcher = new GetterPropertyFetcher(
                             method, true);
                         staticFetchers.put(name, fetcher);
-                        staticFetchers.put(GriffonNameUtils.uncapitalize(name), fetcher);
+                        staticFetchers.put(StringUtils.uncapitalize(name), fetcher);
                     }
                 }
             }
@@ -298,6 +268,45 @@ public class ClassPropertyFetcher {
         return null;
     }
 
+    public static void clearClassPropertyFetcherCache() {
+        CACHED_CLASS_PROPERTY_FETCHERS.clear();
+    }
+
+    public static ClassPropertyFetcher forClass(Class<?> c) {
+        return forClass(c, null);
+    }
+
+    public static ClassPropertyFetcher forClass(final Class<?> c, ReferenceInstanceCallback callback) {
+        ClassPropertyFetcher cpf = CACHED_CLASS_PROPERTY_FETCHERS.get(c);
+        if (cpf == null) {
+            if (callback == null) {
+                callback = new ReferenceInstanceCallback() {
+                    private Object o;
+
+                    public Object getReferenceInstance() {
+                        if (o == null) {
+                            o = GriffonClassUtils.instantiateClass(c);
+                        }
+                        return o;
+                    }
+                };
+            }
+            cpf = new ClassPropertyFetcher(c, callback);
+            CACHED_CLASS_PROPERTY_FETCHERS.put(c, cpf);
+        }
+        return cpf;
+    }
+
+    private static void makeAccessible(AccessibleObject obj) {
+        if (!obj.isAccessible()) {
+            try {
+                obj.setAccessible(true);
+            } catch (SecurityException e) {
+                // skip
+            }
+        }
+    }
+
     public interface ReferenceInstanceCallback {
         Object getReferenceInstance();
     }
@@ -307,6 +316,14 @@ public class ClassPropertyFetcher {
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 
         Class<?> getPropertyType(String name);
+    }
+
+    interface FieldCallback {
+        void doWith(Field field) throws IllegalArgumentException, IllegalAccessException;
+    }
+
+    interface MethodCallback {
+        void doWith(Method method) throws IllegalArgumentException, IllegalAccessException;
     }
 
     static class GetterPropertyFetcher implements PropertyFetcher {
@@ -363,23 +380,5 @@ public class ClassPropertyFetcher {
         public Class<?> getPropertyType(String name) {
             return field.getType();
         }
-    }
-
-    private static void makeAccessible(AccessibleObject obj) {
-        if (!obj.isAccessible()) {
-            try {
-                obj.setAccessible(true);
-            } catch (SecurityException e) {
-                // skip
-            }
-        }
-    }
-
-    interface FieldCallback {
-        void doWith(Field field) throws IllegalArgumentException, IllegalAccessException;
-    }
-
-    interface MethodCallback {
-        void doWith(Method method) throws IllegalArgumentException, IllegalAccessException;
     }
 }

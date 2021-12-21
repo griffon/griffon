@@ -19,28 +19,28 @@ package org.codehaus.griffon.runtime.core;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
+import griffon.annotations.inject.Contextual;
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
 import griffon.core.Context;
 import griffon.exceptions.FieldException;
-import griffon.inject.Contextual;
 
 import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
+import static griffon.core.util.GriffonClassUtils.getAllDeclaredFields;
+import static griffon.core.util.GriffonClassUtils.getPropertyDescriptors;
+import static griffon.core.util.GriffonClassUtils.setFieldValue;
+import static griffon.core.util.TypeUtils.castToBoolean;
+import static griffon.core.util.TypeUtils.castToDouble;
+import static griffon.core.util.TypeUtils.castToFloat;
+import static griffon.core.util.TypeUtils.castToInt;
+import static griffon.core.util.TypeUtils.castToLong;
 import static griffon.util.AnnotationUtils.annotationsOfMethodParameter;
 import static griffon.util.AnnotationUtils.findAnnotation;
 import static griffon.util.AnnotationUtils.nameFor;
-import static griffon.util.GriffonClassUtils.getAllDeclaredFields;
-import static griffon.util.GriffonClassUtils.getPropertyDescriptors;
-import static griffon.util.GriffonClassUtils.setFieldValue;
-import static griffon.util.TypeUtils.castToBoolean;
-import static griffon.util.TypeUtils.castToDouble;
-import static griffon.util.TypeUtils.castToFloat;
-import static griffon.util.TypeUtils.castToInt;
-import static griffon.util.TypeUtils.castToLong;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -48,9 +48,11 @@ import static java.util.Objects.requireNonNull;
  * @since 2.2.0
  */
 public abstract class AbstractContext implements Context {
+    protected final ConverterRegistry converterRegistry;
     protected Context parentContext;
 
-    public AbstractContext(@Nullable Context parentContext) {
+    public AbstractContext(@Nonnull ConverterRegistry converterRegistry, @Nullable Context parentContext) {
+        this.converterRegistry = requireNonNull(converterRegistry, "Argument 'converterRegistry' must not be null");
         this.parentContext = parentContext;
     }
 
@@ -207,9 +209,10 @@ public abstract class AbstractContext implements Context {
             if (type.isAssignableFrom(value.getClass())) {
                 return (T) value;
             } else {
-                PropertyEditor editor = findEditor(type);
-                editor.setValue(value);
-                return (T) editor.getValue();
+                Converter<T> converter = converterRegistry.findConverter(type);
+                if (null != converter) {
+                    return converter.fromObject(value);
+                }
             }
         }
         return null;

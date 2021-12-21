@@ -18,9 +18,10 @@
 package org.codehaus.griffon.runtime.javafx;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.ApplicationEvent;
 import griffon.core.GriffonApplication;
 import griffon.core.env.ApplicationPhase;
+import griffon.core.events.WindowHiddenEvent;
+import griffon.core.events.WindowShownEvent;
 import griffon.javafx.JavaFXWindowDisplayHandler;
 import griffon.javafx.JavaFXWindowManager;
 import javafx.event.EventHandler;
@@ -33,7 +34,6 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,9 +41,10 @@ import static java.util.Objects.requireNonNull;
  * @since 2.0.0
  */
 public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> implements JavaFXWindowManager {
-    private final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();
-    private final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();
-    private final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();
+    protected final OnWindowHidingHelper onWindowHiding = new OnWindowHidingHelper();
+    protected final OnCloseRequestHelper onCloseRequest = new OnCloseRequestHelper();
+    protected final OnWindowShownHelper onWindowShown = new OnWindowShownHelper();
+    protected final OnWindowHiddenHelper onWindowHidden = new OnWindowHiddenHelper();
 
     @Inject
     @Nonnull
@@ -55,6 +56,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
     @Override
     protected void doAttach(@Nonnull Window window) {
         requireNonNull(window, ERROR_WINDOW_NULL);
+        window.setOnCloseRequest(onCloseRequest);
         window.setOnHiding(onWindowHiding);
         window.setOnShown(onWindowShown);
         window.setOnHidden(onWindowHidden);
@@ -63,6 +65,7 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
     @Override
     protected void doDetach(@Nonnull Window window) {
         requireNonNull(window, ERROR_WINDOW_NULL);
+        window.setOnCloseRequest(null);
         window.setOnHiding(null);
         window.setOnShown(null);
         window.setOnHidden(null);
@@ -74,32 +77,46 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
         return window.isShowing();
     }
 
-    public void handleClose(@Nonnull Window widget) {
+    public boolean handleClose(@Nonnull Window window) {
         if (getApplication().getPhase() == ApplicationPhase.SHUTDOWN) {
-            return;
+            return false;
         }
 
         List<Window> visibleWindows = new ArrayList<>();
-        for (Window window : getWindows()) {
-            if (window.isShowing()) {
-                visibleWindows.add(window);
+        for (Window w : getWindows()) {
+            if (w.isShowing()) {
+                visibleWindows.add(w);
             }
         }
 
-        if (isAutoShutdown() && visibleWindows.size() <= 1 && visibleWindows.contains(widget) && !getApplication().shutdown()) {
-            show(widget);
+        if (isAutoShutdown() && visibleWindows.size() <= 1 && visibleWindows.contains(window) && !getApplication().shutdown()) {
+            show(window);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * WindowAdapter that invokes close() when the window is about to be closed.
+     *
+     * @author Andres Almiray
+     */
+    protected class OnCloseRequestHelper implements EventHandler<WindowEvent> {
+        public void handle(WindowEvent event) {
+            if (!handleClose((Window) event.getSource())) {
+                event.consume();
+            }
         }
     }
 
     /**
-     * WindowAdapter that invokes hide() when the window is about to be closed.
+     * WindowAdapter that invokes hide() when the window is about to be hidden.
      *
      * @author Andres Almiray
      */
-    private class OnWindowHidingHelper implements EventHandler<WindowEvent> {
+    protected class OnWindowHidingHelper implements EventHandler<WindowEvent> {
         public void handle(WindowEvent event) {
             hide((Window) event.getSource());
-            handleClose((Window) event.getSource());
         }
     }
 
@@ -108,13 +125,13 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
      *
      * @author Andres Almiray
      */
-    private class OnWindowShownHelper implements EventHandler<WindowEvent> {
+    protected class OnWindowShownHelper implements EventHandler<WindowEvent> {
         /**
          * Triggers a <tt>WindowShown</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
             Window window = (Window) windowEvent.getSource();
-            event(ApplicationEvent.WINDOW_SHOWN, asList(findWindowName(window), window));
+            event(WindowShownEvent.of(findWindowName(window), window));
         }
     }
 
@@ -123,13 +140,13 @@ public class DefaultJavaFXWindowManager extends AbstractWindowManager<Window> im
      *
      * @author Andres Almiray
      */
-    private class OnWindowHiddenHelper implements EventHandler<WindowEvent> {
+    protected class OnWindowHiddenHelper implements EventHandler<WindowEvent> {
         /**
          * Triggers a <tt>WindowHidden</tt> event with the window as sole argument
          */
         public void handle(WindowEvent windowEvent) {
             Window window = (Window) windowEvent.getSource();
-            event(ApplicationEvent.WINDOW_HIDDEN, asList(findWindowName(window), window));
+            event(WindowHiddenEvent.of(findWindowName(window), window));
         }
     }
 }

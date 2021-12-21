@@ -135,14 +135,17 @@ class AbstractModuleSpec extends Specification {
         @Inject Engine engine
     }
 
+    @SuppressWarnings('EmptyClass')
     static class Engine {
 
     }
 
+    @SuppressWarnings('EmptyClass')
     static class Boat implements Vehicle {
 
     }
 
+    @SuppressWarnings('EmptyClass')
     static class Plane implements Vehicle {
 
     }
@@ -165,6 +168,7 @@ class AbstractModuleSpec extends Specification {
         @Inject Vehicle vehicle
     }
 
+    @SuppressWarnings('EmptyClass')
     static class Singularity {
 
     }

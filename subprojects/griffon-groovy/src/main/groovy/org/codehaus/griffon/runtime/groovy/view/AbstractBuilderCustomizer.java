@@ -19,7 +19,7 @@ package org.codehaus.griffon.runtime.groovy.view;
 
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.util.BuilderCustomizer;
+import griffon.core.util.groovy.BuilderCustomizer;
 import groovy.lang.Closure;
 import groovy.util.Factory;
 

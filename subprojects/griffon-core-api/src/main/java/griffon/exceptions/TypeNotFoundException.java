@@ -27,6 +27,7 @@ import java.lang.annotation.Annotation;
  */
 public class TypeNotFoundException extends GriffonException {
     private static final long serialVersionUID = -1200238376357824754L;
+
     private static final String TYPE = "type";
     private static final String CAUSE = "cause";
 

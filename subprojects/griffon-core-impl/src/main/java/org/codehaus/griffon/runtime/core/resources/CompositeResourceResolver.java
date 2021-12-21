@@ -18,14 +18,15 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.annotations.core.Nonnull;
+import griffon.converter.ConverterRegistry;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
 
 import java.util.Collection;
 import java.util.Locale;
 
-import static griffon.util.GriffonClassUtils.requireNonEmpty;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.ObjectUtils.requireNonEmpty;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -35,18 +36,13 @@ import static java.util.Objects.requireNonNull;
 public class CompositeResourceResolver extends AbstractResourceResolver {
     private final ResourceResolver[] resourceResolvers;
 
-    public CompositeResourceResolver(@Nonnull Collection<ResourceResolver> resourceResolvers) {
-        this(toResourceResolverArray(resourceResolvers));
+    public CompositeResourceResolver(@Nonnull ConverterRegistry converterRegistry, @Nonnull Collection<ResourceResolver> resourceResolvers) {
+        this(converterRegistry, toResourceResolverArray(resourceResolvers));
     }
 
-    public CompositeResourceResolver(@Nonnull ResourceResolver[] resourceResolvers) {
+    public CompositeResourceResolver(@Nonnull ConverterRegistry converterRegistry, @Nonnull ResourceResolver[] resourceResolvers) {
+        super(converterRegistry);
         this.resourceResolvers = requireNonNull(resourceResolvers, "Argument 'resourceResolvers' must not be null");
-    }
-
-    private static ResourceResolver[] toResourceResolverArray(@Nonnull Collection<ResourceResolver> resourceResolvers) {
-        requireNonNull(resourceResolvers, "Argument 'resourceResolvers' must not be null");
-        requireNonEmpty(resourceResolvers, "Argument 'resourceResolvers' must not be empty");
-        return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);
     }
 
     @Nonnull
@@ -62,5 +58,11 @@ public class CompositeResourceResolver extends AbstractResourceResolver {
             }
         }
         throw new NoSuchResourceException(key, locale);
+    }
+
+    private static ResourceResolver[] toResourceResolverArray(@Nonnull Collection<ResourceResolver> resourceResolvers) {
+        requireNonNull(resourceResolvers, "Argument 'resourceResolvers' must not be null");
+        requireNonEmpty(resourceResolvers, "Argument 'resourceResolvers' must not be empty");
+        return resourceResolvers.toArray(new ResourceResolver[resourceResolvers.size()]);
     }
 }

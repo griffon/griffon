@@ -25,7 +25,6 @@ import griffon.core.GriffonExceptionHandler;
 import org.codehaus.griffon.runtime.core.addon.AbstractGriffonAddon;
 import org.jdesktop.swinghelper.debug.CheckThreadViolationRepaintManager;
 import org.jdesktop.swinghelper.debug.EventDispatchThreadHangMonitor;
-import sun.awt.AppContext;
 
 import javax.inject.Named;
 import javax.swing.*;
@@ -59,14 +58,8 @@ public class
             if (getLog().isInfoEnabled()) {
                 getLog().info("EDT violations check enabled.");
             }
-            RepaintManager currentRepaintManager = getCurrentRepaintManager();
-            if (null == currentRepaintManager) {
-                currentRepaintManager = new RepaintManager();
-            }
-            if( currentRepaintManager instanceof CheckThreadViolationRepaintManager) {
-                return;
-            }
-            RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(currentRepaintManager));
+
+            RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager(new RepaintManager()));
 
             GriffonExceptionHandler.addClassTest(new CallableWithArgs<Boolean>() {
                 @Override
@@ -98,9 +91,5 @@ public class
                 }
             }
         }
-    }
-
-    private RepaintManager getCurrentRepaintManager() {
-        return (RepaintManager) AppContext.getAppContext().get(RepaintManager.class);
     }
 }

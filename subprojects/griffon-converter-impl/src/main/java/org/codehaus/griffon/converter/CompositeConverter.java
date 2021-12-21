@@ -21,6 +21,7 @@ import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 import griffon.converter.ConversionException;
 import griffon.converter.Converter;
+import griffon.converter.FormattingConverter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

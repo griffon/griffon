@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyMapProperty;
 import javafx.beans.value.ChangeListener;
@@ -25,10 +26,10 @@ import javafx.collections.ObservableMap;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareReadOnlyMapProperty<K, V> extends ReadOnlyMapPropertyDecorator<K, V> implements UIThreadAware {
-    UIThreadAwareReadOnlyMapProperty(ReadOnlyMapProperty<K, V> delegate) {
+    UIThreadAwareReadOnlyMapProperty(@Nonnull ReadOnlyMapProperty<K, V> delegate) {
         super(delegate);
     }
 

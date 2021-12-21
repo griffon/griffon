@@ -67,6 +67,7 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
         mapper.addListener((v, o, n) -> updateAll());
     }
 
+    @Nonnull
     protected Function<S, T> resolveMapper() {
         Function<S, T> function = observableMapper != null ? observableMapper.getValue() : mapper;
         return requireNonNull(function, ERROR_MAPPER_NULL);

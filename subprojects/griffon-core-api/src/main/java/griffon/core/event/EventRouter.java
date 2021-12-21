@@ -19,16 +19,6 @@ package griffon.core.event;
 
 /**
  * An event handling helper.<p>
- * Listeners may be of type<ul>
- * <li>a <tt>Map</tt></li>
- * <li>a <tt>CallableWithArgs</tt></li>
- * <li>a <tt>Object</tt> (a Java bean)</li>
- * </ul>
- * <p/>
- * With the exception of Map keys, the naming convention for an eventHandler is
- * "on" + eventName, Maps keys require handlers to be named as eventName only.<p>
- * Some examples of eventHandler names are: onStartupStart, onMyCoolEvent.
- * Event names must follow the camelCase naming convention.<p>
  *
  * @author Andres Almiray
  */

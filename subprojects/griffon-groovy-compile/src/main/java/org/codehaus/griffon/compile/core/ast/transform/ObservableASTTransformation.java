@@ -17,10 +17,10 @@
  */
 package org.codehaus.griffon.compile.core.ast.transform;
 
-import griffon.core.Observable;
+import griffon.beans.Observable;
+import org.codehaus.griffon.compile.beans.ObservableConstants;
 import org.codehaus.griffon.compile.core.AnnotationHandler;
 import org.codehaus.griffon.compile.core.AnnotationHandlerFor;
-import org.codehaus.griffon.compile.core.ObservableConstants;
 import org.codehaus.griffon.compile.core.ast.GriffonASTUtils;
 import org.codehaus.groovy.ast.ASTNode;
 import org.codehaus.groovy.ast.AnnotatedNode;
@@ -46,8 +46,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Modifier;
 
-import static griffon.util.GriffonNameUtils.getGetterName;
-import static griffon.util.GriffonNameUtils.getSetterName;
+import static griffon.util.StringUtils.getGetterName;
+import static griffon.util.StringUtils.getSetterName;
 import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PROTECTED;
 import static org.codehaus.griffon.compile.core.ast.GriffonASTUtils.NO_ARGS;
@@ -77,27 +77,12 @@ import static org.codehaus.groovy.ast.ClassHelper.VOID_TYPE;
  *
  * @author Andres Almiray
  */
-@AnnotationHandlerFor(griffon.transform.Observable.class)
+@AnnotationHandlerFor(griffon.annotations.beans.Observable.class)
 @GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
 public class ObservableASTTransformation extends AbstractASTTransformation implements ObservableConstants, AnnotationHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ObservableASTTransformation.class);
     private static final ClassNode OBSERVABLE_CNODE = makeClassSafe(Observable.class);
-    private static final ClassNode OBSERVABLE_ANNOTATION_CNODE = makeClassSafe(griffon.transform.Observable.class);
-
-    /**
-     * Convenience method to see if an annotated node is {@code @Observable}.
-     *
-     * @param node the node to check
-     * @return true if the node is an event publisher
-     */
-    public static boolean hasObservableAnnotation(AnnotatedNode node) {
-        for (AnnotationNode annotation : node.getAnnotations()) {
-            if (OBSERVABLE_ANNOTATION_CNODE.equals(annotation.getClassNode())) {
-                return true;
-            }
-        }
-        return false;
-    }
+    private static final ClassNode OBSERVABLE_ANNOTATION_CNODE = makeClassSafe(griffon.annotations.beans.Observable.class);
 
     /**
      * Handles the bulk of the processing, mostly delegating to other methods.
@@ -122,7 +107,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
         if (parent instanceof FieldNode) {
             if ((((FieldNode) parent).getModifiers() & Modifier.FINAL) != 0) {
                 source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                    new SyntaxException("@griffon.transform.Observable cannot annotate a final property.",
+                    new SyntaxException("@griffon.transform.beans.Observable cannot annotate a final property.",
                         node.getLineNumber(), node.getColumnNumber(), node.getLastLineNumber(), node.getLastColumnNumber()),
                     source));
             }
@@ -135,6 +120,21 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
         } else if (parent instanceof ClassNode) {
             addObservableIfNeeded(source, (ClassNode) parent);
         }
+    }
+
+    /**
+     * Convenience method to see if an annotated node is {@code @Observable}.
+     *
+     * @param node the node to check
+     * @return true if the node is an event publisher
+     */
+    public static boolean hasObservableAnnotation(AnnotatedNode node) {
+        for (AnnotationNode annotation : node.getAnnotations()) {
+            if (OBSERVABLE_ANNOTATION_CNODE.equals(annotation.getClassNode())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean needsObservableSupport(ClassNode classNode, SourceUnit source) {
@@ -171,7 +171,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
                 if (field.isStatic()) {
                     //noinspection ThrowableInstanceNeverThrown
                     source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-                        new SyntaxException("@griffon.transform.Observable cannot annotate a static property.",
+                        new SyntaxException("@griffon.transform.beans.Observable cannot annotate a static property.",
                             annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
                         source));
                 } else {
@@ -186,7 +186,7 @@ public class ObservableASTTransformation extends AbstractASTTransformation imple
         }
         //noinspection ThrowableInstanceNeverThrown
         source.getErrorCollector().addErrorAndContinue(new SyntaxErrorMessage(
-            new SyntaxException("@griffon.transform.Observable must be on a property, not a field. Try removing the private, protected, or public modifier.",
+            new SyntaxException("@griffon.transform.beans.Observable must be on a property, not a field. Try removing the private, protected, or public modifier.",
                 annotationNode.getLineNumber(), annotationNode.getColumnNumber(), annotationNode.getLastLineNumber(), annotationNode.getLastColumnNumber()),
             source));
     }

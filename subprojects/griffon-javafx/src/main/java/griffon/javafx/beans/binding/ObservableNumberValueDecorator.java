@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableNumberValue;
@@ -32,6 +33,7 @@ public class ObservableNumberValueDecorator implements ObservableNumberValue {
         this.delegate = delegate;
     }
 
+    @Nonnull
     protected final ObservableNumberValue getDelegate() {
         return delegate;
     }

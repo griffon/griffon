@@ -19,8 +19,8 @@ package sample.swing.groovy
 
 import griffon.annotations.core.Nonnull
 import griffon.core.artifact.GriffonController
-import griffon.core.controller.ControllerAction
-import griffon.inject.MVCMember
+import griffon.annotations.controller.ControllerAction
+import griffon.annotations.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
 import javax.inject.Inject

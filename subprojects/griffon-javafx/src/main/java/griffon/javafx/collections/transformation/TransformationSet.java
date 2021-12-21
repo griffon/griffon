@@ -41,6 +41,7 @@ public abstract class TransformationSet<E, F> extends ObservableSetBase<E> imple
         source.addListener(new WeakSetChangeListener<>(getListener()));
     }
 
+    @Nonnull
     public final ObservableSet<? extends F> getSource() {
         return source;
     }

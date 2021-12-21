@@ -17,6 +17,8 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.FloatBinding;
@@ -63,9 +65,11 @@ public final class ReducingBindings {
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V> ObjectBinding<V> reduce(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer) {
+    @Nonnull
+    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> items.values().stream().reduce(reducer).orElse(defaultValue), items);
@@ -77,9 +81,11 @@ public final class ReducingBindings {
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V> ObjectBinding<V> reduce(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer) {
+    @Nonnull
+    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -92,9 +98,11 @@ public final class ReducingBindings {
      * @param items        the observable map.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V> ObjectBinding<V> reduce(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer) {
+    @Nonnull
+    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> {
             BinaryOperator<V> operator = reducer.getValue();
@@ -109,9 +117,11 @@ public final class ReducingBindings {
      * @param items    the observable map.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V> ObjectBinding<V> reduce(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer) {
+    @Nonnull
+    public static <K, V> ObjectBinding<V> reduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> {
@@ -128,9 +138,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding reduceThenMapToBoolean(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer, final Function<? super V, Boolean> mapper) {
+    @Nonnull
+    public static <K, V> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -144,9 +156,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding reduceThenMapToBoolean(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer, final Function<? super V, Boolean> mapper) {
+    @Nonnull
+    public static <K, V> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -161,9 +175,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding reduceThenMapToBoolean(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Boolean>> mapper) {
+    @Nonnull
+    public static <K, V> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -182,9 +198,11 @@ public final class ReducingBindings {
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding reduceThenMapToBoolean(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Boolean>> mapper) {
+    @Nonnull
+    public static <K, V> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -203,9 +221,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding reduceThenMapToInteger(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer, final Function<? super V, Integer> mapper) {
+    @Nonnull
+    public static <K, V> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -219,9 +239,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding reduceThenMapToInteger(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer, final Function<? super V, Integer> mapper) {
+    @Nonnull
+    public static <K, V> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -236,9 +258,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding reduceThenMapToInteger(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Integer>> mapper) {
+    @Nonnull
+    public static <K, V> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -257,9 +281,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding reduceThenMapToInteger(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Integer>> mapper) {
+    @Nonnull
+    public static <K, V> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -278,9 +304,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding reduceThenMapToLong(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer, final Function<? super V, Long> mapper) {
+    @Nonnull
+    public static <K, V> LongBinding reduceThenMapToLong(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -294,9 +322,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding reduceThenMapToLong(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer, final Function<? super V, Long> mapper) {
+    @Nonnull
+    public static <K, V> LongBinding reduceThenMapToLong(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -311,9 +341,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding reduceThenMapToLong(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Long>> mapper) {
+    @Nonnull
+    public static <K, V> LongBinding reduceThenMapToLong(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -332,9 +364,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding reduceThenMapToLong(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Long>> mapper) {
+    @Nonnull
+    public static <K, V> LongBinding reduceThenMapToLong(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Long>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -353,9 +387,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding reduceThenMapToFloat(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer, final Function<? super V, Float> mapper) {
+    @Nonnull
+    public static <K, V> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -369,9 +405,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding reduceThenMapToFloat(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer, final Function<? super V, Float> mapper) {
+    @Nonnull
+    public static <K, V> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -386,9 +424,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding reduceThenMapToFloat(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Float>> mapper) {
+    @Nonnull
+    public static <K, V> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -407,9 +447,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding reduceThenMapToFloat(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Float>> mapper) {
+    @Nonnull
+    public static <K, V> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Float>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -428,9 +470,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding reduceThenMapToDouble(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer, final Function<? super V, Double> mapper) {
+    @Nonnull
+    public static <K, V> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -444,9 +488,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding reduceThenMapToDouble(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer, final Function<? super V, Double> mapper) {
+    @Nonnull
+    public static <K, V> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -461,9 +507,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding reduceThenMapToDouble(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Double>> mapper) {
+    @Nonnull
+    public static <K, V> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -482,9 +530,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding reduceThenMapToDouble(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, Double>> mapper) {
+    @Nonnull
+    public static <K, V> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, Double>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -503,9 +553,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a String binding
      */
-    public static <K, V> StringBinding reduceThenMapToString(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer, final Function<? super V, String> mapper) {
+    @Nonnull
+    public static <K, V> StringBinding reduceThenMapToString(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -519,9 +571,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a String binding
      */
-    public static <K, V> StringBinding reduceThenMapToString(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer, final Function<? super V, String> mapper) {
+    @Nonnull
+    public static <K, V> StringBinding reduceThenMapToString(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -536,9 +590,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a String binding
      */
-    public static <K, V> StringBinding reduceThenMapToString(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, String>> mapper) {
+    @Nonnull
+    public static <K, V> StringBinding reduceThenMapToString(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -557,9 +613,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a String binding
      */
-    public static <K, V> StringBinding reduceThenMapToString(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, String>> mapper) {
+    @Nonnull
+    public static <K, V> StringBinding reduceThenMapToString(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, String>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -577,9 +635,11 @@ public final class ReducingBindings {
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> items.stream().reduce(reducer).orElse(defaultValue), items);
@@ -591,9 +651,11 @@ public final class ReducingBindings {
      * @param items    the observable list of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -606,9 +668,11 @@ public final class ReducingBindings {
      * @param items        the observable list of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
@@ -623,9 +687,11 @@ public final class ReducingBindings {
      * @param items    the observable list of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> {
@@ -642,9 +708,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, String> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
@@ -658,9 +726,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, String> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
@@ -674,9 +744,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, String>> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -695,9 +767,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, String>> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -717,9 +791,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Integer> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -733,9 +809,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Integer> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -749,9 +827,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Integer>> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -771,9 +851,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Integer>> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -794,9 +876,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Long> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -810,9 +894,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Long> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -826,9 +912,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Long>> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -848,9 +936,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Long>> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -871,9 +961,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Float> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -887,9 +979,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Float> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -903,9 +997,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Float>> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -925,9 +1021,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Float>> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -948,9 +1046,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Double> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -964,9 +1064,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Double> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -980,9 +1082,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Double>> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1002,9 +1106,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Double>> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1025,9 +1131,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Boolean> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1041,9 +1149,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Boolean> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1058,9 +1168,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Boolean>> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1080,9 +1192,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Boolean>> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1103,9 +1217,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, ? extends Number> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, ? extends Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1119,9 +1235,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Number> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1136,9 +1254,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, ? extends Number>> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, ? extends Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1158,9 +1278,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Number>> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1180,9 +1302,11 @@ public final class ReducingBindings {
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> items.stream().reduce(reducer).orElse(defaultValue), items);
@@ -1194,9 +1318,11 @@ public final class ReducingBindings {
      * @param items    the observable set of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1209,9 +1335,11 @@ public final class ReducingBindings {
      * @param items        the observable set of elements.
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> {
             BinaryOperator<T> operator = reducer.getValue();
@@ -1226,9 +1354,11 @@ public final class ReducingBindings {
      * @param items    the observable set of elements.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
+     *
      * @return an object binding
      */
-    public static <T> ObjectBinding<T> reduce(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer) {
+    @Nonnull
+    public static <T> ObjectBinding<T> reduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> {
@@ -1245,9 +1375,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, String> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         final Function<? super T, String> mapperValue = mapper != null ? mapper : String::valueOf;
@@ -1261,9 +1393,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, String> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, String> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1278,9 +1412,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, String>> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1299,9 +1435,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding reduceThenMapToString(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, String>> mapper) {
+    @Nonnull
+    public static <T> StringBinding reduceThenMapToString(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, String>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1321,9 +1459,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Integer> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1337,9 +1477,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Integer> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Integer> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1354,9 +1496,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Integer>> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1376,9 +1520,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding reduceThenMapToInteger(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Integer>> mapper) {
+    @Nonnull
+    public static <T> IntegerBinding reduceThenMapToInteger(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1399,9 +1545,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Long> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1415,9 +1563,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Long> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Long> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1432,9 +1582,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Long>> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1454,9 +1606,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding reduceThenMapToLong(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Long>> mapper) {
+    @Nonnull
+    public static <T> LongBinding reduceThenMapToLong(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Long>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1477,9 +1631,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Float> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1493,9 +1649,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Float> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Float> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1510,9 +1668,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Float>> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1532,9 +1692,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding reduceThenMapToFloat(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Float>> mapper) {
+    @Nonnull
+    public static <T> FloatBinding reduceThenMapToFloat(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Float>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1555,9 +1717,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Double> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1571,9 +1735,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Double> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Double> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1588,9 +1754,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Double>> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1610,9 +1778,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding reduceThenMapToDouble(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Double>> mapper) {
+    @Nonnull
+    public static <T> DoubleBinding reduceThenMapToDouble(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Double>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1633,9 +1803,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, Boolean> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1649,9 +1821,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Boolean> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Boolean> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1666,9 +1840,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Boolean>> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1688,9 +1864,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding reduceThenMapToBoolean(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Boolean>> mapper) {
+    @Nonnull
+    public static <T> BooleanBinding reduceThenMapToBoolean(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1711,9 +1889,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, ? extends Number> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, ? extends Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1727,9 +1907,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, Number> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, Number> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1744,9 +1926,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, ? extends Number>> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, ? extends Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1766,9 +1950,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding reduceThenMapToNumber(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, Number>> mapper) {
+    @Nonnull
+    public static <T> NumberBinding reduceThenMapToNumber(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, Number>> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1789,9 +1975,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableList<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, R> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1805,9 +1993,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableList<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, R> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1822,9 +2012,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableList<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, R>> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableList<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -1843,9 +2035,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableList<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, R>> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1865,9 +2059,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableSet<T> items,  final T defaultValue, final BinaryOperator<T> reducer, final Function<? super T, R> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> mapper.apply(items.stream().reduce(reducer).orElse(defaultValue)), items);
@@ -1880,9 +2076,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableSet<T> items, final Supplier<T> supplier, final BinaryOperator<T> reducer, final Function<? super T, R> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final BinaryOperator<T> reducer, @Nonnull final Function<? super T, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1897,9 +2095,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableSet<T> items,  final T defaultValue, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, R>> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nullable final T defaultValue, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -1918,9 +2118,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> reduceThenMap(final ObservableSet<T> items, final Supplier<T> supplier, final ObservableValue<BinaryOperator<T>> reducer, final ObservableValue<Function<? super T, R>> mapper) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<T> supplier, @Nonnull final ObservableValue<BinaryOperator<T>> reducer, @Nonnull final ObservableValue<Function<? super T, R>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1940,9 +2142,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> reduceThenMap(final ObservableMap<K, V> items,  final V defaultValue, final BinaryOperator<V> reducer, final Function<? super V, R> mapper) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -1956,9 +2160,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> reduceThenMap(final ObservableMap<K, V> items, final Supplier<V> supplier, final BinaryOperator<V> reducer, final Function<? super V, R> mapper) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final BinaryOperator<V> reducer, @Nonnull final Function<? super V, R> mapper) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -1973,9 +2179,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
      * @param mapper       a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> reduceThenMap(final ObservableMap<K, V> items,  final V defaultValue, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, R>> mapper) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nullable final V defaultValue, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, R>> mapper) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -1994,9 +2202,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
      * @param mapper   a non-interfering, stateless function to apply to the reduced value.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> reduceThenMap(final ObservableMap<K, V> items, final Supplier<V> supplier, final ObservableValue<BinaryOperator<V>> reducer, final ObservableValue<Function<? super V, R>> mapper) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> reduceThenMap(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<V> supplier, @Nonnull final ObservableValue<BinaryOperator<V>> reducer, @Nonnull final ObservableValue<Function<? super V, R>> mapper) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2016,9 +2226,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableList<T> items,  final R defaultValue, final Function<? super T, R> mapper, final BinaryOperator<R> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nullable final R defaultValue, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2032,9 +2244,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableList<T> items, final Supplier<R> supplier, final Function<? super T, R> mapper, final BinaryOperator<R> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2049,9 +2263,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableList<T> items,  final R defaultValue, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<BinaryOperator<R>> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nullable final R defaultValue, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -2070,9 +2286,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableList<T> items, final Supplier<R> supplier, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<BinaryOperator<R>> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2092,9 +2310,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableSet<T> items,  final R defaultValue, final Function<? super T, R> mapper, final BinaryOperator<R> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final R defaultValue, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createObjectBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
@@ -2107,9 +2327,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableSet<T> items, final Supplier<R> supplier, final Function<? super T, R> mapper, final BinaryOperator<R> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super T, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2124,9 +2346,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableSet<T> items,  final R defaultValue, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<BinaryOperator<R>> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final R defaultValue, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -2145,9 +2369,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <T, R> ObjectBinding<R> mapThenReduce(final ObservableSet<T> items, final Supplier<R> supplier, final ObservableValue<Function<? super T, R>> mapper, final ObservableValue<BinaryOperator<R>> reducer) {
+    @Nonnull
+    public static <T, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super T, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2167,9 +2393,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> mapThenReduce(final ObservableMap<K, V> items,  final R defaultValue, final Function<? super V, R> mapper, final BinaryOperator<R> reducer) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final R defaultValue, @Nonnull final Function<? super V, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2183,9 +2411,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> mapThenReduce(final ObservableMap<K, V> items, final Supplier<R> supplier, final Function<? super V, R> mapper, final BinaryOperator<R> reducer) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final Function<? super V, R> mapper, @Nonnull final BinaryOperator<R> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2200,9 +2430,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> mapThenReduce(final ObservableMap<K, V> items,  final R defaultValue, final ObservableValue<Function<? super V, R>> mapper, final ObservableValue<BinaryOperator<R>> reducer) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final R defaultValue, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createObjectBinding(() -> {
@@ -2221,9 +2453,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an object binding
      */
-    public static <K, V, R> ObjectBinding<R> mapThenReduce(final ObservableMap<K, V> items, final Supplier<R> supplier, final ObservableValue<Function<? super V, R>> mapper, final ObservableValue<BinaryOperator<R>> reducer) {
+    @Nonnull
+    public static <K, V, R> ObjectBinding<R> mapThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<R> supplier, @Nonnull final ObservableValue<Function<? super V, R>> mapper, @Nonnull final ObservableValue<BinaryOperator<R>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2243,9 +2477,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableList<T> items,  final Boolean defaultValue, final Function<? super T, Boolean> mapper, final BinaryOperator<Boolean> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Boolean defaultValue, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2259,9 +2495,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableList<T> items, final Supplier<Boolean> supplier, final Function<? super T, Boolean> mapper, final BinaryOperator<Boolean> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2276,9 +2514,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableList<T> items,  final Boolean defaultValue, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<BinaryOperator<Boolean>> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -2297,9 +2537,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableList<T> items, final Supplier<Boolean> supplier, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<BinaryOperator<Boolean>> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2319,9 +2561,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableSet<T> items,  final Boolean defaultValue, final Function<? super T, Boolean> mapper, final BinaryOperator<Boolean> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Boolean defaultValue, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createBooleanBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
@@ -2334,9 +2578,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableSet<T> items, final Supplier<Boolean> supplier, final Function<? super T, Boolean> mapper, final BinaryOperator<Boolean> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super T, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2351,9 +2597,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableSet<T> items,  final Boolean defaultValue, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<BinaryOperator<Boolean>> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -2372,9 +2620,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <T> BooleanBinding mapToBooleanThenReduce(final ObservableSet<T> items, final Supplier<Boolean> supplier, final ObservableValue<Function<? super T, Boolean>> mapper, final ObservableValue<BinaryOperator<Boolean>> reducer) {
+    @Nonnull
+    public static <T> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super T, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2394,9 +2644,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding mapToBooleanThenReduce(final ObservableMap<K, V> items,  final Boolean defaultValue, final Function<? super V, Boolean> mapper, final BinaryOperator<Boolean> reducer) {
+    @Nonnull
+    public static <K, V> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Boolean defaultValue, @Nonnull final Function<? super V, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2410,9 +2662,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding mapToBooleanThenReduce(final ObservableMap<K, V> items, final Supplier<Boolean> supplier, final Function<? super V, Boolean> mapper, final BinaryOperator<Boolean> reducer) {
+    @Nonnull
+    public static <K, V> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final Function<? super V, Boolean> mapper, @Nonnull final BinaryOperator<Boolean> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2427,9 +2681,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding mapToBooleanThenReduce(final ObservableMap<K, V> items,  final Boolean defaultValue, final ObservableValue<Function<? super V, Boolean>> mapper, final ObservableValue<BinaryOperator<Boolean>> reducer) {
+    @Nonnull
+    public static <K, V> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Boolean defaultValue, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createBooleanBinding(() -> {
@@ -2448,9 +2704,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a boolean binding
      */
-    public static <K, V> BooleanBinding mapToBooleanThenReduce(final ObservableMap<K, V> items, final Supplier<Boolean> supplier, final ObservableValue<Function<? super V, Boolean>> mapper, final ObservableValue<BinaryOperator<Boolean>> reducer) {
+    @Nonnull
+    public static <K, V> BooleanBinding mapToBooleanThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Boolean> supplier, @Nonnull final ObservableValue<Function<? super V, Boolean>> mapper, @Nonnull final ObservableValue<BinaryOperator<Boolean>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2470,9 +2728,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableList<T> items,  final Integer defaultValue, final Function<? super T, Integer> mapper, final BinaryOperator<Integer> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Integer defaultValue, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2486,9 +2746,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableList<T> items, final Supplier<Integer> supplier, final Function<? super T, Integer> mapper, final BinaryOperator<Integer> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2503,9 +2765,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableList<T> items,  final Integer defaultValue, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<BinaryOperator<Integer>> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Integer defaultValue, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -2524,9 +2788,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableList<T> items, final Supplier<Integer> supplier, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<BinaryOperator<Integer>> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2546,9 +2812,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableSet<T> items,  final Integer defaultValue, final Function<? super T, Integer> mapper, final BinaryOperator<Integer> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Integer defaultValue, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createIntegerBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
@@ -2561,9 +2829,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableSet<T> items, final Supplier<Integer> supplier, final Function<? super T, Integer> mapper, final BinaryOperator<Integer> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super T, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2578,9 +2848,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableSet<T> items,  final Integer defaultValue, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<BinaryOperator<Integer>> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Integer defaultValue, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -2599,9 +2871,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <T> IntegerBinding mapToIntegerThenReduce(final ObservableSet<T> items, final Supplier<Integer> supplier, final ObservableValue<Function<? super T, Integer>> mapper, final ObservableValue<BinaryOperator<Integer>> reducer) {
+    @Nonnull
+    public static <T> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super T, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2621,9 +2895,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding mapToIntegerThenReduce(final ObservableMap<K, V> items,  final Integer defaultValue, final Function<? super V, Integer> mapper, final BinaryOperator<Integer> reducer) {
+    @Nonnull
+    public static <K, V> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Integer defaultValue, @Nonnull final Function<? super V, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2637,9 +2913,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding mapToIntegerThenReduce(final ObservableMap<K, V> items, final Supplier<Integer> supplier, final Function<? super V, Integer> mapper, final BinaryOperator<Integer> reducer) {
+    @Nonnull
+    public static <K, V> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final Function<? super V, Integer> mapper, @Nonnull final BinaryOperator<Integer> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2654,9 +2932,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding mapToIntegerThenReduce(final ObservableMap<K, V> items,  final Integer defaultValue, final ObservableValue<Function<? super V, Integer>> mapper, final ObservableValue<BinaryOperator<Integer>> reducer) {
+    @Nonnull
+    public static <K, V> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Integer defaultValue, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createIntegerBinding(() -> {
@@ -2675,9 +2955,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return an integer binding
      */
-    public static <K, V> IntegerBinding mapToIntegerThenReduce(final ObservableMap<K, V> items, final Supplier<Integer> supplier, final ObservableValue<Function<? super V, Integer>> mapper, final ObservableValue<BinaryOperator<Integer>> reducer) {
+    @Nonnull
+    public static <K, V> IntegerBinding mapToIntegerThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Integer> supplier, @Nonnull final ObservableValue<Function<? super V, Integer>> mapper, @Nonnull final ObservableValue<BinaryOperator<Integer>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2697,9 +2979,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableList<T> items,  final Long defaultValue, final Function<? super T, Long> mapper, final BinaryOperator<Long> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Long defaultValue, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2713,9 +2997,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableList<T> items, final Supplier<Long> supplier, final Function<? super T, Long> mapper, final BinaryOperator<Long> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2730,9 +3016,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableList<T> items,  final Long defaultValue, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<BinaryOperator<Long>> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Long defaultValue, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -2751,9 +3039,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableList<T> items, final Supplier<Long> supplier, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<BinaryOperator<Long>> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2773,9 +3063,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableSet<T> items,  final Long defaultValue, final Function<? super T, Long> mapper, final BinaryOperator<Long> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Long defaultValue, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createLongBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
@@ -2788,9 +3080,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableSet<T> items, final Supplier<Long> supplier, final Function<? super T, Long> mapper, final BinaryOperator<Long> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super T, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2805,9 +3099,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableSet<T> items,  final Long defaultValue, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<BinaryOperator<Long>> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Long defaultValue, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -2826,9 +3122,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <T> LongBinding mapToLongThenReduce(final ObservableSet<T> items, final Supplier<Long> supplier, final ObservableValue<Function<? super T, Long>> mapper, final ObservableValue<BinaryOperator<Long>> reducer) {
+    @Nonnull
+    public static <T> LongBinding mapToLongThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super T, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2848,9 +3146,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding mapToLongThenReduce(final ObservableMap<K, V> items,  final Long defaultValue, final Function<? super V, Long> mapper, final BinaryOperator<Long> reducer) {
+    @Nonnull
+    public static <K, V> LongBinding mapToLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Long defaultValue, @Nonnull final Function<? super V, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2864,9 +3164,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding mapToLongThenReduce(final ObservableMap<K, V> items, final Supplier<Long> supplier, final Function<? super V, Long> mapper, final BinaryOperator<Long> reducer) {
+    @Nonnull
+    public static <K, V> LongBinding mapToLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final Function<? super V, Long> mapper, @Nonnull final BinaryOperator<Long> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2881,9 +3183,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding mapToLongThenReduce(final ObservableMap<K, V> items,  final Long defaultValue, final ObservableValue<Function<? super V, Long>> mapper, final ObservableValue<BinaryOperator<Long>> reducer) {
+    @Nonnull
+    public static <K, V> LongBinding mapToLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Long defaultValue, @Nonnull final ObservableValue<Function<? super V, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createLongBinding(() -> {
@@ -2902,9 +3206,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a long binding
      */
-    public static <K, V> LongBinding mapToLongThenReduce(final ObservableMap<K, V> items, final Supplier<Long> supplier, final ObservableValue<Function<? super V, Long>> mapper, final ObservableValue<BinaryOperator<Long>> reducer) {
+    @Nonnull
+    public static <K, V> LongBinding mapToLongThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Long> supplier, @Nonnull final ObservableValue<Function<? super V, Long>> mapper, @Nonnull final ObservableValue<BinaryOperator<Long>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2924,9 +3230,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableList<T> items,  final Float defaultValue, final Function<? super T, Float> mapper, final BinaryOperator<Float> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Float defaultValue, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -2940,9 +3248,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableList<T> items, final Supplier<Float> supplier, final Function<? super T, Float> mapper, final BinaryOperator<Float> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -2957,9 +3267,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableList<T> items,  final Float defaultValue, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<BinaryOperator<Float>> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Float defaultValue, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -2978,9 +3290,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableList<T> items, final Supplier<Float> supplier, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<BinaryOperator<Float>> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3000,9 +3314,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableSet<T> items,  final Float defaultValue, final Function<? super T, Float> mapper, final BinaryOperator<Float> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Float defaultValue, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createFloatBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
@@ -3015,9 +3331,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableSet<T> items, final Supplier<Float> supplier, final Function<? super T, Float> mapper, final BinaryOperator<Float> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super T, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3032,9 +3350,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableSet<T> items,  final Float defaultValue, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<BinaryOperator<Float>> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Float defaultValue, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -3053,9 +3373,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <T> FloatBinding mapToFloatThenReduce(final ObservableSet<T> items, final Supplier<Float> supplier, final ObservableValue<Function<? super T, Float>> mapper, final ObservableValue<BinaryOperator<Float>> reducer) {
+    @Nonnull
+    public static <T> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super T, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3075,9 +3397,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding mapToFloatThenReduce(final ObservableMap<K, V> items,  final Float defaultValue, final Function<? super V, Float> mapper, final BinaryOperator<Float> reducer) {
+    @Nonnull
+    public static <K, V> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Float defaultValue, @Nonnull final Function<? super V, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3091,9 +3415,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding mapToFloatThenReduce(final ObservableMap<K, V> items, final Supplier<Float> supplier, final Function<? super V, Float> mapper, final BinaryOperator<Float> reducer) {
+    @Nonnull
+    public static <K, V> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final Function<? super V, Float> mapper, @Nonnull final BinaryOperator<Float> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3108,9 +3434,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding mapToFloatThenReduce(final ObservableMap<K, V> items,  final Float defaultValue, final ObservableValue<Function<? super V, Float>> mapper, final ObservableValue<BinaryOperator<Float>> reducer) {
+    @Nonnull
+    public static <K, V> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Float defaultValue, @Nonnull final ObservableValue<Function<? super V, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createFloatBinding(() -> {
@@ -3129,9 +3457,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a float binding
      */
-    public static <K, V> FloatBinding mapToFloatThenReduce(final ObservableMap<K, V> items, final Supplier<Float> supplier, final ObservableValue<Function<? super V, Float>> mapper, final ObservableValue<BinaryOperator<Float>> reducer) {
+    @Nonnull
+    public static <K, V> FloatBinding mapToFloatThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Float> supplier, @Nonnull final ObservableValue<Function<? super V, Float>> mapper, @Nonnull final ObservableValue<BinaryOperator<Float>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3151,9 +3481,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableList<T> items,  final Double defaultValue, final Function<? super T, Double> mapper, final BinaryOperator<Double> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Double defaultValue, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3167,9 +3499,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableList<T> items, final Supplier<Double> supplier, final Function<? super T, Double> mapper, final BinaryOperator<Double> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3184,9 +3518,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableList<T> items,  final Double defaultValue, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<BinaryOperator<Double>> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Double defaultValue, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -3205,9 +3541,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableList<T> items, final Supplier<Double> supplier, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<BinaryOperator<Double>> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3227,9 +3565,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableSet<T> items,  final Double defaultValue, final Function<? super T, Double> mapper, final BinaryOperator<Double> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Double defaultValue, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
@@ -3242,9 +3582,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableSet<T> items, final Supplier<Double> supplier, final Function<? super T, Double> mapper, final BinaryOperator<Double> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super T, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3259,9 +3601,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableSet<T> items,  final Double defaultValue, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<BinaryOperator<Double>> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Double defaultValue, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -3280,9 +3624,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <T> DoubleBinding mapToDoubleThenReduce(final ObservableSet<T> items, final Supplier<Double> supplier, final ObservableValue<Function<? super T, Double>> mapper, final ObservableValue<BinaryOperator<Double>> reducer) {
+    @Nonnull
+    public static <T> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super T, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3302,9 +3648,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding mapToDoubleThenReduce(final ObservableMap<K, V> items,  final Double defaultValue, final Function<? super V, Double> mapper, final BinaryOperator<Double> reducer) {
+    @Nonnull
+    public static <K, V> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Double defaultValue, @Nonnull final Function<? super V, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3318,9 +3666,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding mapToDoubleThenReduce(final ObservableMap<K, V> items, final Supplier<Double> supplier, final Function<? super V, Double> mapper, final BinaryOperator<Double> reducer) {
+    @Nonnull
+    public static <K, V> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final Function<? super V, Double> mapper, @Nonnull final BinaryOperator<Double> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3335,9 +3685,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding mapToDoubleThenReduce(final ObservableMap<K, V> items,  final Double defaultValue, final ObservableValue<Function<? super V, Double>> mapper, final ObservableValue<BinaryOperator<Double>> reducer) {
+    @Nonnull
+    public static <K, V> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Double defaultValue, @Nonnull final ObservableValue<Function<? super V, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -3356,9 +3708,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a double binding
      */
-    public static <K, V> DoubleBinding mapToDoubleThenReduce(final ObservableMap<K, V> items, final Supplier<Double> supplier, final ObservableValue<Function<? super V, Double>> mapper, final ObservableValue<BinaryOperator<Double>> reducer) {
+    @Nonnull
+    public static <K, V> DoubleBinding mapToDoubleThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Double> supplier, @Nonnull final ObservableValue<Function<? super V, Double>> mapper, @Nonnull final ObservableValue<BinaryOperator<Double>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3378,9 +3732,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableList<T> items,  final Number defaultValue, final Function<? super T, Number> mapper, final BinaryOperator<Number> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Number defaultValue, @Nonnull final Function<? super T, Number> mapper, @Nonnull final BinaryOperator<Number> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3394,9 +3750,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableList<T> items, final Supplier<Number> supplier, final Function<? super T, Number> mapper, final BinaryOperator<Number> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Number> supplier, @Nonnull final Function<? super T, Number> mapper, @Nonnull final BinaryOperator<Number> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3411,9 +3769,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableList<T> items,  final Number defaultValue, final ObservableValue<Function<? super T, Number>> mapper, final ObservableValue<BinaryOperator<Number>> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableList<T> items, @Nullable final Number defaultValue, @Nonnull final ObservableValue<Function<? super T, Number>> mapper, @Nonnull final ObservableValue<BinaryOperator<Number>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -3432,9 +3792,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableList<T> items, final Supplier<Number> supplier, final ObservableValue<Function<? super T, Number>> mapper, final ObservableValue<BinaryOperator<Number>> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<Number> supplier, @Nonnull final ObservableValue<Function<? super T, Number>> mapper, @Nonnull final ObservableValue<BinaryOperator<Number>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3454,9 +3816,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableSet<T> items,  final Number defaultValue, final Function<? super T, Number> mapper, final BinaryOperator<Number> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Number defaultValue, @Nonnull final Function<? super T, Number> mapper, @Nonnull final BinaryOperator<Number> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createDoubleBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue).doubleValue(), items);
@@ -3469,9 +3833,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableSet<T> items, final Supplier<Number> supplier, final Function<? super T, Number> mapper, final BinaryOperator<Number> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Number> supplier, @Nonnull final Function<? super T, Number> mapper, @Nonnull final BinaryOperator<Number> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3486,9 +3852,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableSet<T> items,  final Number defaultValue, final ObservableValue<Function<? super T, Number>> mapper, final ObservableValue<BinaryOperator<Number>> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final Number defaultValue, @Nonnull final ObservableValue<Function<? super T, Number>> mapper, @Nonnull final ObservableValue<BinaryOperator<Number>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -3507,9 +3875,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <T> NumberBinding mapToNumberThenReduce(final ObservableSet<T> items, final Supplier<Number> supplier, final ObservableValue<Function<? super T, Number>> mapper, final ObservableValue<BinaryOperator<Number>> reducer) {
+    @Nonnull
+    public static <T> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<Number> supplier, @Nonnull final ObservableValue<Function<? super T, Number>> mapper, @Nonnull final ObservableValue<BinaryOperator<Number>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3529,9 +3899,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <K, V> NumberBinding mapToNumberThenReduce(final ObservableMap<K, V> items,  final Number defaultValue, final Function<? super V, Number> mapper, final BinaryOperator<Number> reducer) {
+    @Nonnull
+    public static <K, V> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Number defaultValue, @Nonnull final Function<? super V, Number> mapper, @Nonnull final BinaryOperator<Number> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3545,9 +3917,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <K, V> NumberBinding mapToNumberThenReduce(final ObservableMap<K, V> items, final Supplier<Number> supplier, final Function<? super V, Number> mapper, final BinaryOperator<Number> reducer) {
+    @Nonnull
+    public static <K, V> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Number> supplier, @Nonnull final Function<? super V, Number> mapper, @Nonnull final BinaryOperator<Number> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3562,9 +3936,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <K, V> NumberBinding mapToNumberThenReduce(final ObservableMap<K, V> items,  final Number defaultValue, final ObservableValue<Function<? super V, Number>> mapper, final ObservableValue<BinaryOperator<Number>> reducer) {
+    @Nonnull
+    public static <K, V> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final Number defaultValue, @Nonnull final ObservableValue<Function<? super V, Number>> mapper, @Nonnull final ObservableValue<BinaryOperator<Number>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createDoubleBinding(() -> {
@@ -3583,9 +3959,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a number binding
      */
-    public static <K, V> NumberBinding mapToNumberThenReduce(final ObservableMap<K, V> items, final Supplier<Number> supplier, final ObservableValue<Function<? super V, Number>> mapper, final ObservableValue<BinaryOperator<Number>> reducer) {
+    @Nonnull
+    public static <K, V> NumberBinding mapToNumberThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<Number> supplier, @Nonnull final ObservableValue<Function<? super V, Number>> mapper, @Nonnull final ObservableValue<BinaryOperator<Number>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3605,9 +3983,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableList<T> items,  final String defaultValue, final Function<? super T, String> mapper, final BinaryOperator<String> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableList<T> items, @Nullable final String defaultValue, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3621,9 +4001,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableList<T> items, final Supplier<String> supplier, final Function<? super T, String> mapper, final BinaryOperator<String> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3638,9 +4020,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableList<T> items,  final String defaultValue, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<BinaryOperator<String>> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableList<T> items, @Nullable final String defaultValue, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -3659,9 +4043,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableList<T> items, final Supplier<String> supplier, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<BinaryOperator<String>> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableList<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3681,9 +4067,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableSet<T> items,  final String defaultValue, final Function<? super T, String> mapper, final BinaryOperator<String> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final String defaultValue, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         return createStringBinding(() -> items.stream().map(mapper).reduce(reducer).orElse(defaultValue), items);
@@ -3696,9 +4084,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableSet<T> items, final Supplier<String> supplier, final Function<? super T, String> mapper, final BinaryOperator<String> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super T, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3713,9 +4103,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each element.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableSet<T> items,  final String defaultValue, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<BinaryOperator<String>> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableSet<T> items, @Nullable final String defaultValue, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -3734,9 +4126,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each element.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <T> StringBinding mapToStringThenReduce(final ObservableSet<T> items, final Supplier<String> supplier, final ObservableValue<Function<? super T, String>> mapper, final ObservableValue<BinaryOperator<String>> reducer) {
+    @Nonnull
+    public static <T> StringBinding mapToStringThenReduce(@Nonnull final ObservableSet<T> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super T, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3756,9 +4150,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <K, V> StringBinding mapToStringThenReduce(final ObservableMap<K, V> items,  final String defaultValue, final Function<? super V, String> mapper, final BinaryOperator<String> reducer) {
+    @Nonnull
+    public static <K, V> StringBinding mapToStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final String defaultValue, @Nonnull final Function<? super V, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
@@ -3772,9 +4168,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <K, V> StringBinding mapToStringThenReduce(final ObservableMap<K, V> items, final Supplier<String> supplier, final Function<? super V, String> mapper, final BinaryOperator<String> reducer) {
+    @Nonnull
+    public static <K, V> StringBinding mapToStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final Function<? super V, String> mapper, @Nonnull final BinaryOperator<String> reducer) {
         requireNonNull(items, ERROR_ITEMS_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
@@ -3789,9 +4187,11 @@ public final class ReducingBindings {
      * @param defaultValue the value to be returned if there is no value present, may be null.
      * @param mapper       a non-interfering, stateless function to apply to each value.
      * @param reducer      an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <K, V> StringBinding mapToStringThenReduce(final ObservableMap<K, V> items,  final String defaultValue, final ObservableValue<Function<? super V, String>> mapper, final ObservableValue<BinaryOperator<String>> reducer) {
+    @Nonnull
+    public static <K, V> StringBinding mapToStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nullable final String defaultValue, @Nonnull final ObservableValue<Function<? super V, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);
         return createStringBinding(() -> {
@@ -3810,9 +4210,11 @@ public final class ReducingBindings {
      * @param supplier a {@code Supplier} whose result is returned if no value is present.
      * @param mapper   a non-interfering, stateless function to apply to each value.
      * @param reducer  an associative, non-interfering, stateless function for combining two values.
+     *
      * @return a string binding
      */
-    public static <K, V> StringBinding mapToStringThenReduce(final ObservableMap<K, V> items, final Supplier<String> supplier, final ObservableValue<Function<? super V, String>> mapper, final ObservableValue<BinaryOperator<String>> reducer) {
+    @Nonnull
+    public static <K, V> StringBinding mapToStringThenReduce(@Nonnull final ObservableMap<K, V> items, @Nonnull final Supplier<String> supplier, @Nonnull final ObservableValue<Function<? super V, String>> mapper, @Nonnull final ObservableValue<BinaryOperator<String>> reducer) {
         requireNonNull(supplier, ERROR_SUPPLIER_NULL);
         requireNonNull(reducer, ERROR_REDUCER_NULL);
         requireNonNull(mapper, ERROR_MAPPER_NULL);

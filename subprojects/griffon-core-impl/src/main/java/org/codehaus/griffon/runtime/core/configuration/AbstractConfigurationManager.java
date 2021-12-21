@@ -17,31 +17,32 @@
  */
 package org.codehaus.griffon.runtime.core.configuration;
 
+import griffon.annotations.configuration.Configured;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
-import griffon.core.ApplicationEvent;
+import griffon.annotations.event.EventHandler;
+import griffon.converter.Converter;
+import griffon.converter.ConverterRegistry;
+import griffon.converter.FormattingConverter;
+import griffon.converter.NoopConverter;
 import griffon.core.Configuration;
 import griffon.core.GriffonApplication;
 import griffon.core.configuration.ConfigurationManager;
-import griffon.core.configuration.Configured;
-import griffon.core.editors.ExtendedPropertyEditor;
-import griffon.core.editors.PropertyEditorResolver;
+import griffon.core.events.NewInstanceEvent;
+import griffon.core.util.GriffonClassUtils;
 import griffon.exceptions.GriffonException;
-import griffon.util.GriffonClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.beans.PropertyDescriptor;
-import java.beans.PropertyEditor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static griffon.core.editors.PropertyEditorResolver.findEditor;
-import static griffon.util.GriffonNameUtils.isNotBlank;
+import static griffon.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Objects.requireNonNull;
 
@@ -59,14 +60,18 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     @Inject
     protected GriffonApplication application;
 
+    @Inject
+    protected ConverterRegistry converterRegistry;
+
     @PostConstruct
     private void initialize() {
         requireNonNull(application, "Argument 'application' cannot ne null");
+        application.getEventRouter().subscribe(this);
+    }
 
-        application.getEventRouter().addEventListener(ApplicationEvent.NEW_INSTANCE.getName(), args -> {
-            Object instance = args[1];
-            injectConfiguration(instance);
-        });
+    @EventHandler
+    public void handleNewInstanceEvent(@Nonnull NewInstanceEvent event) {
+        injectConfiguration(event.getInstance());
     }
 
     @Override
@@ -98,7 +103,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
             String defaultValue = annotation.defaultValue();
             defaultValue = Configured.NO_VALUE.equals(defaultValue) ? null : defaultValue;
             String format = annotation.format();
-            Class<? extends PropertyEditor> editor = annotation.editor();
+            Class<? extends Converter> converter = annotation.converter();
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Property " + propertyName +
@@ -109,7 +114,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
                     "', format='" + format +
                     "'] is marked for configuration injection.");
             }
-            descriptors.put(propertyName, new MethodConfigurationDescriptor(writeMethod, configuration, key, defaultValue, format, editor));
+            descriptors.put(propertyName, new MethodConfigurationDescriptor(writeMethod, configuration, key, defaultValue, format, converter));
         }
 
         for (Field field : currentClass.getDeclaredFields()) {
@@ -126,7 +131,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
             String defaultValue = annotation.defaultValue();
             defaultValue = Configured.NO_VALUE.equals(defaultValue) ? null : defaultValue;
             String format = annotation.format();
-            Class<? extends PropertyEditor> editor = annotation.editor();
+            Class<? extends Converter> converter = annotation.converter();
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Field " + fqFieldName +
@@ -138,7 +143,7 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
                     "'] is marked for configuration injection.");
             }
 
-            descriptors.put(field.getName(), new FieldConfigurationDescriptor(field, configuration, key, defaultValue, format, editor));
+            descriptors.put(field.getName(), new FieldConfigurationDescriptor(field, configuration, key, defaultValue, format, converter));
         }
     }
 
@@ -148,8 +153,8 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
 
             if (value != null) {
                 InjectionPoint injectionPoint = descriptor.asInjectionPoint();
-                if (!isNoopPropertyEditor(descriptor.getEditor()) || !injectionPoint.getType().isAssignableFrom(value.getClass())) {
-                    value = convertValue(injectionPoint.getType(), value, descriptor.getFormat(), descriptor.getEditor());
+                if (!isNoopConverter(descriptor.getConverter()) || !injectionPoint.getType().isAssignableFrom(value.getClass())) {
+                    value = convertValue(injectionPoint.getType(), value, descriptor.getFormat(), descriptor.getConverter());
                 }
                 injectionPoint.setValue(instance, value);
             }
@@ -171,42 +176,41 @@ public abstract class AbstractConfigurationManager implements ConfigurationManag
     }
 
     @Nonnull
-    protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
+    protected Object convertValue(@Nonnull Class<?> type, @Nonnull Object value, @Nullable String format, @Nonnull Class<? extends Converter> converter) {
         requireNonNull(type, ERROR_TYPE_NULL);
         requireNonNull(value, ERROR_VALUE_NULL);
 
-        PropertyEditor propertyEditor = resolvePropertyEditor(type, format, editor);
-        if (isNoopPropertyEditor(propertyEditor.getClass())) { return value; }
+        Converter resolvedConverter = resolveConverter(type, format, converter);
+        if (isNoopConverter(resolvedConverter.getClass())) { return value; }
         if (value instanceof CharSequence) {
-            propertyEditor.setAsText(String.valueOf(value));
+            return resolvedConverter.fromObject(String.valueOf(value));
         } else {
-            propertyEditor.setValue(value);
+            return resolvedConverter.fromObject(value);
         }
-        return propertyEditor.getValue();
     }
 
     @Nonnull
-    protected PropertyEditor resolvePropertyEditor(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends PropertyEditor> editor) {
+    protected Converter resolveConverter(@Nonnull Class<?> type, @Nullable String format, @Nonnull Class<? extends Converter> converter) {
         requireNonNull(type, ERROR_TYPE_NULL);
 
-        PropertyEditor propertyEditor = null;
-        if (isNoopPropertyEditor(editor)) {
-            propertyEditor = findEditor(type);
+        Converter resolvedConverter = null;
+        if (isNoopConverter(converter)) {
+            resolvedConverter = converterRegistry.findConverter(type);
         } else {
             try {
-                propertyEditor = editor.newInstance();
+                resolvedConverter = converter.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new GriffonException("Could not instantiate editor with " + editor, e);
+                throw new GriffonException("Could not instantiate converter with " + converter, e);
             }
         }
 
-        if (propertyEditor instanceof ExtendedPropertyEditor) {
-            ((ExtendedPropertyEditor) propertyEditor).setFormat(format);
+        if (resolvedConverter instanceof FormattingConverter) {
+            ((FormattingConverter) resolvedConverter).setFormat(format);
         }
-        return propertyEditor;
+        return resolvedConverter;
     }
 
-    protected boolean isNoopPropertyEditor(@Nonnull Class<? extends PropertyEditor> editor) {
-        return PropertyEditorResolver.NoopPropertyEditor.class.isAssignableFrom(editor);
+    protected boolean isNoopConverter(@Nonnull Class<? extends Converter> converter) {
+        return NoopConverter.class.isAssignableFrom(converter);
     }
 }

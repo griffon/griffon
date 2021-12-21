@@ -17,8 +17,7 @@
  */
 package integration
 
-import griffon.core.configuration.Configured
-
+import griffon.annotations.configuration.Configured
 import griffon.annotations.core.Nonnull
 
 class ConfigurableBean {
@@ -27,7 +26,7 @@ class ConfigurableBean {
     @Configured(value = 'keys.key2', defaultValue = 'true')
     boolean pboolean
 
-    @Configured(value = 'keys.key3', defaultValue = '01/02/2000', format = 'dd/MM/yyyy')
+    @Configured(value = 'keys.key3', defaultValue = '01/01/2000', format = 'dd/MM/yyyy')
     Date pdate
 
     @Nonnull
@@ -40,6 +39,6 @@ class ConfigurableBean {
         this.pstring = pstring
     }
 
-    @Configured(value='keys.key4', defaultValue = '*custom*', editor = CustomStringPropertyEditor)
+    @Configured(value = 'keys.key4', defaultValue = '*custom*', converter = CustomStringConverter)
     String customString
 }

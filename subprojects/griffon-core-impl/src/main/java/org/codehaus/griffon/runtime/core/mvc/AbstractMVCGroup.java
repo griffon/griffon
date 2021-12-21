@@ -27,13 +27,13 @@ import griffon.core.artifact.GriffonModelClass;
 import griffon.core.artifact.GriffonMvcArtifact;
 import griffon.core.artifact.GriffonView;
 import griffon.core.artifact.GriffonViewClass;
-import griffon.core.mvc.MVCFunction;
+import griffon.core.mvc.MVCConsumer;
 import griffon.core.mvc.MVCGroup;
 import griffon.core.mvc.MVCGroupConfiguration;
-import griffon.core.mvc.MVCGroupFunction;
+import griffon.core.mvc.MVCGroupConsumer;
 import griffon.core.mvc.MVCGroupManager;
 import griffon.core.mvc.TypedMVCGroup;
-import griffon.core.mvc.TypedMVCGroupFunction;
+import griffon.core.mvc.TypedMVCGroupConsumer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,10 +42,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static griffon.util.GriffonClassUtils.requireState;
-import static griffon.util.GriffonClassUtils.setPropertyOrFieldValue;
-import static griffon.util.GriffonNameUtils.isBlank;
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.core.util.GriffonClassUtils.setPropertyOrFieldValue;
+import static griffon.util.ObjectUtils.requireState;
+import static griffon.util.StringUtils.isBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 
@@ -62,9 +62,9 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     protected final Map<String, Object> members = new LinkedHashMap<>();
     protected final Map<String, MVCGroup> children = new LinkedHashMap<>();
     private final Object[] lock = new Object[0];
+    private final List<Object> injectedInstances = new ArrayList<>();
     protected MVCGroup parentGroup;
     private boolean alive;
-    private final List<Object> injectedInstances = new ArrayList<>();
 
     public AbstractMVCGroup(@Nonnull MVCGroupManager mvcGroupManager, @Nonnull MVCGroupConfiguration configuration, @Nullable String mvcId, @Nonnull Map<String, Object> members, @Nullable MVCGroup parentGroup) {
         super(mvcGroupManager);
@@ -335,123 +335,123 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(injectParentGroup(args), mvcType, new MVCFunctionDecorator<>(handler));
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(injectParentGroup(args), mvcType, new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(injectParentGroup(args), mvcType, mvcId, new MVCFunctionDecorator<>(handler));
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(injectParentGroup(args), mvcType, mvcId, new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, injectParentGroup(args), new MVCFunctionDecorator<>(handler));
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, injectParentGroup(args), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, mvcId, injectParentGroup(args), new MVCFunctionDecorator<>(handler));
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, mvcId, injectParentGroup(args), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, injectParentGroup(), new MVCFunctionDecorator<>(handler));
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, injectParentGroup(), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, mvcId, injectParentGroup(), new MVCFunctionDecorator<>(handler));
+    public <M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, mvcId, injectParentGroup(), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(injectParentGroup(args), mvcType, new MVCFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(injectParentGroup(args), mvcType, new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(injectParentGroup(args), mvcType, mvcId, new MVCFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(injectParentGroup(args), mvcType, mvcId, new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, injectParentGroup(args), new MVCFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, injectParentGroup(args), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, mvcId, injectParentGroup(args), new MVCFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, mvcId, injectParentGroup(args), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, injectParentGroup(), new MVCFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, injectParentGroup(), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCFunction<M, V, C> handler) {
-        super.withMVC(mvcType, mvcId, injectParentGroup(), new MVCFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup, M extends GriffonModel, V extends GriffonView, C extends GriffonController> void withMVC(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull MVCConsumer<M, V, C> handler) {
+        super.withMVC(mvcType, mvcId, injectParentGroup(), new MVCConsumerDecorator<>(handler));
     }
 
     @Override
-    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(injectParentGroup(args), mvcType, new MVCGroupFunctionDecorator(handler));
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull MVCGroupConsumer handler) {
+        super.withMVCGroup(injectParentGroup(args), mvcType, new MVCGroupConsumerDecorator(handler));
     }
 
     @Override
-    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(injectParentGroup(args), mvcType, mvcId, new MVCGroupFunctionDecorator(handler));
+    public void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull String mvcType, @Nonnull String mvcId, @Nonnull MVCGroupConsumer handler) {
+        super.withMVCGroup(injectParentGroup(args), mvcType, mvcId, new MVCGroupConsumerDecorator(handler));
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, injectParentGroup(args), new MVCGroupFunctionDecorator(handler));
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull Map<String, Object> args, @Nonnull MVCGroupConsumer handler) {
+        super.withMVCGroup(mvcType, injectParentGroup(args), new MVCGroupConsumerDecorator(handler));
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, mvcId, injectParentGroup(args), new MVCGroupFunctionDecorator(handler));
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull MVCGroupConsumer handler) {
+        super.withMVCGroup(mvcType, mvcId, injectParentGroup(args), new MVCGroupConsumerDecorator(handler));
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, injectParentGroup(), new MVCGroupFunctionDecorator(handler));
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull MVCGroupConsumer handler) {
+        super.withMVCGroup(mvcType, injectParentGroup(), new MVCGroupConsumerDecorator(handler));
     }
 
     @Override
-    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull final MVCGroupFunction handler) {
-        super.withMVCGroup(mvcType, mvcId, injectParentGroup(), new MVCGroupFunctionDecorator(handler));
+    public void withMVCGroup(@Nonnull String mvcType, @Nonnull String mvcId, @Nonnull final MVCGroupConsumer handler) {
+        super.withMVCGroup(mvcType, mvcId, injectParentGroup(), new MVCGroupConsumerDecorator(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        super.withMVCGroup(injectParentGroup(args), mvcType, new TypedMVCGroupFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
+        super.withMVCGroup(injectParentGroup(args), mvcType, new TypedMVCGroupConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        super.withMVCGroup(injectParentGroup(args), mvcType, mvcId, new TypedMVCGroupFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Map<String, Object> args, @Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
+        super.withMVCGroup(injectParentGroup(args), mvcType, mvcId, new TypedMVCGroupConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        super.withMVCGroup(mvcType, injectParentGroup(args), new TypedMVCGroupFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
+        super.withMVCGroup(mvcType, injectParentGroup(args), new TypedMVCGroupConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        super.withMVCGroup(mvcType, mvcId, injectParentGroup(args), new TypedMVCGroupFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull Map<String, Object> args, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
+        super.withMVCGroup(mvcType, mvcId, injectParentGroup(args), new TypedMVCGroupConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupFunction<MVC> handler) {
-        super.withMVCGroup(mvcType, injectParentGroup(), new TypedMVCGroupFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull TypedMVCGroupConsumer<MVC> handler) {
+        super.withMVCGroup(mvcType, injectParentGroup(), new TypedMVCGroupConsumerDecorator<>(handler));
     }
 
     @Override
-    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull final TypedMVCGroupFunction<MVC> handler) {
-        super.withMVCGroup(mvcType, mvcId, injectParentGroup(), new TypedMVCGroupFunctionDecorator<>(handler));
+    public <MVC extends TypedMVCGroup> void withMVCGroup(@Nonnull Class<? extends MVC> mvcType, @Nonnull String mvcId, @Nonnull final TypedMVCGroupConsumer<MVC> handler) {
+        super.withMVCGroup(mvcType, mvcId, injectParentGroup(), new TypedMVCGroupConsumerDecorator<>(handler));
     }
 
     @Nonnull
@@ -500,52 +500,62 @@ public abstract class AbstractMVCGroup extends AbstractMVCHandler implements MVC
         return map;
     }
 
-    private final class MVCFunctionDecorator<M extends GriffonModel, V extends GriffonView, C extends GriffonController> implements MVCFunction<M, V, C> {
-        private final MVCFunction<M, V, C> delegate;
+    private final class MVCConsumerDecorator<M extends GriffonModel, V extends GriffonView, C extends GriffonController> implements MVCConsumer<M, V, C> {
+        private final MVCConsumer<M, V, C> delegate;
 
-        private MVCFunctionDecorator(MVCFunction<M, V, C> delegate) {
+        private MVCConsumerDecorator(MVCConsumer<M, V, C> delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public void apply(@Nullable M model, @Nullable V view, @Nullable C controller) {
+        public void accept(@Nullable M model, @Nullable V view, @Nullable C controller) {
             MVCGroup group = null;
-            if (model != null) { group = model.getMvcGroup(); }
-            if (view != null) { group = view.getMvcGroup(); }
-            if (controller != null) { group = controller.getMvcGroup(); }
+            if (model != null) {
+                group = model.getMvcGroup();
+            }
+            if (view != null) {
+                group = view.getMvcGroup();
+            }
+            if (controller != null) {
+                group = controller.getMvcGroup();
+            }
 
-            if (group != null) { children.put(group.getMvcId(), group); }
-            delegate.apply(model, view, controller);
-            if (group != null) { children.remove(group.getMvcId()); }
+            if (group != null) {
+                children.put(group.getMvcId(), group);
+            }
+            delegate.accept(model, view, controller);
+            if (group != null) {
+                children.remove(group.getMvcId());
+            }
         }
     }
 
-    private final class MVCGroupFunctionDecorator implements MVCGroupFunction {
-        private final MVCGroupFunction delegate;
+    private final class MVCGroupConsumerDecorator implements MVCGroupConsumer {
+        private final MVCGroupConsumer delegate;
 
-        private MVCGroupFunctionDecorator(MVCGroupFunction delegate) {
+        private MVCGroupConsumerDecorator(MVCGroupConsumer delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public void apply(@Nonnull MVCGroup group) {
+        public void accept(@Nonnull MVCGroup group) {
             children.put(group.getMvcId(), group);
-            delegate.apply(group);
+            delegate.accept(group);
             children.remove(group.getMvcId());
         }
     }
 
-    private final class TypedMVCGroupFunctionDecorator<MVC extends TypedMVCGroup> implements TypedMVCGroupFunction<MVC> {
-        private final TypedMVCGroupFunction<MVC> delegate;
+    private final class TypedMVCGroupConsumerDecorator<MVC extends TypedMVCGroup> implements TypedMVCGroupConsumer<MVC> {
+        private final TypedMVCGroupConsumer<MVC> delegate;
 
-        private TypedMVCGroupFunctionDecorator(TypedMVCGroupFunction<MVC> delegate) {
+        private TypedMVCGroupConsumerDecorator(TypedMVCGroupConsumer<MVC> delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public void apply(@Nonnull MVC group) {
+        public void accept(@Nonnull MVC group) {
             children.put(group.getMvcId(), group);
-            delegate.apply(group);
+            delegate.accept(group);
             children.remove(group.getMvcId());
         }
     }

@@ -20,7 +20,7 @@ package griffon.exceptions;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -29,6 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class MethodInvocationException extends GriffonException {
     private static final long serialVersionUID = -4458948337239674524L;
+
     private static final String MESSAGE = "message";
 
     public MethodInvocationException(@Nonnull String message) {

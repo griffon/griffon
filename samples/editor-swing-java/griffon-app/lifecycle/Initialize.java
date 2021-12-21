@@ -23,7 +23,7 @@ import org.codehaus.griffon.runtime.core.AbstractLifecycleHandler;
 import javax.inject.Inject;
 import javax.swing.*;
 
-import static griffon.util.GriffonApplicationUtils.isMacOSX;
+import static griffon.core.util.GriffonApplicationUtils.isMacOSX;
 
 public class Initialize extends AbstractLifecycleHandler {
     @Inject

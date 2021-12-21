@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.value.ObservableBooleanValue;
 
 /**
@@ -24,7 +25,7 @@ import javafx.beans.value.ObservableBooleanValue;
  * @since 2.9.0
  */
 class UIThreadAwareObservableBooleanValue extends UIThreadAwareObservableValue<Boolean> implements ObservableBooleanValue {
-    UIThreadAwareObservableBooleanValue(ObservableBooleanValue delegate) {
+    UIThreadAwareObservableBooleanValue(@Nonnull ObservableBooleanValue delegate) {
         super(delegate);
     }
 

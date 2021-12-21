@@ -18,15 +18,16 @@
 package org.codehaus.griffon.runtime.core.resources;
 
 import griffon.annotations.core.Nonnull;
+import griffon.converter.ConverterRegistry;
+import griffon.core.bundles.CompositeResourceBundleBuilder;
 import griffon.core.resources.NoSuchResourceException;
-import griffon.util.CompositeResourceBundleBuilder;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -38,7 +39,8 @@ public class DefaultResourceResolver extends AbstractResourceResolver {
     private final Map<Locale, ResourceBundle> bundles = new ConcurrentHashMap<>();
     private final CompositeResourceBundleBuilder compositeResourceBundleBuilder;
 
-    public DefaultResourceResolver(@Nonnull CompositeResourceBundleBuilder builder, @Nonnull String basename) {
+    public DefaultResourceResolver(@Nonnull ConverterRegistry converterRegistry, @Nonnull CompositeResourceBundleBuilder builder, @Nonnull String basename) {
+        super(converterRegistry);
         this.compositeResourceBundleBuilder = requireNonNull(builder, "Argument 'builder' must not be null");
         this.basename = requireNonBlank(basename, "Argument 'basename' must not be blank");
     }

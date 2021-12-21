@@ -18,15 +18,15 @@
 package org.codehaus.griffon.runtime.groovy.resources;
 
 import griffon.annotations.core.Nonnull;
-import griffon.core.resources.GroovyAwareResourceResolver;
 import griffon.core.resources.NoSuchResourceException;
 import griffon.core.resources.ResourceResolver;
+import griffon.core.resources.groovy.GroovyAwareResourceResolver;
 import org.codehaus.griffon.runtime.core.resources.ResourceResolverDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static griffon.util.GriffonClassUtils.requireNonEmpty;
+import static griffon.util.ObjectUtils.requireNonEmpty;
 
 /**
  * @author Andres Almiray

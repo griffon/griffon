@@ -17,8 +17,6 @@
  */
 package griffon.javafx.collections
 
-import groovy.transform.Canonical
-import groovy.transform.MapConstructor
 import javafx.beans.binding.BooleanBinding
 import javafx.beans.binding.ObjectBinding
 import javafx.beans.property.LongProperty
@@ -46,10 +44,10 @@ import static javafx.collections.FXCollections.observableSet
  */
 @Unroll
 class ObservableStreamSpec extends Specification {
-    @Shared private static Ghost INKY = new Ghost(id: 1, name: 'Inky')
-    @Shared private static Ghost PINKY = new Ghost(id: 2, name: 'Pinky')
-    @Shared private static Ghost BLINKY = new Ghost(id: 3, name: 'Blinky')
-    @Shared private static Ghost CLYDE = new Ghost(id: 4, name: 'Clyde')
+    @Shared private Ghost INKY = new Ghost(id: 1, name: 'Inky')
+    @Shared private Ghost PINKY = new Ghost(id: 2, name: 'Pinky')
+    @Shared private Ghost BLINKY = new Ghost(id: 3, name: 'Blinky')
+    @Shared private Ghost CLYDE = new Ghost(id: 4, name: 'Clyde')
 
     void "Check map/filter/reduce (default value) on #type"() {
         given:
@@ -447,7 +445,7 @@ class ObservableStreamSpec extends Specification {
         'ObservableMap'  | observableMapOfGhosts()   | 'max'  | { a, b -> a.id - b.id } | CLYDE
     }
 
-    private static ObservableList<Ghost> observableListsOfGhosts() {
+    private ObservableList<Ghost> observableListsOfGhosts() {
         return observableArrayList(
             INKY,
             PINKY,
@@ -456,7 +454,7 @@ class ObservableStreamSpec extends Specification {
         )
     }
 
-    private static ObservableSet<Ghost> observableSetOfGhosts() {
+    private ObservableSet<Ghost> observableSetOfGhosts() {
         return observableSet([
             INKY,
             PINKY,
@@ -465,7 +463,7 @@ class ObservableStreamSpec extends Specification {
         ] as LinkedHashSet)
     }
 
-    private static ObservableMap<String, Ghost> observableMapOfGhosts() {
+    private ObservableMap<String, Ghost> observableMapOfGhosts() {
         return observableMap(
             g1: INKY,
             g2: PINKY,
@@ -474,10 +472,8 @@ class ObservableStreamSpec extends Specification {
         )
     }
 
-    @Canonical
-    @MapConstructor
-    private static class Ghost implements Comparable<Ghost> {
-        Integer id
+    private class Ghost implements Comparable<Ghost> {
+        int id
         String name
 
         @Override

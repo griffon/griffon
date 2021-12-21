@@ -21,7 +21,7 @@ import griffon.annotations.core.Nonnull;
 
 import java.util.Locale;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 import static java.util.Objects.requireNonNull;
 
 /**

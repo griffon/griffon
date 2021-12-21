@@ -19,8 +19,9 @@ package org.codehaus.griffon.runtime.core.configuration
 
 import griffon.annotations.core.Nonnull
 import griffon.core.Configuration
-import griffon.util.AbstractMapResourceBundle
+import org.codehaus.griffon.converter.DefaultConverterRegistry
 import org.codehaus.griffon.runtime.core.MapResourceBundle
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -29,7 +30,7 @@ class ConfigurationDecoratorSpec extends Specification {
     def 'Calling configuration.#method(#key, #defaultValue) gives #value as result'() {
         given:
         ResourceBundle bundle = new MapResourceBundle()
-        Configuration configuration = new ResourceBundleConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(new DefaultConverterRegistry(), bundle)
         configuration = new ConfigurationDecorator(configuration)
 
         expect:
@@ -67,7 +68,7 @@ class ConfigurationDecoratorSpec extends Specification {
     def 'Can resolve nested keys from sample application configuration (Properties)'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
-        Configuration configuration = new ResourceBundleConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(new DefaultConverterRegistry(), bundle)
         configuration = new ConfigurationDecorator(configuration)
         Properties props = configuration.asProperties()
 
@@ -81,7 +82,7 @@ class ConfigurationDecoratorSpec extends Specification {
     def 'Can resolve nested keys from sample application configuration (ResourceBundle)'() {
         given:
         ResourceBundle bundle = new AppResourceBundle()
-        Configuration configuration = new ResourceBundleConfiguration(bundle)
+        Configuration configuration = new ResourceBundleConfiguration(new DefaultConverterRegistry(), bundle)
         configuration = new ConfigurationDecorator(configuration)
         ResourceBundle asBundle = configuration.asResourceBundle()
 

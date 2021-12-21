@@ -18,15 +18,15 @@
 package org.codehaus.griffon.runtime.util;
 
 import griffon.annotations.core.Nonnull;
+import griffon.core.Instantiator;
 import griffon.core.injection.Injector;
 import griffon.exceptions.InstanceNotFoundException;
-import griffon.util.Instantiator;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import static griffon.util.GriffonClassUtils.invokeAnnotatedMethod;
+import static griffon.core.util.GriffonClassUtils.invokeAnnotatedMethod;
 import static java.util.Objects.requireNonNull;
 
 /**

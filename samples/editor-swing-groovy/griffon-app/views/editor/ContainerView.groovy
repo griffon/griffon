@@ -19,13 +19,13 @@ package editor
 
 import griffon.annotations.core.Nonnull
 import griffon.core.artifact.GriffonView
-import griffon.inject.MVCMember
+import griffon.annotations.inject.MVCMember
 import griffon.metadata.ArtifactProviderFor
 
 import javax.swing.event.ChangeListener
 import java.awt.*
 
-import static griffon.util.GriffonApplicationUtils.isMacOSX
+import static griffon.core.util.GriffonApplicationUtils.isMacOSX
 
 @ArtifactProviderFor(GriffonView)
 class ContainerView {

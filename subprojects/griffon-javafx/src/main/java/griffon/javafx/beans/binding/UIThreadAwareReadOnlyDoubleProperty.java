@@ -17,16 +17,17 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ChangeListener;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 class UIThreadAwareReadOnlyDoubleProperty extends ReadOnlyDoublePropertyDecorator implements UIThreadAware {
-    UIThreadAwareReadOnlyDoubleProperty( ReadOnlyDoubleProperty delegate) {
+    UIThreadAwareReadOnlyDoubleProperty(@Nonnull ReadOnlyDoubleProperty delegate) {
         super(delegate);
     }
 

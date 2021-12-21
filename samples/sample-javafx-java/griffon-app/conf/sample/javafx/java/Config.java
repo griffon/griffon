@@ -18,7 +18,7 @@
 package sample.javafx.java;
 
 import griffon.annotations.core.Nonnull;
-import griffon.util.AbstractMapResourceBundle;
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle;
 import griffon.util.CollectionUtils;
 
 import java.util.Map;

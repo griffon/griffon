@@ -22,7 +22,7 @@ import griffon.annotations.core.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static griffon.util.GriffonClassUtils.requireState;
+import static griffon.util.ObjectUtils.requireState;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -17,6 +17,8 @@
  */
 package griffon.javafx.collections;
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.core.Nullable;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,7 +26,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -182,6 +184,7 @@ public class ElementObservableListTest {
             super(id, name, lastname);
         }
 
+        @Nonnull
         @Override
         public ObservableValue<?>[] observableValues() {
             return new ObservableValue<?>[]{
@@ -193,8 +196,9 @@ public class ElementObservableListTest {
     }
 
     public static class ObservablePersonObservableValueExtractor implements ElementObservableList.ObservableValueExtractor<ObservablePerson> {
+        @Nonnull
         @Override
-        public ObservableValue<?>[] observableValues(ObservablePerson instance) {
+        public ObservableValue<?>[] observableValues(@Nullable ObservablePerson instance) {
             return new ObservableValue<?>[]{
                 instance.idProperty(),
                 instance.nameProperty(),

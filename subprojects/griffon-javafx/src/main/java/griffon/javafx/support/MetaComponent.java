@@ -23,7 +23,7 @@ import javafx.beans.DefaultProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-import static griffon.util.GriffonNameUtils.requireNonBlank;
+import static griffon.util.StringUtils.requireNonBlank;
 
 /**
  * @author Andres Almiray
@@ -51,6 +51,7 @@ public class MetaComponent {
         this.mcvId = mcvId;
     }
 
+    @Nonnull
     public List<MvcArg> getMvcArgs() {
         return mvcArgs;
     }

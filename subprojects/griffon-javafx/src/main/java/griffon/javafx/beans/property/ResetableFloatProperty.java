@@ -49,11 +49,13 @@ public class ResetableFloatProperty extends AbstractResetableProperty<Number> {
         super(bean, name, baseValue);
     }
 
+    @Nonnull
     @Override
     protected Property<Number> writableBaseValueProperty() {
         return writableBaseValueFloatProperty();
     }
 
+    @Nonnull
     protected FloatProperty writableBaseValueFloatProperty() {
         if (baseValue == null) {
             baseValue = new SimpleFloatProperty(this, "baseValue");
@@ -61,20 +63,24 @@ public class ResetableFloatProperty extends AbstractResetableProperty<Number> {
         return baseValue;
     }
 
+    @Nonnull
     @Override
     public ReadOnlyProperty<Number> baseValueProperty() {
         return writableBaseValueProperty();
     }
 
+    @Nonnull
     public ReadOnlyFloatProperty baseValueFloatProperty() {
         return writableBaseValueFloatProperty();
     }
 
+    @Nonnull
     @Override
     public Property<Number> valueProperty() {
         return valueFloatProperty();
     }
 
+    @Nonnull
     public FloatProperty valueFloatProperty() {
         if (value == null) {
             value = new SimpleFloatProperty(this, "value");

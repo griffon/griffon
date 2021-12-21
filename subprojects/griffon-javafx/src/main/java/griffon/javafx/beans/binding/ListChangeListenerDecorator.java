@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.collections.ListChangeListener;
 
 import static java.util.Objects.requireNonNull;
@@ -28,10 +29,11 @@ import static java.util.Objects.requireNonNull;
 public class ListChangeListenerDecorator<E> implements ListChangeListener<E> {
     private final ListChangeListener<E> delegate;
 
-    public ListChangeListenerDecorator(ListChangeListener<E> delegate) {
+    public ListChangeListenerDecorator(@Nonnull ListChangeListener<E> delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final ListChangeListener<E> getDelegate() {
         return delegate;
     }

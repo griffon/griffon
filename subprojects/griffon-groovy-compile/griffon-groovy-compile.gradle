@@ -19,13 +19,13 @@ dependencies {
     annotationProcessor project(':griffon-core-compile')
     api project(':griffon-core-impl')
     api project(':griffon-core-compile')
+    api project(':griffon-beans-compile')
 
     api project(':griffon-groovy')
-    api("org.codehaus.groovy:groovy:$groovyVersion") {
+    api("org.codehaus.groovy:groovy-all:$groovyVersion") {
         exclude group: 'junit', module: 'junit'
     }
     api(config.dependencyManagement.gav('gipsy')) {
-        exclude group: 'org.codehaus.groovy', module: 'groovy'
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
 }

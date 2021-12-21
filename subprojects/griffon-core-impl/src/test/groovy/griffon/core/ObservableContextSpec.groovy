@@ -18,18 +18,21 @@
 package griffon.core
 
 import griffon.annotations.core.Nonnull
-import griffon.core.editors.IntegerPropertyEditor
-import griffon.core.editors.PropertyEditorResolver
+import griffon.converter.ConverterRegistry
+import org.codehaus.griffon.converter.DefaultConverterRegistry
+import org.codehaus.griffon.converter.IntegerConverter
 import org.codehaus.griffon.runtime.core.DefaultObservableContext
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+
 @Unroll
 class ObservableContextSpec extends Specification {
-    @Shared private static ObservableContext ctx1 = new DefaultObservableContext()
-    @Shared private static ObservableContext ctx2 = new DefaultObservableContext(ctx1)
-    @Shared private static ObservableContext ctx3 = new DefaultObservableContext(ctx1)
+    @Shared private ConverterRegistry converterRegistry = new DefaultConverterRegistry()
+    @Shared private ObservableContext ctx1 = new DefaultObservableContext(converterRegistry)
+    @Shared private ObservableContext ctx2 = new DefaultObservableContext(converterRegistry,ctx1)
+    @Shared private ObservableContext ctx3 = new DefaultObservableContext(converterRegistry, ctx1)
 
     def setup() {
         ctx1['foo'] = 'foo'
@@ -194,8 +197,8 @@ class ObservableContextSpec extends Specification {
 
         when:
         ctx1.put('key', '1')
-        PropertyEditorResolver.clear()
-        PropertyEditorResolver.registerEditor(Integer, IntegerPropertyEditor)
+        converterRegistry.clear()
+        converterRegistry.registerConverter(Integer, IntegerConverter)
         Integer converted = ctx1.removeConverted('key', Integer)
 
         then:
@@ -206,7 +209,7 @@ class ObservableContextSpec extends Specification {
         listener.contextEvent.newValue == null
 
         cleanup:
-        PropertyEditorResolver.clear()
+        converterRegistry.clear()
     }
 
     void "listen to lateral context events"() {

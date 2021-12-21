@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.FloatBinding;
 import javafx.beans.value.ChangeListener;
@@ -26,7 +27,7 @@ import javafx.beans.value.ChangeListener;
  * @since 2.13.0
  */
 class UIThreadAwareFloatBinding extends FloatBindingDecorator implements UIThreadAware {
-    UIThreadAwareFloatBinding(FloatBinding delegate) {
+    UIThreadAwareFloatBinding(@Nonnull FloatBinding delegate) {
         super(delegate);
     }
 

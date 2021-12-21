@@ -22,7 +22,7 @@ import griffon.core.i18n.MessageSource;
 import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonService;
 
-import static griffon.util.GriffonNameUtils.isBlank;
+import static griffon.util.StringUtils.isBlank;
 import static java.util.Collections.singletonList;
 
 @javax.inject.Singleton

@@ -17,6 +17,7 @@
  */
 package griffon.javafx.beans.binding;
 
+import griffon.annotations.core.Nonnull;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.binding.IntegerBinding;
@@ -28,15 +29,16 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * @author Andres Almiray
- * @since 2.16.0
+ * @since 3.0.0
  */
 public class StringExpressionDecorator extends StringExpression {
     private final StringExpression delegate;
 
-    public StringExpressionDecorator(StringExpression delegate) {
+    public StringExpressionDecorator(@Nonnull StringExpression delegate) {
         this.delegate = requireNonNull(delegate, "Argument 'delegate' must not be null");
     }
 
+    @Nonnull
     protected final StringExpression getDelegate() {
         return delegate;
     }

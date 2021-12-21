@@ -17,10 +17,13 @@
  */
 package integration;
 
+import griffon.annotations.inject.MVCMember;
+import griffon.core.artifact.GriffonController;
 import griffon.core.mvc.MVCGroup;
-import griffon.inject.MVCMember;
 import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
+@ServiceProviderFor(GriffonController.class)
 public class SimpleController extends AbstractGriffonController {
     private SimpleModel model;
     private String key;
