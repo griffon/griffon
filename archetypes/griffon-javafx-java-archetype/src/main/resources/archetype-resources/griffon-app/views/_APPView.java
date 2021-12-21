@@ -1,22 +1,21 @@
 package ${package};
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import java.util.Collections;
-import griffon.annotations.core.Nonnull;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class _APPView extends AbstractJavaFXGriffonView {
     private _APPController controller;
     private _APPModel model;

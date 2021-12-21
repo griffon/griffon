@@ -1,10 +1,11 @@
 package \${package}
 
+import griffon.annotations.javafx.FXObservable
 import griffon.core.artifact.GriffonModel
-import griffon.transform.FXObservable
-import griffon.metadata.ArtifactProviderFor
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonModel)
-class _APPModel {
-    @FXObservable String clickCount = "0"
+@ServiceProviderFor(GriffonModel)
+class _APPModel extends AbstractGriffonModel {
+    @FXObservable String clickCount = '0'
 }

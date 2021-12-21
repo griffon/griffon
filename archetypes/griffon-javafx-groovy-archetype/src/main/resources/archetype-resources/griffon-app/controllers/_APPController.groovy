@@ -1,14 +1,15 @@
 package \${package}
 
-import griffon.core.artifact.GriffonController
-import griffon.core.controller.ControllerAction
-import griffon.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
-import griffon.transform.Threading
+import griffon.annotations.controller.ControllerAction
 import griffon.annotations.core.Nonnull
+import griffon.annotations.inject.MVCMember
+import griffon.annotations.threading.Threading
+import griffon.core.artifact.GriffonController
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonController
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonController)
-class _APPController {
+@ServiceProviderFor(GriffonController)
+class _APPController extends AbstractGriffonController {
     @MVCMember @Nonnull
     _APPModel model
 

@@ -1,4 +1,4 @@
-import griffon.util.AbstractMapResourceBundle;
+import org.codehaus.griffon.runtime.core.bundles.AbstractMapResourceBundle;
 
 import griffon.annotations.core.Nonnull;
 import java.util.Map;

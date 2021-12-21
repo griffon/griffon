@@ -1,9 +1,9 @@
 package \${package}
 
-import griffon.core.event.EventHandler
+import griffon.core.event.XEventHandler
 import griffon.exceptions.GriffonViewInitializationException
 
-class ApplicationEventHandler implements EventHandler {
+class ApplicationEventHandler implements XEventHandler {
     void onUncaughtGriffonViewInitializationException(GriffonViewInitializationException x) {
         System.exit(1)
     }

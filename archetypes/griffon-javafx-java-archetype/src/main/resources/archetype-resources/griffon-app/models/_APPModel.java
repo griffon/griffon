@@ -1,14 +1,13 @@
 package ${package};
 
-import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleStringProperty;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
-
 import griffon.annotations.core.Nonnull;
+import griffon.core.artifact.GriffonModel;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
+@ServiceProviderFor(GriffonModel.class)
 public class _APPModel extends AbstractGriffonModel {
     private StringProperty clickCount;
 

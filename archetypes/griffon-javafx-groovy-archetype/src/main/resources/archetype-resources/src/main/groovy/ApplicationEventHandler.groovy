@@ -1,10 +1,10 @@
 package \${package}
 
-import griffon.core.event.EventHandler
+import griffon.core.event.XEventHandler
 import griffon.exceptions.GriffonViewInitializationException
 import javafx.application.Platform
 
-class ApplicationEventHandler implements EventHandler {
+class ApplicationEventHandler implements XEventHandler {
     void onUncaughtGriffonViewInitializationException(GriffonViewInitializationException x) {
         Platform.exit()
     }

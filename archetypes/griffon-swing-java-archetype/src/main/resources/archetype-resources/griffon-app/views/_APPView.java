@@ -1,24 +1,23 @@
 package ${package};
 
+import griffon.annotations.core.Nonnull;
+import griffon.annotations.inject.MVCMember;
 import griffon.core.artifact.GriffonView;
-import griffon.inject.MVCMember;
-import griffon.metadata.ArtifactProviderFor;
 import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonView;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
 import javax.swing.*;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 
-import griffon.annotations.core.Nonnull;
-
 import static java.util.Arrays.asList;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
-@ArtifactProviderFor(GriffonView.class)
+@ServiceProviderFor(GriffonView.class)
 public class _APPView extends AbstractSwingGriffonView {
     private _APPModel model;
     private _APPController controller;

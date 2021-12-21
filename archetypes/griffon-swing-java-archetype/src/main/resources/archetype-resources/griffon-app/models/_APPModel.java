@@ -1,11 +1,11 @@
 package ${package};
 
 import griffon.core.artifact.GriffonModel;
-import griffon.metadata.ArtifactProviderFor;
-import org.codehaus.griffon.runtime.core.artifact.AbstractGriffonModel;
+import org.codehaus.griffon.runtime.swing.artifact.AbstractSwingGriffonModel;
+import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
-@ArtifactProviderFor(GriffonModel.class)
-public class _APPModel extends AbstractGriffonModel {
+@ServiceProviderFor(GriffonModel.class)
+public class _APPModel extends AbstractSwingGriffonModel {
     private int clickCount = 0;
 
     public int getClickCount() {

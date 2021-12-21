@@ -1,12 +1,12 @@
 package \${package}
 
-import griffon.core.artifact.GriffonView
-import griffon.inject.MVCMember
-import griffon.metadata.ArtifactProviderFor
-import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
 import griffon.annotations.core.Nonnull
+import griffon.annotations.inject.MVCMember
+import griffon.core.artifact.GriffonView
+import org.codehaus.griffon.runtime.javafx.artifact.AbstractJavaFXGriffonView
+import org.kordamp.jipsy.annotations.ServiceProviderFor
 
-@ArtifactProviderFor(GriffonView)
+@ServiceProviderFor(GriffonView)
 class _APPView extends AbstractJavaFXGriffonView {
     @MVCMember @Nonnull
     FactoryBuilderSupport builder
