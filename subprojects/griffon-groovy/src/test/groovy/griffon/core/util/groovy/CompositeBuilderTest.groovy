@@ -17,6 +17,8 @@
  */
 package griffon.core.util.groovy
 
+import groovy.test.GroovyTestCase
+
 class CompositeBuilderTest extends GroovyTestCase {
     void testWithTwoBuilderCustomizers() {
         SampleBuilderCustomizer one = new SampleBuilderCustomizer('one')

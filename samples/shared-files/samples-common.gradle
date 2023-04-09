@@ -38,8 +38,22 @@ dependencies {
     functionalTestImplementation("org.spockframework:spock-core:$spockVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
-    functionalTestImplementation("org.codehaus.groovy:groovy:$groovyVersion") {
+    functionalTestImplementation("org.apache.groovy:groovy-all:$groovyVersion") {
         exclude module: 'junit', group: 'junit'
+    }
+
+    if (project.name.contains('javafx')) {
+        implementation "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+        implementation "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+        implementation "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+        implementation "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+        implementation "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
+
+        testImplementation "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+        testImplementation "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+        testImplementation "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+        testImplementation "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+        testImplementation "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
     }
 }
 

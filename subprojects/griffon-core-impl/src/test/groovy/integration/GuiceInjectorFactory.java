@@ -41,7 +41,7 @@ import griffon.exceptions.NewInstanceException;
 import org.codehaus.griffon.runtime.core.injection.InjectorProvider;
 import org.kordamp.jipsy.annotations.ServiceProviderFor;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.beans.PropertyDescriptor;

@@ -17,6 +17,7 @@
  */
 package griffon.core.util.groovy
 
+import groovy.test.GroovyTestCase
 import org.codehaus.griffon.runtime.core.DefaultApplicationClassLoader
 
 class ConfigReaderTest extends GroovyTestCase {

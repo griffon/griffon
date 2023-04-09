@@ -54,7 +54,7 @@ public class CalendarFormatterTest extends ConversionSupport {
 
     public static Stream<Arguments> where_value_literal() {
         return Stream.of(
-            Arguments.of(epochAsCalendar(), "1/1/70 12:00 AM")
+            Arguments.of(epochAsCalendar(), "1/1/70, 12:00 AM")
         );
     }
 

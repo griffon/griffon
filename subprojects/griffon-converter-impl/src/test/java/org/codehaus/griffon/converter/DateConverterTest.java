@@ -69,7 +69,7 @@ public class DateConverterTest extends ConversionSupport {
         return Stream.of(
             Arguments.of(null, null, null),
             Arguments.of("", null, null),
-            Arguments.of("1/1/70 12:00 AM", null, epochAsDate()),
+            Arguments.of("1/1/70, 12:00 AM", null, epochAsDate()),
             Arguments.of("0", null, epochAsDate()),
             Arguments.of(0, null, epochAsDate()),
             Arguments.of(epochAsDate(), null, epochAsDate()),

@@ -13,8 +13,8 @@ project:
     you can for example apply standard MVC, MVP, MVVM, PMVC and others. Griffon also follows in the
     spirit of the Swing Application Framework (JSR 296), it defines a simple yet powerful application
     life cycle and event publishing mechanism regardless of the UI toolkit of choice.
-
-  website: https://griffon-framework.org
+  links:
+    homepage: https://griffon-framework.org
   authors:
     - Andres Almiray
   license: Apache-2.0
@@ -22,8 +22,7 @@ project:
     groupId: org.codehaus.griffon
     version: 8
     multiProject: true
-  extraProperties:
-    inceptionYear: 2008
+  inceptionYear: 2008
   tags:
     - 'griffon'
     - 'java'
@@ -37,10 +36,13 @@ release:
     overwrite: true
     sign: true
     discussionCategoryName: Announcements
+    issues:
+      enabled: true
     changelog:
       formatted: ALWAYS
-      format: '- {{commitShortHash}} {{commitTitle}}'
       preset: conventional-commits
+      extraProperties:
+        categorizeScopes: true
       contributors:
         format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
       hide:
@@ -50,13 +52,28 @@ release:
           - 'GitHub'
 
 signing:
-  active: always
+  active: ALWAYS
   armored: true
+
+deploy:
+  maven:
+    nexus2:
+      maven-central:
+        active: RELEASE
+        url: https://s01.oss.sonatype.org/service/local
+        closeRepository: true
+        releaseRepository: true
+        stagingRepositories:
+          - build/repos/local/release
 
 announce:
   gitter:
-    active: release
+    active: RELEASE
     message: '🚀 Griffon {{projectVersion}} has been released! {{releaseNotesUrl}}'
   twitter:
-    active: release
+    active: RELEASE
+    status: '🚀 Griffon {{projectVersion}} has been released! {{releaseNotesUrl}}'
+  mastodon:
+    active: RELEASE
+    host: https://mastodon.social
     status: '🚀 Griffon {{projectVersion}} has been released! {{releaseNotesUrl}}'

@@ -17,6 +17,8 @@
  */
 apply from: 'gradle/idea.gradle'
 
+ext.javafxPlatform = osdetector.os == 'osx' ? 'mac' : osdetector.os == 'windows' ? 'win' : osdetector.os
+ext.platform = "${osdetector.os}-${osdetector.arch}"
 boolean github = (System.env['CI'] ?: false) as boolean
 ext {
     depProjects = []
@@ -131,28 +133,6 @@ config {
                 links 'http://docs.groovy-lang.org/latest/html/api/'
                 links 'http://kordamp.org/jipsy/apidocs/'
                 links 'http://kordamp.org/gipsy/apidocs/'
-            }
-        }
-
-        sourceHtml {
-            overview {
-                windowTitle = "Griffon $version"
-                docTitle = "Griffon $version"
-                docDescription = """Griffon is an application framework for developing desktop
-                                applications in Groovy. Inspired by Grails, Griffon follows the Convention over
-                                Configuration paradigm, paired with an intuitive MVC architecture and a command
-                                line interface."""
-                icon = rootProject.file('src/javadoc/resources/img/griffon.ico')
-                stylesheet = rootProject.file('src/javadoc/resources/css/stylesheet.css')
-            }
-            aggregate {
-                excludedProjects.addAll nonCoreProjects
-            }
-        }
-
-        sourceXref {
-            aggregate {
-                excludedProjects.addAll nonCoreProjects
             }
         }
     }
@@ -272,14 +252,6 @@ subprojects { Project subproj ->
             javadoc {
                 enabled = shouldPublish
             }
-
-            sourceHtml {
-                enabled = isCoreProject
-            }
-
-            sourceXref {
-                enabled = isCoreProject
-            }
         }
 
         testing {
@@ -348,15 +320,7 @@ subprojects { Project subproj ->
                 exclude group: 'org.sonatype.sisu.inject', module: 'cglib'
             }
             if (!subproj.name.endsWith('-gradle-plugin')) {
-                testImplementation "org.codehaus.groovy:groovy:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-json:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-macro:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-templates:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-datetime:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-nio:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-sql:$groovyVersion"
-                testImplementation "org.codehaus.groovy:groovy-xml:$groovyVersion"
+                testImplementation "org.apache.groovy:groovy-all:$groovyVersion"
                 testImplementation "org.spockframework:spock-core:$spockVersion"
                 testImplementation "org.mockito:mockito-core:$mockitoVersion"
             }
@@ -456,7 +420,6 @@ project.gradle.addBuildListener(new BuildAdapter() {
                             'application_name': subprj.name,
                             'application_version': subprj.version,
                             'griffon_version': subprj.version,
-                            'built_by': gradle.rootProject.config.buildInfo.buildBy,
                             'created_by': gradle.rootProject.config.buildInfo.buildCreatedBy,
                             'build_date': gradle.rootProject.config.buildInfo.buildDate,
                             'build_time': gradle.rootProject.config.buildInfo.buildTime,

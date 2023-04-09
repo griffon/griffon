@@ -33,8 +33,8 @@ import griffon.util.MethodDescriptor
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import javax.annotation.PostConstruct
-import javax.annotation.PreDestroy
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import java.lang.reflect.Method
 
 @Unroll

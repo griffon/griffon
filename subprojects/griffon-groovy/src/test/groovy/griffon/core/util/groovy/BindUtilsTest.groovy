@@ -18,6 +18,7 @@
 package griffon.core.util.groovy
 
 import griffon.core.CallableWithArgs
+import groovy.test.GroovyTestCase
 
 class BindUtilsTest extends GroovyTestCase {
     void testAllOptions() {

@@ -51,10 +51,10 @@ dependencies {
 
     testImplementation "org.codehaus.griffon:griffon-swing-test:${griffon.version.get()}"
     testImplementation "org.spockframework:spock-core:${spockVersion}"
-    testImplementation('org.awaitility:awaitility-groovy:4.1.0') {
+    testImplementation("org.awaitility:awaitility-groovy:${awaitilityVersion}") {
         exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
-    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
+    testImplementation "org.apache.groovy:groovy-all:${groovyVersion}"
 }
 
 startScripts {

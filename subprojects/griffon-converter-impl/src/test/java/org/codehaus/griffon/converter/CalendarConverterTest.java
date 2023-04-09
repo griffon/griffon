@@ -69,7 +69,7 @@ public class CalendarConverterTest extends ConversionSupport {
         return Stream.of(
             Arguments.of(null, null, null),
             Arguments.of("", null, null),
-            Arguments.of("1/1/70 12:00 AM", null, epochAsCalendar()),
+            Arguments.of("1/1/70, 12:00 AM", null, epochAsCalendar()),
             Arguments.of("0", null, epochAsCalendar()),
             Arguments.of(0, null, epochAsCalendar()),
             Arguments.of(epochAsDate(), null, epochAsCalendar()),

@@ -17,6 +17,8 @@
  */
 package griffon.util
 
+import groovy.test.GroovyTestCase
+
 class CollectionUtilsTest extends GroovyTestCase {
     void testMapBuilderAdDelegate() {
         // given:

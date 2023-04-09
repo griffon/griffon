@@ -79,6 +79,11 @@ public class MappingObservableList<T, S> extends TransformationList<T, S> {
     }
 
     @Override
+    public int getViewIndex(int index) {
+        return index;
+    }
+
+    @Override
     public T get(int index) {
         return elements[index];
     }

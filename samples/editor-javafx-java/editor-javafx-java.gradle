@@ -29,6 +29,18 @@ dependencies {
 
     runtimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-simple')
 
+    implementation "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+    implementation "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+    implementation "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+    implementation "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+    implementation "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
+
+    testImplementation "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
+
     testImplementation project(':griffon-core-test')
 }
 

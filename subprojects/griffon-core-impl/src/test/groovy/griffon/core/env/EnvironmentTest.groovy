@@ -17,6 +17,7 @@
  */
 package griffon.core.env
 
+import groovy.test.GroovyTestCase
 import org.codehaus.griffon.runtime.core.env.EnvironmentProvider
 
 class EnvironmentTest extends GroovyTestCase {

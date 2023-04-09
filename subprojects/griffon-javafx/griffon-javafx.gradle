@@ -21,6 +21,18 @@ dependencies {
     compileOnly project(':griffon-core-compile')
     annotationProcessor project(':griffon-core-compile')
 
+    compileOnly "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
+
+    testImplementation "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
+
     testImplementation project(':griffon-tck')
     testImplementation("org.awaitility:awaitility-groovy:$awaitilityVersion") {
         exclude group: 'org.codehaus.groovy', module: 'groovy'

@@ -22,7 +22,7 @@ import com.google.inject.Injector;
 import griffon.annotations.core.Nonnull;
 import org.codehaus.griffon.runtime.core.injection.InjectionUnitOfWork;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;

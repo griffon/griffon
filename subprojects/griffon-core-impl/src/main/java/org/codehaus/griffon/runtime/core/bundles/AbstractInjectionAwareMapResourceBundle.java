@@ -20,7 +20,7 @@ package org.codehaus.griffon.runtime.core.bundles;
 import griffon.annotations.core.Nonnull;
 import griffon.annotations.core.Nullable;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

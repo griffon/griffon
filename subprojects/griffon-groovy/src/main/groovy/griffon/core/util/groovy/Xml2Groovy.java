@@ -18,10 +18,10 @@
 package griffon.core.util.groovy;
 
 import groovy.util.IndentPrinter;
-import groovy.util.XmlSlurper;
-import groovy.util.slurpersupport.GPathResult;
-import groovy.util.slurpersupport.Node;
-import groovy.util.slurpersupport.NodeChild;
+import groovy.xml.XmlSlurper;
+import groovy.xml.slurpersupport.GPathResult;
+import groovy.xml.slurpersupport.Node;
+import groovy.xml.slurpersupport.NodeChild;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

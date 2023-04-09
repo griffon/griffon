@@ -17,6 +17,8 @@
  */
 package griffon.util
 
+import groovy.test.GroovyTestCase
+
 class StringUtilsTest extends GroovyTestCase {
     void testCapitalize() {
         assert '' == StringUtils.capitalize('')

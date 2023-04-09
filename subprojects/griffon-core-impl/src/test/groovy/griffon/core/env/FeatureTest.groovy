@@ -17,6 +17,8 @@
  */
 package griffon.core.env
 
+import groovy.test.GroovyTestCase
+
 class FeatureTest extends GroovyTestCase {
     protected void tearDown() {
         System.setProperty('feature.foo', '')

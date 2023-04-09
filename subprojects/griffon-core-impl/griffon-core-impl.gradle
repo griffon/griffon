@@ -21,6 +21,7 @@ dependencies {
     api 'mrj:MRJToolkitStubs:1.0'
     api "com.google.code.findbugs:jsr305:$jsr305Version"
     api config.dependencyManagement.gav('jipsy', 'jipsy-util')
+    api "jakarta.annotation:jakarta.annotation-api:$annotationsVersion"
 
     testImplementation project(':griffon-tck')
     testRuntimeOnly config.dependencyManagement.gav('slf4j', 'slf4j-simple')

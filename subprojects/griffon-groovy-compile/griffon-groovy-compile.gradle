@@ -22,12 +22,24 @@ dependencies {
     api project(':griffon-beans-compile')
 
     api project(':griffon-groovy')
-    api("org.codehaus.groovy:groovy-all:$groovyVersion") {
+    api("org.apache.groovy:groovy-all:$groovyVersion") {
         exclude group: 'junit', module: 'junit'
     }
     api(config.dependencyManagement.gav('gipsy')) {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
+
+    compileOnly "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+    compileOnly "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
+
+    testImplementation "org.openjfx:javafx-base:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-graphics:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-controls:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-fxml:${javafxVersion}:${javafxPlatform}"
+    testImplementation "org.openjfx:javafx-swing:${javafxVersion}:${javafxPlatform}"
 }
 
 compileGroovy.enabled = false

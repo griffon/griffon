@@ -294,7 +294,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                         testImplementation(sub.config.dependencyManagement.gav('junit')) {
                             exclude group: 'org.hamcrest', module: 'hamcrest-core'
                         }
-                        testImplementation("org.codehaus.groovy:groovy-all:${sub.groovyVersion}") {
+                        testImplementation("org.apache.groovy:groovy-all:${sub.groovyVersion}") {
                             exclude group: 'junit', module: 'junit'
                         }
                         testImplementation("org.spockframework:spock-core:${sub.spockVersion}") {
@@ -362,7 +362,7 @@ class GriffonParentPomPlugin implements Plugin<Project> {
                     }
 
                     dependencies {
-                        compileOnly("org.codehaus.groovy:groovy-all:${project.groovyVersion}") {
+                        compileOnly("org.apache.groovy:groovy-all:${project.groovyVersion}") {
                             exclude group: 'junit', module: 'junit'
                         }
                     }

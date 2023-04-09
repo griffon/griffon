@@ -50,9 +50,9 @@ dependencies {
     runtimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
 
     testImplementation "org.codehaus.griffon:griffon-javafx-test:${griffon.version.get()}"
-    testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
+    testImplementation "org.apache.groovy:groovy-all:${groovyVersion}"
     testImplementation "org.spockframework:spock-core:${spockVersion}"
-    testImplementation('org.awaitility:awaitility-groovy:4.1.0') {
+    testImplementation("org.awaitility:awaitility-groovy:${awaitilityVersion}") {
         exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
 }

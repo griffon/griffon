@@ -44,7 +44,7 @@ import org.kordamp.jipsy.annotations.ServiceProviderFor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.beans.PropertyDescriptor;
